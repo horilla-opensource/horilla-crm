@@ -1,0 +1,6 @@
+{% load static i18n %}
+
+<div id="navbar-roles"  class="p-5 pb-0 w-full" hx-get="{% url 'horilla_core:view_user_in_role_nav_view' %}?{{request.GET.urlencode}}" hx-trigger="load" >
+</div>
+<div  id="mainSession" class="pl-5 pb-5 pr-7 pt-0" hx-get="{% url 'horilla_core:view_user_in_role_list_view' %}?{{request.GET.urlencode}}" hx-trigger="load"  >
+</div>

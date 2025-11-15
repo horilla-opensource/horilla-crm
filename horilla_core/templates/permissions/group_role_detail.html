@@ -1,0 +1,159 @@
+{% load i18n %}
+<div id="tab-tasks" class="tab-content block text-sm">
+    <button id="reloadButton" hidden hx-get="{{ request.path }}?{{request.GET.urlencode}}" hx-target="#group-container" hx-swap="outerHTML" hx-select="#group-container">click</button>
+    <div id="messages-container" style="display: none;">
+        {% for message in messages %}
+            <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+        {% endfor %}
+    </div>
+    <div class="flex justify-between gap-5 items-center mb-4 fixed w-[57vw] bg-white">
+        <h3 class="text-base font-semibold">
+            {{ role.role_name }}
+        </h3>
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-4">
+                <button>
+                    <img src="/assets/icons/edit.svg" alt="" width="16" />
+                </button>
+                <button>
+                    <img src="/assets/icons/a4.svg" alt="" width="18" />
+                </button>
+            </div>
+            <ul id="followup-tabs" class="flex gap-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+                <li>
+                    <a id="permissiontab" href="{% url 'horilla_core:role_permissions_view' role.id %}"
+                       data-tab="tab-fu-open"
+                       class="fu-tab-btn inline-flex items-center px-3 py-1 text-white bg-primary-600 rounded-sm w-full text-xs"
+                       hx-get="{% url 'horilla_core:role_permissions_view' role.id %}"
+                       hx-target="#followup-contents"
+                       hx-select="#followup-contents"
+                       hx-swap="outerHTML">
+                        {% trans "Permissions" %}
+                    </a>
+                </li>
+                <li>
+                    <a id="membertab" href="{% url 'horilla_core:role_members_view' role.id  %}"
+                       data-tab="tab-fu-closed"
+                       class="fu-tab-btn inline-flex items-center px-3 py-1 rounded-sm bg-primary-200 text-primary-600 w-full text-xs"
+                       hx-get="{% url 'horilla_core:role_members_view' role.id %}"
+                       hx-target="#followup-contents"
+                       hx-swap="innerHTML">
+                       {% trans "Members" %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="followup-contents" class="overflow-hidden overflow-y-auto h-[420px] overflow-x-auto w-[970px] pt-[35px]">
+        <div id="tab-fu-open" class="fu-tab-content block text-[.8rem] border-[1px] border-[solid] border-[#efefef] rounded-md bg-white">
+            <div class="bg-primary-300 px-4 py-3">
+                <div class="flex gap-4 items-center justify-between">
+                    <div class="flex items-center">
+                        <input
+                            type="text"
+                            class="text-color-600 px-2 py-1.5 pr-[40px] pw-full border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm [transition:.3s] focus:border-primary-600"
+                            placeholder="{% trans 'Search models...' %}"
+                            hx-get="{% url 'horilla_core:search_role_models' role.id %}"
+                            hx-trigger="input changed delay:500ms"
+                            hx-target="#role-model-container"
+                            hx-swap="innerHTML"
+                            name="search"
+                            value="{{ search_query }}"
+                        />
+
+                    </div>
+
+                    <div class="flex items-center font-semibold text-primary-600">
+                        <input
+                            type="checkbox"
+                            id="master-select-all"
+                            class="model-select-all w-4 h-4 border border-[#cfcfcf] rounded-sm accent-[#e54f38] mr-2"
+                            {% if master_select_all_checked %}checked{% endif %}
+                            hx-post="{% url 'horilla_core:update_role_all_permissions' role.id %}"
+                            hx-trigger="change"
+                            hx-vals='js:{"checked": event.target.checked}'
+                            hx-on::after-request="$('#reloadMessagesButton').click(); toggleAllChecked(this)"
+                            hx-swap="none"
+                        />
+                        {% trans "Select All" %}
+                    </div>
+                </div>
+            </div>
+
+            <div id="role-model-container">
+                {% for model in all_models %}
+                    <div class="border-[1px] border-[solid] border-[#efefef] last:border-b-0 px-4 py-2 hover:bg-primary-100">
+                        <div class="flex gap-4 permItem">
+                            <div class="flex items-center">
+                                <label class="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        class="model-select-all w-4 h-4 bg-[#E9EDF7] rounded-sm accent-[#e54f38] mr-2"
+                                        {% if model.select_all_checked %}checked{% endif %}
+                                        hx-post="{% url 'horilla_core:update_role_model_permissions' role.id %}"
+                                        hx-trigger="change"
+                                        hx-vals='js:{"model_name": "{{ model.model_name }}", "app_label": "{{ model.app_label }}", "checked": event.target.checked}'
+                                        hx-on::after-request="$('#reloadMessagesButton').click();toggleChecked($(this));"
+                                        hx-swap="none"
+                                    />
+                                </label>
+                            </div>
+                            <div class="w-44">{{ model.verbose_name }}</div>
+
+
+                            <div class="flex gap-12 text-xs text-dark-300">
+                                {% for perm in model.permissions %}
+                                    <label class="flex items-center whitespace-nowrap">
+                                        <input
+                                            type="checkbox"
+                                            name="permissions"
+                                            value="{{ perm.id }}"
+                                            class="individual-perm w-4 h-4 border border-[#cfcfcf] rounded-sm accent-[#e54f38] mr-2"
+                                            {% if perm.has_perm %}checked{% endif %}
+                                            hx-post="{% url 'horilla_core:update_role_permissions' role.id %}"
+                                            hx-trigger="change"
+                                            hx-vals='js:{"permission_id": "{{ perm.id }}", "checked": event.target.checked}'
+                                            hx-on::after-request="$('#reloadMessagesButton').click();"
+                                            hx-swap="innerHTML"
+                                        />
+                                        {{ perm.label }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleChecked($elm) {
+        var is_checked = $elm.is(':checked');
+        $elm.closest('.permItem').find('.individual-perm').prop('checked', is_checked);
+    }
+    function toggleAllChecked(el) {
+        var $elm = $(el);
+        var is_checked = $elm.is(':checked');
+
+        $('#followup-contents').find('.model-select-all, .individual-perm').prop('checked', is_checked);
+    }
+
+    $(document).ready(function () {
+        const tabButtons = document.querySelectorAll(".fu-tab-btn");
+        tabButtons.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                tabButtons.forEach((b) => {
+                    b.classList.remove("bg-primary-600", "text-white");
+                    b.classList.add("bg-primary-200", "text-primary-600");
+                });
+
+                btn.classList.remove("bg-primary-200", "text-primary-600");
+                btn.classList.add("bg-primary-600", "text-white");
+            });
+        });
+    });
+</script>

@@ -1,0 +1,40 @@
+{% load static i18n horilla_tags %}
+
+<div class="fixed inset-y-0 left-0 w-auto bg-white border-r border-r-primary-400 z-40">
+    <div class="p-4">
+        <div class="flex items-center justify-center gap-2 mb-8">
+            <img src="{% static '/assets/img/horilla-logo.png' %}" alt="Logo" class="w-8 h-8" />
+        </div>
+
+        <nav class="relative space-y-2">
+            {% for item in main_section_menu %}
+                {% has_section_perm_url request.user item.section as perm_url %}
+                {% if perm_url %}
+                    <a href="{{ perm_url }}?section={{ item.section }}" class="nav-link group relative" id="{{ item.section }}">
+                        <img src="{% static item.icon %}" alt="{{ item.name }}" class="w-5 h-5" />
+                        <div
+                            class="absolute left-full ml-1 bg-[#000000] text-[.7rem] leading-[10px] rounded-[5px] px-2 py-1 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                            <p>{{ item.name }}</p>
+                        </div>
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </nav>
+    </div>
+    {% if floating_menu %}
+        <div class="floating-menu">
+            <input type="checkbox" name="floating-menu">
+            <span class="plus-icon">
+                <span class="fa fa-plus" aria-hidden="true"></span>
+            </span>
+            <ul class="floating-nav">
+                {% for menu in floating_menu %}
+                    <li hx-get="{{ menu.url }}?{{ request.GET.urlencode }}" {% for key, value in menu.items.items %} {{ key }}="{{ value }}" {% endfor %}>
+                        <img src="{% static menu.icon %}" alt="" width="17" class="w-4 h-4 brightness-0 invert" />
+                        <span class="text">{{ menu.title }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>

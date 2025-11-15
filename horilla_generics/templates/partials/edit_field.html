@@ -1,0 +1,103 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<style>
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    display: none !important;
+  }
+</style>
+<div id="field-{{ field_info.name }}"{% if field_info.name == pipeline_field %} hx-on::after-request="$('#reloadButton').click();"{% endif %}>
+  <label for="{{ field_info.name }}" class="text-xs text-color-600">{{ field_info.verbose_name }}</label>
+  <div class="relative">
+    <form hx-post="{% url 'horilla_generics:update_field' pk=object_id field_name=field_info.name app_label=app_label model_name=model_name %}"
+          hx-target="#field-{{ field_info.name }}"
+          hx-swap="outerHTML"
+         >
+      {% if field_info.field_type == 'select' %}
+        <!-- Select dropdown for ForeignKey, Choice, and Boolean fields -->
+        <div class="relative">
+          {% if field_info.use_select2 %}
+            <!-- Select2 with pagination for ForeignKey and ManyToMany -->
+            <select name="{{ field_info.name }}{% if field_info.multiple %}[]{% endif %}"
+                    class="select2-pagination w-full text-sm"
+                    data-url="{% url 'horilla_generics:model_select2' app_label=field_info.related_app_label model_name=field_info.related_model_name %}"
+                    data-placeholder="Select {{ field_info.verbose_name }}"
+                    data-initial="{% if field_info.multiple %}{% for val in field_info.value %}{{ val }}{% if not forloop.last %},{% endif %}{% endfor %}{% else %}{{ field_info.value }}{% endif %}"
+                    data-field-name="{{ field_info.name }}"
+                    id="id_{{ field_info.name }}"
+                    {% if field_info.multiple %}multiple="multiple"{% endif %}>
+              {% for choice in field_info.choices %}
+                <option value="{{ choice.value }}"
+                        {% if field_info.multiple %}
+                          {% if choice.value|stringformat:"s" in field_info.value|join:"," %}selected{% endif %}
+                        {% else %}
+                          {% if choice.value|stringformat:"s" == field_info.value|stringformat:"s" %}selected{% endif %}
+                        {% endif %}>
+                  {{ choice.label }}
+                </option>
+              {% endfor %}
+            </select>
+          {% else %}
+            <!-- Regular select for choice fields and boolean -->
+            <select name="{{ field_info.name }}{% if field_info.multiple %}[]{% endif %}"
+                    class="js-example-basic-single headselect mt-0"
+                    {% if field_info.multiple %}multiple="multiple"{% endif %}>
+              {% for choice in field_info.choices %}
+                <option value="{{ choice.value }}"
+                        {% if field_info.multiple %}
+                          {% if choice.value|stringformat:"s" in field_info.value|join:"," %}selected{% endif %}
+                        {% else %}
+                          {% if choice.value|stringformat:"s" == field_info.value|stringformat:"s" %}selected{% endif %}
+                        {% endif %}>
+                  {{ choice.label }}
+                </option>
+              {% endfor %}
+            </select>
+          {% endif %}
+
+          <div class="absolute right-3 top-0 bottom-0 m-auto flex gap-3 items-center">
+            <button type="submit" class="cursor-pointer hover:scale-110 transition-transform">
+              <img src="{% static './assets/icons/tick.svg' %}" alt="Save" width="16" />
+            </button>
+            <button type="button"
+                    class="cursor-pointer hover:scale-110 transition-transform"
+                    hx-get="{% url 'horilla_generics:cancel_edit' pk=object_id field_name=field_info.name app_label=app_label model_name=model_name %}"
+                    hx-target="#field-{{ field_info.name }}"
+                    hx-swap="outerHTML">
+              <img src="{% static './assets/icons/close1.svg' %}" alt="Cancel" width="13" />
+            </button>
+          </div>
+        </div>
+
+      {% elif field_info.field_type == 'textarea' %}
+        <!-- Textarea for TextField -->
+        <textarea name="{{ field_info.name }}"
+                  rows="3"
+                  class="text-color-600 p-2 pr-[80px] w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600 resize-vertical">{{ field_info.value }}</textarea>
+
+      {% else %}
+        <!-- Regular input for text, email, url, number, date, datetime fields -->
+        <input type="{{ field_info.field_type }}"
+               name="{{ field_info.name }}"
+               value="{{ field_info.value }}"
+               {% if field_info.step %}step="{{ field_info.step }}"{% endif %}
+               class="text-color-600 p-2 pr-[80px] w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600" />
+      {% endif %}
+
+      {% if field_info.field_type != 'select' %}
+        <div class="absolute right-3 top-0 bottom-0 m-auto flex gap-3 {% if field_info.field_type == 'textarea' %}items-start pt-2{% else %}items-center{% endif %}">
+          <button type="submit" class="cursor-pointer hover:scale-110 transition-transform">
+            <img src="{% static './assets/icons/tick.svg' %}" alt="Save" width="16" />
+          </button>
+          <button type="button"
+                  class="cursor-pointer hover:scale-110 transition-transform"
+                  hx-get="{% url 'horilla_generics:cancel_edit' pk=object_id field_name=field_info.name app_label=app_label model_name=model_name %}"
+                  hx-target="#field-{{ field_info.name }}"
+                  hx-swap="outerHTML">
+            <img src="{% static './assets/icons/close1.svg' %}" alt="Cancel" width="13" />
+          </button>
+        </div>
+      {% endif %}
+    </form>
+  </div>
+</div>

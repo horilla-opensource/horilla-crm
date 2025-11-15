@@ -1,0 +1,13 @@
+
+{% load static %}
+<div class="p-5 ">
+    <div class="flex justify-between items-center mb-2">
+        <h2 class="text-md font-semibold">{{ mail_template.title }}</h2>
+        <button type="button" onclick="closeContentModal()" class="text-gray-500 hover:text-red-500 text-xl">
+            <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+        </button>
+    </div>
+    <div class="overflow overflow-hidden overflow-y-auto custom-scroll max-h-[600px] mt-4">
+        {{ mail_template.body|safe }}
+    </div>
+</div>

@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+
+# Environment
+.env*
+venv/
+.venv/
+horillavenv/
+
+# Git
+.git/
+.gitignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Django
+staticfiles/
+media/
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+
+# Documentation
+*.md
+
+# Temporary
+*.tmp
+*.log

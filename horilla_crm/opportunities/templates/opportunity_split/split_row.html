@@ -1,0 +1,98 @@
+{% load i18n %}
+{% load static %}
+<tr id="split-row-{{ row_index }}" class="split-row hover:bg-gray-50 transition-colors">
+    <td class="py-3 px-4 border border-[#e9e9e9]">
+        <select name="user_id_{{ row_index }}"
+                class="js-example-basic-single w-full"
+                onblur="autoSaveSplits(this)"
+                required>
+            <option value="">{% trans "Select User" %}</option>
+            {% for user in users %}
+            <option value="{{ user.id }}">
+                {{ user.get_full_name|default:user.username }}
+                {% if team_selling_enabled and allow_all_users and not user.is_team_member %}
+                    ({% trans "Not in team" %})
+                {% endif %}
+            </option>
+            {% endfor %}
+        </select>
+    </td>
+    <td class="py-3 px-4 border border-[#e9e9e9]">
+        <div id="percentage-container-{{ split_type.id }}-{{ row_index }}">
+            <div class="flex items-center gap-2">
+                <input type="number"
+                       name="percentage_{{ row_index }}"
+                       id="percentage-{{ row_index }}"
+                       class="flex-1 h-9 px-3 bg-white border border-[#e9e9e9] rounded text-sm text-gray-900 text-right focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 hover:border-gray-700"
+                       value="0.00"
+                       step="0.01"
+                       min="0"
+                       max="100"
+                       required
+                       hx-get="{% url 'opportunities:recalculate_split_row' opportunity.id split_type.id %}"
+                       hx-trigger="input changed delay:500ms"
+                       hx-target="#amount-container-{{ split_type.id }}-{{ row_index }}"
+                       hx-swap="innerHTML"
+                       hx-vals='{"row_index": "{{ row_index }}", "changed_field": "percentage"}'
+                       hx-include="#split-form-{{ split_type.id }} input[name^='percentage_'], #split-form-{{ split_type.id }} input[name^='amount_']"
+                       onblur="autoSaveSplits(this)">
+                <span class="text-gray-600 font-semibold text-sm">%</span>
+            </div>
+        </div>
+    </td>
+    <td class="py-3 px-4 border border-[#e9e9e9]">
+        <div id="amount-container-{{ split_type.id }}-{{ row_index }}">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-600 font-semibold text-sm">{{ currency }}</span>
+                <input type="number"
+                       name="amount_{{ row_index }}"
+                       id="amount-{{ row_index }}"
+                       class="flex-1 h-9 px-3 bg-white border border-[#e9e9e9] rounded text-sm text-gray-900 text-right focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 hover:border-gray-700"
+                       value="0.00"
+                       step="0.01"
+                       min="0"
+                       hx-get="{% url 'opportunities:recalculate_split_row' opportunity.id split_type.id %}"
+                       hx-trigger="input changed delay:500ms"
+                       hx-target="#percentage-container-{{ split_type.id }}-{{ row_index }}"
+                       hx-swap="innerHTML"
+                       hx-vals='{"row_index": "{{ row_index }}", "changed_field": "amount"}'
+                       hx-include="#split-form-{{ split_type.id }} input[name^='percentage_'], #split-form-{{ split_type.id }} input[name^='amount_']"
+                       onblur="autoSaveSplits(this)">
+            </div>
+        </div>
+    </td>
+    <td class="py-3 px-8 text-center border border-[#e9e9e9]">
+        <div class="flex tablebtn">
+            <button type="button"
+                    class="delete-row-btn rounded-md group relative w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] hover:bg-[#e0e0e0] transition duration-300 items-center"
+                    hx-on:click="
+                        const row = this.closest('tr');
+                        const form = document.getElementById('split-form-{{ split_type.id }}');
+
+                        // Remove the row
+                        row.remove();
+
+                        // Wait a bit for DOM update, then recalculate totals
+                        setTimeout(() => {
+                            const percentageInputs = form.querySelectorAll('input[name^=percentage_]');
+                            const params = new URLSearchParams();
+                            percentageInputs.forEach(input => {
+                                if (input.value && input.offsetParent !== null) {
+                                    params.append(input.name, input.value);
+                                }
+                            });
+                            htmx.ajax('GET', '{% url 'opportunities:recalculate_split_totals' opportunity.id split_type.id %}?' + params.toString(), {
+                                target: '#totals-row-{{ split_type.id }}',
+                                swap: 'innerHTML'
+                            });
+                        }, 100);
+                    "
+                    >
+                <img src="{% static "assets/icons/a4.svg" %}" alt="Delete" width="16" class="">
+                <div class="min-w-max z-50 absolute h-auto py-[3px] px-[15px] right-[40px] top-0 bg-[#000000] text-[.7rem] rounded-[5px] text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <p>{% trans 'Delete' %}</p>
+                </div>
+            </button>
+        </div>
+    </td>
+</tr>

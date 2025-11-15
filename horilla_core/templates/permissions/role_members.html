@@ -1,0 +1,15 @@
+{% load i18n %}
+<button class="text-primary-600 hover:text-primary-800 text-sm flex items-center gap-2 pb-3"
+    hx-get="{% url 'horilla_core:add_user_to_roles_view' %}"
+    hx-vals='{"role_id": {{ role.id }}}'
+    hx-target="#modalBox"
+    hx-swap="innerHTML"
+    hx-on:click="openModal()">
+    <i class="fa-solid fa-plus text-xs">
+    </i>
+    {% trans "Add Member" %}
+</button>
+<div id="tab-fu-closed" class="fu-tab-content text-[.8rem] border border-primary-300 rounded-md bg-white">
+        {% include "list_view.html" %}
+    </div>
+</div>

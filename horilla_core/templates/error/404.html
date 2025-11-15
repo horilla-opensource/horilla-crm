@@ -1,0 +1,13 @@
+{% extends "error/error.html" %}
+{% load static i18n %}
+{% block content %}
+    <img src={% static "assets/img/404.svg" %} alt="" width="400" class="flex justify-center m-auto pb-10">
+    <h2 class="error-title pb-1">{% trans "Page Not Found" %}</h2>
+    <p class="error-description pb-3">
+        {{ error_message }}
+    </p>
+    <a href="/" class="text-sm px-6 py-3 bg-primary-600 rounded-md hover:bg-primary-800
+        transition duration-300 text-white">
+        {% trans "Go to Dashboard" %}
+    </a>
+{% endblock %}

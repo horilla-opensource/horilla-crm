@@ -1,0 +1,197 @@
+{% load i18n static %}
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" id="scheduleModal">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+
+    <form hx-post="{% url 'horilla_core:schedule_create' %}" hx-target="#scheduleModal" hx-swap="outerHTML">
+        <div id="messages-container" class="hidden" >
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+      {% csrf_token %}
+
+      <!-- Hidden fields -->
+      {% for m in selected_modules %}
+        <input type="hidden" name="module" value="{{ m }}">
+      {% endfor %}
+
+
+      <input type="hidden" name="export_format" value="{{ selected_format }}">
+
+    {% if schedule_id %}
+        <input type="hidden" name="schedule_id" value="{{ schedule_id }}">
+    {% endif %}
+
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-lg font-semibold">{% trans "Schedule Export" %}</h2>
+        <button type="button" onclick="closeModal();"
+                class="text-gray-500 hover:text-red-500">
+          <img src="{% static 'assets/icons/close.svg' %}" alt="Close" class="w-5 h-5" />
+        </button>
+      </div>
+
+
+    {% if non_field_error %}
+        <div class="bg-primary-100 text-primary-600 px-4 py-2 rounded mb-4">
+            <p class="text-sm">{{ non_field_error }}</p>
+        </div>
+    {% endif %}
+
+
+      <!-- Frequency -->
+      <div class="mb-6">
+        <label class="block text-xs font-medium text-gray-700 mb-2">{% trans "Frequency" %}</label>
+        <div class="radio-group flex flex-wrap gap-6">
+          <!-- Daily -->
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="frequency" value="daily"
+                   {% if selected_frequency_option == 'daily' %}checked{% endif %}
+                   class="hidden peer">
+            <span class="custom-radio"></span>
+            <span>{% trans "Daily" %}</span>
+          </label>
+
+          <!-- Weekly -->
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="frequency" value="weekly"
+                   {% if selected_frequency_option == 'weekly' %}checked{% endif %}
+                   class="hidden peer">
+            <span class="custom-radio"></span>
+            <span>{% trans "Weekly" %}</span>
+          </label>
+
+          <!-- Monthly -->
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="frequency" value="monthly"
+                   {% if selected_frequency_option == 'monthly' %}checked{% endif %}
+                   class="hidden peer">
+            <span class="custom-radio"></span>
+            <span>{% trans "Monthly" %}</span>
+          </label>
+
+          <!-- Yearly -->
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="frequency" value="yearly"
+                   {% if selected_frequency_option == 'yearly' %}checked{% endif %}
+                   class="hidden peer">
+            <span class="custom-radio"></span>
+            <span>{% trans "Yearly" %}</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Weekly: Day of Week -->
+      <div id="weeklyFields" class="mb-6 {% if selected_frequency_option != 'weekly' %}hidden{% endif %}">
+        <label class="block text-xs font-medium text-gray-700 mb-1">{% trans "Day of week" %}</label>
+        <select name="weekday" class="js-example-basic-single headselect w-full">
+          {% for day in weekdays %}
+            <option value="{{ day }}">{{ day|capfirst }}</option>
+          {% endfor %}
+        </select>
+        {% if field_errors.weekday %}
+            <div class="bg-primary-100 text-primary-600 px-4 py-2 rounded mb-4 mt-2">
+                <p class="text-sm">{{ field_errors.weekday }}</p>
+            </div>
+        {% endif %}
+      </div>
+
+      <!-- Monthly: Day of Month -->
+      <div id="monthlyFields" class="mb-6 {% if selected_frequency_option != 'monthly' %}hidden{% endif %}">
+        <label class="block text-xs font-medium text-gray-700 mb-1">{% trans "Day of month" %}</label>
+        <select name="day_of_month" class="js-example-basic-single headselect w-full">
+          {% for d in days_in_month %}
+            <option value="{{ d }}">{{ d }}</option>
+          {% endfor %}
+        </select>
+        {% if field_errors.day_of_month %}
+            <div class="bg-primary-100 text-primary-600 px-4 py-2 rounded mb-4 mt-2">
+                <p class="text-sm">{{ field_errors.day_of_month }}</p>
+            </div>
+        {% endif %}
+      </div>
+
+      <!-- Yearly: Day of Month -->
+      <div id="yearlyDayField" class="mb-6 {% if selected_frequency_option != 'yearly' %}hidden{% endif %}">
+        <label class="block text-xs font-medium text-gray-700 mb-1">{% trans "Day of month" %}</label>
+        <select name="yearly_day_of_month" class="js-example-basic-single headselect w-full">
+          {% for d in days_in_month %}
+            <option value="{{ d }}">{{ d }}</option>
+          {% endfor %}
+        </select>
+        {% if field_errors.yearly_day_of_month %}
+            <div class="bg-primary-100 text-primary-600 px-4 py-2 rounded mb-4 mt-2">
+                <p class="text-sm">{{ field_errors.yearly_day_of_month }}</p>
+            </div>
+        {% endif %}
+      </div>
+
+      <!-- Yearly: Month -->
+      <div id="yearlyMonthField" class="mb-6 {% if selected_frequency_option != 'yearly' %}hidden{% endif %}">
+        <label class="block text-xs font-medium text-gray-700 mb-1">{% trans "Month" %}</label>
+        <select name="yearly_month" class="js-example-basic-single headselect w-full">
+          {% for m, name in months %}
+            <option value="{{ m }}">{{ name }}</option>
+          {% endfor %}
+        </select>
+        {% if field_errors.yearly_month %}
+            <div class="bg-primary-100 text-primary-600 px-4 py-2 rounded mb-4 mt-2">
+                <p class="text-sm">{{ field_errors.yearly_month }}</p>
+            </div>
+        {% endif %}
+      </div>
+
+      <!-- Start Date -->
+      <div class="mb-6">
+        <label class="block text-xs font-medium text-gray-700 mb-1">{% trans "Start Date" %}</label>
+        <input type="date" name="start_date" required
+            value="{{ form_data.start_date|default:'' }}"
+            class="text-color-600 p-2 placeholder:text-xs w-full border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-dark-100 text-sm transition duration-300 focus:border-primary-600">
+        {% if field_errors.start_date %}
+            <div class="bg-primary-100 text-primary-600 px-4 py-2 rounded mb-4 mt-2">
+                <p class="text-sm">{{ field_errors.start_date }}</p>
+            </div>
+        {% endif %}
+        </div>
+
+      <!-- End Date -->
+      <div class="mb-6">
+        <label class="block text-xs font-medium text-gray-700 mb-1">{% trans "End Date (optional)" %}</label>
+        <input type="date" name="end_date"
+            value="{{ form_data.end_date|default:'' }}"
+            class="text-color-600 p-2 placeholder:text-xs w-full border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-dark-100 text-sm transition duration-300 focus:border-primary-600">
+        {% if field_errors.end_date %}
+            <div class="bg-primary-100 text-primary-600 px-4 py-2 rounded mb-4 mt-2">
+                <p class="text-sm">{{ field_errors.end_date }}</p>
+            </div>
+        {% endif %}
+        </div>
+
+
+      <!-- Buttons -->
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="submit"
+                class="px-4 py-2 text-sm bg-primary-600 text-white rounded hover:bg-primary-700">
+               {% trans "Schedule" %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+  function updateFields() {
+    const value = document.querySelector('input[name="frequency"]:checked')?.value || 'daily';
+    document.getElementById('weeklyFields').classList.toggle('hidden', value !== 'weekly');
+    document.getElementById('monthlyFields').classList.toggle('hidden', value !== 'monthly');
+    document.getElementById('yearlyDayField').classList.toggle('hidden', value !== 'yearly');
+    document.getElementById('yearlyMonthField').classList.toggle('hidden', value !== 'yearly');
+  }
+
+  document.querySelectorAll('input[name="frequency"]').forEach(radio => {
+    radio.addEventListener('change', updateFields);
+  });
+
+  updateFields();
+</script>

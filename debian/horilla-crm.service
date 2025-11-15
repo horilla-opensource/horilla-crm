@@ -1,0 +1,49 @@
+[Unit]
+Description=Horilla CRM Web Application
+Documentation=https://github.com/horilla-opensource/horilla-crm
+After=network.target postgresql.service mysql.service redis.service
+Wants=network.target
+Requires=network.target
+
+[Service]
+Type=exec
+User=horilla-crm
+Group=horilla-crm
+WorkingDirectory=/opt/horilla-crm
+Environment=PYTHONPATH=/opt/horilla-crm
+EnvironmentFile=-/etc/horilla-crm/horilla-crm.conf
+ExecStartPre=/bin/bash -c 'source /opt/horilla-crm/venv/bin/activate && python manage.py migrate --noinput'
+ExecStartPre=/bin/bash -c 'source /opt/horilla-crm/venv/bin/activate && python manage.py collectstatic --noinput'
+ExecStart=/opt/horilla-crm/venv/bin/gunicorn \
+    --bind 127.0.0.1:8000 \
+    --workers 3 \
+    --threads 2 \
+    --timeout 120 \
+    --access-logfile /var/log/horilla-crm/access.log \
+    --error-logfile /var/log/horilla-crm/error.log \
+    --log-level info \
+    --capture-output \
+    horilla.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=30
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/horilla-crm /var/log/horilla-crm /opt/horilla-crm/media
+NoNewPrivileges=true
+RuntimeDirectory=horilla-crm
+RuntimeDirectoryMode=0755
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Restart policy
+Restart=always
+RestartSec=10
+StartLimitInterval=300
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

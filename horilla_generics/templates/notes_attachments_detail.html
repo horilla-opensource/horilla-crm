@@ -1,0 +1,113 @@
+{% load static %}
+{% load i18n %}
+<div class="p-5">
+    <!-- Header -->
+    <div class="flex justify-between mb-3">
+        <h2 class="text-lg font-semibold">{{ obj.title }}</h2>
+        <button onclick="closeContentModal();" class="ms-4 text-gray-500 hover:text-red-500 text-xl">
+            <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+        </button>
+    </div>
+
+    {% if obj.file %}
+        <!-- File Preview Section -->
+        <div class="max-h-[500px] overflow-hidden overflow-y-auto pe-2">
+            <div class="file-preview relative">
+                <a href="{{ obj.file.url }}"  download
+                    class="absolute right-1 top-1 text-sm p-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                    </svg>
+                </a>
+
+                <!-- Conditional rendering -->
+                {% if obj.file.name|lower|slice:"-4:" in ".jpg.png.gif.svg" or obj.file.name|lower|slice:"-5:" == ".jpeg" %}
+                    <a  href="{{ obj.file.url }}" class="preview-placeholder m-auto bg-white text-center">
+                        <img src="{{ obj.file.url }}" alt="{{ obj.file.name }}" class="max-h-[300px] m-auto rounded shadow" />
+
+                    </a>
+                {% else %}
+                    <div class="file-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                        </svg>
+                    </div>
+                    <!-- File name -->
+                    <div class="file-name">{{ obj.file.name }}</div>
+                    <!-- Open link -->
+                    <a href="{{ obj.file.url }}" target="_blank" class="open-link">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
+                        </svg>
+                        {% trans "Open file in new tab" %}
+                    </a>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Notes Section -->
+            {% if obj.description %}
+                <div class="notes-section mb-3">
+                    <div class="notes-header">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                        </svg>
+                        {% trans "Notes" %}
+                    </div>
+                    <div class="">
+                        {{  obj.description|safe  }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="details-grid">
+                <div class="detail-card">
+                    <div class="detail-label">{% trans "Created By" %}</div>
+                    <div class="detail-value">{{ obj.created_by.get_full_name }}</div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-label">{% trans "Created At" %}</div>
+                    <div class="detail-value">{{ obj.created_at|date:"M d, Y, h:i A" }}</div>
+                </div>
+                {% if obj.file %}
+                    <div class="detail-card">
+                        <div class="detail-label">{% trans "File Size" %}</div>
+                        <div class="detail-value">{{ obj.file.size|filesizeformat }}</div>
+                    </div>
+                {% endif %}
+                <div class="detail-card">
+                    <div class="detail-label">{% trans "Related To" %}</div>
+                    <div class="detail-value">{{ obj.related_object }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-2 justify-end p-5">
+            <button hx-get={% url "horilla_generics:notes_attachment_edit" obj.pk  %}
+                hx-target="#modalBox" hx-on:click="openModal();"
+                class="w-[100px] justify-center flex items-center gap-2 text-sm px-3 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                </svg>
+                {% trans "Edit" %}
+            </button>
+            <button
+                    hx-get="{% url 'horilla_generics:notes_attachment_delete' obj.pk  %}"
+                    hx-target="#deleteModeBox"
+                    hx-swap="innerHTML"
+                    hx-on:click="openDeleteModeModal()"
+                    hx-vals='{"check_dependencies" : "true"}'
+                    title="Delete Role"
+                    class="w-[100px] justify-center flex items-center gap-2 text-sm px-3 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                    </svg>
+                {% trans "Delete" %}
+            </button>
+        </div>
+</div>

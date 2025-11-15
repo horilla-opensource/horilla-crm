@@ -1,0 +1,56 @@
+{% load i18n %}
+<div class="ps-3" id="styled-2" role="tabpanel" aria-labelledby="history-tab">
+    <div class="flex justify-between mb-4">
+        <h3 class="text-md font-semibold">
+            {% trans "User Permissions" %}
+        </h3>
+        <div class="flex items-center gap-4">
+            <input type="text"
+                class="text-color-600 px-2 py-1.5 pr-[40px] w-full border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm [transition:.3s] focus:border-primary-600"
+                placeholder="{% trans 'Search users...' %}" hx-get="{% url 'horilla_core:load_more_users' %}"
+                hx-trigger="input changed delay:500ms" hx-target="#users-container" hx-swap="innerHTML"
+                hx-indicator="#loadingIndicator" name="search" />
+            <button
+                class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+                hx-get="{% url 'horilla_core:assign_users_perm' %}" hx-target="#contentModalBox" hx-swap="innerHTML"
+                onclick="openContentModal()">
+                {% trans "Assign" %}
+            </button>
+        </div>
+    </div>
+    <div class="overflow-y-auto h-[400px] overflow-hidden" id="users-container">
+        {% include "permissions/user_list.html" %}
+    </div>
+    <div id="loadingIndicator" class="htmx-indicator">
+        <div class="flex justify-center items-center p-4">
+            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#e54f38]"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleAccordion(button) {
+        const content = button.nextElementSibling;
+        const svg = button.querySelector('svg');
+
+        if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+            content.style.maxHeight = '0px';
+            svg.style.transform = 'rotate(0deg)';
+        } else {
+            content.style.maxHeight = content.scrollHeight + 'px';
+            svg.style.transform = 'rotate(180deg)';
+        }
+    }
+    document.addEventListener('htmx:afterSwap', function (event) {
+        const target = event.detail.target;
+        if (target.classList.contains('accordion-content')) {
+            const button = target.previousElementSibling;
+            const svg = button.querySelector('svg');
+
+            if (!target.style.maxHeight || target.style.maxHeight === '0px') {
+                target.style.maxHeight = target.scrollHeight + 'px';
+                svg.style.transform = 'rotate(180deg)';
+            }
+        }
+    });
+</script>

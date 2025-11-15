@@ -1,0 +1,89 @@
+{% load static i18n forecast_filters %}
+
+<button
+    class="text-gray-500 hover:text-red-500 text-xl absolute top-[25px] right-[25px] z-50"
+    onclick="closeContentModal()">
+    <img src="{% static 'assets/icons/close.svg' %}" alt="" />
+</button>
+<div class="relative bg-white rounded-lg shadow-sm">
+    <div class="p-5">
+        <div class="mb-4">
+            <ul
+                class="flex flex-wrap -mb-px text-sm font-medium text-center border-b border-[#dddddd] mb-4"
+                id="default-styled-tab"
+                data-tabs-toggle="#default-styled-tab-content"
+                data-tabs-active-classes="text-primary-600 border-b-2 border-primary-600"
+                data-tabs-inactive-classes="text-[#333] hover:text-primary-600 border-b-0 border-transparent"
+                role="tablist" >
+                {% for type in opportunity_types %}
+                    <li class="flex-[1_0] me-2" role="presentation">
+                        <button
+                            class="js-tab inline-block px-5 py-3 text-sm rounded-t-lg transition duration-300 w-full {% if opportunity_type == type.display_name %}text-primary-600 border-b-2 border-primary-600{% else %}text-[#333] hover:text-primary-600 border-b-0 border-transparent{% endif %}"
+                            id="{{ type.key }}-tab"
+                            data-tabs-target="#{{ type.key }}-panel"
+                            type="button"
+                            role="tab"
+                            aria-controls="{{ type.key }}-panel"
+                            aria-selected="{% if opportunity_type == type.display_name %}true{% else %}false{% endif %}"
+                            hx-get="{% url 'forecast:forecast_opportunities' forecast_id=forecast.id opportunity_type=type.key %}?{% if request.GET.user_id %}user_id={{ request.GET.user_id }}{% endif %}{% if request.GET.fiscal_year_id %}&fiscal_year_id={{ request.GET.fiscal_year_id }}{% endif %}"
+                            hx-target="#{{ type.key }}-panel"
+                            hx-swap="outerHTML"
+                            hx-select="#{{ type.key }}-panel">
+                            <div class="text-[green] text-lg text-start font-bold">
+                                <p>{{ type.display_name }}</p>
+                            </div>
+                            <p class="flex items-center gap-3">
+                                <span
+                                    class="text-[white] bg-[#ff9627] w-[20px] flex h-[20px] justify-center items-center rounded-sm text-xs">
+                                    {{ type.opportunities.count }}
+                                </span>
+                                <span class="text-[#666] text-md">
+                                    {% if forecast_type.is_quantity_based %}
+                                        {{ type.opportunities.count }} {% trans "deals" %}
+                                    {% else %}
+                                        {{ currency_symbol }} {% if type.opportunities %}{{ type.opportunities|sum_amounts|floatformat:0 }}{% else %}0{% endif %}
+                                    {% endif %}
+                                </span>
+                            </p>
+                        </button>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <!-- TAB CONTENT -->
+            <div id="default-styled-tab-content" class="overflow-hidden">
+                {% for type in opportunity_types %}
+                    <div
+                        class="{% if opportunity_type != type.display_name %}hidden{% endif %} p-4"
+                        id="{{ type.key }}-panel"
+                        role="tabpanel"
+                        aria-labelledby="{{ type.key }}-tab">
+                        <div id="horilla-list-view-{{ type.key }}" class="w-full">
+                            {{ type.list_view_html|safe }}
+                        </div>
+
+                        <!-- Summary -->
+                        {% if type.opportunities %}
+                            <div class="mt-4 p-3 bg-gray-50 rounded-md flex justify-between items-center">
+                                <div>
+                                    <span class="text-sm text-gray-600">
+                                        {% trans "Total:" %} <strong>{{ type.opportunities.count }} {% trans "opportunities" %}</strong>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-gray-600">
+                                        {% if forecast_type.is_quantity_based %}
+                                            {% trans "Total Quantity:" %} <strong>{{ type.opportunities.count }}</strong>
+                                        {% else %}
+                                            {% trans "Total Amount:" %} <strong>{{ currency_symbol }} {{ type.opportunities|sum_amounts|floatformat:0 }}</strong>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

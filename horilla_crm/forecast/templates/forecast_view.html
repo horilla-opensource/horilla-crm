@@ -1,0 +1,45 @@
+{% extends "index.html" %}
+{% load static i18n horilla_tags %}
+{% block content %}
+<div class="modelcontent">
+    {% include "components/sub_sidebar.html" %}
+    {% has_perm "opportunities.view_opportunity" as can_view_forecast %}
+    {% has_perm "opportunities.view_own_opportunity" as can_view_own_forecast %}
+    {% if can_view_forecast or can_view_own_forecast %}
+        <div id="mainContent" class="flex-[1_0] leftspace transition-all duration-300 ease-in-out pt-0">
+            <!-- Load navbar dynamically -->
+            <div id="forecast-navbar"
+                hx-get="{% url 'forecast:forecast_navbar_view' %}?{{ request.GET.urlencode }}"
+                hx-trigger="load">
+            </div>
+
+            <div class="p-5 pt-24">
+                <div class="relative h-[550px] [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] p-4 bg-white rounded-md">
+                    {% if request.active_company %}
+                        {% if type_count > 0 %}
+                            <div id="forecast-tab-content"
+                                hx-get="{% url 'forecast:forecast_tab_view' %}?{{ request.GET.urlencode }}"
+                                hx-trigger="load">
+                            </div>
+                        {% else %}
+                            <img src="{% static 'assets/img/not-found.svg' %}" alt="" class="w-60 m-auto mb-4 mt-5"/>
+                            <p class="text-sm text-center mb-3">{% trans 'No Forecast Type set. Set it from settings.' %}</p>
+                            <button onclick="window.location.href='/forecast/forecast-type-view/'" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white] m-auto flex">{% trans "Go To Forecast Type" %}</button>
+                        {% endif %}
+                    {% else %}
+                        <div class="flex justify-between items-center h-20"></div>
+                        <img src="{% static 'assets/img/activate-company.svg' %}" alt="" class="w-60 m-auto mb-4 mt-5"/>
+                        <p class="text-sm text-center mb-3">{% trans "Please create or activate your company." %}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="flex-1 p-10 text-center">
+            <img src="{% static '/assets/img/permission.png' %}" alt="" width="300" class="flex justify-center m-auto">
+            <h2 class="error-title">{% trans "Permission Denied" %}</h2>
+            <p class="error-description pb-3">{% trans "You do not have permission to view this page." %}</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock content %}

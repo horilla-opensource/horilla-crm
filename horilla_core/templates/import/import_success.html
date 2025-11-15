@@ -1,0 +1,89 @@
+ {% load i18n %}
+ {% load static %}
+{% if single_import %}
+ <div class="flex justify-end items-center mb-2">
+     <button type="button" onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-xl cursor-pointer">
+         <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+     </button>
+ </div>
+ {% endif %}
+<div id="import-success" class="text-center {% if not single_import %} py-8 pt-0 h-[550px] {% endif  %} overflow-y-auto overflow-hidden custom-scroll">
+    <div class="bg-green-50 rounded-lg p-6 {% if not  single_import %}mb-6{% endif  %}">
+        <div class="flex items-center justify-center mb-4">
+            <div class="bg-green-100 rounded-full p-3">
+                <i class="fa-solid fa-check text-green-600 text-2xl"></i>
+            </div>
+        </div>
+        <h3 class="text-lg font-semibold text-green-800 mb-2">{% trans "Import Completed Successfully!" %}</h3>
+        <p class="text-green-600 mb-4">{% trans "Your data has been imported successfully." %}</p>
+
+        <div class="grid grid-cols-3 gap-4 text-sm">
+            <div class="bg-white rounded-lg p-3 border border-[#efefef]">
+                <div class="text-2xl font-bold text-green-600">{{ result.created_count }}</div>
+                <div class="text-gray-600">{% trans "Records Created" %}</div>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-[#efefef]">
+                <div class="text-2xl font-bold text-blue-600">{{ result.updated_count }}</div>
+                <div class="text-gray-600">{% trans "Records Updated" %}</div>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-[#efefef]">
+                <div class="text-2xl font-bold text-red-600">{{ result.error_count }}</div>
+                <div class="text-gray-600">{% trans "Errors" %}</div>
+            </div>
+        </div>
+
+        <!-- Summary Stats -->
+        <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+            <div class="text-sm text-blue-800">
+                <strong>{% trans "Total Rows Processed:" %}</strong> {{ result.total_rows }}
+                {% if result.error_count > 0 %}
+                    | <strong>{% trans "Success Rate:" %}</strong> {{ result.successful_rows }}/{{ result.total_rows }}
+                    ({{ result.success_rate }}%)
+                {% else %}
+                    | <strong>{% trans "Success Rate:" %}</strong> 100%
+                {% endif %}
+            </div>
+        </div>
+
+        {% if result.errors %}
+            <div class="mt-4 text-left">
+                <div class="flex items-center justify-between mb-2">
+                    <h4 class="font-semibold text-primary-600">{% trans "Errors encountered:" %}</h4>
+                    {% if result.error_file_path %}
+                        <a href="{% url 'horilla_core:download_error_file' %}?file_path={{ result.error_file_path|urlencode }}"
+                        class="inline-flex items-center px-3 py-1 bg-red-600 text-white text-xs rounded-md hover:bg-red-700 transition duration-300">
+                            <i class="fa-solid fa-download mr-1"></i>
+                            {% trans "Download Full Error Report" %}
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="text-sm text-red-600 bg-red-50 p-3 rounded border  max-h-60 overflow-y-auto">
+                    <ul class="list-disc list-inside space-y-1">
+                        {% for error in result.errors %}
+                            <li class="break-words">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% if result.has_more_errors %}
+                        <div class="mt-3 pt-3 border-t border-red-200 text-center">
+                            <span class="text-red-700 font-medium">
+                                {% trans "... and" %} {{ result.error_count|add:"-10" }} {% trans "more errors." %}
+                            </span>
+                            {% if result.error_file_path %}
+                                <span class="text-red-600">{% trans "Download the full report above to see all errors." %}</span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        {% if not single_import %}
+        <div class="mt-6 flex justify-center space-x-3">
+            <a href="{% url 'horilla_core:import_view' %}"
+               class="inline-block bg-primary-600 text-white px-6 py-2 rounded-md hover:bg-primary-800 transition duration-300">
+                {% trans "Import More Data" %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="flex justify-between p-5 pb-3">
+    <h3 class="text-lg font-semibold">{% trans "Save Changes?" %}</h3>
+</div>
+<div class="p-5 pt-0">
+    <p class="text-sm text-gray-600 mb-6">
+        {% trans "Do you want to save your changes as a draft or discard them?" %}
+    </p>
+
+    <div class="flex gap-3 justify-end">
+        <button
+            hx-delete="{% url 'horilla_mail:discard_draft' %}?model_name={{ model_name }}&object_id={{ object_id }}&pk={{pk}}"
+            class="text-sm px-2 py-2 bg-white rounded-md  transition duration-300 text-primary-600  rounded-lg  border border-primary-600">
+            {% trans "Discard" %}
+        </button>
+
+        <button
+            hx-post="{% url 'horilla_mail:save_draft' %}?model_name={{ model_name }}&object_id={{ object_id }}&pk={{pk}}"
+            hx-include="[name='from_mail'], [name='to_email'], [name='cc_email'], [name='bcc_email'], [name='subject'],#fileInput, #message_content"
+            hx-on:click="syncEditorContent();"
+            hx-encoding="multipart/form-data"
+            class="px-4 py-2 text-sm bg-primary-600 hover:bg-primary-700 text-white rounded-md transition-colors">
+            {% trans "Save as Draft" %}
+        </button>
+    </div>
+</div>

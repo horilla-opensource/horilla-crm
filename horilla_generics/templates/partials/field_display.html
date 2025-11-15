@@ -1,0 +1,19 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<div id="field-{{ field_info.name }}">
+  <label for="{{ field_info.name }}" class="text-xs text-color-600">{{ field_info.verbose_name }}</label>
+  <div class="relative">
+    <input type="text"
+           value="{{ field_info.display_value }}"
+           class="text-color-600 p-2 placeholder:text-xs font-normal pr-[40px] w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600"
+           readonly />
+    <button class="absolute right-3 top-0 bottom-0 m-auto cursor-pointer hover:scale-110 transition-transform"
+            hx-get="{% url 'horilla_generics:edit_field' pk=object_id field_name=field_info.name app_label=app_label model_name=model_name %}"
+            hx-target="#field-{{ field_info.name }}"
+            hx-swap="outerHTML">
+      <img src="{% static './assets/icons/edit.svg' %}" alt="Edit" width="13" />
+    </button>
+  </div>
+</div>
+<script>$('#reloadButton').click();</script>

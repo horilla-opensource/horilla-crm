@@ -1,0 +1,36 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+{% for key, group in grouped_items.items %}
+<div
+    id="kanban-block-{{ key|safe }}"
+    class="custom-scroll kanban-block min-w-[250px] relative p-2 pt-0 pb-0 bg-[#e9edf0] rounded-lg overflow-hidden overflow-y-auto {% if height_kanban %}{{ height_kanban }} {% else %}h-[calc(100vh_-_210px)]{% endif %}"
+    ondrop="drop(event)"
+    ondragover="allowDrop(event)"
+    data-column-key="{{ key|safe }}"
+    data-next-page="{{ group.next_page|default_if_none:'' }}"
+    onclick="event.stopPropagation();"
+>
+    <div
+        class="flex justify-between sticky top-0 bg-[#e9edf0] z-10 py-2 cursor-move column-drag-handle"
+        {% if allow_column_reorder %}
+            draggable="true"
+            ondragstart="columnDragStart(event)"
+            ondragend="columnDragEnd(event)"
+            onclick="event.stopPropagation();"
+        {% endif %}
+    >
+        <h5
+            class="text-center {% if group.colour %}bg-[{{ group.colour }}]{% else %}bg-[#f39022]{% endif %} px-3 py-1.5 rounded-2xl text-sm font-medium text-[white]"
+        >
+            {{ group.label }}
+        </h5>
+        <span class="text-[#727C93]">
+            {{ group.total_count }}
+        </span>
+    </div>
+    <div class="items-container">
+        {% include "partials/kanban_items.html" %}
+    </div>
+</div>
+{% endfor %}

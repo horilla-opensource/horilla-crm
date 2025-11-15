@@ -1,0 +1,539 @@
+{% load static i18n horilla_tags %}
+<div class="h-[85px] flex justify-end md:justify-between items-center bg-[#fff] py-5 px-5 border-b border-b-primary-400 fixed w-[calc(100%-76px)] z-40">
+    <h1 class="hidden lg:block text-2xl font-semibold text-secondary-900">{% trans 'Horilla CRM' %}</h1>
+    <div class="relative hidden md:block">
+        <input id="header-search" type="text" name="q" placeholder="Search anything..." class="pl-10 pr-4 py-2 text-dark-400 rounded-lg border border-secondary-200 focus:outline-none focus:border-primary-300 w-64 placeholder:text-dark-50"
+        hx-get="{% url 'horilla_generics:global_search' %}?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.filter %}filter={{ request.GET.filter }}&{% endif %}{% if request.GET.section %}section={{ request.GET.section }}&{% endif %}prev_url={{ request.get_full_path|remove_query_param:"section" }}"
+        hx-target="#mainContent"
+        hx-select="#mainContent"
+        hx-trigger="keyup changed delay:500ms"
+        hx-push-url="true"
+        hx-swap="outerHTML"
+        />
+        <i
+        class="fas fa-search absolute left-[10px] top-[9px] text-dark-400"
+        ></i>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <div class="flex items-center gap-1 sm:gap-2">
+            {% comment %} <button
+                class="text-primary-600 w-8 h-8 lg:w-12 lg:h-12 bg-primary-100 hover:bg-secondary-50 rounded-lg transition duration-300">
+                <i class="fa-solid fa-moon"></i>
+            </button> {% endcomment %}
+
+            {% has_perm "horilla_core.can_view_horilla_settings" as view_global_settings %}
+            {% if view_global_settings %}
+                <button onclick="window.location.href='{% url 'horilla_core:settings_view' %}'"
+                    class="group flex items-center justify-center text-primary-600 w-8 h-8 lg:w-12 lg:h-12 bg-primary-100 hover:bg-primary-600 rounded-lg transition duration-300">
+                    <i class="fas fa-cog transition duration-300 group-hover:text-white"></i>
+                </button>
+            {% endif %}
+
+            <div class="relative dropdown-wrapper">
+                <button
+                class="flex items-center justify-center group text-primary-600 w-8 h-8 lg:w-12 lg:h-12 bg-primary-100 hover:bg-primary-600 rounded-lg transition duration-300">
+                <i class="fas fa-history transition duration-300 group-hover:text-white"></i>
+                </button>
+
+                <div class="dropdown-content w-56 md:w-80 absolute z-10 bg-white rounded-lg shadow-card py-2 md:right-0 md:left-auto right-auto -left-10">
+                <h5 class="px-4 py-2 font-semibold text-sm border-b border-dark-50">{% trans 'Recently Viewed' %}</h5>
+                <ul class="text-sm overflow-hidden overflow-y-auto max-h-64">
+                    {% for item in recently_viewed_items %}
+                    <li>
+                        <a href="{{ item.get_detail_url }}"
+                        class="px-4 py-1.5 block hover:text-primary-600 transition duration-300">
+                        {{ item.content_object|default:"(No name)" }}
+                        <p class="text-xs text-gray-400">{{ item.viewed_at|timesince }} ago</p>
+                        </a>
+                    </li>
+                    {% empty %}
+                    <li class="px-4 py-2 text-gray-500">{% trans "No recent items" %}</li>
+                    {% endfor %}
+                </ul>
+                </div>
+            </div>
+
+
+            {% get_current_language as LANGUAGE_CODE %}
+            <!-- Language icon -->
+            <div class="relative dropdown-wrapper">
+                <button class="flex items-center justify-center group text-primary-600 w-8 h-8 lg:w-12 lg:h-12 bg-primary-100 hover:bg-primary-600 rounded-md transition duration-300">
+                <i class="fas fa-globe transition duration-300 group-hover:text-white"></i>
+                </button>
+                <div class="dropdown-content w-44 absolute z-10 bg-white rounded-lg shadow-md py-2 md:right-0 -right-24">
+                <ul class="text-sm overflow-hidden overflow-y-auto">
+                    {% for lang in allowed_languages %}
+                    <li>
+                        <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="language" value="{{ lang.code }}">
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit"
+                            class="px-4 py-1.5 hover:text-primary-600 transition duration-300 text-sm gap-4 items-center flex w-full">
+                            <div class="flex items-center gap-2">
+                            <span class="rounded-full overflow-hidden w-6 h-6">
+                                <img src="{% static 'assets/img/' %}{{ lang.flag }}" alt="" class="object-cover w-full h-full">
+                            </span>
+                            {{ lang.name }}
+                            </div>
+                            {% if LANGUAGE_CODE == lang.code %}
+                            <i class="fas fa-check-circle text-green-500 text-xs ml-auto"></i>
+                            {% endif %}
+                        </button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+                </div>
+            </div>
+            <!--  End Language icon -->
+            {% has_perm "horilla_core.can_switch_company" as can_switch_company %}
+            {% if can_switch_company %}
+                <div class="relative dropdown-wrapper">
+                    <button class="flex items-center justify-center group text-primary-600 w-8 h-8 lg:w-12 lg:h-12 bg-primary-100 hover:bg-primary-600 rounded-md transition duration-300">
+                    <i class="fas fa-th-large transition duration-300 group-hover:text-white"></i>
+                    </button>
+                    <div class="dropdown-content w-44 absolute z-10 bg-white rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_8%)] py-2 right-0">
+                    <ul class="text-sm overflow-hidden overflow-y-auto max-h-64" id="dropdown-companies">
+                        {% for company in available_companies %}
+                        <li>
+                            <form method="post" action="{% url 'horilla_core:switch_company' 0 %}" class="w-full" onsubmit="event.stopPropagation();">
+                            {% csrf_token %}
+                            <input type="hidden" name="company" value="{{ company.id }}" />
+                            <button
+                                type="submit"
+                                onclick="this.closest('form').action = '/switch-company/{{ company.id }}/';"
+                                class="px-4 py-1.5 hover:text-primary-600 transition duration-300 text-sm gap-4 items-center flex w-full {% if request.active_company.id == company.id %}text-primary-600{% endif %}">
+                                <div class="flex items-center gap-2">
+                                <span class="rounded-full overflow-hidden w-6 h-6">
+                                    <img
+                                    src="{% if company.icon %}{{ company.icon.url }}{% else %}{{ company.get_avatar}}{% endif %}"
+                                    alt="{{ company.name }}"
+                                    class="object-cover w-full h-full">
+                                </span>
+                                {{ company.name }}
+                                </div>
+                                {% if request.active_company.id == company.id %}
+                                <i class="fas fa-check-circle text-green-500 text-xs ml-auto"></i>
+                                {% endif %}
+                            </button>
+                            </form>
+                        </li>
+                        {% empty %}
+                        <li class="px-4 py-2 text-gray-500">{% trans 'No companies available'%}</li>
+                        {% endfor %}
+                    </ul>
+
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Notification icon -->
+            {% include "notification_list.html" %}
+            <!-- End Notification icon -->
+
+            <!-- User Profile with Dropdown -->
+            <div class="relative dropdown-wrapper">
+            <button class="flex items-center gap-2 focus:outline-none">
+                <div class="ps-4 flex gap-3">
+                <div class="relative flex items-center cursor-pointer w-max">
+                    <img
+                    src="{% if request.user.profile %}{{ request.user.profile.url }}{% else %}{{ request.user.get_avatar }}{% endif %}"
+                    alt="{{ request.user.first_name|default:request.user.username }}"
+                    class="w-8 h-8 md:w-11 md:h-11 rounded-full"
+                    />
+                </div>
+                <div class="hidden sm:block">
+                    <div class="flex flex-col justify-center items-start h-full">
+                    <h5 class="font-semibold text-sm">
+                        {{ request.user.first_name|default:request.user.username }}
+                    </h5>
+                    <p class="text-xs text-dark-200">
+                        {{ request.user.role }}
+                    </p>
+                    </div>
+                </div>
+                </div>
+            </button>
+            <div
+                class="dropdown-content absolute z-10 bg-white rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_8%)] min-w-[150px] py-2 right-0"
+            >
+                <ul class="text-sm">
+                <li>
+                    <button
+                    onclick="window.location.href='{% url 'horilla_core:my_settings_view' %}'"
+                    class="px-4 py-1.5 hover:text-primary-600 transition duration-300 text-sm gap-4 items-center flex w-full"
+                    >
+                    {% trans 'My Settings'%}
+                    </button>
+                </li>
+                <li>
+                    <a
+                    href="{% url 'horilla_core:logout' %}"
+                    class="px-4 py-1.5 hover:text-primary-600 transition duration-300 text-sm gap-4 items-center flex w-full"
+                    >
+                    {% trans 'Logout'%}
+                    </a>
+                </li>
+                </ul>
+            </div>
+            </div>
+        </div>
+        <script>
+
+        document.body.addEventListener('htmx:afterSwap', function(event){
+            if(event.target.classList.contains('notification-list')) {
+            updateNotificationCount();
+            }
+        });
+
+        function toggleNotificationDot(notifId) {
+            const dot = document.querySelector(`#${notifId} .notif-indicator`);
+            if (dot) {
+            dot.classList.remove("bg-red-500");
+            }
+        }
+
+        function deleteDropdwonNotification(notifId) {
+            const notif = document.getElementById(notifId);
+            if (notif) {
+                notif.remove();
+            }
+        }
+
+        function markAllDotsAsRead() {
+            document.querySelectorAll('.notif-indicator').forEach(dot => {
+                dot.classList.remove('bg-red-500');
+            });
+        }
+
+        function updateNotificationCount(change = 0) {
+            const badge = document.querySelector("#notification-count");
+            const notifList = document.querySelector(".notification-list");
+
+            if (!badge || !notifList) return;
+
+            let currentCount = parseInt(badge.textContent) || 0;
+
+            if (change === 0) {
+                currentCount = notifList.querySelectorAll("li:not(.dropdown-notif-message)").length;
+            } else {
+                currentCount = Math.max(0, currentCount + change);
+            }
+
+            badge.textContent = currentCount;
+            badge.style.display = 'flex';
+            badge.classList.toggle('hidden', false);
+
+            if (currentCount === 0) {
+                notifList.innerHTML = `
+                <li class="dropdown-notif-message text-center text-xs text-gray-500 py-2">
+                    No unread notifications
+                </li>
+                `;
+            }
+        }
+
+        function deleteAllDropdownNotifications() {
+            const notifList = document.querySelector('.notification-list');
+            if (notifList) {
+                notifList.querySelectorAll('li').forEach(item => item.remove());
+            }
+
+            if (notifList) {
+            notifList.innerHTML = '<li class="dropdown-notif-message text-center text-xs text-gray-500 py-2">No unread notifications</li>';
+            }
+
+            const badge = document.querySelector('#notification-count');
+            if (badge) {
+            badge.textContent = "0";
+            }
+        }
+
+        function handleNewNotification(data) {
+            const timesince = "Just now";
+
+            addToDropdownList(data, timesince);
+            addToSidebarList(data, timesince);
+            updateNotificationCount(1);
+
+            if ("Notification" in window && Notification.permission === "granted") {
+            new Notification("New Notification", {
+                body: data.message,
+                icon: "/static/favicon.ico"
+            });
+            }
+        }
+
+        function addToDropdownList(data, timesince) {
+            const dropdownList = document.querySelector(".notification-list");
+            const sidebar = document.querySelector(".notification-message")
+            const dropdown = document.querySelector(".dropdown-notif-message")
+
+            if (sidebar) {
+            sidebar.remove();
+            }
+            if (dropdown) {
+            dropdown.remove();
+            }
+
+            const newDropdownItem = document.createElement("li");
+            newDropdownItem.id = `notif-${data.id}`;
+            newDropdownItem.className = "mb-3 cursor-pointer";
+            newDropdownItem.setAttribute("hx-get", data.open_url);
+            newDropdownItem.setAttribute("hx-trigger", "click");
+            newDropdownItem.setAttribute("hx-swap", "none");
+
+
+            newDropdownItem.innerHTML = `
+            <div class="flex items-center justify-between">
+                <span>${data.message}</span>
+                <button
+                    hx-post="/horilla_notifications/notifications-read/${data.id}/"
+                    hx-target="#notif-${data.id}"
+                    hx-on:click="setTimeout(function(){ updateNotificationCount(-1); }, 500)"
+                    hx-swap="outerHTML"
+                    class="cursor-pointer text-xs group text-primary-600 w-6 h-6 bg-primary-100
+                        hover:bg-primary-600 hover:text-white rounded-full transition duration-300 flex items-center justify-center">
+                    <i class="fa-solid fa-check text-[10px]"></i>
+                </button>
+            </div>
+            <p class="text-xs text-[#777777] mt-1">
+                ${timesince} by ${data.sender}
+            </p>
+            `;
+
+            dropdownList.insertBefore(newDropdownItem, dropdownList.firstChild);
+
+            const items = dropdownList.querySelectorAll("li");
+            if (items.length > 5) {
+            items[items.length - 1].remove();
+            }
+
+            if (window.htmx) {
+            htmx.process(newDropdownItem);
+            }
+        }
+
+        document.body.addEventListener("htmx:afterSwap", function (event) {
+            if (event.target.id === "sidebarModal3") {
+            document.querySelectorAll(".closeSidemenu").forEach(button => {
+                button.addEventListener("click", () => {
+                const sidebar = document.getElementById(button.dataset.sidebar);
+                if (sidebar) closeSidebar(sidebar);
+                });
+            });
+            }
+
+            if (event.target.id === "notificationWrapper") {
+            // Re-bind OPEN
+            document.querySelectorAll(".toggleSidemenu").forEach(button => {
+                button.addEventListener("click", () => {
+                const sidebar = document.getElementById(button.dataset.sidebar);
+                if (sidebar) openSidebar(sidebar);
+                });
+            });
+
+            // Re-bind CLOSE
+            document.querySelectorAll(".closeSidemenu").forEach(button => {
+                button.addEventListener("click", () => {
+                const sidebar = document.getElementById(button.dataset.sidebar);
+                if (sidebar) closeSidebar(sidebar);
+                });
+            });
+            }
+        });
+
+        function addToSidebarList(data, timesince) {
+            const sidebarContent = document.querySelector("#sidebarModal3 > div");
+            if (!sidebarContent) {
+            console.error("Sidebar content (#sidebarModal3 > div) not found");
+            return;
+            }
+
+
+            const newSidebarItem = document.createElement("div");
+            newSidebarItem.className = "border border-dark-50 p-3 rounded-md mb-2 relative";
+            newSidebarItem.id = `all-notif-${data.id}`;
+            newSidebarItem.innerHTML = `
+            <button
+                hx-post="/horilla_notifications/notification-delete/${data.id}/"
+                class="delete-notification absolute top-2 right-2 text-xs"
+                hx-on:click="setTimeout(() => $('#reloadMessagesButton').click(), 500)"
+                hx-on:htmx:afterRequest="if(event.detail.successful) fadeAndRemoveNotification('all-notif-{{ notification.id }}')"
+                data-target="#all-notif-${data.id}">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-start gap-2">
+            <div class="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div class="flex-1">
+                    <h5 class="text-sm font-semibold mb-2">${data.message}</h5>
+                    <p class="text-xs text-[#777777] mt-1">${timesince} by ${data.sender}</p>
+                </div>
+            </div>
+            `;
+
+            const header = sidebarContent.querySelector('.flex.justify-between');
+            if (header) {
+            const firstNotification = sidebarContent.querySelector('.border');
+            if (firstNotification) {
+                sidebarContent.insertBefore(newSidebarItem, firstNotification);
+            } else {
+                header.insertAdjacentElement('afterend', newSidebarItem);
+            }
+            } else {
+            sidebarContent.insertBefore(newSidebarItem, sidebarContent.firstChild);
+            }
+
+            if (window.htmx) {
+            htmx.process(newSidebarItem);
+            }
+        }
+
+        function openSidebar(sidebar) {
+            sidebar.classList.remove("hidden");
+            setTimeout(() => sidebar.classList.add("active"), 10);
+            document.body.classList.add("overflow-hidden");
+        }
+
+        function closeSidebar(sidebar) {
+            sidebar.classList.remove("active");
+            document.body.classList.remove("overflow-hidden");
+
+            sidebar.addEventListener("transitionend", function hideSidebar() {
+            sidebar.classList.add("hidden");
+            sidebar.removeEventListener("transitionend", hideSidebar);
+            });
+        }
+
+        document.querySelectorAll(".toggleSidemenu").forEach(button => {
+            button.addEventListener("click", () => {
+            const sidebar = document.getElementById(button.dataset.sidebar);
+            if (sidebar) openSidebar(sidebar);
+            });
+        });
+
+        document.querySelectorAll(".closeSidemenu").forEach(button => {
+            button.addEventListener("click", () => {
+            const sidebar = document.getElementById(button.dataset.sidebar);
+            if (sidebar) closeSidebar(sidebar);
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const userId = {{ request.user.id|default:0 }};
+            if (userId === 0) {
+            console.warn("User not authenticated, skipping WebSocket");
+            return;
+            }
+
+            let socket = null;
+            let reconnectAttempts = 0;
+            const maxReconnectAttempts = 5;
+            const reconnectInterval = 3000;
+
+            function connectWebSocket() {
+            const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+            socket = new WebSocket(`${wsProtocol}//${window.location.host}/ws/notifications/`);
+
+            socket.onopen = () => {
+                reconnectAttempts = 0;
+            };
+
+            socket.onerror = (error) => {
+                console.error("WebSocket error:", error);
+            };
+
+            socket.onclose = (event) => {
+                if (reconnectAttempts < maxReconnectAttempts) {
+                reconnectAttempts++;
+                const delay = reconnectInterval * Math.pow(2, reconnectAttempts - 1);
+                setTimeout(connectWebSocket, delay);
+                } else {
+                console.error("Max reconnection attempts reached");
+                }
+            };
+
+            socket.onmessage = (event) => {
+                try {
+                const data = JSON.parse(event.data);
+                handleNewNotification(data);
+                } catch (error) {
+                console.error("Error processing WebSocket message:", error);
+                }
+            };
+            }
+
+            connectWebSocket();
+
+            if ("Notification" in window && Notification.permission === "default") {
+            Notification.requestPermission();
+            }
+
+
+            document.querySelectorAll(".toggleSidemenu").forEach((button) => {
+            button.addEventListener("click", () => {
+                const sidebarId = button.getAttribute("data-sidebar");
+                const sidebar = document.getElementById(sidebarId);
+                if (sidebar) {
+                sidebar.classList.toggle("active");
+                document.body.classList.toggle("overflow-hidden");
+                }
+            });
+            });
+
+            document.querySelectorAll(".closeSidemenu").forEach((button) => {
+            button.addEventListener("click", () => {
+                const sidebarId = button.getAttribute("data-sidebar");
+                const sidebar = document.getElementById(sidebarId);
+                if (sidebar) {
+                sidebar.classList.remove("active");
+                document.body.classList.remove("overflow-hidden");
+                }
+            });
+            });
+
+        });
+
+        document.addEventListener('click', function(event) {
+            const dropdowns = document.querySelectorAll('.dropdown-wrapper');
+            dropdowns.forEach(dropdown => {
+            const button = dropdown.querySelector('button');
+            const content = dropdown.querySelector('.dropdown-content');
+            if (!button || !content) return;
+
+            if (button.contains(event.target)) {
+                content.classList.toggle('hidden');
+                dropdowns.forEach(otherDropdown => {
+                if (otherDropdown !== dropdown) {
+                    const otherContent = otherDropdown.querySelector('.dropdown-content');
+                    if (otherContent) {
+                    otherContent.classList.add('hidden');
+                    }
+                }
+                });
+            } else if (!dropdown.contains(event.target)) {
+                content.classList.add('hidden');
+            }
+            });
+        });
+
+
+
+        $(document).on("htmx:afterRequest", function(event) {
+            if ($(event.target).hasClass("delete-notification")) {
+            const targetId = $(event.target).data("target");
+            $(targetId).remove();
+            updateNotificationCount(-1);
+
+            if ($("#sidebarModal3 .border").length === 0) {
+                $("#sidebarModal3").append(
+                '<div class="notification-message text-center text-xs text-gray-500 py-2">No notifications</div>'
+                );
+            }
+            }
+        });
+
+        </script>
+    </div>

@@ -1,0 +1,102 @@
+{% load  static i18n %}
+
+<div class="p-5">
+    <div class="flex justify-between items-center ">
+        <h2 class="text-lg font-semibold text-gray-800">
+            {% if draft %}
+                <svg class="inline-block w-5 h-5 mr-2 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M20.188 10.934c.388.472.582.707.582 1.066s-.194.594-.582 1.066C18.768 14.79 15.636 18 12 18s-6.768-3.21-8.188-4.934c-.388-.472-.582-.707-.582-1.066s.194-.594.582-1.066C5.232 9.21 8.364 6 12 6s6.768 3.21 8.188 4.934Z" />
+                </svg>
+                {% trans "Mail Preview" %}
+            {% else %}
+                {% trans "Email Snapshot" %}
+            {% endif %}
+        </h2>
+        <button onclick="closeContentModal()" class="text-gray-500 hover:text-red-500 text-xl">
+            <img src="{% static 'assets/icons/close.svg' %}" alt="{% trans 'Close' %}" />
+        </button>
+    </div>
+
+    <div class="p-5 max-h-[80vh] overflow-y-auto">
+        <div class="">
+            <div class="space-y-2">
+                <div class="flex">
+                    <span class="font-medium text-gray-700 w-16">{% trans "From:" %}</span>
+                    <span class="text-gray-900">
+                        {% if from_mail_config %}
+                            {{ from_mail_config.display_name|default:from_mail_config.username }} &lt;{{ from_mail_config.from_email }}&gt;
+                        {% else %}
+                            <span class="text-red-500">{% trans "No sender configured" %}</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="flex">
+                    <span class="font-medium text-gray-700 w-16">To:</span>
+                    <span class="text-gray-900">{{ to_email|default:"<em class='text-gray-500'>No recipient specified</em>" }}</span>
+                </div>
+
+                {% if cc_email %}
+                    <div class="flex">
+                        <span class="font-medium text-gray-700 w-20">{% trans "Cc" %}:</span>
+                        <span class="text-gray-900">{{ cc_email }}</span>
+                    </div>
+                {% endif %}
+
+                {% if bcc_email %}
+                    <div class="flex">
+                        <span class="font-medium text-gray-700 w-20">{% trans "Bcc" %}:</span>
+                        <span class="text-gray-900">{{ bcc_email }}</span>
+                    </div>
+                {% endif %}
+
+                <div class="flex">
+                    <span class="font-medium text-gray-700 w-20">{% trans "Subject" %}:</span>
+                    <span class="text-gray-900">{{ subject|default:"<em class='text-gray-500'>No subject</em>" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 border border-dark-50 rounded-lg bg-gray-50 shadow-sm">
+            <div class="p-4">
+                <div class="prose max-w-none">
+                    {% if message_content %}
+                        {{ message_content }}
+                    {% else %}
+                        <em class="text-gray-500">{% trans "No message content" %}</em>
+                    {% endif %}
+
+                    <div class="grid grid-cols-4 gap-4 justify-items-center">
+                        {% for attachment in attachments %}
+                            <a href="{{ attachment.file.url }}" target="_blank" rel="noopener noreferrer"
+                                class="flex gap-3 items-center justify-between bg-gray-200 p-2 mb-2 rounded-md mt-3 hover:bg-gray-300 cursor-pointer transition-colors duration-200 no-underline">
+                                <div class="flex items-center gap-2">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M13 9V3.5L18.5 9M6 2c-1.11 0-2 .89-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"></path>
+                                    </svg>
+                                </span>
+                                <span class="text-sm truncate max-w-20">{{ attachment.file_name }}</span>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if draft %}
+        <div class="flex justify-between items-center p-5">
+            <div class="text-sm text-gray-600">
+                <svg class="inline-block w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                {% trans "This is how your email will look when sent" %}
+            </div>
+
+        </div>
+    {% endif %}
+</div>

@@ -1,0 +1,442 @@
+{% extends "index.html" %}
+{% load static i18n horilla_tags %}
+{% block content %}
+<div class="modelcontent">
+  <div id="mainContent" class="p-4">
+    {% if settings_menu %}
+      <h3 class="text-md font-semibold">{% trans 'Settings' %}</h3>
+      <div class="grid grid-cols-12 gap-3 pt-3" >
+        <div class="col-span-12 xl:col-span-2">
+          <div id="settings-sidebar" class="bg-white rounded-xl [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)]">
+            {% for menu in settings_menu %}
+              <div class="border-t border-primary-300">
+                <button
+                  type="button"
+                  class="flex justify-between items-center w-full px-4 py-3 text-left text-gray-800 font-medium transition"
+                  onclick="toggleAccordion(this)">
+                  <div class="flex gap-3 w-full font-medium text-sm">
+                    <img src={% static menu.icon %}  alt="" width="18" />
+                    {{ menu.title }}
+                  </div>
+                  <svg
+                    class="ms-5 w-4 h-4 transform transition-transform {% is_open_collapse menu.items %}"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+                <div class="accordion-content text-sm text-dark-500 {% is_open menu.items %}" id="base-content" >
+                  <ul class="px-4 border-t border-primary-300 pt-3">
+                    {% for item in menu.items %}
+                      {% has_perm item.perm as can_view_item %}
+                      {% if can_view_item %}
+                        <li class="py-1">
+                          <a role="button"
+                            hx-get="{{ item.url }}?{{ request.GET.urlencode }}"
+                            {% for key, value in item.items %}
+                                {% if key not in "label,url" %}
+                                  {{ key }}="{{ value }}"
+                                {% endif %}
+                            {% endfor %}
+                            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5 {% is_active item.url %}"
+                            >{{ item.label }}</a
+                          >
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Company Information Card -->
+        {% has_perm "horilla_core.view_company" as can_view_company %}
+        <div class="col-span-12 xl:col-span-10">
+          <div class="bg-white rounded-xl [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] p-5 h-[calc(_100vh_-_160px_)]" id="settings-content">
+          {% block settings %}
+            <div id="default-loader"
+                {% if can_view_company %}
+                    hx-get="{% url 'horilla_core:company_information' %}?{{ request.GET.urlencode }}"
+                    hx-target="#settings-content"
+                    hx-select="#company-information"
+                    hx-trigger="load"
+                    hx-push-url="true"
+                    hx-select-oob="#settings-sidebar"
+                {% else %}
+                    data-auto-load="true"
+                {% endif %}>
+            </div>
+        {% endblock %}
+
+          </div>
+        </div>
+      </div>
+    {% else %}
+      {% include "error/settings_403.html" %}
+    {% endif%}
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      const autoLoader = document.getElementById("default-loader");
+
+      if (autoLoader && autoLoader.dataset.autoLoad === "true") {
+          const firstLink = document.querySelector("#settings-sidebar ul li a[role='button']");
+          if (firstLink) {
+              firstLink.click();
+          }
+      }
+  });
+  </script>
+
+  {% endblock content %}
+
+<!-- DATA MANAGEMENT -->
+
+{% comment %}
+  <li class="py-1">
+    <a role="button"
+      href="#"
+      class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+      >{% trans 'Export Data' %}</a
+    >
+  </li>
+
+ <!-- FORECAST -->
+  {% has_perm "forecast.view_forecasttype" as can_view_forecast_type %}
+  {% has_perm "forecast.view_forecasttarget" as can_view_forecast_target %}
+  {% if can_view_forecast_type  or can_view_forecast_target%}
+      <div class="border-t border-primary-300">
+        <button
+          type="button"
+          class="flex justify-between items-center w-full px-4 py-3 text-left text-gray-800 font-medium transition"
+          onclick="toggleAccordion(this)"
+        >
+          <div class="flex gap-3 w-full font-medium text-sm">
+            <img src={% static "/assets/icons/growth.svg" %}  alt="" width="18" />
+            {% trans 'Forecast' %}
+          </div>
+          <svg
+            class="ms-5 w-4 h-4 transform transition-transform {% is_open_collapse 'forecast:forecast_type_view' 'forecast:forecast_target_view' %}"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+        <div class="accordion-content text-sm text-dark-500 {% is_open 'forecast:forecast_type_view' 'forecast:forecast_target_view' %}" id="base-content" >
+          <ul class="px-4 border-t border-primary-300 pt-3">
+            {% if can_view_forecast_type %}
+              <li class="py-1">
+                <a role="button"
+                hx-get="{% url 'forecast:forecast_type_view' %}?{{request.GET.urlencode}}" hx-target="#settings-content" hx-push-url="true" hx-select="#forecast-type-view" hx-select-oob="#settings-sidebar"
+                  class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5 {% is_active 'forecast:forecast_type_view' %}"
+                  >{% trans 'Forecast Type' %}</a
+                >
+              </li>
+            {% endif %}
+            {% if can_view_forecast_target %}
+              <li class="py-1">
+                <a role="button"
+                  hx-get="{% url 'forecast:forecast_target_view' %}?{{request.GET.urlencode}}" hx-target="#settings-content" hx-push-url="true" hx-select="#forecast-target-view" hx-select-oob="#settings-sidebar"
+                  class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5 {% is_active 'forecast:forecast_target_view' %}"
+                  >{% trans 'Forecast Target' %}</a
+                >
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+  {% endif %}
+
+
+<!-- CASE -->
+  <div class="border-t border-primary-300">
+    <button
+      type="button"
+      class="flex justify-between items-center w-full px-4 py-3 text-left text-gray-800 font-medium transition"
+      onclick="toggleAccordion(this)"
+    >
+      <div class="flex gap-3 w-full font-medium text-sm">
+        <img src={% static "/assets/icons/case.svg" %} alt="" width="18" />
+        {% trans 'Case' %}
+      </div>
+      <svg
+        class="ms-5 w-4 h-4 transform transition-transform"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 9l-7 7-7-7"
+        />
+      </svg>
+    </button>
+    <div class="accordion-content text-sm text-dark-500">
+      <ul class="px-4 border-t border-primary-300 pt-3">
+        <li class="py-1">
+          <a role="button"
+            href="#"
+            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+            >{% trans 'Case Roles' %}</a
+          >
+        </li>
+        <li class="py-1">
+          <a role="button"
+            href="#"
+            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+            >{% trans 'Case Team' %}</a
+          >
+        </li>
+        <li class="py-1">
+          <a role="button"
+            href="#"
+            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+            >{% trans 'Case Assignment' %}</a
+          >
+        </li>
+        <li class="py-1">
+          <a role="button"
+            href="#"
+            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+            >{% trans 'Web to Case' %}</a
+          >
+        </li>
+        <li class="py-1">
+          <a role="button"
+            href="#"
+            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+            >{% trans 'Case Escalation' %}</a
+          >
+        </li>
+        <li class="py-1">
+          <a role="button"
+            href="#"
+            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+            >{% trans 'Mail to Case' %}</a
+          >
+        </li>
+        <li class="py-1">
+          <a role="button"
+            href="#"
+            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+            >{% trans 'Auto Response Rule' %}</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+
+<!-- AUTOMATIONS -->
+  <div class="border-t border-primary-300">
+    <button
+      type="button"
+      class="flex justify-between items-center w-full px-4 py-3 text-left text-gray-800 font-medium transition"
+      onclick="toggleAccordion(this)"
+    >
+      <div class="flex gap-3 w-full font-medium text-sm">
+        <img src={% static "/assets/icons/auto.svg" %} alt="" width="18" />
+        {% trans 'Automations'%}
+      </div>
+      <svg
+        class="ms-5 w-4 h-4 transform transition-transform"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 9l-7 7-7-7"
+        />
+      </svg>
+    </button>
+    <div class="accordion-content text-sm text-dark-500">
+      <ul class="px-4 border-t border-primary-300 pt-3">
+        <li class="py-1">
+          <a role="button"
+            href="#"
+            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+            >{% trans 'Blueprints' %}</a
+          >
+        </li>
+        <li class="py-1">
+          <a role="button"
+            href="#"
+            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+            >{% trans 'Cadences'%}</a
+          >
+        </li>
+        <li class="py-1">
+          <a role="button"
+            href="#"
+            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+            >{% trans 'Approval Process' %}</a
+          >
+        </li>
+        <li class="py-1">
+          <a role="button"
+            href="#"
+            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+            >{% trans 'Review Process' %}</a
+          >
+        </li>
+        <li class="py-1">
+          <a role="button"
+            href="#"
+            class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+            >{% trans 'Workflow Rules' %}</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+
+<!-- GENERAL  -->
+  <li class="py-1">
+  <a role="button"
+    href="#"
+    class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+    >{% trans 'Password Policies' %}</a
+  >
+  </li>
+  <li class="py-1">
+  <a role="button"
+    href="#"
+    class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5"
+    >{% trans 'Calendar Booking' %}</a
+  >
+  </li>
+
+  <!-- BASE -->
+    {% has_perm "horilla_core.view_department" as can_view_department %}
+    {% has_perm "horilla_core.view_scoringrule" as can_view_scoringrule %}
+    {% has_perm "horilla_core.view_role" as can_view_role %}
+    {% has_perm "horilla_core.view_teamrole" as can_view_team_role %}
+    {% has_perm "horilla_core.view_customerrole" as can_view_customer_role %}
+    {% has_perm "horilla_core.view_partnerrole" as can_view_partner_role %}
+    {% if can_view_department or can_view_scoringrule or can_view_role or can_view_team_role or can_view_customer_role or can_view_partner_role%}
+      <div class="border-t border-primary-300">
+        <button
+          type="button"
+          class="flex justify-between items-center w-full px-4 py-3 text-left text-gray-800 font-medium transition"
+          onclick="toggleAccordion(this)">
+          <div class="flex gap-3 w-full font-medium text-sm">
+            <img src="{% static '/assets/icons/base.svg' %}" alt="" width="18" />
+            {% trans 'Base' %}
+          </div>
+          <svg
+            class="ms-5 w-4 h-4 transform transition-transform {% is_open_collapse 'horilla_core:department_view' 'horilla_core:branches_view' 'horilla_core:scoring_rule_view' 'horilla_core:roles_view' 'horilla_core:team_role_view' 'horilla_core:customer_role_view' 'horilla_core:partner_role_view' 'horilla_core:branch_detail_view' 'horilla_core:scoring_rule_detail_view' %}"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+        <div class="accordion-content text-sm text-dark-500 {% is_open 'horilla_core:department_view' 'horilla_core:branches_view' 'horilla_core:scoring_rule_view' 'horilla_core:roles_view' 'horilla_core:team_role_view' 'horilla_core:customer_role_view' 'horilla_core:partner_role_view' 'horilla_core:branch_detail_view' 'horilla_core:scoring_rule_detail_view' %}" id="base-content" >
+          <ul class="px-4 border-t border-primary-300 pt-3">
+            {% if can_view_department %}
+              <li class="py-1">
+                <a role="button"
+                  hx-get="{% url 'horilla_core:department_view' %}?{{request.GET.urlencode}}" hx-target="#settings-content" hx-select="#department-view"  hx-push-url="true" hx-select-oob="#settings-sidebar"
+                  class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5 {% is_active 'horilla_core:department_view' %}"
+                  >{% trans 'Department' %}
+                </a>
+              </li>
+            {% endif %}
+
+            {% if can_view_company %}
+              <li class="py-1">
+                <a role="button"
+                  hx-get="{% url 'horilla_core:branches_view' %}" hx-target="#settings-content" hx-select="#branches-view"  hx-push-url="true" hx-select-oob="#settings-sidebar"
+                  class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5 {% is_active 'horilla_core:branches_view' 'horilla_core:branch_detail_view'%}"
+                  >{% trans 'Branches' %}
+                </a>
+              </li>
+            {% endif %}
+
+            {% if can_view_scoringrule %}
+              <li class="py-1">
+                <a role="button"
+                  hx-get="{% url 'horilla_core:scoring_rule_view' %}?{{request.GET.urlencode}}" hx-target="#settings-content" hx-push-url="true" hx-select="#scoring-rule-view" hx-select-oob="#settings-sidebar"
+                  class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5 {% is_active 'horilla_core:scoring_rule_view' 'horilla_core:scoring_rule_detail_view' %}"
+                  >{% trans 'Scoring Rules' %}
+                </a>
+              </li>
+            {% endif %}
+
+            {% if can_view_role %}
+              <li class="py-1">
+                <a id="roles-link" role="button"
+                  hx-get="{% url 'horilla_core:roles_view' %}?{{request.GET.urlencode}}" hx-target="#settings-content" hx-push-url="true" hx-select="#role-container" hx-select-oob="#settings-sidebar"
+                  class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5 {% is_active 'horilla_core:roles_view' %}"
+                  >{% trans 'Roles' %}
+                </a>
+              </li>
+            {% endif %}
+
+            {% if can_view_team_role %}
+              <li class="py-1">
+                <a role="button"
+                  hx-get="{% url 'horilla_core:team_role_view' %}?{{request.GET.urlencode}}" hx-target="#settings-content" hx-push-url="true" hx-select="#team-role-view" hx-select-oob="#settings-sidebar"
+                  class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5 {% is_active 'horilla_core:team_role_view' %}"
+                  >{% trans 'Team Role' %}
+                </a>
+              </li>
+            {% endif %}
+
+            {% if can_view_customer_role %}
+              <li class="py-1">
+                <a role="button"
+                  hx-get="{% url 'horilla_core:customer_role_view' %}?{{request.GET.urlencode}}" hx-target="#settings-content" hx-push-url="true" hx-select="#customer-role-view" hx-select-oob="#settings-sidebar"
+                  class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5 {% is_active 'horilla_core:customer_role_view' %}"
+                  >{% trans 'Customer Role' %}
+                </a>
+              </li>
+            {% endif %}
+
+            {% if can_view_partner_role %}
+              <li class="py-1">
+                <a role="button"
+                  hx-get="{% url 'horilla_core:partner_role_view' %}?{{request.GET.urlencode}}" hx-target="#settings-content" hx-push-url="true" hx-select="#partner-role-view" hx-select-oob="#settings-sidebar"
+                  class="text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5 {% is_active 'horilla_core:partner_role_view' %}"
+                  >{% trans 'Partner Role' %}
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
+{% endcomment %}

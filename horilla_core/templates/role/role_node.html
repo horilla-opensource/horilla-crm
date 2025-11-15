@@ -1,0 +1,67 @@
+<li data-role-id="{{ role.id }}">
+  <a href="javascript:void(0);">
+    <div class="member-view-box">
+      <div class="member-header whitespace-nowrap">
+        {{ role.name }}
+      </div>
+      <div class="member-footer">
+        <div class="name">{{ role.user_count }} users</div>
+        <div class="downline">
+          <button
+            hx-get="{% url 'horilla_core:add_user_to_roles_view' %}"
+            hx-target="#modalBox"
+            hx-swap="innerHTML"
+            hx-vals='{"role_id": {{ role.id }}}'
+            hx-on:click="openModal()"
+            title="Add Users">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M15 14c-2.67 0-8 1.33-8 4v2h16v-2c0-2.67-5.33-4-8-4m-9-4V7H4v3H1v2h3v3h2v-3h3v-2m6 2a4 4 0 0 0 4-4a4 4 0 0 0-4-4a4 4 0 0 0-4 4a4 4 0 0 0 4 4" />
+            </svg>
+          </button>
+          <button
+            hx-get="{% url 'horilla_core:create_roles_view' %}"
+            hx-target="#modalBox"
+            hx-swap="innerHTML"
+            hx-vals='{"role_id": {{ role.id }}}'
+            hx-on:click="openModal()"
+            title="Add Sub Role">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M20 14h-6v6h-4v-6H4v-4h6V4h4v6h6z" />
+            </svg>
+          </button>
+          <button
+            hx-get="{% url 'horilla_core:view_user_in_role' %}"
+            hx-target="#contentModalBox"
+            hx-swap="innerHTML"
+            hx-vals='{"role_id": {{ role.id }}}'
+            hx-on:click="openContentModal()"
+            title="View Users">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5" />
+            </svg>
+          </button>
+          <button
+            hx-get="{% url 'horilla_core:delete_role' role.id  %}"
+            hx-target="#deleteModeBox"
+            hx-swap="innerHTML"
+            hx-on:click="openDeleteModeModal()"
+            hx-vals='{"check_dependencies" : "true"}'
+            title="Delete Role">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21H7ZM17 6H7v13h10V6ZM9 17h2V8H9v9Zm4 0h2V8h-2v9ZM7 6v13V6Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </a>
+  {% if role.children %}
+    <ul class="level-{{ level|add:1 }}">
+      {% for child_role in role.children %}
+        {% include "role/role_node.html" with role=child_role level=level|add:1 %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</li>

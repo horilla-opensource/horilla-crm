@@ -1,0 +1,67 @@
+Source: horilla-crm
+Section: web
+Priority: optional
+Maintainer: Horilla CRM Team <support@horilla.com>
+Build-Depends: debhelper-compat (= 13),
+               python3-dev (>= 3.12),
+               python3-setuptools,
+               python3-pip,
+               python3-venv,
+               build-essential,
+               libjpeg-dev,
+               zlib1g-dev,
+               libfreetype6-dev,
+               liblcms2-dev,
+               libopenjp2-7-dev,
+               libwebp-dev,
+               libpq-dev,
+               dh-python,
+               dh-systemd
+Standards-Version: 4.6.0
+Homepage: https://github.com/horilla-opensource/horilla-crm
+Vcs-Git: https://github.com/horilla-opensource/horilla-crm.git
+Vcs-Browser: https://github.com/horilla-opensource/horilla-crm
+
+Package: horilla-crm
+Architecture: all
+Depends: ${misc:Depends},
+         ${python3:Depends},
+         python3 (>= 3.12),
+         python3-pip,
+         python3-venv,
+         adduser,
+         systemd,
+         postgresql-client | mysql-client | sqlite3,
+         nginx-light | apache2 | httpd,
+         libjpeg62-turbo,
+         zlib1g,
+         libfreetype6,
+         liblcms2-2,
+         libopenjp2-7,
+         libwebp7,
+         ca-certificates,
+         curl
+Recommends: postgresql-server-dev-all,
+           redis-server,
+           postgresql (>= 12) | mysql-server (>= 8.0)
+Suggests: logrotate,
+         fail2ban,
+         ufw
+Description: Enterprise Customer Relationship Management System
+ Horilla-CRM is a comprehensive Customer Relationship Management system
+ designed for enterprise-level customer engagement, sales tracking, and
+ business process automation.
+ .
+ Key Features:
+  * User Management with role-based access control
+  * Customer & Partner Contact Management
+  * Sales Pipeline with leads and opportunities tracking
+  * Campaign Management and Analytics
+  * Activity Tracking with calendar and communication logs
+  * Reporting & Forecasting tools with dashboards
+  * Real-time notifications via WebSocket
+  * Multi-language support
+  * Regional formatting and fiscal year configuration
+ .
+ This package provides a complete Django-based CRM solution that can be
+ deployed on any Linux system with minimal configuration.

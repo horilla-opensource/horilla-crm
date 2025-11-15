@@ -1,0 +1,183 @@
+    {% load horilla_tags i18n %}
+
+    <div id="sec1" class="sec1">
+        <div id="stage-messages" class="mt-4"></div>
+        <div class="flex justify-between items-center p-5 pb-0">
+          <h2 class="text-lg font-semibold">{% trans "Select Lead Stages for" %} {{ company.name }}</h2>
+         \
+        </div>
+
+        <div id="custom-stage-collapse" class="p-5 pb-0">
+        </div>
+
+        <div class="p-5">
+            <div class="grid grid-cols-3 gap-3 overflow-hidden overflow-y-auto pe-2">
+                <form hx-post="{% url 'leads:create_stage_group' company.id %}?initialization={{initialization}}"
+                        hx-target="#{{hx_target}}"
+                        hx-swap="{{hx_swap}}"
+                        hx-push-url="{{hx_push_url}}"
+                        {% if hx_select%}
+                        hx-select="{{hx_select}}"
+                        {% endif %}>
+                    {% for stage in default_stages %}
+                        <input type="hidden" name="stage_name" value="{{ stage.name }}">
+                        <input type="hidden" name="stage_order" value="{{ stage.order }}">
+                        <input type="hidden" name="stage_probability" value="{{ stage.probability }}">
+                        <input type="hidden" name="stage_is_final" value="{% if stage.is_final %}true{% else %}false{% endif %}">
+                    {% endfor %}
+                    <div class="border border-primary-400 rounded-md px-3 py-2 min-h-[150px]"
+                            hx-post="{% url 'leads:create_stage_group' company.id %}?initialization={{initialization}}"
+                            hx-target="#{{hx_target}}"
+                            hx-swap="{{hx_swap}}"
+                            hx-include="closest form"
+                            hx-push-url="{{hx_push_url}}"
+                            {% if hx_select %}
+                            hx-select="{{hx_select}}"
+                            {% endif %}
+                            onclick="event.preventDefault();">
+                    <h5 class="text-sm font-semibold mb-3 pt-1 text-[#756f6fd1]">{% trans "Default Stages" %}</h5>
+                    <div class="">
+                        <!-- Repeatable Item -->
+                        <div class="bg-primary-100 text-primary-600 rounded-md mb-2">
+                        <button type="button"
+                            class="flex justify-between items-center w-full px-4 py-3 text-left text-gray-800 font-medium transition"
+                            onclick="event.stopPropagation();toggleAccordion(this)">
+                            <div class="flex gap-3 w-full font-medium text-sm">
+                            {% trans "Stages" %}
+                            </div>
+                            <svg class="ms-5 w-4 h-4 transform transition-transform" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div class="accordion-content text-sm text-dark-500">
+                            <div class="p-3 pt-0 h-[300px] overflow-hidden overflow-y-auto custom-scroll" onclick="event.stopPropagation();">
+                                {% for stage in default_stages %}
+                            <div class="bg-[white] rounded-md px-3 py-2 mb-2" onclick="event.stopPropagation();">
+                                <div id="collapse-1" class="toggle-content mt-2  mb-2" onclick="event.stopPropagation();">
+                                <span>{{ stage.name }}</span>
+                                <div class="flex gap-2 pt-2">
+                                    <span class="text-xs bg-[#e1850d23] text-[#e1850d] px-2 py-1 rounded-md font-medium">Order:
+                                        {{ stage.order }}</span>
+                                    <span
+                                        class="text-xs bg-[#d5095726] text-[#d50957] px-2 py-1 rounded-md font-medium">{{ stage.probability }}%</span>
+                                        {% if stage.is_final %}
+                                        <span
+                                        class="text-xs bg-[#0aa10a1a] text-[#0ba10a] px-2 py-1 rounded-md font-medium">Final</span>
+                                        {% endif %}
+                                </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </form>
+                <!-- company cards -->
+                {% for company_id, data in company_stages.items %}
+                    <form hx-post="{% url 'leads:create_stage_group' company.id %}"
+                            hx-target="#stage-messages"
+                            hx-swap="innerHTML"
+                            hx-push-url="false" >
+                        {% for stage in data.stages %}
+                            <input type="hidden" name="stage_name" value="{{ stage.name }}">
+                            <input type="hidden" name="stage_order" value="{{ stage.order }}">
+                            <input type="hidden" name="stage_probability" value="{{ stage.probability }}">
+                            <input type="hidden" name="stage_is_final" value="{% if stage.is_final %}true{% else %}false{% endif %}">
+                        {% endfor %}
+                        <div class="border border-primary-400 rounded-md px-3 py-2 min-h-[150px]"
+                                hx-post="{% url 'leads:create_stage_group' company.id %}"
+                                hx-target="#stage-messages"
+                                hx-swap="innerHTML"
+                                hx-include="closest form"
+                                hx-push-url="false"
+                                onclick="event.preventDefault();">
+                        <h5 class="text-sm font-semibold mb-3 pt-1 text-[#756f6fd1]">{{ data.company_name }} {% trans "Stages" %}</h5>
+                        <div class="">
+                            <!-- Repeatable Item -->
+                            <div class="bg-primary-100 text-primary-600 rounded-md mb-2">
+                            <button type="button"
+                                class="flex justify-between items-center w-full px-4 py-3 text-left text-gray-800 font-medium transition"
+                                onclick="event.stopPropagation();toggleAccordion(this)">
+                                <div class="flex gap-3 w-full font-medium text-sm">
+                                {% trans "Stages" %}
+                                </div>
+                                <svg class="ms-5 w-4 h-4 transform transition-transform" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div class="accordion-content text-sm text-dark-500">
+                                <div class="p-3 pt-0 h-[300px] overflow-hidden overflow-y-auto custom-scroll" onclick="event.stopPropagation();">
+                                    {% for stage in data.stages  %}
+                                <div class="bg-[white] rounded-md px-3 py-2 mb-2" onclick="event.stopPropagation();">
+                                    <div id="collapse-1" class="toggle-content mt-2  mb-2" onclick="event.stopPropagation();">
+                                    <span>{{ stage.name }}</span>
+                                    <div class="flex gap-2 pt-2">
+                                        <span class="text-xs bg-[#e1850d23] text-[#e1850d] px-2 py-1 rounded-md font-medium">Order:
+                                            {{ stage.order }}</span>
+                                        <span
+                                            class="text-xs bg-[#d5095726] text-[#d50957] px-2 py-1 rounded-md font-medium">{{ stage.probability }}%</span>
+                                            {% if stage.is_final %}
+                                            <span
+                                            class="text-xs bg-[#0aa10a1a] text-[#0ba10a] px-2 py-1 rounded-md font-medium">Final</span>
+                                            {% endif %}
+                                    </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </form>
+                {% endfor %}
+                <div
+                class="border border-primary-400 rounded-md px-3 py-2 flex flex-col justify-center items-center relative pt-10"
+                hx-get="{% url 'leads:custom_stages_form' company.id %}?initialization={{initialization}}"
+                hx-target="#custom-stage-collapse"
+                hx-swap="innerHTML"
+                hx-push-url="false"
+                onclick="event.preventDefault();"
+                >
+                <h5 class="text-sm font-semibold mb-3 absolute top-2 left-3 text-[#756f6fd1]">{% trans "Custom Stages" %}</h5>
+
+
+
+                <div class="flex flex-col justify-center items-center">
+                    <!-- Toggle Button -->
+                    <button
+                    class="bg-primary-100 rounded-md w-12 h-12 flex justify-center items-center mb-3 text-primary-600 transition duration-300 custom-toggle-btn"
+                    data-collapse="custom-stage-collapse">
+                    <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+        {% if not initialization %}
+            <div class="flex justify-end gap-2 p-5 pt-0">
+            <button onclick="closeContentModal()"
+                class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                {% trans "Close" %}
+            </button>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleAccordion(button) {
+          const content = button.nextElementSibling;
+          const svg = button.querySelector("svg");
+
+          content.classList.toggle("open");
+          svg.classList.toggle("rotate-90");
+        }
+    </script>

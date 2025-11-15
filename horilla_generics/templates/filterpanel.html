@@ -1,0 +1,124 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+
+<div id="filterpanel" class="w-full mb-5 rounded-lg bg-white z-50 transform transition-all duration-300 ease-in-out [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] transition-transform duration-300 {% if "apply_filter" in query_params or request.GET.search %}visible  {% else %} hidden {% endif %}">
+  <div class="p-5">
+    <div id ="filtercontainer" class="{% if "apply_filter" in request.GET.urlencode %}visible {% else %} hidden {% endif %}">
+    <h5 class="text-sm font-bold mb-3">Filters</h5>
+    <form id="filter-form" hx-get="{{ main_url }}?{% for key, value in request.GET.items %}{% if key != 'apply_filter' and key != 'field' and key != 'operator' and key != 'value' and  key != 'hx_trigger' and  key != 'clear_all_filters'   %}{{ key }}={{ value }}&{% endif %}{% endfor %}apply_filter=true"
+           hx-target="#mainSession"
+           hx-select="#mainSession"
+           hx-swap="outerHTML"
+           hx-push-url="true"
+           hx-trigger="submit"
+           hx-select-oob="#navBar"
+           >
+
+      <div class="space-y-2 pb-2" id="filter-rows">
+        <!-- Initial filter row -->
+        {% include "partials/filter_row.html" with row_id=0 %}
+      </div>
+
+      <div class="flex justify-between text-xs mb-6">
+        <div class="w-fit mt-2">
+          <button type="button"
+                  class="flex gap-2 text-sm text-[#34c759] hover:text-[#287a3d] transition duration-300"
+                  hx-get="{{ search_url }}?add_filter_row=true"
+                  hx-target="#filter-rows"
+                  hx-vals='{"row_id": "{{ last_row_id }}"}'
+                  hx-select=".filter-row"
+                  hx-push-url="false"
+                  hx-swap="beforeend"
+                  hx-trigger="click">
+            <img src="{% static 'assets/icons/filter.svg' %}" alt="" width="14" />
+            {% trans 'Add more filter' %}
+          </button>
+        </div>
+        <div class="flex justify-end text-xs">
+          <button type="submit" class="text-xs px-4 py-1.5 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">Apply</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+    <div class="p-5 border border-[#0000001a] p-3 rounded-md {% if "apply_filter" in query_params or request.GET.search %}visible {% else %} hidden {% endif %}">
+      <div class="flex justify-between">
+        <h5 class="text-sm font-bold mb-3">{% trans 'Applied Filters' %}</h5>
+        <div class="flex gap-1">
+          <button class="text-xs px-4 py-1.5 rounded-md text-[#E54F38] bg-[#ffefed] hover:bg-[#e54f38] hover:text-[white] transition duration-300 cursor-pointer"
+                  hx-get="{{ main_url }}?clear_all_filters=true{% for key, value in request.GET.items %}{% if key not in 'field,operator,value,start_value,end_value,apply_filter,clear_all_filters,page,search,hx_trigger' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                  hx-target="#mainSession"
+                  hx-select="#mainSession"
+                  hx-select-oob="#navBar"
+                  hx-swap="outerHTML"
+                  hx-push-url="true"
+                  hx-trigger="click"
+                  hx-on:click="$('#searchInput').val('')">{% trans 'Clear All' %}</button>
+          {% if save_to_list_option %}
+          <button
+          class="text-xs px-4 py-1.5 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+          type="button"
+            class="text-xs px-4 py-1.5 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+            hx-get="{% url 'horilla_generics:save_filter_list' %}?{% for key, values in query_params.items %}{% for value in values %}&{{ key }}={{ value|urlencode }}{% endfor %}{% endfor %}&main_url={{ main_url|urlencode }}&model_name={{ model_name|urlencode }}"
+            hx-target="#modalBox"
+            hx-swap="innerHTML"
+            hx-push-url="false"
+            hx-on::after-request="openModal()">{% trans 'Save to List' %}</button>
+          {% endif %}
+        </div>
+      </div>
+
+      <ul class="flex flex-wrap gap-3 text-sm items-center">
+        {% if request.GET.search %}
+        <li>
+          <div class="bg-[#25c32417] border border-[#25c32429] text-[#21b320] font-medium text-sm px-3 py-1.5 flex gap-4 items-center justify-center rounded-md">
+            <span>
+              Search : {{ request.GET.search }}
+            </span>
+            <!-- Remove filter button -->
+            <button
+            hx-get="{{ main_url }}?remove_filter=search&{% for key, values in query_params.items %}{% if key not in 'search,hx_trigger' %}{% for value in values %}&{{ key }}={{ value|urlencode }}{% endfor %}{% endif %}{% endfor %}{% if request.GET.field != '' %}&apply_filter=true{% endif %}"
+            hx-target="#mainSession"
+            hx-select="#mainSession"
+            hx-select-oob="#navBar"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+            hx-trigger="click"
+            hx-on:click="$('#searchInput').val('')">
+            <img src="{% static '/assets/icons/close1.svg' %}" alt="" width="10" />
+          </button>
+          </div>
+        </li>
+        {% endif %}
+        {% for row in filter_rows %}
+          {% if row.field and row.operator %}
+            <li>
+              <div class="bg-[#25c32417] border border-[#25c32429] text-[#21b320] font-medium text-sm px-3 py-1.5 flex gap-4 items-center justify-center rounded-md">
+                <span>
+                  {{ row.verbose_name }} {{ row.operator_display }}
+                  {% if row.start_value and row.end_value %}
+                    {{ row.start_value }} and {{ row.end_value }}
+                  {% elif row.raw_value %}
+                    {{ row.raw_value }}
+                  {% endif %}
+                </span>
+                <!-- Remove filter button -->
+                <button
+                  hx-get="{{ main_url }}?remove_filter={{ row.row_id }}{% for key, values in query_params.items %}{% if key != 'remove_filter' and key != 'page' %}{% for value in values %}&{{ key }}={{ value|urlencode }}{% endfor %}{% endif %}{% endfor %}"
+                  hx-target="#mainSession"
+                  hx-select="#mainSession"
+                  hx-select-oob="#navBar"
+                  hx-swap="outerHTML"
+                  hx-push-url="true"
+                  hx-trigger="click">
+                  <img src="{% static '/assets/icons/close1.svg' %}" alt="" width="10" />
+                </button>
+              </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>

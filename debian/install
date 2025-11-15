@@ -1,0 +1,4 @@
+# File installation mapping for horilla-crm package
+# Format: source_path destination_path
+
+debian/horilla-crm.service usr/lib/systemd/system/

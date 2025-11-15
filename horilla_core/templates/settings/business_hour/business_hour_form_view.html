@@ -1,0 +1,80 @@
+{% load static i18n horilla_tags%}
+
+<div id="{{view_id|safe}}-container" class="relative bg-white rounded-lg shadow-sm">
+    <form method="post" hx-post="{{ form_url }}" id="{{view_id|safe}}"
+        hx-swap="outerHTML" hx-target="#{{view_id|safe}}-container">
+        {% csrf_token %}
+        <!-- Render all hidden fields -->
+        {% for field in form %}
+            {% if field.is_hidden %}
+                {{ field }}
+            {% endif %}
+        {% endfor %}
+        <div class="p-5">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-md font-semibold">{{ form_title }}</h2>
+                <button type="button" onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-xl">
+                    <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+                </button>
+            </div>
+            {% if form.non_field_errors %}
+                <div class="bg-red-50 text-red-500 px-4 py-3 rounded-lg text-sm mb-4">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="{% if modal_height %}h-[500px]{% endif %} overflow-hidden overflow-y-auto pe-2">
+                <div class="grid grid-cols-6 gap-4 mb-3">
+                    {% for field in form %}
+                        {% if not field.is_hidden %}
+                            <div id="{{field.name}}_container" class="{% if field.name in full_width_fields %}col-span-6{% elif field.name in three_column_fields %}col-span-2{% else %}col-span-3{% endif %} {% if field.field.widget.input_type == 'checkbox' %}text-sm flex items-center gap-2 relative{% else %}flex flex-col{% endif %}">
+                                {% if field.field.widget.input_type == 'checkbox' %}
+                                    <label for="{{ field.id_for_label }}" class="text-xs text-color-600">{{ field.label }}</label>
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        {{ field }}
+                                        <div class="relative w-10 h-5 bg-gray-200 rounded-full peer peer-checked:bg-primary-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+                                    </label>
+                                {% else %}
+                                    <div class="flex justify-between items-center mb-1">
+                                        <label for="{{ field.id_for_label }}" class="text-xs text-color-600">{{ field.label }}</label>
+                                        {% if field.name in dynamic_create_fields and field.name in related_models_info %}
+                                            <button type="button"
+                                                class="text-primary-600 hover:text-primary-800 text-xs font-semibold px-2 py-1 bg-primary-300 rounded border border-primary-200 transition-colors"
+                                                hx-get="{% url 'horilla_generics:dynamic_create' related_models_info|get_item_form:field.name|get_item_form:'app_label' related_models_info|get_item_form:field.name|get_item_form:'model_name' %}?target_field={{ field.name }}&fields={{ dynamic_create_field_mapping|get_item_form:field.name|get_item_form:'fields'|join:',' }}&full_width_fields={{ dynamic_create_field_mapping|get_item_form:field.name|get_item_form:'full_width_fields'|join:',' }}"
+                                                hx-target="#dynamicCreateModalBox"
+                                                hx-on:click="openDynamicModal();"
+                                                hx-swap="innerHTML"
+                                                hx-post="">
+                                                + {% trans "Add" %}
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                    {{ field }}
+                                {% endif %}
+                                {% if field.errors %}
+                                    <div class="bg-red-50 text-red-500 px-3 py-2 rounded text-xs mt-1">
+                                        {% for error in field.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end p-5 pt-0">
+            <button type="submit" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                {% trans "Save" %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('htmx:afterSettle', function(event) {
+        initializeSelect2Pagination();
+    });
+</script>

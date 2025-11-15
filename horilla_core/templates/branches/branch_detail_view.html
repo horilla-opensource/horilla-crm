@@ -1,0 +1,135 @@
+{% extends "settings/settings.html" %}
+{% load horilla_tags i18n  static %}
+{% block settings %}
+{% has_perm "horilla_core.view_company" as can_view_company %}
+{% has_perm "horilla_core.change_company" as can_change_company %}
+{% if can_view_company %}
+    <div id="branches-view">
+        <button id="reloadButton"  hidden  hx-get="{{ request.path }}?{{request.GET.urlencode}}" hx-target="#branches-view"  hx-swap="outerHTML" hx-select="#branches-view" hx-select-oob="#dropdown-companies" >click</button>
+        <div class="mb-4">
+            <div class="flex justify-between items-center mb-2">
+                <div class="flex gap-4 items-center relative">
+                    <button class=""
+                        hx-get="{% url 'horilla_core:branches_view' %}"
+                        hx-target="#branches-view"
+                        hx-swap="outerHTML"
+                        hx-select="#branches-view"
+                        hx-push-url="true" >
+                        <i class="fas fa-arrow-left mr-2"></i>
+                    </button>
+                    <div class="relative flex items-center">
+                        {% if current_obj.icon %}
+                            <img src="{{ current_obj.icon.url }}" alt="Profile Image" class="w-[35px] h-[35px] rounded-full object-cover" />
+                        {% else %}
+                            <img src="{{ current_obj.get_avatar }}" alt="Avatar" class="w-[35px] h-[35px] rounded-full object-cover" />
+                        {% endif %}
+                    </div>
+                    <div class="font-semibold transition duration-300"> {{ current_obj.name }} </div>
+                </div>
+                <div class="flex gap-2 mb-2">
+                    {% if can_change_company and request.active_company  %}
+                        <button class="border rounded-md p-3 border-dark-50"
+                            hx-get="{% url 'horilla_core:edit_company' current_obj.pk %}?details=true"
+                            hx-target="#modalBox"
+                            hx-swap="innerHTML"
+                            onclick="openModal()">
+                            <img src="{% static '/assets/icons/edit.svg' %}" alt="" width="15" />
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div id="details-content">
+            <h3 class="text-sm font-semibold bg-primary-300 text-primary-600 rounded-md p-3 mb-4">
+                {% trans 'Company Information' %}
+            </h3>
+            <div class="p-2 grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40"> {{ current_obj|verbose_name:"name"}}  </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>
+                {{current_obj.name}}
+                </span>
+            </div>
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40">{{ current_obj|verbose_name:"email"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>
+                {{current_obj.email}}
+                </span>
+            </div>
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40"> {{ current_obj|verbose_name:"website"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{current_obj.website}}</span
+                >
+            </div>
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40">{{ current_obj|verbose_name:"contact_number"}}</span>
+                <span class="flex-1 text-dark-200"
+                ><span class="pe-2">:</span>{{current_obj.contact_number}}</span
+                >
+            </div>
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40">{{ current_obj|verbose_name:"no_of_employees"}}</span>
+                <span class="flex-1 text-dark-200"
+                ><span class="pe-2">:</span>{{current_obj.no_of_employees}}</span
+                >
+            </div>
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40">{{ current_obj|verbose_name:"annual_revenue"}}</span>
+                <span class="flex-1 text-dark-200"
+                ><span class="pe-2">:</span>{{current_obj.annual_revenue}}</span
+                >
+            </div>
+        </div>
+        <h3 class="text-sm font-semibold bg-primary-300 text-primary-600 rounded-md p-3 mb-4">
+            {% trans 'Address' %}
+        </h3>
+        <div class="p-2 grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40">{{ current_obj|verbose_name:"city"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ current_obj.city}}</span>
+            </div>
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40">{{ current_obj|verbose_name:"state"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ current_obj.state}}</span>
+            </div>
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40">{{ current_obj|verbose_name:"country"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ current_obj.get_country_display}}</span>
+            </div>
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40">{{ current_obj|verbose_name:"zip_code"}}</span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ current_obj.zip_code}}</span>
+            </div>
+        </div>
+        <h3 class="text-sm font-semibold bg-primary-300 text-primary-600 rounded-md p-3 mb-4">
+            {% trans 'Localization' %}
+        </h3>
+        <div class="p-2 grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40">{{ current_obj|verbose_name:"time_zone"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ current_obj.time_zone}}</span>
+            </div>
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40">{{ current_obj|verbose_name:"language"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ current_obj.get_language_display}}</span>
+            </div>
+            <div class="text-sm flex flex-col sm:flex-row">
+                <span class="text-dark-200 font-semibold w-40">{{ current_obj|verbose_name:"currency"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ current_obj.get_currency_display}}</span>
+            </div>
+        </div>
+    </div>
+{% else %}
+    {% include "error/403.html" %}
+{% endif %}
+{% endblock %}

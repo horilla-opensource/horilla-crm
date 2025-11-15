@@ -1,0 +1,22 @@
+{% load i18n %}
+<div id="week_start_day_container" class="{% if 'week_start_day' in full_width_fields %}col-span-2{% else %}col-span-1{% endif %} flex flex-col">
+    <label for="{{ form.week_start_day.id_for_label }}" class="text-xs text-gray-600 mb-1 font-medium">
+        {{ form.week_start_day.label }}
+    </label>
+    <select name="week_start_day" id="{{ form.week_start_day.id_for_label }}"
+            class="js-example-basic-single w-full text-sm" {% if form.week_start_day.field.required %}required{% endif %}>
+        <option value="">{% trans "Select" %} {{ form.week_start_day.label }}</option>
+        {% for value, label in form.week_start_day.field.choices %}
+            <option value="{{ value }}" {% if week_start_day_value == value %}selected{% endif %}>
+                {{ label }}
+            </option>
+        {% endfor %}
+    </select>
+    {% if form.week_start_day.errors %}
+        <div class="bg-red-50 text-red-500 px-3 py-2 rounded text-xs mt-1">
+            {% for error in form.week_start_day.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

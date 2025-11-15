@@ -1,0 +1,30 @@
+
+<div class="col" id="operator-container-{{ row_id }}">
+<select name="operator"
+        class="js-example-basic-single w-full"
+        hx-get="{{ search_url }}"
+        hx-include="#filter-row-{{ row_id }} select[name='field']"
+        hx-vals='{"operator_change": "true", "row_id": "{{ row_id }}"}'
+        hx-target="#value-container-{{ row_id }}"
+        hx-select="#value-container-{{ row_id }}"
+        hx-swap="outerHTML"
+        hx-push-url="false"
+        hx-trigger="change">
+  <option value="">Select Operator</option>
+  {% for operator in operators %}
+    <option value="{{ operator.0 }}">{{ operator.1 }}</option>
+  {% endfor %}
+</select>
+<script>
+  $(document).ready(function () {
+
+    $("select[name='operator']").on("select2:select", function (e) {
+      $(this).closest("select")[0].dispatchEvent(new Event("change"));
+
+    });
+  });
+  document.addEventListener('htmx:afterSettle', function(event) {
+      initializeSelect2Pagination();
+});
+</script>
+</div>

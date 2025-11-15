@@ -1,0 +1,13 @@
+{% extends "settings/settings.html" %}
+{% load static i18n %}
+
+{% block settings %}
+
+<div id="forecast-type-view">
+    <div id="navBar" hx-get="{{ nav_url}}?{{ request.GET.urlencode}}" hx-trigger="load">
+    </div>
+    <div id="mainSession"  hx-get="{{ list_url }}?{{ request.GET.urlencode}}" hx-trigger="load">
+    </div>
+</div>
+
+{% endblock %}

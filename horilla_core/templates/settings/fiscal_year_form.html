@@ -1,0 +1,83 @@
+{% load static i18n horilla_tags %}
+
+<div id="{{view_id|safe}}-container" class="relative bg-white rounded-lg shadow-sm">
+    <form hx-post="{{ form_url }}" id="{{view_id|safe}}"
+        hx-swap="outerHTML" hx-indicator="#fiscal-spinner" hx-target="#{{view_id|safe}}-container">
+        {% csrf_token %}
+        <!-- Render all hidden fields -->
+        {% for field in form %}
+            {% if field.is_hidden %}
+                {{ field }}
+            {% endif %}
+        {% endfor %}
+        <div class="p-5">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-md font-semibold">{{ form_title }}</h2>
+                <button type="button" onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-xl">
+                    <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+                </button>
+            </div>
+            {% if form.non_field_errors %}
+                <div class="bg-red-50 text-red-500 px-4 py-3 rounded-lg text-sm mb-4">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div id="form-content" class="{% if modal_height %}h-[500px]{% endif %} overflow-hidden overflow-y-auto pe-2" >
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                    <!-- Fiscal Year Type - Always visible -->
+                    <div class="{% if 'fiscal_year_type' in full_width_fields %}col-span-2{% else %}col-span-1{% endif %} flex flex-col">
+                        <label for="{{ form.fiscal_year_type.id_for_label }}" class="text-xs text-gray-600 mb-1 font-medium">
+                            {{ form.fiscal_year_type.label }}
+                        </label>
+                        <select name="fiscal_year_type" id="{{ form.fiscal_year_type.id_for_label }}"
+                                class="js-example-basic-single w-full text-sm"
+                                hx-get="{% url 'horilla_core:fiscal_year_fields' %}"
+                                hx-target="#dynamic-fields"
+                                hx-swap="innerHTML"
+                                hx-include="#fiscalyear-form-view"
+                                hx-trigger="change">
+                            {% for value, label in form.fiscal_year_type.field.choices %}
+                                <option value="{{ value }}" {% if form.fiscal_year_type.value == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        {% if form.fiscal_year_type.errors %}
+                            <div class="bg-red-50 text-red-500 px-3 py-2 rounded text-xs mt-1">
+                                {% for error in form.fiscal_year_type.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <!-- Dynamic Fields Container -->
+                    <div id="dynamic-fields" class="col-span-2">
+                        {% include 'settings/fiscal_year_fields.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-wrap justify-end p-5 pt-0 gap-2">
+            <button class="text-sm border-[1px] border-[solid] hover:border-[#9b210f] hover:bg-secondary-600 rounded-[5px] px-4 py-2 text-[#e54f38] flex gap-3 btn-with-icon border-[#e54f38] transition-[.3s] hover:text-[white]"
+                type="button"
+                hx-get="{% url 'horilla_core:fiscal_year_calendar_preview' %}"
+                hx-target="#contentModal"
+                hx-swap="innerHTML"
+                hx-on:click="openContentModal()"
+                hx-include="#{{view_id|safe}}"
+                id="preview-calendar-btn">
+                {% trans "Preview Calendar" %}
+            </button>
+            <button type="submit" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-white">
+                <span class="flex item-center gap-2">
+                    {% trans "Save" %}
+                    <span id="fiscal-spinner" class="htmx-indicator">
+                        <img src="{% static '/assets/icons/spinner.svg' %}" alt="loading..." width="25" />
+                    </span>
+                </span>
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,33 @@
+{% load static i18n horilla_tags %}
+
+{% for notification in notifications %}
+    <div class="border border-dark-50 p-3 rounded-md mb-2 relative" id="all-notif-{{ notification.id }}">
+      <button
+        hx-post="{% url 'notifications:notification_delete' notification.id %}"
+        class="delete-notification absolute top-2 right-2 text-xs"
+        hx-on:click="setTimeout(() => {
+            $('#reloadMessagesButton').click()
+            deleteDropdwonNotification('notif-{{ notification.id }}');
+        }, 500)"
+        data-target="#all-notif-{{ notification.id }}">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="flex items-start gap-2">
+        {% if not notification.read %}
+            <div class="notif-indicator w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+        {% else %}
+            <div class="notif-indicator w-2 h-2 mt-2 flex-shrink-0"></div>
+        {% endif %}
+        <div class="flex-1 max-w-[220px] truncate">
+            <h5 class="text-sm font-semibold mb-2 truncate">{{ notification.message }}</h5>
+            <p class="text-xs text-[#777777] mt-1">
+                {{ notification.created_at|timesince }} ago by {{ notification.sender|default:"System" }}
+            </p>
+        </div>
+      </div>
+    </div>
+{% empty %}
+    <div class="notification-message text-center text-xs text-gray-500 py-4">
+        {% trans "No notifications" %}
+    </div>
+{% endfor %}

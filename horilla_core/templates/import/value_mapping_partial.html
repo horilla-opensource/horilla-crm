@@ -1,0 +1,101 @@
+{% load horilla_tags i18n %}
+
+<div id="value-mapping-{{ field.name }}" class="{% if field.unique_file_values %}block{% else %}hidden{% endif %}">
+    <h4 class="text-sm font-semibold mb-2">{% trans "Map Values for" %} {{ field.verbose_name }}</h4>
+    <table class="w-full border border-[#efefef]">
+        <thead>
+            <tr>
+                <th class="text-xs p-2 border border-[#efefef]">{% trans "File Value" %}</th>
+                <th class="text-xs p-2 border border-[#efefef]">{% trans "Replace With" %}</th>
+                <th class="text-xs p-2 border border-[#efefef]">{% trans "Status" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file_value in field.unique_file_values %}
+                {% with slug_value=file_value|slugify %}
+                <tr>
+                    <td class="text-xs p-2 border border-[#efefef]">{{ file_value }}</td>
+                    <td class="text-xs p-2 border border-[#efefef]">
+                        {% if field.is_choice_field %}
+                        <select name="choice_mapping_{{ field.name }}_{{ slug_value }}"
+                            class="js-example-basic-single headselect w-full"
+                            hx-post="{% url 'horilla_core:update_value_mapping_status' %}?field_name={{ field.name }}&slug_value={{ slug_value }}"
+                            hx-target="#status-{{ field.name }}-{{ slug_value }}"
+                            hx-trigger="change"
+                            hx-swap="innerHTML">
+                            <option value="">Select Choice</option>
+                            {% for choice in field.choices %}
+                                {% with manual_val=choice_mappings|lookup:slug_value %}
+                                    {% if manual_val == choice.value %}
+                                        {% with selected_value=manual_val %}
+                                            <option value="{{ choice.value }}" selected>{{ choice.label }}</option>
+                                        {% endwith %}
+                                    {% else %}
+                                        {% with auto_val=auto_choice_mappings|lookup:slug_value %}
+                                            {% if auto_val == choice.value %}
+                                                {% with selected_value=auto_val %}
+                                                    <option value="{{ choice.value }}" selected>{{ choice.label }}</option>
+                                                {% endwith %}
+                                            {% else %}
+                                                <option value="{{ choice.value }}">{{ choice.label }}</option>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        </select>
+                        {% elif field.is_foreign_key %}
+                        <select name="fk_mapping_{{ field.name }}_{{ slug_value }}"
+                            class="js-example-basic-single headselect w-full"
+                            hx-post="{% url 'horilla_core:update_value_mapping_status' %}?field_name={{ field.name }}&slug_value={{ slug_value }}"
+                            hx-target="#status-{{ field.name }}-{{ slug_value }}"
+                            hx-trigger="change"
+                            hx-swap="innerHTML">
+                            <option value="">Select Related Object</option>
+                            {% for fk_choice in field.foreign_key_choices %}
+                                {% with manual_val=fk_mappings|lookup:slug_value %}
+                                    {% if manual_val|stringformat:"s" == fk_choice.id|stringformat:"s" %}
+                                        <option value="{{ fk_choice.id }}" selected>{{ fk_choice.display }}</option>
+                                    {% else %}
+                                        {% with auto_val=auto_fk_mappings|lookup:slug_value %}
+                                            {% if auto_val|stringformat:"s" == fk_choice.id|stringformat:"s" %}
+                                                <option value="{{ fk_choice.id }}" selected>{{ fk_choice.display }}</option>
+                                            {% else %}
+                                                <option value="{{ fk_choice.id }}">{{ fk_choice.display }}</option>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        </select>
+                        {% endif %}
+                    </td>
+                    <td class="text-xs p-2 border border-[#efefef]" id="status-{{ field.name }}-{{ slug_value }}">
+                        {% if field.is_choice_field %}
+                            {% if choice_mappings|lookup:slug_value %}
+                                <span class="bg-green-100 text-green-500 text-xs font-medium px-2 py-0.5 rounded-full">Mapped</span>
+                            {% elif auto_choice_mappings|lookup:slug_value %}
+                                <span class="bg-green-100 text-green-500 text-xs font-medium px-2 py-0.5 rounded-full">Auto Mapped</span>
+                            {% else %}
+                                <span class="bg-red-100 text-red-500 text-xs font-medium px-2 py-0.5 rounded-full">Not Mapped</span>
+                            {% endif %}
+                        {% elif field.is_foreign_key %}
+                            {% if fk_mappings|lookup:slug_value %}
+                                <span class="bg-green-100 text-green-500 text-xs font-medium px-2 py-0.5 rounded-full">Mapped</span>
+                            {% elif auto_fk_mappings|lookup:slug_value %}
+                                <span class="bg-green-100 text-green-500 text-xs font-medium px-2 py-0.5 rounded-full">Auto Mapped</span>
+                            {% else %}
+                                <span class="bg-red-100 text-red-500 text-xs font-medium px-2 py-0.5 rounded-full">Not Mapped</span>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endwith %}
+            {% empty %}
+                <tr>
+                    <td colspan="3" class="text-xs p-2 border border-[#efefef]">No unique values found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,222 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<div class="relative bg-white rounded-lg shadow-sm">
+    <form method="post" hx-post="{{ form_url }}?{{ request.GET.urlencode }}" autocomplete="off"
+        hx-target="#modalBox"
+        hx-swap="innerHTML"
+        enctype="multipart/form-data"
+        class="w-full">
+        {% csrf_token %}
+        <input type="hidden" name="step" value="{{ current_step }}">
+        <div class="flex justify-between items-center p-5">
+            <h2 class="text-lg font-semibold">{{ form_title }}</h2>
+            <a id="modalCloseButton" onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-xl">
+                <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+            </a>
+        </div>
+
+        <div class="p-5 py-0">
+            <ul class="progress overflow-hidden overflow-x-auto">
+                {% for i in total_steps|get_range %}
+                    <li class="{% if i <= current_step %}active{% endif %}">
+                        <div class="sec {% if i >= 2 and i != total_steps %} flex [flex-flow:column] items-center{% elif i == total_steps %}flex [flex-flow:column] items-end {% endif %}">
+                            <span class="bg-[#e54f38] h-[30px] w-[30px] flex items-center justify-center rounded-[50px] text-[white]">{{ i }}</span>
+                            <p class="text-[.8rem] mb-0">{{ step_titles|get_item:i }}</p>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="p-5">
+            <h2 class="text-lg font-semibold mb-3">{{ step_titles|get_steps:current_step }}</h2>
+            {% if form.non_field_errors %}
+                <div class="bg-primary-100  text-primary-600 px-4 py-2 rounded mb-4">
+                    {% for error in form.non_field_errors %}
+                        <p class="text-sm">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="grid md:grid-cols-2 grid-cols-1 gap-4 h-[300px] md:h-auto  overflow-hidden overflow-y-auto pe-2 md:pe-0">
+                {% for field in form|get_fields_for_step:current_step %}
+                    <div class="{% if field.field.widget.attrs.fullwidth %}col-span-2{% else %}{% if field.field.widget.input_type == 'checkbox' %}text-sm flex items-center gap-2 relative{% else %}flex flex-col{% endif %}{% endif %}">
+                        {% if field.field.widget.input_type == 'checkbox' %}
+                            <label class="inline-flex items-center cursor-pointer">
+                                <span class="me-3 text-xs text-color-600">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                </span>
+                                {{ field }}
+                                <div class="relative w-10 h-5 bg-gray-200 rounded-full peer peer-checked:bg-primary-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+                            </label>
+
+                            {% elif field.field.widget.input_type == 'file' %}
+                            <label class="inline-flex items-center cursor-pointer">
+                                <span class="me-3 text-xs text-color-600">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                </span>
+                            </label>
+                            <div class="w-full">
+                                <label
+                                    for="{{ field.id_for_label }}"
+                                    class="flex items-center gap-3 text-color-600 p-2 placeholder:text-xs font-normal w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm transition duration-300 focus:border-primary-600 cursor-pointer"
+                                >
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 bg-primary-600 text-white text-xs font-medium rounded-md hover:bg-primary-700 transition"
+                                    >
+                                        {% trans 'Choose File'%}
+                                    </span>
+                                    <span
+                                        id="{{ field.id_for_label }}-name"
+                                        class="text-sm text-gray-500 flex-1 truncate"
+                                        data-has-file="{% if file_field_states|get_item:field.name and file_field_states|get_item:field.name|get_item:'has_file' %}true{% else %}false{% endif %}"
+                                    >
+                                        {% if file_field_states|get_item:field.name and file_field_states|get_item:field.name|get_item:'has_file' %}
+                                            {{ file_field_states|get_item:field.name|get_item:'filename' }}
+                                        {% else %}
+                                            {% trans 'No file chosen'%}
+                                        {% endif %}
+                                    </span>
+                                </label>
+                                <div class="flex justify-end">
+                                    <button type="button"
+                                            id="{{ field.id_for_label }}-clear"
+                                            class="text-primary-600 hover:text-primary-700 text-xs mt-1"
+                                            style="{% if file_field_states|get_item:field.name and file_field_states|get_item:field.name|get_item:'has_file' %}display: inline-block;{% else %}display: none;{% endif %}"
+                                            onclick="clearFileInput{{ field.id_for_label|capfirst }}(event)">
+                                        {% trans 'Clear'%}
+                                    </button>
+                                </div>
+                                <div style="display: none">
+                                    {{ field }}
+                                    <input type="hidden" id="{{ field.id_for_label }}-cleared" name="{{ field.name }}-clear" value="{% if file_field_states|get_item:field.name and file_field_states|get_item:field.name|get_item:'is_cleared' %}true{% else %}false{% endif %}">
+                                </div>
+                            </div>
+
+                            <script>
+                                function clearFileInput{{ field.id_for_label|capfirst }}(event) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    const input = document.getElementById('{{ field.id_for_label }}');
+                                    const fileName = document.getElementById('{{ field.id_for_label }}-name');
+                                    const clearBtn = document.getElementById('{{ field.id_for_label }}-clear');
+                                    const clearedFlag = document.getElementById('{{ field.id_for_label }}-cleared');
+
+                                    if (input) {
+                                        input.value = '';
+                                        fileName.textContent = '{% trans "No file chosen"%}';
+                                        fileName.setAttribute('data-has-file', 'false');
+                                        if (clearBtn) clearBtn.style.display = 'none';
+                                        if (clearedFlag) clearedFlag.value = 'true';
+                                    }
+                                }
+
+                                function initFileInput{{ field.id_for_label|capfirst }}() {
+                                    const input = document.getElementById('{{ field.id_for_label }}');
+                                    const fileName = document.getElementById('{{ field.id_for_label }}-name');
+                                    const clearBtn = document.getElementById('{{ field.id_for_label }}-clear');
+                                    const clearedFlag = document.getElementById('{{ field.id_for_label }}-cleared');
+
+                                    if (input && fileName) {
+                                        input.addEventListener('change', function() {
+                                            if (this.files && this.files.length > 0) {
+                                                fileName.textContent = this.files[0].name;
+                                                fileName.setAttribute('data-has-file', 'true');
+                                                if (clearBtn) clearBtn.style.display = 'inline-block';
+                                                if (clearedFlag) clearedFlag.value = 'false';
+                                            } else {
+                                                fileName.textContent = '{% trans "No file chosen"%}';
+                                                fileName.setAttribute('data-has-file', 'false');
+                                                if (clearBtn) clearBtn.style.display = 'none';
+                                            }
+                                        });
+
+                                        // Show clear button based on session state
+                                        const hasFile = fileName.getAttribute('data-has-file') === 'true';
+                                        if (hasFile && clearBtn) {
+                                            clearBtn.style.display = 'inline-block';
+                                        }
+                                    }
+                                }
+
+                                if (document.readyState === 'loading') {
+                                    document.addEventListener('DOMContentLoaded', initFileInput{{ field.id_for_label|capfirst }});
+                                } else {
+                                    initFileInput{{ field.id_for_label|capfirst }}();
+                                }
+                            </script>
+
+                        {% else %}
+                            <div class="flex justify-between items-center {% if 'select' in field.field.widget.attrs.class|lower or field.field.widget.input_type == 'select' %}mb-2{% else %}mb-1{% endif %}">
+                                <label for="{{ field.id_for_label }}" class="text-xs text-color-600">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                </label>
+                                    {% if field.name in dynamic_create_fields and field.name in related_models_info %}
+                                        <button type="button"
+                                            id="generic-button"
+                                            class="text-primary-600 hover:text-primary-800 text-xs font-semibold px-2 py-1 bg-primary-300 rounded border border-primary-200  transition-colors"
+                                            hx-get="{% url 'horilla_generics:dynamic_create' related_models_info|get_item_form:field.name|get_item_form:'app_label' related_models_info|get_item_form:field.name|get_item_form:'model_name' %}?target_field={{ field.name }}&fields={{ dynamic_create_field_mapping|get_item_form:field.name|get_item_form:'fields'|join:',' }}&full_width_fields={{ dynamic_create_field_mapping|get_item_form:field.name|get_item_form:'full_width_fields'|join:',' }}"
+                                            hx-target="#dynamicCreateModalBox"
+                                            hx-on:click="openDynamicModal();"
+                                            hx-swap="innerHTML"
+                                            >
+                                            + Add
+                                        </button>
+                                    {% endif %}
+                            </div>
+                            {{ field }}
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="text-red-500 text-xs mt-1">
+                                {% for error in field.errors %}
+                                    {{ error }}<br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="flex justify-end p-5 pt-0 gap-2">
+            {% if current_step > 1 %}
+                <button type="button" name="previous" value="previous" hx-post="{{ form_url }}"
+                        hx-target="#modalBox"
+                        hx-swap="innerHTML"
+                        class="text-sm border-[1px] border-[solid] hover:border-[#9b210f] hover:bg-secondary-600 rounded-[5px] px-4 py-2 text-[#e54f38] flex gap-3 btn-with-icon border-[#e54f38] transition-[.3s] hover:text-[white]"
+                        >
+                        {% trans "Previous" %}
+                </button>
+            {% endif %}
+            {% if current_step < total_steps %}
+                <button type="submit"
+                        class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+                        >
+                    {% trans "Next" %}
+                </button>
+            {% else %}
+                <button type="submit"
+                        class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+                        >
+                    {% trans "Save" %}
+                </button>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("select").on("select2:select", function (e) {
+            $(this).closest("select")[0].dispatchEvent(new Event("change"));
+        });
+    });
+
+    document.addEventListener('htmx:afterSettle', function(event) {
+        initializeSelect2Pagination();
+    });
+    initializeSelect2Pagination();
+</script>

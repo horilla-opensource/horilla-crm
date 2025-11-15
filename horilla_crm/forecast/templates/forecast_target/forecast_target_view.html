@@ -1,0 +1,22 @@
+{% extends "settings/settings.html" %}
+{% load static horilla_tags i18n %}
+
+{% block settings %}
+<div id="forecast-target-view">
+    {% if not has_company %}
+        <div class="flex justify-between items-center h-20"></div>
+        <img src="{% static 'assets/img/activate-company.svg' %}" alt="" class="w-60 m-auto mb-4 mt-5"/>
+        <p class="text-sm text-center mb-3">{% trans "Please create or activate your company." %}</p>
+    {% elif not has_forecast_types %}
+        <img src="{% static 'assets/img/not-found.svg' %}" alt="" class="w-60 m-auto mb-4 mt-5"/>
+        <p class="text-sm text-center mb-3">{% trans 'No Forecast Type set. Set it from settings.' %}</p>
+        <button onclick="window.location.href='/forecast/forecast-type-view/'" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white] m-auto flex">
+            {% trans "Go To Forecast Type" %}
+        </button>
+    {% else %}
+        <div id="navBar" hx-get="{{ nav_url }}" hx-trigger="load"></div>
+        <div id="forecastFilters" hx-get="{% url 'forecast:forecast_target_filters_view' %}?forecast_type={{ current_forecast_type_id|default_if_none:'' }}&period={{ current_period_id|default_if_none:'' }}" hx-trigger="load"></div>
+        <div id="mainSession" hx-get="{{ list_url }}?forecast_type={{ current_forecast_type_id|default_if_none:default_forecast_type.pk|default_if_none:'' }}&period={{ current_period_id|default_if_none:default_period.pk|default_if_none:'' }}" hx-trigger="load"></div>
+    {% endif %}
+</div>
+{% endblock %}

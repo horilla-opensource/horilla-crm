@@ -1,0 +1,464 @@
+{% load reports_tags %}
+{% load static  i18n %}
+<div id="panel" class="transition-all duration-300 w-[350px] bg-white [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] rounded-lg h-[calc(100vh_-_100px)] ms-4">
+    <div class="p-4">
+      <div class="mb-4 border-b border-[#dddddd]">
+        <ul
+          class="flex text-sm font-medium text-center"
+          id="default-styled-tab"
+          data-tabs-toggle="#default-styled-tab-content"
+          data-tabs-active-classes="text-primary-600 border-b-0"
+          data-tabs-inactive-classes="text-[#333] hover:text-primary-600 border-b-0"
+          role="tablist">
+          <li class="flex-auto" role="presentation">
+            <button
+              class="px-1.5 py-1 text-sm border-b-2 rounded-t-lg transition duration-300 w-full tab-button"
+              id="details-styled-tab"
+              data-tabs-target="#columns-tab"
+              type="button"
+              role="tab"
+              aria-controls="details"
+              aria-selected="true"
+              data-tab-name="columns">
+              {% trans "Columns" %}
+            </button>
+          </li>
+          <li class="flex-auto" role="presentation">
+            <button
+              class="px-1.5 py-1 text-sm border-b-2 rounded-t-lg transition duration-300 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 w-full tab-button"
+              id="activity-styled-tab"
+              data-tabs-target="#grouping-tab"
+              type="button"
+              role="tab"
+              aria-controls="activity"
+              aria-selected="false"
+              data-tab-name="grouping">
+              {% trans "Grouping" %}
+            </button>
+          </li>
+          <li class="flex-auto" role="presentation">
+            <button
+              class="px-1.5 py-1 text-sm border-b-2 rounded-t-lg transition duration-300 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 w-full tab-button"
+              id="realted-list-styled-tab"
+              data-tabs-target="#filter-tab"
+              type="button"
+              role="tab"
+              aria-controls="realted-list"
+              aria-selected="false"
+              data-tab-name="filter">
+              {% trans "Filter" %}
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div id="default-styled-tab-content" class="overflow-hidden">
+        <div
+          class="tab-content"
+          id="columns-tab"
+          role="tabpanel"
+          aria-labelledby="details-tab">
+          <h3 class="text-sm font-semibold mb-1">{% trans "Columns" %}</h3>
+          <div class="relative mb-3">
+            <input
+              type="text"
+              placeholder="Search Columns"
+              name="search_columns"
+              class="text-color-600 px-2 py-1.5 pr-[40px] w-full border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-dark-100 placeholder:text-xs text-sm [transition:.3s] focus:border-primary-600"
+              hx-get="{% url 'reports:search_available_fields' report.pk %}"
+              hx-trigger="keyup changed delay:300ms"
+              hx-target="#available-columns-list"
+              hx-swap="innerHTML"
+              hx-vals='{"field_type": "columns"}'/>
+            <button
+              class="absolute right-3 top-0 bottom-0 m-auto cursor-pointer">
+              <img src="{% static '/assets/icons/search.svg' %}" alt="" width="20" />
+            </button>
+          </div>
+
+          <div class="mb-3 custom-scroll h-[250px] overflow-hidden overflow-y-auto bg-[#00000008] rounded-md p-2" id="available-columns-list">
+            {% for field in available_fields %}
+              {% if field.name not in report.selected_columns_list %}
+                <button
+                  class="mb-1 bg-dark-50 rounded-md px-1.5 py-2 text-xs font-medium w-full text-left relative before:content-['+'] before:right-2 before:absolute before:text-lg before:top-0 before:bottom-0 before:m-auto"
+                  hx-post="{% url 'reports:add_column' report.pk %}"
+                  hx-vals='{"field_name": "{{ field.name }}"}'
+                  hx-target="#report-content"
+                  hx-select="#report-content"
+                  hx-select-oob="#nav-actions"
+                  hx-swap="outerHTML"
+                  hx-headers='{"HX-Trigger": "refreshReport"}'>
+                  {{ field.verbose_name|title }}
+                </button>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          <h3 class="text-sm font-semibold mb-1">Selected Columns</h3>
+          <div class="h-[200px] custom-scroll overflow-hidden overflow-y-auto bg-[#00000008] rounded-md p-2">
+            {% for column in report.selected_columns_list %}
+              <button
+                class="mb-1 bg-dark-50 rounded-md px-1.5 py-2 text-xs font-medium w-full text-left relative before:content-['-'] before:right-2 before:absolute before:text-xl before:top-0 before:bottom-0 before:m-auto"
+                hx-post="{% url 'reports:remove_column' report.pk %}"
+                hx-vals='{"field_name": "{{ column }}"}'
+                hx-target="#report-content"
+                hx-select="#report-content"
+                hx-select-oob="#nav-actions"
+                hx-swap="outerHTML"
+                hx-headers='{"HX-Trigger": "refreshReport"}'>
+                {{ column|get_field_verbose_name:report.model_class }}
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Grouping Tab -->
+        <div
+          class="hidden tab-content"
+          id="grouping-tab"
+          role="tabpanel"
+          aria-labelledby="activity-tab">
+          <h3 class="text-sm font-semibold mb-1">{% trans "Columns" %}</h3>
+          <div class="relative mb-3">
+            <input
+              type="text"
+              placeholder="Search Columns"
+              name="search_grouping"
+              class="text-color-600 px-2 py-1.5 pr-[40px] w-full border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-dark-100 placeholder:text-xs text-sm [transition:.3s] focus:border-primary-600"
+              hx-get="{% url 'reports:search_available_fields' report.pk %}"
+              hx-trigger="keyup changed delay:300ms"
+              hx-target="#available-grouping-list"
+              hx-swap="innerHTML"
+              hx-vals='{"field_type": "grouping"}'/>
+            <button
+              class="absolute right-3 top-0 bottom-0 m-auto cursor-pointer">
+              <img src="{% static '/assets/icons/search.svg' %}" alt="" width="20" />
+            </button>
+          </div>
+
+          <div class="mb-3 h-[250px] custom-scroll overflow-hidden overflow-y-auto bg-[#00000008] rounded-md p-2" id="available-grouping-list">
+            {% for field in available_fields %}
+              <div class="mb-1 flex items-center justify-between bg-dark-50 rounded-md px-1.5 py-2 text-xs font-medium w-full text-left relative">
+                <span>{{ field.verbose_name|title }}</span>
+                <div class="flex border border-dark-100 rounded-md">
+                  {% with row_count=report.row_groups_list|length %}
+                  {% with col_count=report.column_groups_list|length %}
+                  {% with total_count=row_count|add:col_count %}
+                    {% if total_count < 3 %}
+                      <button
+                        class="font-bold px-1.5 py-1 {% if field.name in report.row_groups_list %}text-primary-600{% else %}text-[#979797]{% endif %}"
+                        hx-post="{% url 'reports:toggle_row_group' report.pk %}"
+                        hx-vals='{"field_name": "{{ field.name }}"}'
+                        hx-target="#report-content"
+                        hx-select="#report-content"
+                        hx-select-oob="#nav-actions"
+                        hx-swap="outerHTML"
+                        hx-headers='{"HX-Trigger": "refreshReport"}'>
+                        {% trans "R" %}
+                      </button>
+                      <button
+                        class="font-bold px-1.5 py-1 border-l-[1px] border-r-[1px] border-dark-100 {% if field.name in report.column_groups_list %}text-primary-600{% else %}text-[#979797]{% endif %}"
+                        hx-post="{% url 'reports:toggle_column_group' report.pk %}"
+                        hx-vals='{"field_name": "{{ field.name }}"}'
+                        hx-target="#report-content"
+                        hx-select="#report-content"
+                        hx-select-oob="#nav-actions"
+                        hx-swap="outerHTML"
+                        hx-headers='{"HX-Trigger": "refreshReport"}'>
+                        {% trans "C" %}
+                      </button>
+                    {% endif %}
+                  {% endwith %}
+                  {% endwith %}
+                  {% endwith %}
+                  <button
+                    class="font-bold px-1.5 py-1 {% if report.aggregate_columns_dict.field == field.name %}text-primary-600{% else %}text-[#979797]{% endif %}"
+                    hx-post="{% url 'reports:toggle_aggregate' report.pk %}"
+                    hx-vals='{"field_name": "{{ field.name }}"}'
+                    hx-target="#report-content"
+                    hx-select="#report-content"
+                    hx-select-oob="#nav-actions"
+                    hx-swap="outerHTML"
+                    hx-headers='{"HX-Trigger": "refreshReport"}'>
+                    {% trans "A" %}
+                  </button>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <h3 class="text-sm font-semibold mb-1">Grouped Columns</h3>
+          <div class="h-[200px]  overflow-hidden custom-scroll overflow-y-auto bg-[#00000008] rounded-md p-2">
+            <h3 class="text-sm font-semibold mb-1">Row Groups</h3>
+            <div class="mb-3">
+              {% for row_group in report.row_groups_list %}
+                {% if forloop.first and report.column_groups_list|length > 0 %}
+                  <button class="mb-1 bg-dark-50 rounded-md px-1.5 py-2 text-xs font-medium w-full text-left relative">
+                    {{ row_group|get_field_verbose_name:report.model_class }}
+                  </button>
+                {% else %}
+                  <button
+                    class="mb-1 bg-dark-50 rounded-md px-1.5 py-2 text-xs font-medium w-full text-left relative before:content-['-'] before:right-2 before:absolute before:text-xl before:top-0 before:bottom-0 before:m-auto"
+                    hx-post="{% url 'reports:remove_row_group' report.pk %}"
+                    hx-vals='{"field_name": "{{ row_group }}"}'
+                    hx-target="#report-content"
+                    hx-select="#report-content"
+                    hx-select-oob="#nav-actions"
+                    hx-swap="outerHTML"
+                    hx-headers='{"HX-Trigger": "refreshReport"}'>
+                    {{ row_group|get_field_verbose_name:report.model_class }}
+                  </button>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <h3 class="text-sm font-semibold mb-1">Column Groups</h3>
+            <div class="mb-3">
+              {% for column_group in report.column_groups_list %}
+                <button
+                  class="mb-1 bg-dark-50 rounded-md px-1.5 py-2 text-xs font-medium w-full text-left relative before:content-['-'] before:right-2 before:absolute before:text-xl before:top-0 before:bottom-0 before:m-auto"
+                  hx-post="{% url 'reports:remove_column_group' report.pk %}"
+                  hx-vals='{"field_name": "{{ column_group }}"}'
+                  hx-target="#report-content"
+                  hx-select="#report-content"
+                  hx-select-oob="#nav-actions"
+                  hx-swap="outerHTML"
+                  hx-headers='{"HX-Trigger": "refreshReport"}'>
+                  {{ column_group|get_field_verbose_name:report.model_class }}
+                </button>
+              {% endfor %}
+            </div>
+            <h3 class="text-sm font-semibold mb-1">Aggregate Columns</h3>
+            <div class="mb-3">
+              {% for agg in report.aggregate_columns_dict %}
+                <div class="flex items-center justify-between pe-6 mb-1 bg-dark-50 rounded-md px-1.5 py-2 text-xs font-medium w-full text-left relative before:content-['-'] before:right-2 before:absolute before:text-xl before:top-1px"
+                  hx-post="{% url 'reports:remove_aggregate_column' report.pk %}"
+                  hx-vals='{"field_name": "{{ agg.field }}"}'
+                  hx-target="#report-content"
+                  hx-select="#report-content"
+                  hx-select-oob="#nav-actions"
+                  hx-swap="outerHTML"
+                  hx-headers='{"HX-Trigger": "refreshReport"}'>
+                  <p>{{ agg.field|get_field_verbose_name:report.model_class }}</p>
+                  <select
+                    class="w-20 text-xs px-2 py-1 rounded-md"
+                    onclick="event.stopPropagation();"
+                    hx-post="{% url 'reports:update_aggregate_function' report.pk %}"
+                    hx-trigger="change"
+                    hx-target="#report-content"
+                    hx-select="#report-content"
+                    hx-select-oob="#nav-actions"
+                    hx-swap="outerHTML"
+                    hx-headers='{"HX-Trigger": "refreshReport"}'
+                    name="aggfunc"
+                    hx-vals='{"field_name": "{{ agg.field }}"}'>
+                    <option value="sum" {% if agg.aggfunc == 'sum' %}selected{% endif %}>Sum</option>
+                    <option value="avg" {% if agg.aggfunc == 'avg' %}selected{% endif %}>Avg</option>
+                    <option value="count" {% if agg.aggfunc == 'count' %}selected{% endif %}>Count</option>
+                    <option value="max" {% if agg.aggfunc == 'max' %}selected{% endif %}>Max</option>
+                    <option value="min" {% if agg.aggfunc == 'min' %}selected{% endif %}>Min</option>
+                  </select>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Tab -->
+        <div class="hidden tab-content" id="filter-tab" role="tabpanel" aria-labelledby="realted-list-tab">
+          <h3 class="text-sm font-semibold mb-1">{% trans "Columns" %}</h3>
+          <div class="relative mb-3">
+              <input
+                  type="text"
+                  placeholder="Search Columns"
+                  name="search_filter"
+                  class="text-color-600 px-2 py-1.5 pr-[40px] w-full border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-dark-100 placeholder:text-xs text-sm [transition:.3s] focus:border-primary-600"
+                  hx-get="{% url 'reports:search_available_fields' report.pk %}"
+                  hx-trigger="keyup changed delay:300ms"
+                  hx-target="#available-filter-list"
+                  hx-swap="innerHTML"
+                  hx-vals='{"field_type": "filter"}'/>
+              <button class="absolute right-3 top-0 bottom-0 m-auto cursor-pointer">
+                  <img src="{% static '/assets/icons/search.svg' %}" alt="" width="20" />
+              </button>
+          </div>
+
+          <div class="mb-5 h-[250px] custom-scroll overflow-hidden overflow-y-auto bg-[#00000008] rounded-md p-2" id="available-filter-list">
+            {% for field in available_fields %}
+              <button
+                  class="mb-1 bg-dark-50 rounded-md px-1.5 py-2 text-xs font-medium w-full text-left relative before:content-['+'] before:right-2 before:absolute before:text-lg before:top-0 before:bottom-0 before:m-auto"
+                  hx-post="{% url 'reports:add_filter_field' report.pk %}"
+                  hx-vals='{"field_name": "{{ field.name }}"}'
+                  hx-target="#panel"
+                  hx-swap="outerHTML"
+                  hx-headers='{"HX-Trigger": "refreshReport"}'>
+                  {{ field.verbose_name|title }}
+              </button>
+            {% endfor %}
+          </div>
+
+          <h3 class="text-sm font-semibold mb-1">{% trans "Apply Filters" %}</h3>
+          <div class="pb-2 custom-scroll overflow-x-auto h-[200px] overflow-hidden overflow-y-auto bg-[#00000008] rounded-md p-2">
+              {% for filter_key, filter_value in report.filters_dict.items %}
+                  <div class="flex flex-col items-center w-full">
+                      {% if forloop.counter > 1 %}
+                          <div class="flex justify-center items-center my-1 w-24">
+                              <select
+                                  class="js-example-basic-single w-full"
+                                  name="logic"
+                                  hx-post="{% url 'reports:update_filter_logic' report.pk %}"
+                                  hx-vals='{"field_name": "{{ filter_key }}"}'
+                                  hx-target="#report-content"
+                                  hx-select="#report-content"
+                                  hx-select-oob="#nav-actions"
+                                  hx-swap="outerHTML"
+                                  hx-trigger="change"
+                                  hx-headers='{"HX-Trigger": "refreshReport"}'>
+                                  <option value="and" {% if filter_value.logic|default:'and' == 'and' %}selected{% endif %}>AND</option>
+                                  <option value="or" {% if filter_value.logic|default:'and' == 'or' %}selected{% endif %}>OR</option>
+                              </select>
+                          </div>
+                      {% endif %}
+                      <div class="flex gap-2 items-center filter-row w-full h-[36px]" data-field-name="{{ filter_key }}">
+                          <div class="w-20 text-xs px-2 bg-white rounded-md border border-[#d9d9d9] flex-shrink-0 flex items-center justify-center h-full">
+                              <span class="text-center leading-none">{{ filter_value.original_field|get_field_verbose_name:report.model_class }}</span>
+                          </div>
+                          <select
+                              class="js-example-basic-single w-24 text-xs px-1 py-1 rounded-md border border-[#d9d9d9] flex-shrink-0 h-full"
+                              name="operator"
+                              hx-post="{% url 'reports:update_filter_operator' report.pk %}"
+                              hx-vals='{"field_name": "{{ filter_key }}"}'
+                              hx-target="#report-content"
+                              hx-select="#report-content"
+                              hx-select-oob="#nav-actions"
+                              hx-swap="outerHTML"
+                              hx-trigger="change"
+                              hx-headers='{"HX-Trigger": "refreshReport"}'>
+                              <option value="exact" {% if filter_value.operator == 'exact' %}selected{% endif %}>Is</option>
+                              <option value="icontains" {% if filter_value.operator == 'icontains' %}selected{% endif %}>Contains</option>
+                              <option value="gt" {% if filter_value.operator == 'gt' %}selected{% endif %}>Greater than</option>
+                              <option value="lt" {% if filter_value.operator == 'lt' %}selected{% endif %}>Less than</option>
+                              <option value="gte" {% if filter_value.operator == 'gte' %}selected{% endif %}>Greater or equal</option>
+                              <option value="lte" {% if filter_value.operator == 'lte' %}selected{% endif %}>Less or equal</option>
+                          </select>
+                          {% if report|is_choice_or_foreign:filter_value.original_field %}
+                              <select
+                                  class="js-example-basic-single w-32 text-xs px-1 py-1 rounded-md border border-[#d9d9d9] flex-shrink-0 h-full"
+                                  name="value"
+                                  hx-post="{% url 'reports:update_filter_value' report.pk %}"
+                                  hx-vals='{"field_name": "{{ filter_key }}"}'
+                                  hx-target="#report-content"
+                                  hx-select="#report-content"
+                                  hx-select-oob="#nav-actions"
+                                  hx-swap="outerHTML"
+                                  hx-trigger="change"
+                                  hx-headers='{"HX-Trigger": "refreshReport"}'>
+                                  <option value="">Select...</option>
+                                  {% for choice in report|get_field_choices:filter_value.original_field %}
+                                      <option value="{{ choice.value }}" {% if filter_value.value == choice.value|stringformat:"s" %}selected{% endif %}>
+                                          {{ choice.display }}
+                                      </option>
+                                  {% endfor %}
+                              </select>
+                          {% else %}
+                              <input
+                                  type="text"
+                                  class="w-32 text-xs px-1 py-1 rounded-md border border-[#d9d9d9] flex-shrink-0 h-full"
+                                  value="{{ filter_value.value }}"
+                                  name="value"
+                                  hx-post="{% url 'reports:update_filter_value' report.pk %}"
+                                  hx-vals='{"field_name": "{{ filter_key }}"}'
+                                  hx-target="#report-content"
+                                  hx-select="#report-content"
+                                  hx-select-oob="#nav-actions"
+                                  hx-swap="outerHTML"
+                                  hx-trigger="change"
+                                  hx-headers='{"HX-Trigger": "refreshReport"}'
+                              />
+                          {% endif %}
+                          <div class="flex items-center justify-center w-5 flex-shrink-0 close-button h-full">
+                              <button
+                                  class="hover:bg-gray-100 rounded-full p-0.5 flex items-center justify-center"
+                                  hx-post="{% url 'reports:remove_filter' report.pk %}"
+                                  hx-vals='{"field_name": "{{ filter_key }}"}'
+                                  hx-target="#report-content"
+                                  hx-select="#report-content"
+                                  hx-select-oob="#nav-actions"
+                                  hx-swap="outerHTML"
+                                  hx-headers='{"HX-Trigger": "refreshReport"}'>
+                                  <i class="fas fa-times text-red-600 text-xs"></i>
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+</div>
+
+<script>
+    // Store active tab in sessionStorage to persist across HTMX updates
+    function initTabSystem() {
+        const tabs = document.querySelectorAll('#panel .tab-button');
+        const contents = document.querySelectorAll('#panel .tab-content');
+
+        // Get the stored active tab or default to 'columns'
+        const activeTab = sessionStorage.getItem('activeReportTab') || 'columns';
+
+        // Function to switch tabs
+        function switchTab(targetTabName) {
+            tabs.forEach(tab => {
+                const tabName = tab.getAttribute('data-tab-name');
+                if (tabName === targetTabName) {
+                    tab.classList.add('text-primary-600');
+                    tab.classList.remove('text-[#333]');
+                    tab.setAttribute('aria-selected', 'true');
+                } else {
+                    tab.classList.remove('text-primary-600');
+                    tab.classList.add('text-[#333]');
+                    tab.setAttribute('aria-selected', 'false');
+                }
+            });
+
+            contents.forEach(content => {
+                const contentId = content.id;
+                if (
+                    (targetTabName === 'columns' && contentId === 'columns-tab') ||
+                    (targetTabName === 'grouping' && contentId === 'grouping-tab') ||
+                    (targetTabName === 'filter' && contentId === 'filter-tab')
+                ) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+        }
+
+        // Set initial active tab
+        switchTab(activeTab);
+
+        // Add click handlers
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tabName = this.getAttribute('data-tab-name');
+                switchTab(tabName);
+                sessionStorage.setItem('activeReportTab', tabName);
+            });
+        });
+    }
+
+    // Initialize tab system when panel loads
+    if (document.getElementById('panel')) {
+        initTabSystem();
+    }
+
+    // Reinitialize after HTMX updates the panel
+    document.body.addEventListener('htmx:afterSettle', function(event) {
+        if (event.target.id === 'panel') {
+            setTimeout(initTabSystem, 10);
+        }
+    });
+</script>
+</div>

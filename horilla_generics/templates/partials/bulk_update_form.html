@@ -1,0 +1,93 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<div class="flex justify-between items-center p-5">
+    <h2 class="text-md font-semibold">{% trans "Bulk Update Selected" %} {{ model_verbose_name }}</h2>
+    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-500 text-xl">
+        <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+    </button>
+</div>
+
+
+<div class="relative bg-white rounded-lg shadow-sm p-5 pt-0">
+    <form id="bulkUpdateForm" hx-post="{{ search_url }}"
+        hx-push-url="false" hx-on::after-request="closeModal()">
+        {% csrf_token %}
+        {% if bulk_update_fields %}
+            <div class="{% if bulk_update_two_column %}grid grid-cols-1 sm:grid-cols-2 gap-x-4{% endif %}">
+                {% for field in bulk_update_fields %}
+                    <div class="mb-4">
+                        <label for="bulkUpdateValue_{{ field.name }}" class="text-xs text-color-600">{{ field.verbose_name }}</label>
+                        {% if field.type == 'text' or field.type == 'char' %}
+                            <input type="text" id="bulkUpdateValue_{{ field.name }}" name="bulk_update_value_{{ field.name }}"
+                                class="h-[38px] text-color-600 p-2 placeholder:text-xs text-xs w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm transition focus:border-primary-600"
+                                placeholder="Enter {{ field.verbose_name|lower }}">
+                        {% elif field.type == 'number' or field.type == 'integer' %}
+                            <input type="number" id="bulkUpdateValue_{{ field.name }}" name="bulk_update_value_{{ field.name }}"
+                                class="h-[38px] text-color-600 p-2 placeholder:text-xs text-xs w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm transition focus:border-primary-600"
+                                placeholder="Enter {{ field.verbose_name|lower }}">
+                        {% elif field.type == 'float' or field.type == 'decimal' %}
+                            <input type="number" step="any" id="bulkUpdateValue_{{ field.name }}"
+                                name="bulk_update_value_{{ field.name }}"
+                                class="h-[38px] text-color-600 p-2 placeholder:text-xs text-xs w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm transition focus:border-primary-600"
+                                placeholder="Enter {{ field.verbose_name|lower }}">
+                        {% elif field.type == 'boolean' %}
+                            <div class="flex w-full mb-3">
+                                <select id="bulkUpdateValue_{{ field.name }}" name="bulk_update_value_{{ field.name }}"
+                                    class="js-example-basic-single headselect" style="width: 100%">
+                                    <option value="True">Yes</option>
+                                    <option value="False">No</option>
+                                </select>
+                            </div>
+                        {% elif field.type == 'choice' and field.choices %}
+                            <div class="flex w-full mb-3">
+                                <select id="bulkUpdateValue_{{ field.name }}" name="bulk_update_value_{{ field.name }}"
+                                    class="js-example-basic-single headselect" style="width: 100%">
+                                    <option value= "">Select {{ field.verbose_name|lower }}</option>
+                                    {% for choice in field.choices %}
+                                    <option value="{{ choice.value }}">{{ choice.label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% elif field.type == 'date' %}9
+                            <input type="date" id="bulkUpdateValue_{{ field.name }}" name="bulk_update_value_{{ field.name }}"
+                                class="h-[38px] text-color-600 p-2 placeholder:text-xs text-xs w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm transition focus:border-primary-600">
+                        {% elif field.type == 'datetime' %}
+                            <input type="datetime-local" id="bulkUpdateValue_{{ field.name }}" name="bulk_update_value_{{ field.name }}"
+                                class="h-[38px] text-color-600 p-2 placeholder:text-xs text-xs w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm transition focus:border-primary-600">
+                        {% elif field.type == 'foreignkey' %}
+                            <div class="flex w-full mb-3">
+                                <select id="bulkUpdateValue_{{ field.name }}" name="bulk_update_value_{{ field.name }}"
+                                    class="select2-pagination w-full" style="width: 100" data-url="{% url 'horilla_generics:model_select2' field.app_label field.model %}">
+                                    <option value= "">Select {{ field.verbose_name|lower }}</option>
+                                    {% for choice in field.choices %}
+                                    <option value="{{ choice.value }}">{{ choice.label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% else %}
+                            <input type="text" id="bulkUpdateValue_{{ field.name }}" name="bulk_update_value_{{ field.name }}"
+                                class="h-[38px] text-color-600 p-2 placeholder:text-xs text-xs w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm transition focus:border-primary-600"
+                                placeholder="Enter {{ field.verbose_name|lower }}">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-sm text-color-600">{% trans "No fields available for bulk update." %}</p>
+        {% endif %}
+
+        <input type="hidden" id="bulkUpdateRecordIds" name="record_ids" value="{{ selected_ids_json }}">
+        <div class="flex justify-end gap-2">
+            <button type="submit"
+                class="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-800">{% trans "Update" %}</button>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $("select").on("select2:select", function (e) {
+            $(this).closest("select")[0].dispatchEvent(new Event("change"));
+        });
+    });
+</script>

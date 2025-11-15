@@ -1,0 +1,199 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="{% static 'assets/js/tailwind/tailwind.js' %}"></script>
+        <script src="{% static 'assets/js/tailwind.config.js' %}"></script>
+        <script src="{% static 'assets/js/htmx/htmx.min.js' %}"></script>
+        <link href="{% static 'assets/css/flowbite/flowbite.min.css' %}" rel="stylesheet" />
+        <script src=" {% static 'assets/js/flowbite/flowbite.min.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'assets/fontawesome/css/all.min.css' %}" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="{% static 'assets/css/googlefonts/css2.css' %}"
+            rel="stylesheet" />
+        <script src="{% static 'assets/js/cloudflare/jquery.min.js' %}"></script>
+        <script src="{% static 'assets/js/cloudflare/chart.min.js' %}"></script>
+        <script src="{% static 'assets/js/cloudflare/htmx.min.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" />
+        <link rel="stylesheet" href="{% static 'assets/css/calendar.css' %}" />
+        <link href="{% static 'assets/css/select2.min.css' %}"  rel="stylesheet" />
+        <link rel="stylesheet" href="{% static 'assets/css/sweetalert_toast/toast.css' %}" />
+        <script src="{% static 'assets/js/sweetalert2.js' %} "></script>
+        <link href="{% static 'assets/css/select2.min.css' %}"  rel="stylesheet" />
+
+    </head>
+    <body class="bg-[#f8f8f9] font-[Inter,_sans-serif]">
+        <div class="h-screen w-full flex items-center justify-center">
+            <div id="messages-container" style="display:none;">
+                {% for message in messages %}
+                    <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+                {% endfor %}
+            </div>
+
+            {% block login %}
+            <!-- LOGIN FORM -->
+            <div id="sec1" class="bg-white p-[50px] rounded-md shadow w-[450px]">
+                <img src="{% static 'assets/img/logo.svg' %}" alt="Horilla Logo" class="m-auto mb-4" />
+                <h1 class="text-3xl font-bold mb-2 text-center">{% trans "Welcome to Horilla CRM" %}</h1>
+                <p class="mb-5 text-center text-sm text-color-600">
+                    {% trans "Please sign in to access your dashboard" %}
+                </p>
+
+                <form method="post" action="{% url 'horilla_core:login' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next }}" />
+                    <div class="mb-3">
+                        <label for="username" class="text-sm text-color-600">{% trans "Username" %}</label>
+                        <input
+                        id="username"
+                        type="text"
+                        name="username"
+                        autocomplete="off"
+                        placeholder="Enter Username"
+                        required
+                        class="text-color-600 w-full border border-dark-50 rounded-md p-3 mt-1 placeholder:text-dark-100 text-sm focus:border-primary-600 focus-visible:outline-0"
+                        />
+                    </div>
+                    <label  for="passwordInput"  class="text-sm text-color-600">{% trans "Password" %}</label>
+                    <div class="relative {% if not show_forgot_password %}mb-4{% endif %}">
+                        <input
+                        id="passwordInput"
+                        type="password"
+                        name="password"
+                        autocomplete="off"
+                        placeholder="Enter Password"
+                        required
+                        class="text-color-600 p-3 pr-[40px] w-full border border-dark-50 rounded-md mt-1 placeholder:text-dark-100 text-sm focus:border-primary-600 focus-visible:outline-0"
+                        />
+                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-0 bottom-0 m-auto cursor-pointer">
+                        <img id="eyeIcon" src="{% static 'assets/icons/eye.svg' %}" alt="Toggle visibility" />
+                        <img id="eyeHideIcon" src="{% static 'assets/icons/eye-hide.svg' %}" width="21" alt="Toggle visibility" class='hidden' />
+                        </button>
+                    </div>
+                    {% if show_forgot_password %}
+                    <div class="flex justify-end">
+                        <button
+                        type="button"
+                        hx-get="{% url 'horilla_core:forgot_password' %}"
+                        hx-target="#sec1"
+                        hx-select="#sec2"
+                        hx-push-url="true"
+                        hx-swap="outerHTML"
+                        class="text-sm font-medium text-red-500 mb-3 mt-2 cursor-pointer"
+                        >
+                        {% trans "Forgot Password?" %}
+                        </button>
+                    </div>
+                    {% endif %}
+                    <button
+                        type="submit"
+                        class="p-3 bg-primary-600 hover:bg-secondary-600 w-full flex gap-3 justify-center rounded-md text-white transition duration-300">
+                        <img src="{% static 'assets/icons/sign.svg' %}" alt="" />
+                        {% trans "Sign In" %}
+                    </button>
+                </form>
+
+                {% if initialize_database %}
+                    <div class="grid grid-cols-2 gap-2 mt-5">
+                        <button
+                            class="cursor-pointer btn-with-icon flex gap-3 text-sm px-[15px] py-[13px] rounded-md text-[#34c558] bg-[#e6fff5] hover:bg-[#34c558] hover:text-[white] transition duration-300 whitespace-nowrap"
+                            hx-get="{% url 'horilla_core:load_data' %}"
+                            hx-target="#sec1"
+                            hx-swap="outerHTML"
+                            hx-push-url="true"
+                            hx-select="#load-sec">
+                            {% trans "Load Demo Data" %}
+                            <img src="{% static 'assets/icons/ar1.svg' %}" alt="" />
+                        </button>
+                        <button
+                            class="btn-with-icon flex gap-3 text-sm px-[15px] py-[13px] rounded-md text-[#E54F38] bg-[#ffefed] hover:bg-[#e54f38] hover:text-[white] transition duration-300 cursor-pointer whitespace-nowrap"
+                            hx-get="{% url 'horilla_core:initialize_database' %}"
+                            hx-target="#sec1"
+                            hx-swap="outerHTML"
+                            hx-push-url="true"
+                            hx-select="#initialize-sec">
+                            {% trans "Initialize Database" %}
+                            <img src="{% static 'assets/icons/ar2.svg' %}" alt="" />
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+            {% endblock login %}
+        </div>
+
+        <script>
+
+            function togglePassword() {
+                const passwordInput = document.getElementById('passwordInput');
+
+                if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                $('#eyeIcon').toggleClass('hidden')
+                $('#eyeHideIcon').toggleClass('hidden')
+
+                } else {
+                passwordInput.type = 'password';
+                $('#eyeHideIcon').toggleClass('hidden')
+                $('#eyeIcon').toggleClass('hidden')
+
+
+                }
+            }
+            $(document).ready(function() {
+                $('.js-example-basic-single').select2(
+                    {
+                        templateResult: formatOption,
+                        templateSelection: formatOption,
+                    }
+                );
+                showMessages();
+
+
+                $("select").on("select2:select", function (e) {
+                    $(this).closest("select")[0].dispatchEvent(new Event("change"));
+                });
+
+
+            });
+
+
+            $(document).on("htmx:afterSettle", function (event) {
+                var target = $(event.target);
+                target.find(".js-example-basic-single").each(function () {
+                    if ($(this).hasClass("select2-hidden-accessible")) {
+                    $(this).select2("destroy");
+                    }
+                });
+                target.find(".js-example-basic-single").select2({
+                    templateResult: formatOption,
+                    templateSelection: formatOption,
+                    width: "100%"
+                });
+                initializeSelect2Pagination();
+                setTimeout(function() {
+                    showMessages();
+                }, 200);
+
+                $('.js-example-basic-multiple').each(function() {
+                    if (!$(this).hasClass('select2-hidden-accessible')) {
+                        $(this).select2({
+                            placeholder: $(this).data('placeholder') || 'Select options...',
+                            allowClear: true
+                        });
+                    }
+                });
+                $("select").on("select2:select", function (e) {
+                    $(this).closest("select")[0].dispatchEvent(new Event("change"));
+                });
+
+            });
+        </script>
+        <script src="{% url 'javascript-catalog' %}"></script>
+        <script src="{% static 'assets/js/global.js' %}"></script>
+        <script src="{% static 'assets/js/select2.min.js' %}"></script>
+    </body>
+</html>

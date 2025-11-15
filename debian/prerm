@@ -1,0 +1,30 @@
+#!/bin/bash
+# Pre-removal script for horilla-crm
+
+set -e
+
+case "$1" in
+    remove|upgrade|deconfigure)
+        # Stop the service if it's running
+        if systemctl is-active --quiet horilla-crm; then
+            systemctl stop horilla-crm
+        fi
+
+        # Disable the service
+        if systemctl is-enabled --quiet horilla-crm; then
+            systemctl disable horilla-crm
+        fi
+        ;;
+
+    failed-upgrade)
+        ;;
+
+    *)
+        echo "prerm called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

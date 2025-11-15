@@ -1,0 +1,173 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<div class="bg-white rounded-lg shadow p-6 min-w-[500px]">
+    <div class="flex justify-between items-center mb-2">
+        <h3 class="text-md font-semibold mb-2">
+            {% if cannot_delete %}
+                {% trans 'Delete' %} {{ model_verbose_name }} {% trans 'with Dependencies' %}
+            {% else %}
+                {% trans 'Confirm Delete' %}
+            {% endif %}
+        </h3>
+        {% if cannot_delete %}
+            <button onclick="closeModal();" class="text-gray-500 hover:text-red-500 text-xl">
+                <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+            </button>
+        {% endif %}
+
+    </div>
+    {% if cannot_delete %}
+        <p class="text-sm text-gray-600 mb-2">
+            {% trans 'The' %} {{ model_verbose_name }} "{{ object }}" {% trans 'has dependencies and cannot be deleted directly.' %}
+        </p>
+        <div class="border border-primary-300 rounded-md bg-white mb-3">
+            {% for item in cannot_delete %}
+                <div class="border-b border-primary-300">
+                    <button type="button" class="flex justify-between items-center px-1 py-3 text-left text-gray-800 font-medium transition gap-2" onclick="toggleAccordion(this)">
+                        <svg class="ms-0 w-4 h-4 transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-4 4-4-4" />
+                        </svg>
+                        <div class="flex gap-3 w-full font-medium text-sm">
+                            {{ item.name }}
+                        </div>
+                    </button>
+                    <div class="accordion-content text-sm text-dark-500 transition-all duration-300 overflow-hidden max-h-0">
+                        <div class="px-4 border-t border-primary-300 pt- max-h-60 overflow-y-auto">
+                            {% for dep in item.dependencies %}
+                                <div class="py-1 text-[.85rem] flex justify-between items-center">
+                                    <span>{{ dep.model_name }} ({{ dep.count }})</span>
+                                </div>
+                                {% if dep.records %}
+                                    <div class="mt-1 mb-2">
+                                        <!-- Container for infinite scroll -->
+                                        <div id="records-container-{{ dep.related_name }}">
+                                            <ul class="list-disc ml-4 text-xs text-gray-400" id="records-list-{{ dep.related_name }}">
+                                                {% for record in dep.records|slice:":8" %}
+                                                    <li class="py-1">{{ record }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                            <!-- Sentinel for infinite scroll -->
+                                            {% if dep.has_more %}
+                                                <div id="sentinel-{{ dep.related_name }}"
+                                                     hx-get="{{ search_url }}?action=load_more_dependencies&related_name={{ dep.related_name }}&record_id={{ record_id }}&page=2&per_page=8"
+                                                     hx-target="#records-list-{{ dep.related_name }}"
+                                                     hx-swap="beforeend"
+                                                     hx-push-url="false"
+                                                     hx-trigger="intersect once"
+                                                     hx-indicator="#mainloadingIndicator">
+                                                    <div id="mainloadingIndicator" class="htmx-indicator">
+                                                        <div class="flex justify-center items-center p-4">
+                                                            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#e54f38]"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-4">
+            <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
+                {% if reassign_all_visibility %}
+                    <button class="bg-[#2563eb] text-white rounded-md px-4 py-2 text-sm w-full sm:w-auto"
+                            hx-get="{{ search_url }}?action=show_bulk_reassign&record_id={{ record_id }}&view_id={{ view_id|safe }}&delete_mode={{ delete_mode }}"
+                            hx-target="#deleteBox"
+                            hx-swap="innerHTML"
+                            hx-push-url="false"
+                            hx-on::after-request="openDeleteModal()">
+                        <span class="flex items-center gap-2">
+                            <span class="htmx-indicator">
+                                <img src="{% static '/assets/icons/spinner.svg' %}" alt="Loading..." width="25" />
+                            </span>
+                            {% trans 'Reassign All' %}
+                        </span>
+                    </button>
+                {% endif %}
+                {% if reassign_individual_visibility %}
+                    <button class="bg-[#16a34a] text-white rounded-md px-4 py-2 text-sm w-full sm:w-auto"
+                            hx-get="{{ search_url }}?action=show_individual_reassign&record_id={{ record_id }}&view_id={{ view_id|safe }}&delete_mode={{ delete_mode }}"
+                            hx-target="#deleteBox"
+                            hx-swap="innerHTML"
+                            hx-push-url="false"
+                            hx-on::after-request="openDeleteModal()">
+                        <span class="flex items-center gap-2">
+                            <span class="htmx-indicator">
+                                <img src="{% static '/assets/icons/spinner.svg' %}" alt="Loading..." width="25" />
+                            </span>
+                            {% trans 'Reassign Individually' %}
+                        </span>
+                    </button>
+                {% endif%}
+                <button class="bg-[#dc2626] text-white rounded-md px-4 py-2 text-sm w-full sm:w-auto"
+                        hx-get="{{ search_url }}?action=show_delete_confirmation&record_id={{ record_id }}&view_id={{ view_id|safe }}&delete_mode={{ delete_mode }}"
+                        hx-target="#deleteConfirmModalBox"
+                        hx-swap="innerHTML"
+                        hx-push-url="false"
+                        hx-on::after-request="OpenDeleteConfirmModal()">
+                    <span class="flex items-center gap-2">
+                        <span id="bulk-delete-spinner" class="htmx-indicator">
+                            <img src="{% static '/assets/icons/spinner.svg' %}" alt="Loading..." width="25" />
+                        </span>
+                        {% trans 'Delete All' %}
+                    </span>
+                </button>
+            </div>
+        </div>
+    {% else %}
+
+        <p class="text-sm text-gray-600 mb-4">
+            {% trans 'Are you sure you want to delete the' %} {{ model_verbose_name }} "{{ object }}"?
+        </p>
+        {% comment %} <div id="data-messages" class="mt-4"></div> {% endcomment %}
+        <div class="flex justify-end gap-2">
+            <button onclick="closeModal();" class="text-sm px-6 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                {% trans 'Cancel' %}
+            </button>
+            <form
+                  hx-post="{{ search_url }}"
+                  hx-push-url="false"
+                  {% if hx_target %}
+                    hx-target = "{{ hx_target }}"
+                  {% endif %}
+                  hx-on::after-request="closeModal();closeDeleteModeModal();$('.unselect-all-btn').click();">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="simple_delete">
+                <input type="hidden" name="record_id" value="{{ record_id }}">
+                <input type="hidden" name="view_id" value="{{ view_id|safe }}">
+                <input type="hidden" name="delete_mode" value="{{ delete_mode }}">
+                <button type="submit"
+                        class="text-sm px-6 py-2 bg-[#21b442] text-white rounded-md hover:bg-[#198230]"
+                        hx-indicator="#confirm-delete-spinner">
+                    <span class="flex items-center gap-2">
+                        <span id="confirm-delete-spinner" class="htmx-indicator">
+                            <img src="{% static '/assets/icons/spinner.svg' %}" alt="Loading..." width="25" />
+                        </span>
+                        {% trans 'Confirm' %}
+                    </span>
+                </button>
+            </form>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function toggleAccordion(button) {
+    const content = button.nextElementSibling;
+    const svg = button.querySelector('svg');
+
+    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+        content.style.maxHeight = '0px';
+        svg.style.transform = 'rotate(0deg)';
+    } else {
+        content.style.maxHeight = content.scrollHeight + 'px';
+        svg.style.transform = 'rotate(180deg)';
+    }
+}
+</script>

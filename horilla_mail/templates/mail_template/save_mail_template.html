@@ -1,0 +1,42 @@
+{% load static i18n %}
+
+<div class="flex justify-between p-5 pb-0">
+    <h2 class="text-lg font-semibold">{% trans "Save as mail template" %}</h2>
+    <button id="close" class="text-gray-500 hover:text-red-500 text-xl" onclick="closeModal();">
+        <img src="{% static 'assets/icons/close.svg' %}" alt="Close">
+    </button>
+</div>
+
+<form hx-post="{% url 'horilla_mail:save_as_mail_template' %}?model_name={{ model_name }}" hx-target="#modalBox">
+    {% csrf_token %}
+    <input type="hidden" name="model_name" value="{{ model_name }}">
+    <input type="hidden" name="message_content" value="{{ message_content }}" id="modal_message_content">
+
+    <div class="p-5">
+        <label class="text-xs text-color-600">{% trans "Title" %}</label>
+        <input type="text" name="title" placeholder="Enter title" value="{% if form.title.value %}{{ form.title.value }}{% endif %}"
+            class="mb-2 text-color-600 p-2 placeholder:text-xs pr-[40px] w-full border border-dark-50 rounded-md mt-1
+                   focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600">
+
+        <!-- Display empty body error if present -->
+        {% if empty_body_error %}
+            <div class="text-xs text-red-600 mb-2">{{ empty_body_error }}</div>
+        {% endif %}
+
+        {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+                <div class="text-xs text-red-600 mb-2">{{ error }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        <div class="flex justify-end">
+            {% if not empty_body_error %}
+                <button
+                    class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-white"
+                    type="submit">
+                    {% trans "Save Template" %}
+                </button>
+            {% endif %}
+        </div>
+    </div>
+</form>

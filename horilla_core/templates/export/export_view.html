@@ -1,0 +1,161 @@
+{% extends "settings/settings.html" %}
+{% block settings %}
+
+{% load static i18n horilla_tags %}
+{% has_perm "horilla_core.can_view_horilla_export" as view_horilla_export %}
+{% if view_horilla_export %}
+    <div class="ps-3" id="export-view">
+
+        <div class="flex justify-between items-center mb-2">
+            <h3 class="text-md font-semibold">{% trans 'Export Data' %}</h3>
+        </div>
+
+        <button id="reloadScheduleListButton" hidden
+            hx-get="{{ request.path }}?{{ request.GET.urlencode }}"
+            hx-target="#schedule-export-wrapper"
+            hx-trigger="click"
+            hx-select="#schedule-export-wrapper"
+            hx-swap="outerHTML">
+            click
+        </button>
+
+        <form id="exportform" method="POST" action="{% url 'horilla_core:export_view' %}" hx-target="#export-view" hx-swap="innerHTML" enctype="multipart/form-data">
+            <div id="messages-container" class="hidden" >
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            <button id="reloadButton" hidden hx-get="{{ request.path }}?{{request.GET.urlencode}}" hx-target="#exportform" hx-trigger="click" hx-swap="outerHTML" hx-select="#exportform">click</button>
+            {% csrf_token %}
+            <div class="flex flex-col-2 gap-4">
+                <!-- Select Module -->
+                <div class="md:w-1/2">
+                    <div class="flex flex-col gap-1 select-module">
+                        <label class="text-xs text-color-600">{% trans "Select Module" %}</label>
+                        <select data-placeholder="Choose Module" name="module" multiple class="js-example-basic-multiple headselect w-full" required>
+                            {% for module in modules %}
+                                <option value="{{ module.name }}"
+                                        {% if selected_modules == module.name %}selected{% endif %}>
+                                    {{ module.label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Export Format -->
+                <div class="md:w-1/2 flex flex-col justify-between">
+                    <label class="text-xs text-color-600">{% trans "Export Format" %}</label>
+                    <select data-placeholder="Select Export Format" name="export_format" class="js-example-basic-single headselect w-full">
+                        <option></option>
+                        <option value="xlsx" selected>{% trans 'Excel'%}</option>
+                        <option value="csv">{% trans 'CSV'%}</option>
+                        <option value="pdf">{% trans 'PDF'%}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-end mt-5 gap-2">
+                <button type="button"
+                    id="scheduleBtn"
+                    hx-get="{% url 'horilla_core:schedule_modal' %}"
+                    hx-target="#modalBox" hx-push-url="false"
+                    hx-on:click="openModal();"
+                    hx-include="[name=module], [name=export_format]"
+                    class="text-sm px-5 py-2 bg-white rounded-md border border-primary-600 text-primary-600">
+                {% trans "Schedule" %}
+                </button>
+                <button type="submit"
+                    hx-on::after-request="$('#reloadMessagesButton').click();"
+                    class="nextBtn text-sm px-5 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]" hx-indicator="#exportSpinner">
+                    {% trans "Export" %}
+                </button>
+            </div>
+        </form>
+        <div id="schedule-export-wrapper">
+            {% if scheduled_exports %}
+                <div id="schedule-export" class="pt-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-md font-semibold">{% trans 'Scheduled Exports' %}</h3>
+                    </div>
+                    <div id="mainSession" class="pt-5"
+                        hx-get="{% url 'horilla_core:schedule_export_list' %}?{{ request.GET.urlencode }}"
+                        hx-trigger="load">
+                    </div>
+                </div>
+            {% else %}
+                <div class="mt-8 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-6 border border-[#efefef]">
+                    <div class="flex items-start gap-6">
+                        <div class="flex-shrink-0 w-[138px]">
+                            <img src="{% static '/assets/img/export.png' %}" alt="">
+                        </div>
+
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800 mb-3">{% trans "Quick Tips" %}</h4>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <span>{% trans "Select multiple modules to export data from different sections at once" %}</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span>{% trans "Choose from Excel, CSV, or PDF formats based on your needs" %}</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span>{% trans "You can set an end date for scheduled exports or leave it blank for indefinite scheduling" %}</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span>{% trans "Export immediately by clicking the Export button, or schedule for automated recurring exports" %}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#exportform').on('submit', function(e) {
+                e.preventDefault();
+
+                var form = $(this)[0];
+                var formData = new FormData(form);
+
+                $.ajax({
+                    url: form.action,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    xhrFields: {
+                        responseType: 'blob'
+                    },
+                    success: function(blob, status, xhr) {
+                        var url = window.URL.createObjectURL(blob);
+                        var a = document.createElement('a');
+                        a.href = url;
+
+                        var contentDisposition = xhr.getResponseHeader('Content-Disposition');
+                        var filename = 'exported_data.zip';
+                        if (contentDisposition) {
+                            var filenameMatch = contentDisposition.match(/filename="(.+)"/);
+                            if (filenameMatch && filenameMatch[1]) {
+                                filename = filenameMatch[1];
+                            }
+                        }
+
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+
+                        $('#reloadMessagesButton').click();
+                        $('#reloadButton').click();
+                    },
+
+                });
+            });
+        });
+    </script>
+{% else %}
+  {% include 'error/403.html' %}
+{% endif %}
+{% endblock %}

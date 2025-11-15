@@ -1,0 +1,361 @@
+
+{% load static i18n %}
+<div id="send-mail-container">
+<style>
+  .note-modal-backdrop{
+      z-index:39 !important;
+
+  }
+</style>
+<div class="flex justify-between p-5 pb-0">
+    <h2 class="text-lg font-semibold">{% trans "Send Mail" %}</h2>
+    <button
+    id="close-mail-btn"
+    hx-post="{% url 'horilla_mail:check_draft_changes' %}?model_name={{ model_name }}&object_id={{ object_id }}&pk={{pk}}"
+    hx-include="[name='from_mail'], [name='to_email'], [name='cc_email'], [name='bcc_email'], [name='subject'],#fileInput, #message_content"
+    hx-target="#deleteModeBox"
+    hx-encoding="multipart/form-data"
+    hx-on:click="openDeleteModeModal();"
+    class="text-gray-500 hover:text-red-500 text-xl">
+    <img src="{% static 'assets/icons/close.svg' %}" alt="" />
+    </button>
+</div>
+<div class="p-5 ">
+    <div class="overflow-hidden overflow-y-auto h-[600px] pe-2">
+        <label for="" class="text-xs text-color-600">{% trans "From" %}</label>
+        <div>
+            <select name="from_mail" class="js-example-basic-single">
+                {% for mail_config in all_mail_configs %}
+                    <option value="{{ mail_config.id }}" {% if mail_config.is_primary %}selected{% endif %}>
+                        {{ mail_config.display_name|default:mail_config.username }} &lt;{{ mail_config.from_email }}&gt;
+                    </option>
+                {% empty %}
+                    <option>{% trans "No mail server configured" %}</option>
+                {% endfor %}
+        </select>
+        </div>
+
+        <label for="" class="text-xs text-color-600">{% trans "To" %}</label>
+        <div class="relative">
+            {% include 'email_pills_field.html' with field_type='to' email_list=to_pills.email_list email_string=to_pills.email_string current_search=to_pills.current_search %}
+            <div id="email-suggestions-to" class="relative"></div>
+        </div>
+
+        <label for="" class="text-xs text-color-600">{% trans "Cc" %}</label>
+        <div class="relative">
+            {% include 'email_pills_field.html' with field_type='cc' email_list=cc_pills.email_list email_string=cc_pills.email_string current_search=cc_pills.current_search %}
+            <div id="email-suggestions-cc" class="relative"></div>
+        </div>
+
+        <label for="" class="text-xs text-color-600">{% trans "Bcc" %}</label>
+        <div class="relative">
+            {% include 'email_pills_field.html' with field_type='bcc' email_list=bcc_pills.email_list email_string=bcc_pills.email_string current_search=bcc_pills.current_search %}
+            <div id="email-suggestions-bcc" class="relative"></div>
+        </div>
+
+        <label for="" class="text-xs text-color-600">{% trans "Subject" %}</label>
+        <input type="text" name="subject" placeholder="Enter Subject" value="{{subject}}"
+        class="mb-2 text-color-600 p-2 placeholder:text-xs pr-[40px] w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600" />
+
+        {% if related_object %}
+            <div class="mb-3 p-2 bg-blue-50 rounded">
+                <label class="text-xs text-blue-600">{% trans "Related to" %}</label>
+                <p class="text-sm font-medium text-blue-800">{{ model_name }} - {{ related_object }}</p>
+            </div>
+        {% endif %}
+
+        <div class="flex justify-between items-center mb-1">
+        <label for="" class="text-xs text-color-600">{% trans "Message" %}</label>
+
+        <div class="flex gap-1">
+            <input type="file" name="attachments" id="fileInput" multiple value="" hidden/>
+            <button
+                class="w-7 h-7 hover:bg-primary-600 hover:text-[white] transition-all p-[5px] border border-[#a8a8a8] hover:border-primary-600 flex items-center justify-center rounded-md"
+                onclick="document.getElementById('fileInput').click()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M19.463 5.576c-.688-.75-1.929-.796-2.756.031l-8.1 8.1c-.21.21-.21.476 0 .686s.476.21.686 0l6.7-6.7a1 1 0 0 1 1.414 1.414l-6.7 6.7a2.45 2.45 0 0 1-3.514 0a2.45 2.45 0 0 1 0-3.514l8.1-8.1c1.567-1.568 4.115-1.619 5.63.015c1.552 1.569 1.597 4.104-.03 5.613l-9.486 9.486c-2.19 2.19-5.624 2.19-7.814 0s-2.19-5.624 0-7.814l8.1-8.1a1 1 0 0 1 1.414 1.414l-8.1 8.1c-1.41 1.41-1.41 3.576 0 4.986s3.576 1.41 4.986 0l9.5-9.5l.031-.03c.75-.687.796-1.929-.031-2.756z"/>
+                </svg>
+            </button>
+            <button title="Insert Field" class="w-7 h-7 hover:bg-primary-600 hover:text-[white] transition-all p-[5px] border border-[#a8a8a8] hover:border-primary-600 flex items-center justify-center rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+            hx-get="{% url 'horilla_mail:field_selection' %}?model_name={{ model_name }}&object_id={{ object_id }}"
+            hx-target="#contentModalBox"
+            hx-on:click="openContentModal()"
+            >
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+                <path stroke-width="2" d="M8 12h.009m3.986 0h.01m3.986 0H16" />
+                <path stroke-width="1.5"
+                    d="M18 21c1.232 0 2.231-1.151 2.231-2.571c0-2.248-.1-3.743 1.442-5.52c.436-.502.436-1.316 0-1.818c-1.542-1.777-1.442-3.272-1.442-5.52C20.231 4.151 19.232 3 18 3M6 21c-1.232 0-2.231-1.151-2.231-2.571c0-2.248.1-3.743-1.442-5.52c-.436-.502-.436-1.316 0-1.818C3.835 9.352 3.769 7.84 3.769 5.57C3.769 4.151 4.768 3 6 3" />
+                </g>
+            </svg></button>
+            <button title="Add mail template"
+            hx-get="{% url 'horilla_mail:select_mail_template' %}?model_name={{ model_name }}"
+            hx-target="#modalBox"
+            hx-on:click="openModal()"
+            class="w-7 h-7 hover:bg-primary-600 hover:text-[white] transition-all p-[5px] border border-[#a8a8a8] hover:border-primary-600 flex items-center justify-center rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+            >
+                <g fill="currentColor">
+                <path d="M10 18v-2H8v-2h2v-2h2v2h2v2h-2v2z" />
+                <path fill-rule="evenodd"
+                    d="M6 2a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V9a7 7 0 0 0-7-7zm0 2h7v5h6v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1m9 .1A5.01 5.01 0 0 1 18.584 7H15z"
+                    clip-rule="evenodd" />
+                </g>
+            </svg></button>
+            <button title="Save as template"
+                    hx-post="{% url 'horilla_mail:save_as_mail_template' %}?model_name={{ model_name }}"
+                    hx-include="#message_content"
+                    hx-target="#modalBox"
+                    hx-on:click="openModal()"
+                    hx-on--before-request="syncEditorContent()"
+                    class="w-7 h-7 hover:bg-primary-600 hover:text-[white] transition-all p-[5px] border border-[#a8a8a8] hover:border-green-600 flex items-center justify-center rounded-md"
+                    onclick="showSaveTemplateModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17,21 17,13 7,13 7,21"/>
+                        <polyline points="7,3 7,8 15,8"/>
+                    </g>
+                </svg>
+            </button>
+            <button title="Preview" class="w-7 h-7 hover:bg-primary-600 hover:text-[white] transition-all p-[3px] border border-[#a8a8a8] hover:border-primary-600 flex items-center justify-center rounded-md"
+            hx-post="{% url 'horilla_mail:preview_mail' %}?model_name={{ model_name }}&object_id={{ object_id }}&pk={{pk}}"
+            hx-include="[name='from_mail'], [name='to_email'], [name='cc_email'], [name='bcc_email'], [name='subject'], #fileInput, #message_content"
+            hx-target="#contentModalBox"
+            hx-encoding="multipart/form-data"
+            hx-on--before-request="syncEditorContent()"
+            hx-on:click="openContentModal();">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3" />
+                <path
+                    d="M20.188 10.934c.388.472.582.707.582 1.066s-.194.594-.582 1.066C18.768 14.79 15.636 18 12 18s-6.768-3.21-8.188-4.934c-.388-.472-.582-.707-.582-1.066s.194-.594.582-1.066C5.232 9.21 8.364 6 12 6s6.768 3.21 8.188 4.934Z" />
+                </g>
+            </svg>
+            </button>
+        </div>
+        </div>
+        <div id="editor-container">
+        <textarea id="summernote" name="summernote"></textarea>
+        </div>
+        {% if validation_errors.body %}
+            <div class="bg-red-50 text-red-500 px-3 py-2 rounded text-xs mt-1">
+                {{ validation_errors.body }}
+            </div>
+        {% endif %}
+        <div id="attachment-grid" class="mt-3">
+            {% for attachment in existing_attachments %}
+                <div class="flex gap-3 items-center justify-between bg-[#f6f6f6] p-2 mb-2 rounded-md w-max" data-attachment-id="{{ attachment.id }}">
+                <div class="flex items-center gap-2">
+                    <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M13 9V3.5L18.5 9M6 2c-1.11 0-2 .89-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"></path>
+                    </svg>
+                    </span>
+                    <span class="text-sm">{{ attachment.file_name }}</span>
+                </div>
+                <button class="remove-btn" data-filename="{{ attachment.file_name }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"></path>
+                    </svg>
+                </button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <input type="hidden" name="message_content" id="message_content" value="{{ message_content}}">
+    </div>
+</div>
+
+<div class="flex justify-end p-5">
+    <button id="send-mail-btn"
+        hx-post="{% url 'horilla_mail:send_mail_view' %}?model_name={{ model_name }}&object_id={{ object_id }}&pk={{pk}}"
+        hx-indicator="#mail-spinner"
+        hx-include="[name='from_mail'], [name='to_email'], [name='cc_email'], [name='bcc_email'], [name='subject'],#fileInput, #message_content"
+        hx-on:click="syncEditorContent();"
+        hx-encoding="multipart/form-data"
+        hx-swap="innerHTML"
+        hx-target="#horillaModalBox"
+        class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white] rounded-tl-[5px] rounded-br-[0] rounded-tr-[0] rounded-bl-[5px] border-r-[1px] border-[#dad8d8]">
+        <span class="flex items-center gap-2">
+            <span id="mail-spinner" class="htmx-indicator">
+                <img src="{% static 'assets/icons/spinner.svg' %}" alt="Loading..." width="25">
+            </span>
+            {% trans "Send Mail" %}
+        </span>
+    </button>
+    <button
+        hx-get="{% url 'horilla_mail:schedule_mail_form' %}?model_name={{ model_name }}&object_id={{ object_id }}&pk={{pk}}"
+        hx-target="#modalBox"
+        hx-on:click="openModal()"
+        class="text-sm px-2 py-2 bg-white rounded-md  transition duration-300 text-primary-600 rounded-tl-[0] rounded-br-[5px] rounded-tr-[5px] rounded-bl-[0]  border border-l-0 border-primary-600"
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2m0 18a8 8 0 1 1 8-8a8.009 8.009 0 0 1-8 8"/>
+        <path fill="currentColor" d="M12.5 7h-1v6l5.25 3.15l.5-.85l-4.75-2.8z"/>
+        </svg>
+    </button>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+    <script>
+        var allFiles = [];
+        let summernoteInitialized = false;
+
+        function createSummernoteInstance() {
+            $('#summernote').summernote({
+                height: 200,
+                minHeight: 200,
+                maxHeight: 400,
+                focus: false,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video', 'hr']],
+                    ['view', ['fullscreen', 'codeview']],
+                    ['help', ['help']]
+                ],
+                codeviewFilter: true,
+                codeviewFilterRegex: /<\/*(?:script|iframe|object|embed|applet|svg|link)[^>]*>/gi,
+                codeviewIframeFilter: true,
+                callbacks: {
+                    onChange: function(contents, $editable) {
+                        syncEditorContent();
+                    },
+                    onInit: function() {
+                        summernoteInitialized = true;
+                        restoreSummernoteContent();
+                    }
+                }
+            });
+        }
+
+        function restoreSummernoteContent() {
+            const existingContent = $('#message_content').val();
+            if (existingContent && existingContent.trim() !== '' && summernoteInitialized) {
+                $('#summernote').summernote('code', existingContent);
+            }
+        }
+
+        function initMailForm() {
+            const editorContainer = document.getElementById('editor-container');
+            const summernoteElement = document.getElementById('summernote');
+
+            if (!editorContainer || !summernoteElement) return;
+
+            // Check if Summernote needs to be initialized
+            if (!summernoteInitialized || !$('#summernote').next('.note-editor').length) {
+                try {
+                    // Destroy existing instance if it exists
+                    if ($('#summernote').next('.note-editor').length) {
+                        $('#summernote').summernote('destroy');
+                    }
+                    summernoteInitialized = false;
+                    createSummernoteInstance();
+                } catch (error) {
+                    try {
+                        summernoteInitialized = false;
+                        createSummernoteInstance();
+                    } catch (finalError) {
+                        console.error('Failed to initialize Summernote editor:', finalError);
+                    }
+                }
+            }
+        }
+
+        function syncEditorContent() {
+            if (summernoteInitialized && $('#summernote').next('.note-editor').length) {
+                try {
+                    const content = $('#summernote').summernote('code');
+                    $("#message_content").val(content);
+                    document.getElementById('message_content').value = content;
+                } catch (error) {
+                    console.log('Error syncing editor content:', error);
+                }
+            }
+        }
+
+        function syncFileInput() {
+            const dataTransfer = new DataTransfer();
+            allFiles.forEach(file => dataTransfer.items.add(file));
+            const fileInput = document.getElementById("fileInput");
+            if (fileInput) {
+                fileInput.files = dataTransfer.files;
+            }
+        }
+
+        $(document).on("click", "#send-mail-btn, #close-mail-btn, button[title='Preview']", syncEditorContent);
+
+        $(document).on("change", "#fileInput", function() {
+            const newFiles = Array.from(this.files);
+
+            newFiles.forEach(file => {
+                if (!allFiles.some(f => f.name === file.name && f.size === file.size)) {
+                    allFiles.push(file);
+
+                    const fileCard = $(`
+                        <div class="flex gap-3 items-center justify-between bg-[#f6f6f6] p-2 mb-2 rounded-md w-max mt-3">
+                            <div class="flex items-center gap-2">
+                                <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M13 9V3.5L18.5 9M6 2c-1.11 0-2 .89-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"></path>
+                                </svg>
+                                </span>
+                                <span class="text-sm">${file.name}</span>
+                            </div>
+                            <button class="remove-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    `);
+
+                    fileCard.find(".remove-btn").on("click", function() {
+                        allFiles = allFiles.filter(f => f !== file);
+                        fileCard.remove();
+                        syncFileInput();
+                    });
+
+                    $("#attachment-grid").append(fileCard);
+                }
+            });
+
+            syncFileInput();
+        });
+
+        $(document).on("click", function(event) {
+            const suggestionsContainers = ['email-suggestions-to', 'email-suggestions-cc', 'email-suggestions-bcc'];
+
+            $.each(suggestionsContainers, function(index, containerId) {
+                const $container = $('#' + containerId);
+                if ($container.length) {
+                    const $inputContainer = $container.prev();
+                    const $input = $inputContainer.find('input');
+
+                    if (!$container.is(event.target) &&
+                        !$container.has(event.target).length &&
+                        !$input.is(event.target)) {
+                        $container.empty();
+                    }
+                }
+            });
+        });
+
+        $(document).on("htmx:afterSwap", function(evt) {
+            if ($(evt.target).is('#horillaModalBox') || $(evt.detail.elt).is('#horillaModalBox')) {
+                allFiles = [];
+                setTimeout(function() {
+                    initMailForm();
+                }, 100);
+            }
+        });
+
+        $(document).ready(function() {
+            initMailForm();
+        });
+    </script>
+</div>

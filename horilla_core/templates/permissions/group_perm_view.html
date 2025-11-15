@@ -1,0 +1,15 @@
+{% extends "settings/settings.html" %}
+{% load static i18n horilla_tags %}
+
+{% block settings %}
+<div id="permission-view">
+    <div class="mb-4">
+        <div class="flex justify-between items-center mb-2">
+            <h3 class="text-md font-semibold">
+                {% trans "Groups and Permissions" %}
+            </h3>
+        </div>
+    </div>
+    <div hx-push-url="false" hx-get="{% url 'horilla_core:group_permission_tab' %}?{{request.GET.urlencode}}"  hx-trigger="load"></div>
+</div>
+{% endblock %}

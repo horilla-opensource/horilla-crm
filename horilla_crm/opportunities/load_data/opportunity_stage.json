@@ -1,0 +1,128 @@
+[
+    {
+        "model": "opportunities.opportunitystage",
+        "pk": 4,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-09-29T09:50:16.130Z",
+            "created_by": 1,
+            "updated_at": "2025-10-13T10:33:51.330Z",
+            "updated_by": 1,
+            "name": "Prospecting",
+            "order": 1,
+            "probability": "20.00",
+            "is_final": false,
+            "stage_type": "open"
+        }
+    },
+    {
+        "model": "opportunities.opportunitystage",
+        "pk": 5,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-13T10:34:09.956Z",
+            "created_by": 1,
+            "updated_at": "2025-10-13T10:34:09.956Z",
+            "updated_by": 1,
+            "name": "Qualification",
+            "order": 2,
+            "probability": "40.00",
+            "is_final": false,
+            "stage_type": "open"
+        }
+    },
+    {
+        "model": "opportunities.opportunitystage",
+        "pk": 6,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-13T10:34:24.813Z",
+            "created_by": 1,
+            "updated_at": "2025-10-13T10:34:24.813Z",
+            "updated_by": 1,
+            "name": "Analysis",
+            "order": 3,
+            "probability": "30.00",
+            "is_final": false,
+            "stage_type": "open"
+        }
+    },
+    {
+        "model": "opportunities.opportunitystage",
+        "pk": 7,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-13T10:34:37.471Z",
+            "created_by": 1,
+            "updated_at": "2025-10-13T10:34:37.471Z",
+            "updated_by": 1,
+            "name": "Proposal",
+            "order": 4,
+            "probability": "40.00",
+            "is_final": false,
+            "stage_type": "open"
+        }
+    },
+    {
+        "model": "opportunities.opportunitystage",
+        "pk": 8,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-13T10:34:55.119Z",
+            "created_by": 1,
+            "updated_at": "2025-10-13T10:34:55.119Z",
+            "updated_by": 1,
+            "name": "Review",
+            "order": 5,
+            "probability": "50.00",
+            "is_final": false,
+            "stage_type": "open"
+        }
+    },
+    {
+        "model": "opportunities.opportunitystage",
+        "pk": 9,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-13T10:35:09.758Z",
+            "created_by": 1,
+            "updated_at": "2025-10-13T10:35:09.758Z",
+            "updated_by": 1,
+            "name": "Closed Won",
+            "order": 6,
+            "probability": "50.00",
+            "is_final": true,
+            "stage_type": "open"
+        }
+    },
+    {
+        "model": "opportunities.opportunitystage",
+        "pk": 10,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-13T10:35:19.928Z",
+            "created_by": 1,
+            "updated_at": "2025-10-13T10:35:19.928Z",
+            "updated_by": 1,
+            "name": "Closed Lost",
+            "order": 7,
+            "probability": "20.00",
+            "is_final": false,
+            "stage_type": "open"
+        }
+    }
+]

@@ -1,0 +1,28 @@
+{% load i18n %}
+<div class="email-suggestions-dropdown absolute z-50 bg-white border border-dark-50 rounded-md shadow-lg max-h-60 overflow-y-auto w-full mt-1">
+    {% if emails %}
+        {% for email in emails %}
+            <div class="email-suggestion-item px-3 py-2 hover:bg-primary-100 hover:text-primary-600 cursor-pointer"
+                 hx-trigger="click"
+                 hx-post="{% url 'horilla_mail:add_email' %}"
+                 hx-vals='{"email": "{{ email }}", "field_type": "{{ field_type }}"}'
+                 hx-include="[name='{{ field_type }}_email_list'], [name='{{ field_type }}_email_input']"
+                 hx-target="#email-input-{{ field_type }}"
+                 hx-swap="outerHTML"
+                 hx-on:click="document.getElementById('email-suggestions-{{ field_type }}').innerHTML = ''">
+                <div class="flex items-center justify-between ">
+                    <div class="text-sm">{{ email }}</div>
+
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="px-3 py-2 text-sm text-gray-500">
+            {% if query %}
+                {% trans "No emails found for" %} "{{ query }}"
+            {% else %}
+                {% trans "Start typing to search emails..." %}
+            {% endif %}
+        </div>
+    {% endif %}
+</div>

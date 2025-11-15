@@ -1,0 +1,81 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<div class="flex justify-between mb-2">
+    <div class="flex gap-2">
+        {% if related_list|can_add_related:object and related_list.add_url %}
+            <a hx-get="{{ object|get_add_url:related_list }}?id={{ object.id }}" hx-target="#modalBox" onclick="event.stopPropagation();openModal()"
+                class="text-xs px-4 py-1.5 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                {% if related_list.button_name %}
+                    {{ related_list.button_name }}
+                {% else %}
+                    {% trans "Add" %}
+                {% endif %}
+            </a>
+        {% endif %}
+        {% if related_list.custom_buttons %}
+        {% for button in related_list.custom_buttons %}
+            <button
+                hx-get="{{ button.url }}?id={{object.id}}"
+                {{ button.attrs|safe }}
+                class="{{ button.class }}">
+                {% if button.icon %}
+                    <i class="{{ button.icon }} mr-1"></i>
+                {% endif %}
+                {{ button.label }}
+            </button>
+        {% endfor %}
+    {% endif %}
+    </div>
+
+    <div class="flex gap-2">
+        <!-- Refresh Button -->
+        <button hx-get="{% url 'horilla_generics:related_list_content' object.pk %}?field_name={{ related_list.name }}&model_name={{ object|model_name }}&class_name={{ class_name }}"
+                hx-target="#{{ related_list.name|sanitize_id }}-content"
+                hx-swap="outerHTML"
+                hx-select="#{{ related_list.name|sanitize_id }}-content"
+                class="bg-[transparent] p-[5px] rounded-[5px] [box-shadow:0px_0px_20px_#00000008] w-[30px] h-[30px] flex items-center justify-center hover:bg-white transition duration-300">
+            <img src="{% static '/assets/icons/refresh.svg' %}" alt="" class="filter brightness-0" width="18" />
+        </button>
+
+        <!-- Dropdown Menu -->
+        <button id="dropdownDefaultButton-{{ related_list.name|sanitize_id }}" data-dropdown-toggle="dropdown-{{ related_list.name|sanitize_id }}" data-dropdown-placement="right-end"
+            class="bg-[transparent] p-[5px] rounded-[5px] [box-shadow:0px_0px_20px_#00000008] w-[30px] h-[30px] flex items-center justify-center hover:bg-white transition duration-300">
+            <img src="{% static '/assets/icons/l3.svg' %}" alt="" width="13" />
+        </button>
+    </div>
+</div>
+
+<!-- Dropdown Menu Content -->
+<div id="dropdown-{{ related_list.name|sanitize_id }}"
+    class="z-50 hidden bg-white border-[.1px] border-[#e9e9e9] rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] min-w-[160px] absolute">
+    <ul class="text-sm z-50 relative" aria-labelledby="dropdownDefaultButton-{{ related_list.name }}">
+        <li>
+            <button hx-get="{% url 'horilla_generics:column_selector' %}?app_label={{ related_list.app_label }}&model_name={{ related_list.model_name }}&url_name=related_list_content"
+            onclick="openModal()"
+            hx-target="#modalBox"
+            hx-swap="innerHTML"
+            class="block px-4 py-2 text-[#333] hover:text-primary-600 transition duration-300 text-[.8rem] w-full text-left">
+                Add Columns to List
+            </button>
+        </li>
+        {% for action in related_list.dropdown_actions %}
+            <li>
+                <button hx-get="{{ action.url }}"
+                {{ action.attrs|safe }}
+                class="block px-4 py-2 text-[#333] hover:text-primary-600 transition duration-300 text-[.8rem] w-full text-left">
+                    {{ action.title }}
+                </button>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Content Area -->
+<div class="pt-3">
+    {% if related_list.rendered_content %}
+        {{ related_list.rendered_content|safe }}
+    {% else %}
+        <p class="text-gray-500 text-center py-4">No {{ related_list.title|lower }} found.</p>
+    {% endif %}
+</div>

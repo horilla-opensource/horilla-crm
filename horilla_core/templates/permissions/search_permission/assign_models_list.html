@@ -1,0 +1,44 @@
+{% load i18n %}
+{% for model in all_models %}
+    <div class="border-[1px] border-[solid] border-[#efefef] last:border-b-0 px-4 py-2 hover:bg-primary-100">
+        <div class="flex gap-2 bulk-permItem">
+            <div class="flex items-center">
+                <label class="flex items-center">
+                    <input
+                        type="checkbox"
+                        class="bulk-model-select-all w-4 h-4 bg-[#E9EDF7] rounded-sm accent-[#e54f38] mr-2"
+                        {% if model.select_all_checked %}checked{% endif %}
+                        hx-post="{% url 'horilla_core:bulk_update_user_model_permissions'%}"
+                        hx-trigger="change"
+                        hx-vals='js:{"model_name": "{{ model.model_name }}", "app_label": "{{ model.app_label }}", "checked": event.target.checked}'
+                        hx-on::after-request="$('#reloadMessagesButton').click();toggleBulkChecked($(this));"
+                        hx-swap="none"
+                    />
+                </label>
+            </div>
+            <div class="w-36 text-sm">{{ model.verbose_name }}</div>
+            <div class="flex gap-5 text-xs text-dark-300">
+                {% for perm in model.permissions %}
+                    <label class="flex items-center whitespace-nowrap">
+                        <input
+                            type="checkbox"
+                            name="permissions"
+                            value="{{ perm.id }}"
+                            class="bulk-individual-perm w-4 h-4 border border-[#cfcfcf] rounded-sm accent-[#e54f38] mr-2"
+                            {% if perm.has_perm %}checked{% endif %}
+                            />
+                        {{ perm.label }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <div class="px-4 py-8 text-center text-gray-500">
+        {% if search_query %}
+            {% trans "No models found matching your search." %}
+        {% else %}
+            {% trans "No models available." %}
+        {% endif %}
+    </div>
+{% endfor %}

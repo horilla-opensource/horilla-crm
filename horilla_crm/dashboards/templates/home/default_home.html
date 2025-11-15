@@ -1,0 +1,233 @@
+{% extends "index.html" %}
+{% load static horilla_tags %}
+{% load dashboard_tags i18n%}
+{% block content %}
+<div class="flex modelcontent">
+    <div class="relative h-full" id="sideMenuContainer">
+        <div id="messages-container" style="display: none;">
+            {% for message in messages %}
+            <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div id="mainContent" class="flex-[1_0] transition-all duration-300 ease-in-out pt-0 overflow-hidden overflow-y-auto  h-[100vh]">
+    <div class="p-2 sm:p-5" id="default-home-view">
+        <div class=" pb-6 ">
+        <div class="flex flex-wrap justify-between gap-2 mb-2 items-center">
+            <h1 class="text-xl font-bold text-gray-800">
+                {% trans "Welcome" %}, {{ user.get_full_name|default:user.username }}
+            </h1>
+            {% if request.user|has_super_user:"dashboards.view_own_dashboard" %}
+                <a href="{% url 'dashboards:dashboard_list_view' %}?section=analytics"
+                    class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                    {% trans "View All Dashboards" %}
+                </a>
+            {% endif %}
+        </div>
+        {% if request.user|has_super_user:"dashboards.view_own_dashboard" %}
+            <p class="text-gray-600 mb-0">
+                {% trans "Get started by creating your first dashboard or explore the CRM overview below." %}
+            </p>
+        {% else %}
+            <p class="text-gray-600 mb-4">
+                {% trans "You currently don't have access to dashboards. Please contact your administrator to request permissions or explore available features." %}
+            </p>
+        {% endif %}
+        </div>
+        <!-- KPIs Section -->
+        {% if kpi_data %}
+            <div class="mb-4">
+                <div class="grid grid-cols-12 gap-2 sm:gap-3">
+                    {% for kpi in kpi_data %}
+                        <div class="col-span-12 sm:col-span-6 lg:col-span-3">
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                hx-get="{{ kpi.url }}?section={{ kpi.section }}"
+                                hx-target="#mainContent"
+                                hx-swap="outerHTML"
+                                hx-push-url="true"
+                                hx-select="#mainContent"
+                                hx-select-oob="#sideMenuContainer">
+                                <div class="flex items-center gap-4">
+                                    <div class="bg-{{ kpi.color }}-100 p-3 rounded-xl">
+                                        <i class="fas {{ kpi.icon }} text-{{ kpi.color }}-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500 text-sm mb-1 w-max">{{ kpi.title }}</p>
+                                        <div class="flex items-center gap-3">
+                                            <p class="text-2xl font-bold text-gray-900">
+                                                {% if kpi.type == 'count' %}
+                                                    {{ kpi.value|floatformat:0 }}
+                                                {% else %}
+                                                    {{ kpi.value|floatformat:2 }}
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+
+        <!-- Main Content Grid - Charts and Tables Side by Side -->
+        <div class="grid grid-cols-6 xl:grid-cols-12 gap-3">
+            <!-- Charts Section -->
+            {% if chart_data %}
+                <div class="col-span-12 xl:col-span-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
+                        {% for chart in chart_data %}
+                            <div class="bg-white p-6 rounded-xl shadow-sm chart-container">
+                                <h4 class="text-md font-semibold mb-4">{{ chart.title }}</h4>
+                                <div id="default-chart-{{ forloop.counter }}" class="chart-content"></div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Tables Section -->
+            <div class="{% if chart_data %}col-span-12 xl:col-span-4{% else %}col-span-12{% endif %}">
+                {% if table_data %}
+                    <div class="grid grid-cols-1 gap-2">
+                        {% for table in table_data %}
+                            <div class="p-5 bg-white rounded-xl shadow-sm overflow-hidden table-container" data-table-id="{{ table.id }}">
+                                <div class="table-content">
+                                    {% with ctx=table %}
+                                        {% unpack_context ctx %}
+                                        <div class="flex justify-between mb-3 items-center">
+                                            <h3 class="text-md font-semibold text-gray-700">{{ table.title }}</h3>
+                                            <p class="text-xs font-medium rounded-md text-[#009fff] w-max"
+                                            id="total-data-{{ view_id|safe }}">
+                                            {% trans 'Records'%} (<span id="total-text-{{ view_id|safe }}" class="text-xs font-medium">{{ total_records_count }}</span>)
+                                            </p>
+                                        </div>
+                                        {% include "list_view.html" %}
+                                    {% endwith %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'assets/js/horilla_charts.js' %}"></script>
+<script>
+    $(document).on("htmx:afterSwap", function(event) {
+        if ($(event.target).attr("id") === "mainContent") {
+            initializeCharts();
+            initializeSelect2();
+        }
+    });
+
+    function initializeCharts() {
+        {% if chart_data %}
+            {% for chart in chart_data %}
+                initializeDefaultChart({{ forloop.counter }}, {{ chart.data|safe }}, '{{ chart.type }}');
+            {% endfor %}
+        {% endif %}
+    }
+    $(document).ready(function() {
+        initializeSelect2();
+    });
+
+    function initializeSelect2() {
+        $("#exportFormat").select2({
+            width: '100%',
+            theme: 'default'
+        });
+
+        $("select").on("select2:select", function(e) {
+            this.dispatchEvent(new Event("change"));
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeCharts();
+    });
+
+    function initializeDefaultChart(chartIndex, chartData, chartType) {
+        const chartDom = document.getElementById('default-chart-' + chartIndex);
+        if (chartDom && typeof echarts !== 'undefined' && typeof EChartsConfig !== 'undefined') {
+            const myChart = echarts.init(chartDom);
+
+            const config = {
+                type: chartType,
+                labels: chartData.labels,
+                data: chartData.data,
+                labelField: chartData.labelField,
+                colors: EChartsConfig.defaultColors,
+                urls: chartData.urls || []
+            };
+
+            const option = EChartsConfig.getChartOption(config);
+            myChart.setOption(option);
+
+            if (chartData.urls && chartData.urls.length > 0) {
+                EChartsConfig.attachClickHandler(myChart, chartData.urls);
+            }
+
+            window.addEventListener('resize', function() {
+                myChart.resize();
+            });
+        }
+    }
+
+
+</script>
+
+<style>
+    /* Equal height containers */
+    .chart-container {
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chart-content {
+        flex: 1;
+        min-height: 300px;
+    }
+
+    .table-container {
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .table-content {
+        flex: 1;
+        min-height: 300px;
+    }
+
+    /* Responsive adjustments for smaller charts */
+    {% if chart_data|length > 4 %}
+        .chart-container {
+            height: 350px;
+        }
+        .chart-content {
+            min-height: 250px;
+        }
+    {% endif %}
+
+    /* Color utilities */
+    .bg-blue-100 { background-color: #dbeafe; }
+    .bg-green-100 { background-color: #d1fae5; }
+    .bg-orange-100 { background-color: #fed7aa; }
+    .bg-purple-100 { background-color: #e9d5ff; }
+    .bg-indigo-100 { background-color: #e0e7ff; }
+    .text-blue-600 { color: #2563eb; }
+    .text-green-600 { color: #059669; }
+    .text-orange-600 { color: #ea580c; }
+    .text-purple-600 { color: #9333ea; }
+    .text-indigo-600 { color: #4f46e5; }
+</style>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% load static horilla_tags i18n %}
+{% has_perm "forecast.view_forecasttarget" as can_view_forecast_target %}
+
+{% if can_view_forecast_target %}
+    <div class="grid grid-cols-2 gap-4 mb-3">
+        <div>
+            <div class="font-medium text-sm">{% trans "Forecast Type" %}</div>
+            <div>
+                <select
+                    name="forecast_type"
+                    class="js-example-basic-single headselect w-full"
+                    hx-get="{{ main_url }}"
+                    hx-swap="outerHTML"
+                    hx-select="#mainSession"
+                    hx-target="#mainSession"
+                    hx-trigger="change"
+                    hx-history="false"
+                    hx-push-url="true"
+                    hx-include="[name='period']"
+                >
+                    {% for forecast_type in forecast_types %}
+                    <option
+                        value="{{ forecast_type.pk }}"
+                        {% if current_forecast_type_id == forecast_type.pk|stringformat:"s" or forecast_type.pk == default_forecast_type.pk and not current_forecast_type_id %}selected{% endif %}
+                    >
+                        {{ forecast_type }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div>
+            <div class="font-medium text-sm">{% trans "Forecast Period" %}</div>
+            <div>
+                <select
+                    name="period"
+                    class="js-example-basic-single headselect w-full"
+                    hx-get="{{ main_url }}"
+                    hx-swap="outerHTML"
+                    hx-select="#mainSession"
+                    hx-target="#mainSession"
+                    hx-trigger="change"
+                    hx-push-url="true"
+                    hx-include="[name='forecast_type']"
+                >
+                    {% for period in periods %}
+                    <option
+                        value="{{ period.pk }}"
+                        {% if current_period_id == period.pk|stringformat:"s" or period.pk == default_period.pk and not current_period_id %}selected{% endif %}
+                    >
+                        {{ period }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+{% endif %}

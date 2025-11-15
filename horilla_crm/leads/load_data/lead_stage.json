@@ -1,0 +1,128 @@
+[
+    {
+        "model": "leads.leadstatus",
+        "pk": 1,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-06-04T07:44:11Z",
+            "created_by": 1,
+            "updated_at": "2025-06-04T07:44:11Z",
+            "updated_by": 1,
+            "name": "Not contacted",
+            "order": 2,
+            "color": "#f39022",
+            "is_final": false,
+            "probability": "20.00"
+        }
+    },
+    {
+        "model": "leads.leadstatus",
+        "pk": 2,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-06-04T16:49:19Z",
+            "created_by": 1,
+            "updated_at": "2025-06-04T16:49:19Z",
+            "updated_by": 1,
+            "name": "Junk lead",
+            "order": 1,
+            "color": "#f39022",
+            "is_final": false,
+            "probability": "20.00"
+        }
+    },
+    {
+        "model": "leads.leadstatus",
+        "pk": 3,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-06-17T05:49:50Z",
+            "created_by": 1,
+            "updated_at": "2025-06-17T05:49:50Z",
+            "updated_by": 1,
+            "name": "New",
+            "order": 3,
+            "color": "#f39022",
+            "is_final": false,
+            "probability": "20.00"
+        }
+    },
+    {
+        "model": "leads.leadstatus",
+        "pk": 4,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-06-17T05:50:07Z",
+            "created_by": 1,
+            "updated_at": "2025-06-17T05:50:07Z",
+            "updated_by": 1,
+            "name": "Convert",
+            "order": 4,
+            "color": "#f39022",
+            "is_final": true,
+            "probability": "20.00"
+        }
+    },
+    {
+        "model": "leads.leadstatus",
+        "pk": 5,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-06-17T05:50:39Z",
+            "created_by": 1,
+            "updated_at": "2025-06-17T05:50:39Z",
+            "updated_by": 1,
+            "name": "Contacted",
+            "order": 5,
+            "color": "#f39022",
+            "is_final": false,
+            "probability": "20.00"
+        }
+    },
+    {
+        "model": "leads.leadstatus",
+        "pk": 6,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-06-17T05:51:12Z",
+            "created_by": 1,
+            "updated_at": "2025-06-17T05:51:12Z",
+            "updated_by": 1,
+            "name": "Test",
+            "order": 6,
+            "color": "#f39022",
+            "is_final": true,
+            "probability": "20.00"
+        }
+    },
+    {
+        "model": "leads.leadstatus",
+        "pk": 7,
+        "fields": {
+            "is_active": false,
+            "additional_info": null,
+            "company": null,
+            "created_at": "2025-10-03T10:32:47.809Z",
+            "created_by": 1,
+            "updated_at": "2025-10-03T10:32:47.809Z",
+            "updated_by": 1,
+            "name": "lwde",
+            "order": 1,
+            "color": "#f39022",
+            "is_final": false,
+            "probability": "11.99"
+        }
+    }
+]

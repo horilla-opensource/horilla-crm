@@ -1,0 +1,6 @@
+{% if is_target_same %}
+    <div class="flex flex-col">
+        <label for="{{ form.target_amount.id_for_label }}" class="text-xs text-color-600">{{ form.target_amount.label }}</label>
+        {{ form.target_amount }}
+    </div>
+{% endif %}

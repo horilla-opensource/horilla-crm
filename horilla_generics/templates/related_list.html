@@ -1,0 +1,104 @@
+
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+{% if related_lists_metadata %}
+    <div id="styled-related-list" role="tabpanel" aria-labelledby="related-list-tab" style="height:100%">
+        <div class="flex flex-col sm:flex-row gap-3" style="height:100%">
+            <!-- Sidebar Navigation -->
+            <div class="border-r-[1px] border-[#dddddd]">
+                <ul id="related-tabs" class="flex flex-col space-y-1 text-sm font-normal text-gray-500 dark:text-gray-400 pr-3">
+                    {% for related_list in related_lists_metadata %}
+                        <li class="mb-0 cursor-pointer">
+                            <a id ="tab-{{ related_list.name|sanitize_id }}-btn"
+                            hx-get="{% url 'horilla_generics:related_list_content' object.pk %}?section={{ request.GET.section }}&object_id={{request.GET.object_id}}&field_name={{ related_list.name }}&model_name={{ related_list.parent_model_name }}&class_name={{ class_name }}"
+                            hx-target="#tab-{{ related_list.name|sanitize_id }}"
+                            hx-swap="innerHTML"
+                            hx-trigger="click"
+                            data-tab="tab-{{ related_list.name|sanitize_id }}"
+                            class="tab-btn items-center px-5 py-2 {% if forloop.first %}text-white bg-primary-600{% else %}bg-transparent text-[#3d3d3d]{% endif %} rounded-md w-full flex gap-3">
+                                <i class="fa-solid fa-list"></i> {{ related_list.title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Content Area -->
+            <div class="flex-[1_0] w-full sm:w-24">
+                <div id="related-tab-contents">
+                    {% for related_list in related_lists_metadata %}
+                        <div id="tab-{{ related_list.name|sanitize_id }}" class="tab-content {% if not forloop.first %}hidden{% endif %} p-2 pt-0 text-sm">
+                            {% if forloop.first %}
+                                <div hx-get="{% url 'horilla_generics:related_list_content' object.pk %}?section={{ request.GET.section }}&object_id={{request.GET.object_id}}&field_name={{ related_list.name }}&model_name={{ related_list.parent_model_name }}&class_name={{ class_name }}"
+                                    hx-trigger="load"
+                                    hx-target="#tab-{{ related_list.name|sanitize_id }}"
+                                    hx-swap="innerHTML"
+                                    hx-indicator="#loadingIndicator-{{ related_list.name|sanitize_id }}"
+                                    hx-disinherit="*">
+                                    <div id="loadingIndicator-{{ related_list.name|sanitize_id }}" class="htmx-indicator">
+                                        <div class="flex justify-center items-center p-4">
+                                            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#e54f38]"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div id="loadingIndicator-{{ related_list.name|sanitize_id }}" class="htmx-indicator">
+                                    <div class="flex justify-center items-center p-4">
+                                        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#e54f38]"></div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="flex justify-between items-center">
+    </div>
+    <img
+        src="{% static 'assets/img/not-found.svg' %}"
+        alt="" class="w-60  m-auto mb-4 mt-5"
+    />
+    <p class="text-sm text-center mb-3">
+    {% trans 'No related lists found for this' %} {{ object|model_verbose_name }}
+    </p>
+{% endif %}
+<script>
+    document.body.addEventListener('htmx:beforeRequest', function(evt) {
+        if (evt.detail.elt.classList.contains('tab-btn')) {
+            const tabButtons = document.querySelectorAll("#related-tabs .tab-btn");
+            const tabContents = document.querySelectorAll("#related-tab-contents .tab-content");
+            const clickedBtn = evt.detail.elt;
+            const targetTabId = clickedBtn.getAttribute("data-tab");
+
+            // Remove active styles from all buttons
+            tabButtons.forEach((btn) => {
+                btn.classList.remove("bg-primary-600", "text-white");
+                btn.classList.add("bg-transparent", "text-[#3d3d3d]");
+            });
+
+            // Hide all tab contents
+            tabContents.forEach((content) => content.classList.add("hidden"));
+
+            // Show target tab content
+            const targetTab = document.getElementById(targetTabId);
+            if (targetTab) {
+                targetTab.classList.remove("hidden");
+            }
+
+            // Add active styles to clicked button
+            clickedBtn.classList.remove("bg-transparent", "text-[#3d3d3d]");
+            clickedBtn.classList.add("bg-primary-600", "text-white");
+        }
+    });
+
+    // Initialize dropdowns (if using Flowbite or similar)
+    document.body.addEventListener('htmx:afterSwap', function(evt) {
+        if (typeof initDropdowns === 'function') {
+            initDropdowns();
+        }
+    });
+</script>

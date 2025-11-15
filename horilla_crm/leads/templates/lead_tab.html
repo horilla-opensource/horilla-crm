@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+{% load static i18n horilla_tags %}
+{% block content %}
+<div class="flex modelcontent">
+    {% include "components/sub_sidebar.html" %}
+    <div id="mainContent" class="flex-[1_0] leftspace transition-all duration-300 ease-in-out pt-0 w-full">
+        <div id="navBar" hx-get="{% url 'campaigns:campaign_nav_view' %}?{{ request.GET.urlencode}}" hx-trigger="load">
+        </div>
+        <div class="p-5 pt-24 w-full" id="mainSession"
+            hx-get="{% url 'campaigns:campaign_view' %}?{{ request.GET.urlencode}}" hx-trigger="load">
+        </div>
+    </div>
+</div>
+<div id="dbmodal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 bg-[#00000030] flex">
+    <div id="modalBox" class="bg-white w-full max-w-md rounded-lg shadow-lg p-0 opacity-0 scale-95 transition-all duration-300 min-w-[650px]">
+    </div>
+</div>
+
+<div id="deleteModeModal" class="modal-wrapper fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 bg-[#00000030] flex">
+    <div id="deleteModeBox" class="bg-white w-full max-w-md rounded-lg shadow-lg p-0 opacity-0 scale-95 transition-all duration-300 min-w-[400px]">
+    </div>
+</div>
+
+<div id="deletemodal"class="modal-wrapper fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 bg-[#00000030] flex">
+    <div id="deleteBox" class="bg-white w-full max-w-md rounded-lg shadow-lg p-0 opacity-0 scale-95 transition-all duration-300 min-w-[600px]">
+    </div>
+</div>
+
+<script>
+  htmx.onLoad(function (content) {
+    initFlowbite();
+  });
+</script>
+
+{% endblock content %}

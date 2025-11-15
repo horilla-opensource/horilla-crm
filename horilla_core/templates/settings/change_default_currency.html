@@ -1,0 +1,40 @@
+{% load i18n %}
+{% load static %}
+<div id="currency-form-view-container" class="relative bg-white rounded-lg shadow-sm">
+    <form method="post" hx-post="{% url 'horilla_core:change_default_currency_view' %}" id="currency-form-view" hx-swap="outerHTML" hx-target="#currency-form-view-container">
+        {% csrf_token %}
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+        <div class="p-5">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-md font-semibold">Change Default Currency</h2>
+                <button type="button" onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-xl">
+                    <img src="{% static "assets/icons/close.svg" %}" alt="Close">
+                </button>
+            </div>
+            <div class="overflow-hidden overflow-y-auto pe-2">
+                <div class="mb-3">
+                    <p class="text-sm text-gray-600 font-semibold">{% trans 'Current Default Currency' %}: {{ current_currency.get_currency_display }} - ({{current_currency}})</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                    <div id="currency_container" class="col-span-2">
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="id_currency" class="text-xs text-color-600">New Currency</label>
+                        </div>
+                        <select name="currency" id="id_currency" required="" class="js-example-basic-single headselect w-full">
+                            <option value="" selected>---------</option>
+                            {% for currency in currencies %}
+                                <option value="{{ currency.pk }}">{{ currency.currency }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end p-5 pt-0">
+            <button type="submit" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                {% trans "Save" %}
+            </button>
+        </div>
+    </form>
+</div>

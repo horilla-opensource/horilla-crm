@@ -1,0 +1,82 @@
+{% load static i18n %}
+{% load reports_tags %}
+<div class="flex gap-2 items-center filter-row" data-field-name="{{ field_name }}">
+    <div class="w-20 text-xs px-2 py-1 rounded-md border border-[#d9d9d9]">
+        <span>{{ original_field_name|get_field_verbose_name:report.model_class }}</span>
+    </div>
+    <select
+        class="w-20 text-xs px-2 py-1 rounded-md border border-[#d9d9d9]"
+        name="operator"
+        hx-post="{% url 'reports:update_filter_operator' report.pk %}"
+        hx-vals='{"field_name": "{{ field_name }}"}'
+        hx-target="#panel"
+        hx-swap="outerHTML"
+        hx-trigger="change"
+        hx-headers='{"HX-Trigger": "refreshReport"}'>
+        <option value="exact" {% if filter_value.operator == 'exact' %}selected{% endif %}>{% trans "Is" %}</option>
+        <option value="icontains" {% if filter_value.operator == 'icontains' %}selected{% endif %}>{% trans "Contains" %}</option>
+        <option value="gt" {% if filter_value.operator == 'gt' %}selected{% endif %}>{% trans "Greater than" %}</option>
+        <option value="lt" {% if filter_value.operator == 'lt' %}selected{% endif %}>{% trans "Less than" %}</option>
+        <option value="gte" {% if filter_value.operator == 'gte' %}selected{% endif %}>{% trans "Greater or equal" %}</option>
+        <option value="lte" {% if filter_value.operator == 'lte' %}selected{% endif %}>{% trans "Less or equal" %}</option>
+    </select>
+    {% if is_choice_or_fk %}
+        <select
+            class="w-20 text-xs px-2 py-1 rounded-md border border-[#d9d9d9]"
+            name="value"
+            hx-post="{% url 'reports:update_filter_value' report.pk %}"
+            hx-vals='{"field_name": "{{ field_name }}"}'
+            hx-target="#report-content"
+            hx-select="#report-content"
+            hx-swap="outerHTML"
+            hx-trigger="change"
+            hx-headers='{"HX-Trigger": "refreshReport"}'>
+            <option value="">Select...</option>
+            {% for choice in field_choices %}
+                <option value="{{ choice.value }}">{{ choice.display }}</option>
+            {% endfor %}
+        </select>
+    {% else %}
+        <input
+            type="text"
+            class="w-20 text-xs px-2 py-1 rounded-md border border-[#d9d9d9]"
+            value=""
+            name="value"
+            hx-post="{% url 'reports:update_filter_value' report.pk %}"
+            hx-vals='{"field_name": "{{ field_name }}"}'
+            hx-target="#report-content"
+            hx-select="#report-content"
+            hx-select-oob="#nav-actions"
+            hx-swap="outerHTML"
+            hx-trigger="change"
+            hx-headers='{"HX-Trigger": "refreshReport"}'/>
+    {% endif %}
+    <div class="flex items-center w-3">
+        <button
+            hx-post="{% url 'reports:remove_filter' report.pk %}"
+            hx-vals='{"field_name": "{{ field_name }}"}'
+            hx-target="#report-content"
+            hx-select="#report-content"
+            hx-select-oob="#nav-actions"
+            hx-swap="outerHTML"
+            hx-headers='{"HX-Trigger": "refreshReport"}'
+        >
+            <img src="{% static '/assets/icons/close.svg' %}" alt="" />
+        </button>
+    </div>
+    {% if forloop.last and forloop.counter > 1 %}
+        <select
+            class="w-20 text-xs px-2 py-1 rounded-md border border-[#d9d9d9]"
+            name="logic"
+            hx-post="{% url 'reports:update_filter_logic' report.pk %}"
+            hx-vals='{"field_name": "{{ field_name }}"}'
+            hx-target="#panel"
+            hx-swap="outerHTML"
+            hx-trigger="change"
+            hx-headers='{"HX-Trigger": "refreshReport"}'
+        >
+            <option value="and" selected>AND</option>
+            <option value="or">OR</option>
+        </select>
+    {% endif %}
+</div>

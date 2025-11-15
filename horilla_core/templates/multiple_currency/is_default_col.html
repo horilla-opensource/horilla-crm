@@ -1,0 +1,15 @@
+{% load static %}
+    <input
+        type="checkbox"
+        id="currency-list-{{ instance.id }}"
+        name="is_default-{{ instance.id }}"
+        class="w-4 h-4 bg-[#E9EDF7] rounded-sm accent-[#e54f38] {% if instance.is_default and total_currencies == 1 %}opacity-50 cursor-not-allowed{% endif %}"
+        {% if instance.is_default %}checked{% endif %}
+        {% if instance.is_default and total_currencies == 1 %}disabled{% endif %}
+        value="{{ instance.id }}"
+        hx-post="{% url 'horilla_core:change_default_currency' instance.id %}"
+        hx-trigger="confirmed"
+        hx-target="#currency-list-{{ instance.id }}"
+        hx-swap="innerHTML"
+        hx-on:click="hxConfirm(this, 'Are you sure you want to change the default currency? The previous default will be unset.')"
+    >

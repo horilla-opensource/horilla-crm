@@ -1,0 +1,239 @@
+{% load i18n %}
+{% load static %}
+
+<div class="bg-white rounded w-full">
+    <form hx-post="{% url 'opportunities:save_opportunity_splits' opportunity.id split_type.id %}"
+
+          hx-swap="innerHTML"
+          id="split-form-{{ split_type.id }}">
+        {% csrf_token %}
+
+        {% if error %}
+        <div class="bg-red-50 text-red-500 px-4 py-3 rounded-lg text-sm mb-4">
+                {{ error }}
+        </div>
+        {% endif %}
+        <div class="w-full">
+            <table class="w-full text-sm table-auto border border-[#e9e9e9] ">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="py-3 px-4 text-left font-bold text-gray-700 text-xs uppercase tracking-wide border border-[#e9e9e9]">
+                            *{% trans "Team Member" %}
+                        </th>
+                        <th class="py-3 px-4 text-left font-bold text-gray-700 text-xs uppercase tracking-wide border border-[#e9e9e9]">
+                            *{% trans "Percent" %}
+                        </th>
+                        <th class="py-3 px-4 text-left font-bold text-gray-700 text-xs uppercase tracking-wide border border-[#e9e9e9]">
+                            {% trans "Amount" %}
+                        </th>
+                        <th class="py-3 px-4 text-center font-bold text-gray-700 text-xs uppercase tracking-wide border border-[#e9e9e9]">
+                            {% trans "Actions" %}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="split-rows-{{ split_type.id }}">
+                    {% for split in existing_splits %}
+                    <tr id="split-row-{{ forloop.counter }}" class="split-row hover:bg-gray-50 transition-colors">
+                        <td class="py-3 px-4 border border-[#e9e9e9]">
+                            <select name="user_id_{{ forloop.counter }}"
+                                    class="js-example-basic-single w-full"
+                                    onblur="autoSaveSplits(this)"
+                                    required>
+                                <option value="">{% trans "Select User" %}</option>
+                                {% for user in users %}
+                                <option value="{{ user.id }}" {% if user.id == split.user.id %}selected{% endif %}>
+                                    {{ user.get_full_name|default:user.username }}
+                                    {% if team_selling_enabled and allow_all_users and not user.is_team_member %}
+                                        ({% trans "Not in team" %})
+                                    {% endif %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="py-3 px-4 border border-[#e9e9e9]">
+                            <div id="percentage-container-{{ split_type.id }}-{{ forloop.counter }}">
+                                <div class="flex items-center gap-2">
+                                    <input type="number"
+                                           name="percentage_{{ forloop.counter }}"
+                                           id="percentage-{{ forloop.counter }}"
+                                           class="flex-1 h-9 px-3 bg-white border border-[#e9e9e9] rounded text-sm text-gray-900 text-right focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 hover:border-gray-700"
+                                           value="{{ split.split_percentage }}"
+                                           step="0.01"
+                                           min="0"
+                                           max="100"
+                                           required
+                                           hx-get="{% url 'opportunities:recalculate_split_row' opportunity.id split_type.id %}"
+                                           hx-trigger="input changed delay:500ms"
+                                           hx-target="#amount-container-{{ split_type.id }}-{{ forloop.counter }}"
+                                           hx-swap="innerHTML"
+                                           hx-vals='{"row_index": "{{ forloop.counter }}", "changed_field": "percentage"}'
+                                           hx-include="#split-form-{{ split_type.id }} input[name^='percentage_'], #split-form-{{ split_type.id }} input[name^='amount_']"
+                                           onblur="autoSaveSplits(this)">
+                                    <span class="text-gray-600 font-semibold text-sm">%</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 border border-[#e9e9e9]">
+                            <div id="amount-container-{{ split_type.id }}-{{ forloop.counter }}">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-gray-600 font-semibold text-sm">{{ currency }}</span>
+                                    <input type="number"
+                                           name="amount_{{ forloop.counter }}"
+                                           id="amount-{{ forloop.counter }}"
+                                           class="flex-1 h-9 px-3 bg-white border border-[#e9e9e9] rounded text-sm text-gray-900 text-right focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 hover:border-gray-700"
+                                           value="{{ split.split_amount|floatformat:2 }}"
+                                           step="0.01"
+                                           min="0"
+                                           hx-get="{% url 'opportunities:recalculate_split_row' opportunity.id split_type.id %}"
+                                           hx-trigger="input changed delay:500ms"
+                                           hx-target="#percentage-container-{{ split_type.id }}-{{ forloop.counter }}"
+                                           hx-swap="innerHTML"
+                                           hx-vals='{"row_index": "{{ forloop.counter }}", "changed_field": "amount"}'
+                                           hx-include="#split-form-{{ split_type.id }} input[name^='percentage_'], #split-form-{{ split_type.id }} input[name^='amount_']"
+                                           onblur="autoSaveSplits(this)"
+>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-3 px-8  text-center border border-[#e9e9e9] whitespace-nowrap">
+                            {% if split.user.id == opportunity.owner.id %}
+                                <div class="flex tablebtn">
+                                    <button type="button"
+                                            class="rounded-md group relative w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] cursor-not-allowed items-center"
+                                            disabled
+                                           >
+                                        <img src="{% static "assets/icons/a4.svg" %}" alt="Delete" width="16" class="opacity-50">
+                                        <div class="min-w-max z-50 absolute h-auto py-[3px] px-[15px] right-[40px] top-0 bg-[#000000] text-[.7rem] rounded-[5px] text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                            <p>{% trans 'Cannot delete opportunity owner' %}</p>
+                                        </div>
+                                    </button>
+                                </div>
+                            {% else %}
+                                <div class="flex tablebtn">
+                                    <button type="button"
+                                            class="rounded-md group relative w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] hover:bg-[#e0e0e0] transition duration-300 items-center"
+                                            hx-delete="{% url 'opportunities:delete_split_row' split.id %}"
+                                            hx-target="#split-form-{{ split_type.id }}"
+                                            hx-swap="outerHTML"
+                                            onclick="hxConfirm(this,'Are you sure you want to delete this split?')"
+                                            hx-trigger="confirmed">
+                                        <img src="{% static "assets/icons/a4.svg" %}" alt="Delete" width="16" class="">
+                                        <div class="min-w-max z-50 absolute h-auto py-[3px] px-[15px] right-[40px] top-0 bg-[#000000] text-[.7rem] rounded-[5px] text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                            <p>{% trans 'Delete' %}</p>
+                                        </div>
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% if not existing_splits %}
+                        {% include "opportunity_split/split_row.html" %}
+                    {% endif %}
+                </tbody>
+            </table>
+            <div class="flex justify-end items-center pt-2 pb-2 bg-white">
+                <button type="button"
+                        class="text-primary-600 hover:text-primary-800 text-xs font-semibold px-3 py-1  rounded border border-primary-600 transition-colors"
+                        hx-get="{% url 'opportunities:add_split_row' opportunity.id split_type.id %}"
+                        hx-target="#split-rows-{{ split_type.id }}"
+                        hx-swap="beforeend"
+                        hx-include="#split-form-{{ split_type.id }} [name^='user_id_'], #split-form-{{ split_type.id }} [name^='percentage_']"
+                        hx-on::before-request="
+                            let maxIndex = 0;
+                            document.querySelectorAll('#split-form-{{ split_type.id }} input[name^=percentage_], #split-form-{{ split_type.id }} select[name^=user_id_]').forEach(input => {
+                                const match = input.name.match(/(\d+)$/);
+                                if (match) {
+                                    const index = parseInt(match[1]);
+                                    if (index > maxIndex) maxIndex = index;
+                                }
+                            });
+                            event.detail.parameters = event.detail.parameters || {};
+                            event.detail.parameters.row_index = maxIndex + 1;
+                        ">
+                    + {% trans "Add Row" %}
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Totals Section -->
+
+        <div class="p-4 bg-gray-50 rounded-lg border border-[#e9e9e9]" id="totals-row-{{ split_type.id }}">
+            {% include "opportunity_split/totals_row.html" %}
+        </div>
+
+        {% if team_selling_enabled or split_type.totals_100_percent %}
+        <div class="mt-4 p-3 bg-yellow-50 border border-[#f3edb0] rounded-lg">
+            <div class="flex items-start gap-2">
+                <i class="bi bi-info-circle text-blue-600 text-base mt-0.5 flex-shrink-0"></i>
+                <div  class="text-xs text-yellow-800">
+                    <ul class="list-disc list-inside space-y-1">
+                        {% if team_selling_enabled and not allow_all_users %}
+                        <li class="whitespace-nowrap">
+                            {% trans "Only opportunity team members can be assigned splits.To allow all users, enable Let users add members to opportunity teams while editing splits in  Opportunity Settings" %}
+                        </li>
+                        {% elif team_selling_enabled and allow_all_users %}
+                        <li>
+                            {% trans "All active users in the company can be assigned splits." %}
+                        </li>
+                        {% endif %}
+
+                        {% if split_type.totals_100_percent %}
+                        <li>{% trans "Total percentage must equal 100% for this split type." %}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Actions Footer -->
+        <div class="flex justify-end pt-2">
+            <button type="submit" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                {% trans "Save" %}
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    htmx.process(document.getElementById('split-form-{{ split_type.id }}'));
+
+    let autoSaveTimeout;
+    let isSaving = false;
+
+    function autoSaveSplits(element) {
+        clearTimeout(autoSaveTimeout);
+
+        autoSaveTimeout = setTimeout(() => {
+            if (isSaving) return;
+
+            const form = element.closest('form');
+            if (!form) return;
+
+            if (!form.checkValidity()) {
+                return;
+            }
+
+            isSaving = true;
+
+            const saveButton = form.querySelector('button[type="submit"]');
+            const originalText = saveButton ? saveButton.textContent : '';
+            if (saveButton) {
+                saveButton.textContent = '{% trans "Saving..." %}';
+                saveButton.disabled = true;
+            }
+
+            htmx.ajax('POST', form.getAttribute('hx-post'), {
+                source: form,
+                swap: 'none',
+                handler: function(target, response) {
+                    isSaving = false;
+                    if (saveButton) {
+                        saveButton.textContent = originalText;
+                        saveButton.disabled = false;
+                    }
+                }
+            });
+        }, 1500);
+    }
+</script>

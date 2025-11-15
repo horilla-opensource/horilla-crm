@@ -1,0 +1,68 @@
+{% load static i18n %}
+
+<div class="flex w-full relative bg-white rounded-lg shadow-sm " id="calendar-preview-container">
+    <div class=" border-b border-secondary-200 bg-white flex items-center justify-between p-5 fixed top-0  w-full z-10">
+        <h3 class="text-md font-semibold">{% trans 'Preview in Calendar' %}</h3>
+        <button onclick="closeContentModal()">
+            <img src="{% static '/assets/icons/close.svg' %}" alt="" />
+        </button>
+    </div>
+    <div  class=" bg-[#f8fafc] p-5 h-screen overflow-hidden overflow-y-auto pt-20 w-full">
+        {% for quarter in calendar_data %}
+            <h3 class="text-md font-semibold mb-2">Quarter {{ quarter.quarter_number }}</h3>
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                {% for period in quarter.periods %}
+                    <div class="bg-white rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] p-3">
+                        {% if period.is_standard %}
+                            <p class="text-sm font-semibold text-center text-primary-600 bg-primary-400 py-2 rounded-tl-md rounded-tr-md">
+                                {{ period.month_name }}
+                            </p>
+                            <div class="overflow-hidden overflow-y-auto border border-primary-400 rounded-bl-md rounded-br-md border-t-0 p-1">
+                                <table class="w-full text-xs text-center">
+                                    <!-- Days of week header -->
+                                    <tr>
+                                        {% for day in ordered_days %}
+                                            <td class="border border-secondary-50 p-1 font-medium">{{ day }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                    <!-- Calendar weeks -->
+                                    {% for week in period.weeks %}
+                                        <tr>
+                                            {% for day in week %}
+                                                <td class="p-1">{% if day %}{{ day }}{% endif %}</td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        {% else %}
+                            <p class="text-sm font-semibold text-center text-primary-600 bg-primary-400 py-2 rounded-tl-md rounded-tr-md">
+                                {% trans "Period" %} {{ period.period_number }}
+                            </p>
+                            <div class="overflow-hidden overflow-y-auto border border-primary-400 rounded-bl-md rounded-br-md border-t-0 p-1">
+                                <table class="w-full text-xs text-center ">
+                                    <tr>
+                                        <th class="p-1">{% trans 'Week' %}</th>
+                                        <th class="p-1">{% trans 'Month'%}</th>
+                                        {% for day in ordered_days %}
+                                            <th class="p-1">{{ day }}</th>
+                                        {% endfor %}
+                                    </tr >
+                                    {% for week in period.weeks %}
+                                        <tr>
+                                            <td class="p-1">{{ week.week_number }}</td>
+                                            <td class="p-1">{{ week.month|capfirst }}</td>
+                                            {% for day in week.days %}
+                                                <td class="p-1">{% if day %}{{ day }}{% endif %}</td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

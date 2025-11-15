@@ -1,0 +1,47 @@
+{% load i18n %}
+{% if opportunity_action == 'create_new' %}
+    <div class="flex flex-col mb-3">
+        <label for="" class="text-xs text-color-600 mb-2">{% trans 'Opportunity Name' %}</label>
+        <input id="id_existing_opportunity" type="text" name="opportunity_name" placeholder="Enter Opportunity Name"
+               class="text-color-600 p-2 placeholder:text-xs pr-[40px] w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600"
+
+               value="{{ form.opportunity_name.value|default:'' }}">
+        {% if form.opportunity_name.errors %}
+        <div class="bg-red-50 text-red-500 px-3 py-2 rounded-lg text-sm mb-4 mt-2">{{ form.opportunity_name.errors.0 }}</div>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="flex flex-col mb-3">
+        <label for="" class="text-xs text-color-600 mb-2">{% trans 'Opportunity Name' %}</label>
+        {% if selected_account_id %}
+            <select name="existing_opportunity" class="select2-pagination w-full text-sm"
+                    data-url="{% url 'horilla_generics:model_select2' app_label='opportunities' model_name='Opportunity' %}?account={{ selected_account_id }}"
+                    data-placeholder="Select opportunity"
+                    data-dependency="existing_account"
+                    id="id_existing_opportunity"
+                    data-dependency-model="accounts.Account"
+                    data-dependency-field="account"
+                    data-field-name="opportunity">
+                <option value="">{% trans 'Select Opportunity' %}</option>
+                {% for value, label in form.fields.existing_opportunity.choices %}
+                    {% if value %}
+                        <option value="{{ value }}" {% if value == form.existing_opportunity.value %}selected{% endif %}>{{ label }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        {% elif account_action == 'create_new' %}
+            <select name="existing_opportunity" class="select2-pagination w-full text-sm" disabled>
+                <option value="">{% trans 'Please select an account first' %}</option>
+            </select>
+            <small class="text-gray-500 text-xs mt-1">{% trans 'Select an account to see available opportunities' %}</small>
+        {% else %}
+            <select name="existing_opportunity" class="select2-pagination w-full text-sm" disabled>
+                <option value="">{% trans 'Please select an account first' %}</option>
+            </select>
+            <small class="text-gray-500 text-xs mt-1">{% trans 'Select an account to see available opportunities' %}</small>
+        {% endif %}
+        {% if form.existing_opportunity.errors %}
+        <div class="bg-red-50 text-red-500 px-3 py-2 rounded-lg text-sm mb-4 mt-2">{{ form.existing_opportunity.errors.0 }}</div>
+        {% endif %}
+    </div>
+{% endif %}

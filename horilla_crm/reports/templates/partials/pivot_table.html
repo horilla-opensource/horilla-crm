@@ -1,0 +1,487 @@
+{% load reports_tags %}
+{% load i18n %}
+{% if configuration_type == "0_row_0_col" %}
+    <div class="bg-white p-6 rounded-lg shadow-sm border border-[#efefef]">
+        <h3 class="text-lg font-semibold mb-4">{% trans 'Summary Report' %}</h3>
+        <div class="text-center">
+            <div class="text-3xl font-bold text-primary-600 mb-2"
+                 hx-get="{% url 'reports:report_detail_filtered' report.pk %}?simple_aggregate={{ simple_aggregate.value }}&{{request.GET.urlencode}}"
+                 hx-target="#details-table"
+                 hx-swap="innerHTML">
+                 {% trans 'Total Count' %} - {{ total_count }}
+            </div>
+            {% for agg in aggregate_columns %}
+                <div class="text-gray-600 mt-2">
+                    {{ agg.name }}: {{ agg.value|floatformat:2 }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+<!-- Configuration: 1 row, 0 columns -->
+{% elif configuration_type == "1_row_0_col" %}
+    <table class="w-full rounded-lg">
+        <thead class="sticky top-0 bg-primary-300 text-primary-600">
+            <tr>
+                <th class="text-sm sticky top-0 font-bold text-left p-3 rounded-tl-md" style="width: 300px">{{ row_group_verbose_names.0 }}</th>
+                {% for col in pivot_columns %}
+                    <th class="text-sm sticky top-0 font-bold text-center p-3 {% if forloop.last %}rounded-tr-md{% endif %}" style="width: 120px">{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in pivot_index %}
+                <tr>
+                    <td class="text-sm border border-[solid] border-[#efefef] text-left p-3">{{ row }}</td>
+                    {% for col in pivot_columns %}
+                        <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                            hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ row|urlencode }}{% if col != 'Count' %}&col={{ col|urlencode }}{% endif %}{% for agg in aggregate_columns %}&aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                            hx-target="#details-table"
+                            hx-swap="innerHTML">
+                            {{ pivot_table|get_item:row|get_item:col|default:"0" }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            <tr class="font-bold bg-[#e54f3808]">
+                <td class="text-sm border border-[solid] border-[#efefef] text-left p-3">Total</td>
+                {% for col in pivot_columns %}
+                    <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                        hx-get="{% url 'reports:report_detail_filtered' report.pk %}?col={{ col|urlencode }}{% for agg in aggregate_columns %}&aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                        hx-target="#details-table"
+                        hx-swap="innerHTML">
+                        {{ pivot_table|column_sum:col|default:"0" }}
+                    </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+<!-- Configuration: 1 row, 1 column -->
+{% elif configuration_type == "1_row_1_col" %}
+    <table class="w-full rounded-lg">
+        <thead class="sticky top-0 bg-primary-300 text-primary-600">
+            <tr>
+                <th class="text-sm sticky top-0 font-bold text-left p-3 rounded-tl-md" style="width: 200px">{{ row_group_verbose_names.0 }}</th>
+                {% for col in pivot_columns %}
+                    <th class="text-sm sticky top-0 font-bold text-center p-3 {% if forloop.last %}rounded-tr-md{% endif %}" style="width: 100px">{{ col }}</th>
+                {% endfor %}
+                <th class="text-sm sticky top-0 font-bold text-center p-3 rounded-tr-md" style="width: 100px">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in pivot_index %}
+                <tr>
+                    <td class="text-sm border border-[solid] border-[#efefef] text-left p-3">{{ row }}</td>
+                    {% for col in pivot_columns %}
+                        <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                            hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ row|urlencode }}&col={{ col|urlencode }}{% for agg in aggregate_columns %}&aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                            hx-target="#details-table"
+                            hx-swap="innerHTML">
+                            {{ pivot_table|get_item:row|get_item:col|default:"0" }}
+                        </td>
+                    {% endfor %}
+                    <td class="text-sm border border-[solid] border-[#efefef] text-center p-3 bg-[#e54f3808]"
+                        hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ row|urlencode }}&{{request.GET.urlencode}}"
+                        hx-target="#details-table"
+                        hx-swap="innerHTML">
+                        {{ pivot_table|get_item:row|get_item:'total'|default:"0" }}
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr class="font-bold bg-[#e54f3808]">
+                <td class="text-sm border border-[solid] border-[#efefef] text-left p-3">Total</td>
+                {% for col in pivot_columns %}
+                    <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                        hx-get="{% url 'reports:report_detail_filtered' report.pk %}?col={{ col|urlencode }}{% for agg in aggregate_columns %}&aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                        hx-target="#details-table"
+                        hx-swap="innerHTML">
+                        {{ pivot_table|column_sum:col|default:"0" }}
+                    </td>
+                {% endfor %}
+                <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                    hx-get="{% url 'reports:report_detail_filtered' report.pk %}{% for agg in aggregate_columns %}?aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                    hx-target="#details-table"
+                    hx-swap="innerHTML">
+                    {% with agg_names=aggregate_columns|aggregate_names %}
+                        {{ pivot_table|total_sum_excluding_aggregate:agg_names|default:"0" }}
+                    {% endwith %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+<!-- Configuration: 1 row, 2 columns -->
+{% elif configuration_type == "1_row_2_col" %}
+    <table class="w-full rounded-lg">
+        <thead class="sticky top-0 bg-primary-300 text-primary-600">
+            <tr class="border-b border-white">
+                <th class="text-sm sticky top-0 font-bold text-left p-3 border-r border-white border-2" rowspan="2" style="width: 200px">{{ row_group_verbose_names.0 }}</th>
+                {% regroup column_hierarchy by level1 as level1_groups %}
+                {% for level1_group in level1_groups %}
+                    <th class="text-sm sticky top-0 font-bold text-center p-3 border-r border-white border-2" colspan="{{ level1_group.list|length }}">
+                        {{ level1_group.grouper }}
+                    </th>
+                {% endfor %}
+                <th class="text-sm sticky top-0 font-bold text-center p-3 rounded-tr-md border border-white border-2" rowspan="2" style="width: 100px">Total</th>
+            </tr>
+            <tr>
+                {% for col_info in column_hierarchy %}
+                    <th class="text-sm sticky top-0 font-bold text-center p-3 border-r border-white border-2" style="width: 80px">{{ col_info.level2 }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in pivot_index %}
+                <tr>
+                    <td class="text-sm border border-[solid] border-[#efefef] text-left p-3">{{ row }}</td>
+                    {% for col_info in column_hierarchy %}
+                        <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                            hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ row|urlencode }}&col1={{ col_info.level1|urlencode }}&col2={{ col_info.level2|urlencode }}{% for agg in aggregate_columns %}&aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                            hx-target="#details-table"
+                            hx-swap="innerHTML">
+                            {{ pivot_table|get_item:row|get_item:col_info.key|default:"0" }}
+                        </td>
+                    {% endfor %}
+                    <td class="text-sm border border-[solid] border-[#efefef] text-center p-3 bg-[#e54f3808]"
+                        hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ row|urlencode }}&{{request.GET.urlencode}}"
+                        hx-target="#details-table"
+                        hx-swap="innerHTML">
+                        {{ pivot_table|get_item:row|get_item:'total'|default:"0" }}
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr class="font-bold bg-[#e54f3808]">
+                <td class="text-sm border border-[solid] border-[#efefef] text-left p-3">Total</td>
+                {% for col_info in column_hierarchy %}
+                    <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                        hx-get="{% url 'reports:report_detail_filtered' report.pk %}?col1={{ col_info.level1|urlencode }}&col2={{ col_info.level2|urlencode }}{% for agg in aggregate_columns %}&aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                        hx-target="#details-table"
+                        hx-swap="innerHTML">
+                        {{ pivot_table|column_sum:col_info.key|default:"0" }}
+                    </td>
+                {% endfor %}
+                <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                    hx-get="{% url 'reports:report_detail_filtered' report.pk %}{% for agg in aggregate_columns %}?aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                    hx-target="#details-table"
+                    hx-swap="innerHTML">
+                    {% with agg_names=aggregate_columns|aggregate_names %}
+                        {{ pivot_table|total_sum_excluding_aggregate:agg_names|default:"0" }}
+                    {% endwith %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+<!-- Configuration: 2 rows, 0 columns -->
+{% elif configuration_type == "2_row_0_col" %}
+    <table class="w-full rounded-lg">
+        <thead class="sticky top-0 bg-primary-300 text-primary-600">
+            <tr>
+                <th class="text-sm sticky top-0 font-bold text-left p-3 rounded-tl-md" style="width: 200px">{{ row_group_verbose_names.0 }}</th>
+                <th class="text-sm sticky top-0 font-bold text-left p-3" style="width: 250px">{{ row_group_verbose_names.1 }}</th>
+                {% for col in pivot_columns %}
+                    <th class="text-sm sticky top-0 font-bold text-center p-3 {% if forloop.last %}rounded-tr-md{% endif %}" style="width: 100px">{{ col }}</th>
+                {% endfor %}
+                <th class="text-sm sticky top-0 font-bold text-center p-3 rounded-tr-md" style="width: 100px">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in hierarchical_data.groups %}
+                {% for item in group.items %}
+                    <tr>
+                        {% if forloop.first %}
+                            <td class="text-sm border border-[solid] border-[#efefef] text-left p-3 font-bold"
+                                rowspan="{{ group.items|length|add:1 }}">
+                                {{ group.primary_group }}
+                            </td>
+                        {% endif %}
+                        <td class="text-sm border border-[solid] border-[#efefef] text-left p-3 pl-6">{{ item.secondary_group }}</td>
+                        {% for col in pivot_columns %}
+                            <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                                hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ group.primary_group|urlencode }}&row_group2={{ item.secondary_group|urlencode }}&col={{ col|urlencode }}{% for agg in aggregate_columns %}&aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                                hx-target="#details-table"
+                                hx-swap="innerHTML">
+                                {{ item.values|get_item:col|default:"0" }}
+                            </td>
+                        {% endfor %}
+                        <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                            hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ group.primary_group|urlencode }}&row_group2={{ item.secondary_group|urlencode }}&{{request.GET.urlencode}}"
+                            hx-target="#details-table"
+                            hx-swap="innerHTML">
+                            {{ item.total }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr class="font-bold">
+                    <td class="text-sm border border-[solid] border-[#efefef] text-left p-3 pl-6">
+                        <strong>Subtotal</strong>
+                    </td>
+                    {% for col in pivot_columns %}
+                        <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                            hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ group.primary_group|urlencode }}&col={{ col|urlencode }}{% for agg in aggregate_columns %}&aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                            hx-target="#details-table"
+                            hx-swap="innerHTML">
+                            <strong>{{ group.items|get_column_subtotal:col }}</strong>
+                        </td>
+                    {% endfor %}
+                    <td class="text-sm border border-[solid] border-[#efefef] text-center p-3 bg-[#e54f3808]"
+                        hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ group.primary_group|urlencode }}&{{request.GET.urlencode}}"
+                        hx-target="#details-table"
+                        hx-swap="innerHTML">
+                        <strong>{{ group.subtotal }}</strong>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr class="font-bold bg-[#e54f3808]">
+                <td class="text-sm border border-[solid] border-[#efefef] text-left p-3" colspan="2">
+                    <strong>Grand Total</strong>
+                </td>
+                {% for col in pivot_columns %}
+                    <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                        hx-get="{% url 'reports:report_detail_filtered' report.pk %}?col={{ col|urlencode }}{% for agg in aggregate_columns %}&aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                        hx-target="#details-table"
+                        hx-swap="innerHTML">
+                        <strong>{{ hierarchical_data|get_grand_column_total:col }}</strong>
+                    </td>
+                {% endfor %}
+                <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                    hx-get="{% url 'reports:report_detail_filtered' report.pk %}{% for agg in aggregate_columns %}?aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                    hx-target="#details-table"
+                    hx-swap="innerHTML">
+                    <strong>{{ hierarchical_data.grand_total }}</strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+<!-- Configuration: 2 rows, 1 column -->
+{% elif configuration_type == "2_row_1_col" %}
+    <table class="w-full rounded-lg">
+        <thead class="sticky top-0 bg-primary-300 text-primary-600">
+            <tr>
+                <th class="text-sm sticky top-0 font-bold text-left p-3 rounded-tl-md" style="width: 200px">{{ row_group_verbose_names.0 }}</th>
+                <th class="text-sm sticky top-0 font-bold text-left p-3" style="width: 250px">{{ row_group_verbose_names.1 }}</th>
+                {% for col in pivot_columns %}
+                    <th class="text-sm sticky top-0 font-bold text-center p-3 {% if forloop.last %}rounded-tr-md{% endif %}" style="width: 100px">{{ col }}</th>
+                {% endfor %}
+                <th class="text-sm sticky top-0 font-bold text-center p-3 rounded-tr-md" style="width: 100px">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in hierarchical_data.groups %}
+                {% for item in group.items %}
+                    <tr>
+                        {% if forloop.first %}
+                            <td class="text-sm border border-[solid] border-[#efefef] text-left p-3 font-bold"
+                                rowspan="{{ group.items|length|add:1 }}">
+                                {{ group.primary_group }}
+                            </td>
+                        {% endif %}
+                        <td class="text-sm border border-[solid] border-[#efefef] text-left p-3 pl-6">{{ item.secondary_group }}</td>
+                        {% for col in pivot_columns %}
+                            <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                                hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ group.primary_group|urlencode }}&row_group2={{ item.secondary_group|urlencode }}&col={{ col|urlencode }}{% for agg in aggregate_columns %}&aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                                hx-target="#details-table"
+                                hx-swap="innerHTML">
+                                {{ item.values|get_item:col|default:"0" }}
+                            </td>
+                        {% endfor %}
+                        <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                            hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ group.primary_group|urlencode }}&row_group2={{ item.secondary_group|urlencode }}&{{request.GET.urlencode}}"
+                            hx-target="#details-table"
+                            hx-swap="innerHTML">
+                            {{ item.total }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr class="font-bold">
+                    <td class="text-sm border border-[solid] border-[#efefef] text-left p-3 pl-6">
+                        <strong>Subtotal</strong>
+                    </td>
+                    {% for col in pivot_columns %}
+                        <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                            hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ group.primary_group|urlencode }}&col={{ col|urlencode }}{% for agg in aggregate_columns %}&aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                            hx-target="#details-table"
+                            hx-swap="innerHTML">
+                            <strong>{{ group.items|get_column_subtotal:col }}</strong>
+                        </td>
+                    {% endfor %}
+                    <td class="text-sm border border-[solid] border-[#efefef] text-center p-3 bg-[#e54f3808]"
+                        hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ group.primary_group|urlencode }}&{{request.GET.urlencode}}"
+                        hx-target="#details-table"
+                        hx-swap="innerHTML">
+                        <strong>{{ group.subtotal }}</strong>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr class="font-bold bg-[#e54f3808]">
+                <td class="text-sm border border-[solid] border-[#efefef] text-left p-3" colspan="2">
+                    <strong>Grand Total</strong>
+                </td>
+                {% for col in pivot_columns %}
+                    <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                        hx-get="{% url 'reports:report_detail_filtered' report.pk %}?col={{ col|urlencode }}{% for agg in aggregate_columns %}&aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                        hx-target="#details-table"
+                        hx-swap="innerHTML">
+                        <strong>{{ hierarchical_data|get_grand_column_total:col }}</strong>
+                    </td>
+                {% endfor %}
+                <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                    hx-get="{% url 'reports:report_detail_filtered' report.pk %}{% for agg in aggregate_columns %}?aggregate={{ agg.name|urlencode }}{% endfor %}&{{request.GET.urlencode}}"
+                    hx-target="#details-table"
+                    hx-swap="innerHTML">
+                    <strong>{{ hierarchical_data.grand_total }}</strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+<!-- Configuration: 3 rows, 0 columns -->
+{% elif configuration_type == "3_row_0_col" %}
+    <table class="w-full rounded-lg">
+        <thead class="sticky top-0 bg-primary-300 text-primary-600">
+            <tr>
+                <th class="text-sm sticky top-0 font-bold text-left p-3 rounded-tl-md" style="width: 150px">{{ row_group_verbose_names.0 }}</th>
+                <th class="text-sm sticky top-0 font-bold text-left p-3" style="width: 200px">{{ row_group_verbose_names.1 }}</th>
+                <th class="text-sm sticky top-0 font-bold text-left p-3" style="width: 250px">{{ row_group_verbose_names.2 }}</th>
+                <th class="text-sm sticky top-0 font-bold text-center p-3" style="width: 120px">Count</th>
+                {% for agg in aggregate_columns %}
+                    <th class="text-sm sticky top-0 font-bold text-center p-3 {% if forloop.last %}rounded-tr-md{% endif %}" style="width: 120px">{{ agg.name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for level1_group in three_level_data.groups %}
+                {% for level2_group in level1_group.level2_groups %}
+                    {% for level3_item in level2_group.level3_items %}
+                        <tr>
+                            {% if forloop.parentloop.first and forloop.first %}
+                                <td class="text-sm border border-[solid] border-[#efefef] text-left p-3 font-bold">
+                                    {{ level1_group.level1_group }}
+                                </td>
+                            {% else %}
+                                <td class="text-sm border border-[solid] border-[#efefef] text-left p-3"></td>
+                            {% endif %}
+                            {% if forloop.first %}
+                                <td class="text-sm border border-[solid] border-[#efefef] text-left p-3 pl-4">
+                                    {{ level2_group.level2_group }}
+                                </td>
+                            {% else %}
+                                <td class="text-sm border border-[solid] border-[#efefef] text-left p-3"></td>
+                            {% endif %}
+                            <td class="text-sm border border-[solid] border-[#efefef] text-left p-3 pl-8"
+                                hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ level1_group.level1_group|urlencode }}&row_group2={{ level2_group.level2_group|urlencode }}&row_group3={{ level3_item.level3_group|urlencode }}&{{request.GET.urlencode}}"
+                                hx-target="#details-table"
+                                hx-swap="innerHTML">
+                                {{ level3_item.level3_group }}
+                            </td>
+                            <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                                hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ level1_group.level1_group|urlencode }}&row_group2={{ level2_group.level2_group|urlencode }}&row_group3={{ level3_item.level3_group|urlencode }}&{{request.GET.urlencode}}"
+                                hx-target="#details-table"
+                                hx-swap="innerHTML">
+                                {{ level3_item.count }}
+                            </td>
+                            {% for agg in aggregate_columns %}
+                                <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                                    hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ level1_group.level1_group|urlencode }}&row_group2={{ level2_group.level2_group|urlencode }}&row_group3={{ level3_item.level3_group|urlencode }}&aggregate={{ agg.name|urlencode }}&{{request.GET.urlencode}}"
+                                    hx-target="#details-table"
+                                    hx-swap="innerHTML">
+                                    {{ level3_item.aggregate_values|get_item:agg.name|default:"0" }}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    <tr class="font-semibold bg-gray-50">
+                        <td class="text-sm border border-[solid] border-[#efefef] text-left p-3"></td>
+                        <td class="text-sm border border-[solid] border-[#efefef] text-left p-3 pl-4">
+                            <strong>{{ level2_group.level2_group }} Total</strong>
+                        </td>
+                        <td class="text-sm border border-[solid] border-[#efefef] text-left p-3"></td>
+                        <td class="text-sm border border-[solid] border-[#efefef] text-center p-3 bg-[#e54f3815]"
+                            hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ level1_group.level1_group|urlencode }}&row_group2={{ level2_group.level2_group|urlencode }}&{{request.GET.urlencode}}"
+                            hx-target="#details-table"
+                            hx-swap="innerHTML">
+                            <strong>{{ level2_group.level2_total }}</strong>
+                        </td>
+                        {% for agg in aggregate_columns %}
+                            <td class="text-sm border border-[solid] border-[#efefef] text-center p-3 bg-[#e54f3815]"
+                                hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ level1_group.level1_group|urlencode }}&row_group2={{ level2_group.level2_group|urlencode }}&aggregate={{ agg.name|urlencode }}&{{request.GET.urlencode}}"
+                                hx-target="#details-table"
+                                hx-swap="innerHTML">
+                                <strong>
+                                    {% if agg.function == 'sum' %}
+                                        {{ level2_group.level3_items|sum_aggregate:agg.name }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </strong>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                <tr class="font-bold bg-[#e54f3808]">
+                    <td class="text-sm border border-[solid] border-[#efefef] text-left p-3">
+                        <strong>{{ level1_group.level1_group }} Total</strong>
+                    </td>
+                    <td class="text-sm border border-[solid] border-[#efefef] text-left p-3" colspan="2"></td>
+                    <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                        hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ level1_group.level1_group|urlencode }}&{{request.GET.urlencode}}"
+                        hx-target="#details-table"
+                        hx-swap="innerHTML">
+                        <strong>{{ level1_group.level1_total }}</strong>
+                    </td>
+                    {% for agg in aggregate_columns %}
+                        <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                            hx-get="{% url 'reports:report_detail_filtered' report.pk %}?row_group1={{ level1_group.level1_group|urlencode }}&aggregate={{ agg.name|urlencode }}&{{request.GET.urlencode}}"
+                            hx-target="#details-table"
+                            hx-swap="innerHTML">
+                            <strong>
+                                {% if agg.function == 'sum' %}
+                                    {{ level1_group.level2_groups|sum_level2_aggregate:agg.name }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </strong>
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            <tr class="font-bold bg-[#e54f3808]">
+                <td class="text-sm border border-[solid] border-[#efefef] text-left p-3" colspan="3">
+                    <strong>Overall Grand Total</strong>
+                </td>
+                <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                    hx-get="{% url 'reports:report_detail_filtered' report.pk %}&{{request.GET.urlencode}}"
+                    hx-target="#details-table"
+                    hx-swap="innerHTML">
+                    <strong>{{ three_level_data.grand_total }}</strong>
+                </td>
+                {% for agg in aggregate_columns %}
+                    <td class="text-sm border border-[solid] border-[#efefef] text-center p-3"
+                        hx-get="{% url 'reports:report_detail_filtered' report.pk %}?aggregate={{ agg.name|urlencode }}&{{request.GET.urlencode}}"
+                        hx-target="#details-table"
+                        hx-swap="innerHTML">
+                        <strong>
+                            {% if agg.function == 'sum' %}
+                                {{ three_level_data.groups|sum_level1_aggregate:agg.name }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </strong>
+                    </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+{% else %}
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+        <p class="text-red-800">
+            {% if error %}
+                Error: {{ error }}
+            {% else %}
+                Configuration not supported: {{ configuration_type }}
+            {% endif %}
+        </p>
+    </div>
+{% endif %}

@@ -1,0 +1,128 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+
+<div class="custom-scroll overflow-hidden overflow-y-auto h-full" role="tabpanel" aria-labelledby="history-tab" id="history-main">
+    <div class="w-full max-w-6xl mx-auto p-5 relative">
+        <!-- Sticky filter button -->
+        <div class="sticky top-4 z-90 px-5 bg-white max-w-6xl mx-auto flex justify-end gap-3">
+            {% if filter_applied %}
+                <button onclick="$('#tab-history').click();"
+                    class="text-sm border-[1px] hover:border-[#9b210f] hover:bg-secondary-600 rounded-[5px] px-4 py-2 text-[#e54f38] flex gap-3 btn-with-icon transition duration-300 hover:text-white">
+                    {% trans "Clear Filters" %}
+                </button>
+            {% endif %}
+            <button id="filter-button"
+                    hx-get="{{request.path}}?show_filter=true"
+                    hx-target="#filtermodalBox"
+                    hx-swap="innerHTML"
+                    hx-trigger="click"
+                    class="flex items-center gap-3 text-sm p-2 rounded-md bg-primary-600 text-white shadow">
+                <img src="{% static 'assets/icons/filter1.svg' %}" alt="" width="18" />
+            </button>
+        </div>
+
+        <div id="history-container">
+            {% if page_obj %}
+                {% for date, entries in page_obj %}
+                    <div class="mb-20 history-date-group">
+                        <div class="relative max-w-[600px]">
+                            <h2 class="bg-primary-600 m-auto w-max mb-[20px] px-[15px] py-[5px] rounded-[5px] text-[white]">
+                                {{ date|date:"d M Y" }}
+                            </h2>
+
+                            <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-300 hidden md:block"></div>
+
+                            <ul class="space-y-10">
+                                {% for entry in entries %}
+                                    <li class="flex flex-col sm:flex-row justify-between items-center relative">
+                                        <div class="md:w-1/2 md:pr-10 md:text-right mt-2 md:mt-0 order-1 md:order-none">
+                                            <div class="inline-block px-4 py-2 rounded-md text-center bg-primary-200 text-primary-600">
+                                                <span class="text-xs block">{{ entry.timestamp|time:"H:i A" }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="absolute left-1/2 transform -translate-x-1/2 md:translate-x-0 md:-ml-[8px] top-4 md:top-7 z-10 w-4 h-4 rounded-full flex items-center justify-center
+                                            {% if not entry.status or entry.status == 'completed' %}bg-[#26c163]{% else %}bg-red-500{% endif %}">
+                                            <i class="fa-solid {% if not entry.status or entry.status == 'completed' %}fa-check{% else %}fa-times{% endif %} text-white text-[.5rem]"></i>
+                                        </div>
+
+                                        <div class="md:w-1/2 md:pl-10 md:text-left">
+                                            <div class="bg-white p-4 rounded border-[1px] border-[solid] border-primary-300 w-[350px]">
+                                                <h3 class="text-primary-600 font-semibold text-sm">
+                                                    {% if 'email' in entry|lower %}
+                                                        {% trans "Email" %}
+                                                    {% elif 'call' in entry|lower %}
+                                                        {% trans "Call" %}
+                                                    {% elif 'updated' in entry|lower %}
+                                                        {% trans "Edit" %}
+                                                    {% elif 'created' in entry|lower %}
+                                                        {{ entry.content_type.model|capfirst }}
+                                                    {% else %}
+                                                        {{ entry.content_type.model|capfirst }}
+                                                    {% endif %}
+                                                </h3>
+
+                                                <p class="mt-1 text-xs text-gray-700">
+                                                    {% if 'created' in entry|lower %}
+                                                        {% trans "New" %} {{ entry.content_type.model|capfirst }} {% trans "created" %}
+                                                    {% elif 'updated' in entry|lower %}
+                                                        {% if entry.changes_display_dict %}
+                                                            {% for field, values in entry.changes_display_dict.items %}
+                                                                <span class="font-bold text-black">{{ field|capfirst }}:</span> <br>
+                                                                {{ values.0|default:"--" }} → <span style="background-color: #ffd8d29c; color:#e54f38; padding: 2px 4px; border-radius: 5px;">{{ values.1|default:"--" }}</span>
+                                                                {% if not forloop.last %}<br>{% endif %}
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            {{ entry.content_type.model|lower }} {% trans "status" %}
+                                                        {% endif %}
+                                                    {% elif 'call' in entry|lower %}
+                                                        {% trans "Added call task to this" %} {{ model_name|capfirst }}
+                                                    {% elif 'email' in entry|lower %}
+                                                       {% trans "Send email to this" %} {{ model_name|capfirst }}
+                                                    {% elif entry.content_type.model == "activity" %}
+                                                        {% if "email" in entry.changes_display_dict %}
+                                                            {% trans "Send email to this" %} {{ model_name|capfirst }}
+                                                        {% else %}
+                                                            {% trans "Activity logged for this" %} {{ model_name|capfirst }}
+                                                        {% endif %}
+                                                    {% elif entry.content_type.model == "event" %}
+                                                        {% trans "Event scheduled for this" %} {{ model_name|capfirst }}
+                                                    {% elif entry.content_type.model == "meeting" %}
+                                                        {% trans "Meeting scheduled with this" %} {{ model_name|capfirst }}
+                                                    {% else %}
+                                                        {% if entry.changes_display_dict %}
+                                                            {% for key, value in entry.changes_display_dict.items %}
+                                                                {{ key }}: {{ value }}<br>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            {% trans "Action performed by" %} {{ entry.actor|default:"Unknown" }}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <div id="load-more-trigger"
+                         hx-get="{{request.path}}?{{request.GET.urlencode }}&page={{ page_obj.next_page_number }}"
+                         hx-trigger="revealed"
+                         hx-swap="innerHTML"
+                         hx-target="#history-main"
+                         class="h-1"></div>
+                {% endif %}
+            {% else %}
+                <div class="flex justify-between items-center h-0"></div>
+                <img src="{% static 'assets/img/not-found.svg' %}" alt="" class="w-80 m-auto mb-4 mt-5" />
+                <p class="text-sm text-center mb-3 text-gray-500 justify-center">
+                   {% trans " No history available for this object." %}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</div>

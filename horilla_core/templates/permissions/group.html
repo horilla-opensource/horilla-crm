@@ -1,0 +1,114 @@
+{% load i18n %}
+<div class="" id="group-container" role="tabpanel" aria-labelledby="details-tab">
+    <button id="reloadButton" hidden hx-get="{{ request.path }}?{{request.GET.urlencode}}" hx-target="#group-container" hx-swap="outerHTML" hx-select="#group-container">click</button>
+    <div id="messages-container" style="display: none;">
+        {% for message in messages %}
+            <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+        {% endfor %}
+    </div>
+
+    <h3 class="text-md font-semibold mb-3">{% trans "User Groups" %}</h3>
+    <div class="flex gap-3 ">
+        <div class="w-[250px]">
+            <button class="mb-2 text-sm px-2 py-2 flex gap-2 pt-1 items-center text-primary-600"
+                hx-get="{% url 'horilla_core:create_roles_view' %}"
+                hx-target="#modalBox"
+                hx-swap="innerHTML"
+                onclick="openModal()">
+                {% trans "Add Groups" %}
+                <i class="fa-solid fa-plus text-xs"></i>
+            </button>
+            <div class="custom-scroll max-h-80 overflow-y-auto border-[1px] border-primary-400 p-3 bg-white rounded-md">
+                <ul id="custom-tabs" class="flex flex-col space-y-1 text-sm font-normal text-gray-500 dark:text-gray-400 h-full ">
+                    {% for role in roles %}
+                        <li class="mb-0">
+                            <a href="#"
+                                data-role-id="{{ role.id }}"
+                                hx-get="{% url 'horilla_core:role_permissions_view' role.id %}"
+                                hx-target="#tab-contents"
+                                hx-swap="innerHTML"
+                                class="role-tab items-center px-5 py-2 rounded-md w-full flex gap-3 transition
+                                {% if forloop.first %}
+                                    bg-primary-600 text-white
+                                {% else %}
+                                    bg-transparent text-gray-800
+                                {% endif %}">
+                                <div class="flex justify-between w-full">
+                                    <div class="flex gap-2 items-center">
+                                        {{ role.role_name }}
+                                    </div>
+                                    <span class="bg-white text-primary-600 w-6 h-6 font-semibold rounded-full flex items-center justify-center">
+                                        {{ role.users.count }}
+                                    </span>
+                                </div>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+
+        </div>
+
+        <div id="group-content" class="w-[calc(_100%_-_250px_)] pe-2">
+            <div class="custom-scroll overflow-hidden overflow-x-auto">
+                <div id="tab-contents">
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            const tabButtons = document.querySelectorAll(".role-tab");
+
+            tabButtons.forEach((btn) => {
+                btn.addEventListener("click", (e) => {
+                    e.preventDefault();
+
+                    tabButtons.forEach((b) => {
+                        b.classList.remove("bg-primary-600", "text-white");
+                        b.classList.add("bg-transparent", "text-gray-800");
+                    });
+
+                    btn.classList.remove("bg-transparent", "text-gray-800");
+                    btn.classList.add("bg-primary-600", "text-white");
+
+                    localStorage.setItem("rolePermissionSidebar", $(btn).attr("data-role-id"))
+
+                });
+            });
+
+            let activeSidemenu = localStorage.getItem("rolePermissionSidebar");
+            let activeTab = null;
+
+            if (activeSidemenu) {
+                let activeTab = $(`[data-role-id='${activeSidemenu}']`)[0];
+            }
+
+            if (!activeTab && tabButtons.length > 0) {
+                activeTab = tabButtons[0];
+            }
+
+            if (activeTab) {
+                tabButtons.forEach((b) => {
+                    b.classList.remove("bg-primary-600", "text-white");
+                    b.classList.add("bg-transparent", "text-gray-800");
+                });
+
+                activeTab.classList.remove("bg-transparent", "text-gray-800");
+                activeTab.classList.add("bg-primary-600", "text-white");
+
+                htmx.ajax('GET', activeTab.getAttribute('hx-get'), {
+                    target: '#tab-contents',
+                    swap: 'innerHTML'
+                });
+                localStorage.setItem("rolePermissionSidebar", activeTab.getAttribute("data-role-id"));
+            }
+        });
+
+    </script>
+</div>

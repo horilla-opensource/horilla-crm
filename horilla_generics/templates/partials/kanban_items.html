@@ -1,0 +1,80 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+
+
+{% for item in group.items %}
+
+<div id="item-{{ item.pk }}" draggable="true" ondragstart="drag(event)">
+    <div class="p-[20px] rounded-[5px] text-sm relative bg-white mb-2">
+        {% if actions %}
+            <button
+                class="absolute right-4 top-4"
+                id="kanb-{{ item.pk }}"
+                data-dropdown-toggle="kann-{{ item.pk }}"
+                type="button"
+                onclick="event.stopPropagation();"
+            >
+                <img src="{% static 'assets/icons/dots.svg' %}" width="3" alt="" />
+            </button>
+        {% endif %}
+        <div
+            id="kann-{{ item.pk }}"
+            class="z-10 hidden bg-white rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] min-w-[100px]"
+        >
+            <ul class="py-2 text-sm" aria-labelledby="kanb-{{ item.pk }}">
+                {% for action in actions %}
+                    <li>
+                        <button
+                            class="block px-3 py-1 hover:text-primary-600 transition duration-300 text-xs w-full flex"
+                            {% if action.attrs %}{{ action.attrs|format:item|safe }}{% endif %}
+                        >
+                            {{ action.action }}
+                        </button>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="flex gap-3 mb-3 pb-3 border-b border-b-[#565e6c13]">
+            <div class="rounded-full w-10 h-10 overflow-hidden">
+                <img src="https://ui-avatars.com/api/?name={{item.display_columns.0.value|urlencode}}&background=ffccbc&color=e54f38" alt="A" class="rounded-full w-10 h-10 object-cover" loading="lazy" />
+            </div>
+            <div class="flex-1">
+                {% if item.display_columns %}
+                    <p class="mb-1 {% if kanban_attrs %} hover:text-primary-600 {% endif %}" {% if kanban_attrs %}{{kanban_attrs|format:item|safe}}{% endif %}>
+                        {{ item.display_columns.0.value|default:"N/A" }}
+                    </p>
+                    {% if item.display_columns|length > 1 %}
+                        <p class="text-xs text-[#565E6C] mb-1">{{ item.display_columns.1.value|default:"N/A" }}</p>
+                    {% endif %}
+                {% else %}
+                    <p class="mb-1">N/A</p>
+                {% endif %}
+            </div>
+        </div>
+        {% for column in item.display_columns|slice:"2:" %}
+            <p class="text-xs text-[#565E6C] mb-1">{{ column.label }}: {{ column.value|default:"N/A" }}</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% if forloop.last and group.has_next %}
+<div id ="pagination-container-{{ key|sanitize_id }}" >
+
+<div id="loadingIndicator-{{ key|sanitize_id }}" class="htmx-indicator">
+    <div class="flex justify-center items-center p-4">
+        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#e54f38]"></div>
+    </div>
+</div>
+<button
+    class="htmx-sentinel"
+    hx-get="{% url 'horilla_generics:kanban_load_more' app_label=app_label model_name=model_name  %}?column_key={{ key|urlencode }}&page={{ group.next_page }}"
+    hx-trigger="intersect once"
+    hx-swap="outerHTML"
+    hx-target="#pagination-container-{{ key|sanitize_id }}"
+    hx-indicator="#loadingIndicator-{{ key|sanitize_id }}"
+    id="load-more-{{ key|sanitize_id }}"
+></button>
+</div>
+{% endif %}
+{% endfor %}

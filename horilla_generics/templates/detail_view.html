@@ -1,0 +1,104 @@
+{% extends "index.html" %}
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+{% block content %}
+<div class="flex modelcontent">
+    {% include "components/sub_sidebar.html" %}
+    <div id="mainContent"
+      class="flex-[1_0]   transition-all duration-300 ease-in-out w-full  {% if request.GET.section and request.GET.section != 'home' %} leftspace {% endif %}">
+      <div class="p-5">
+        <div id="messages-container" style="display: none;">
+          {% for message in messages %}
+              <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+          {% endfor %}
+        </div>
+        <ul class="flex flex-wrap gap-y-3 gap-x-5  mb-3 text-[14px] text-gray-500">
+          {% for label, url in breadcrumbs %}
+            <li class="{% if not forloop.last %}after:opacity-60 relative after:[content:''] after:absolute after:bg-[url({% static 'assets/icons/right-arrow.svg' %})] after:right-[-13px] after:top-[0] after:bottom-[0] after:m-auto after:bg-no-repeat after:bg-contain after:bg-center after:w-[8px] after:h-[8px]{% endif %}{% if label == obj %}relative text-primary-600 font-semibold {% endif%}">
+              {% if url %}
+                <a class="cursor-pointer hover:text-primary-600 " hx-get="{{ url }}" hx-target="#mainContent" hx-select-oob="#sideMenuContainer"
+                hx-swap = "outerHTML" hx-push-url= "true" hx-select ="#mainContent">{{ label }}</a>
+              {% else %}
+                {{ label }}
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+
+        <div
+          class="bg-white p-4 mb-4 [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] rounded-md">
+          <div class="flex flex-wrap items-center gap-2 justify-between mb-4">
+            <h2 class="text-lg font-semibold">{{ obj|get_field_value:body.0.1 }}</h2>
+            <div class="flex  items-center">
+                <div class="flex gap-1">
+                    <button class="disabled:opacity-50 cursor-pointer" {% if not has_previous %}disabled{% endif %}>
+                        <a hx-get="{% if has_previous %}{% url app_label|add:':'|add:url_name previous_id %}?{{request.GET.urlencode}}{% endif %}" hx-target="#mainContent"
+                            hx-swap = "outerHTML" hx-push-url= "true" hx-select ="#mainContent">
+                            <img src="{% static 'assets/icons/menuarrow.svg' %}" alt="Previous" />
+                        </a>
+                    </button>
+                    <button class="-rotate-180 disabled:opacity-50 cursor-pointer" {% if not has_next %}disabled{% endif %}>
+                        <a hx-get="{% if has_next %}{% url app_label|add:':'|add:url_name next_id %}?{{request.GET.urlencode}}{% endif %}" hx-target="#mainContent"
+                        hx-swap = "outerHTML" hx-push-url= "true" hx-select ="#mainContent">
+                          <img src="{% static '/assets/icons/menuarrow.svg' %}" alt="Next" />
+                        </a>
+                    </button>
+                </div>
+                {% if actions %}
+                <div class="relative dropdown-wrapper">
+                  <button
+                    id="dropdownLeftEndButton"
+                    type="button"
+                    class="flex w-[30px] justify-end"
+                  >
+                    <img src="{% static '/assets/icons/dots.svg' %}" alt="" width="4" />
+                  </button>
+                  <div class="dropdown-content absolute z-10 bg-white rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_8%)] min-w-[150px] py-2 right-0">
+                    <ul class="text-sm">
+                      {% for action in actions %}
+                      <li>
+                        <a
+                        class="px-4 py-1.5 hover:text-primary-600 transition duration-300 text-sm gap-4 items-center flex w-full cursor-pointer"
+                        {% if action.attrs %}{{ action.attrs|format:obj|safe }}{% endif %}
+                        > {{ action.action }}</a
+                      >
+                      </li>
+                    {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 text-sm">
+            {% for col in  body|slice:"1:" %}
+            <div>
+              <p class="flex flex-col sm:flex-row">
+                <span class="flex w-[150px]">{{col.0}}</span>:
+                <span class="ps-3 font-medium">{% display_field_value obj col.1 request.user %}</span>
+              </p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <button hidden id="reloadButton" hx-get='{% url app_label|add:':'|add:url_name obj.id %}?{{ request.GET.urlencode }}' hx-target="#mainContent" hx-select="#mainContent"
+          hx-swap="outerHTML" hx-push-url="true" class="mb-4">Reload
+        </button>
+        {% if pipeline_field %}
+          <div id="pipeline-choices"
+            class="custom-scroll relative overflow-x-auto [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] p-4 bg-white rounded-md mb-4">
+            {% include 'partials/pipeline_choices.html' %}
+          </div>
+        {% endif %}
+        {% if tab_url %}
+          <div id="tab-session" class="w-full" >
+            <div class="relative [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] p-3 bg-white rounded-md">
+              <div hx-get="{{ tab_url }}?{{ request.GET.urlencode}}&object_id={{obj.id}}&pipeline_field={{ pipeline_field }}" hx-trigger="load"></div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+</div>
+{% endblock content %}

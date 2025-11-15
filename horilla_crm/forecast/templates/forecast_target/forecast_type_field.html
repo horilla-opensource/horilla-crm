@@ -1,0 +1,6 @@
+{% if is_forecast_type_same %}
+    <div class="flex flex-col">
+        <label for="{{ form.forcasts_type.id_for_label }}" class="text-xs text-color-600">{{ form.forcasts_type.label }}</label>
+        {{ form.forcasts_type }}
+    </div>
+{% endif %}

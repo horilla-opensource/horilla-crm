@@ -1,0 +1,34 @@
+{% load i18n %}
+{% if account_action == 'create_new' %}
+    <div class="flex flex-col mb-3">
+        <label for="" class="text-xs text-color-600 mb-2">{% trans 'Account Name' %}</label>
+        <input id="id_existing_account" type="text" name="account_name" placeholder="Enter Account Name"
+               class="text-color-600 p-2 placeholder:text-xs pr-[40px] w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600"
+               value="{{ form.account_name.value|default:'' }}">
+        {% if form.account_name.errors %}
+        <div class="bg-red-50 text-red-500 px-3 py-2 rounded-lg text-sm mb-4 mt-2">{{ form.account_name.errors.0 }}</div>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="flex flex-col mb-3">
+        <label for="" class="text-xs text-color-600 mb-2">{% trans 'Account Name' %}</label>
+        <select name="existing_account"
+                class="select2-pagination w-full text-sm"
+                data-url="{% url 'horilla_generics:model_select2' app_label='accounts' model_name='Account' %}"
+                data-placeholder="Select account"
+                data-field-name="account"
+                hx-get="{% url 'leads:convert_lead' pk=lead.pk %}"
+                hx-target="#opportunity-field"
+                hx-swap="innerHTML"
+                id="id_existing_account"
+                hx-trigger="change"
+                hx-include="[name='opportunity_action']:checked">
+            {% for value, label in form.fields.existing_account.choices %}
+                <option value="{{ value }}" {% if value == form.existing_account.value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        {% if form.existing_account.errors %}
+        <div class="bg-red-50 text-red-500 px-3 py-2 rounded-lg text-sm mb-4 mt-2">{{ form.existing_account.errors.0 }}</div>
+        {% endif %}
+    </div>
+{% endif %}

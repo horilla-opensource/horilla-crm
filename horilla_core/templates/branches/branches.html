@@ -1,0 +1,21 @@
+{% extends "settings/settings.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block settings %}
+
+<div id="branches-view">
+    <div id="messages-container" style="display: none;">
+        {% for message in messages %}
+            <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+        {% endfor %}
+    </div>
+    <div id="navBar" hx-get="{{ nav_url}}?{{request.GET.urlencode}}" hx-trigger="load">
+    </div>
+    <div id="mainSession" class="pt-5" hx-get="{{ list_url }}?{{request.GET.urlencode}}" hx-trigger="load">
+
+    {% comment %} <div id="mainSession"  hx-get="{% if request.GET.kanban == 'true' %}{{ kanban_url }}?{{ request.GET.urlencode}}{% if filter_form %}&hx_trigger={{filter_form}}{% endif %}{% else %}{{ list_url }}?{{ request.GET.urlencode}}{% if filter_form %}&hx_trigger={{filter_form}}{% endif %}{% endif%}" hx-trigger="load"> {% endcomment %}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "settings/settings.html" %}
+{% load static i18n horilla_tags %}
+
+{% block settings %}
+{% has_perm "horilla_core.view_company" as can_view_company %}
+
+{% if can_view_company %}
+  <div id="company-information">
+    <div id="messages-container" style="display: none;">
+      {% for message in messages %}
+          <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+      {% endfor %}
+  </div>
+    {% if not has_company %}
+      <div class="flex justify-between items-center h-20">
+      </div>
+      <img
+          src="{% static 'assets/img/activate-company.svg' %}"
+          alt="" class="w-60  m-auto mb-4 mt-5"/>
+      <p class="text-sm text-center mb-3">
+          {% trans "Please create or activate your company." %}
+      </p>
+    {% else %}
+      <div  class="flex justify-between items-center mb-2">
+          <h3 class="text-md font-semibold">{% trans 'Company Information' %}</h3>
+      </div>
+      <div hx-push-url="false" hx-get="{% url 'horilla_core:company_tab_view' %}?{{request.GET.urlencode}}"  hx-trigger="load"></div>
+    {% endif %}
+  </div>
+{% else %}
+  {% include "error/403.html" %}
+{% endif %}
+{% endblock %}

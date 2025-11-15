@@ -1,0 +1,233 @@
+[
+    {
+        "model": "reports.reportfolder",
+        "pk": 9,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-15T08:56:02.527Z",
+            "created_by": 1,
+            "updated_at": "2025-10-15T08:56:02.527Z",
+            "updated_by": 1,
+            "name": "Default Reports",
+            "parent": null,
+            "is_favourite": false,
+            "report_folder_owner": 1
+        }
+    },
+    {
+        "model": "reports.reportfolder",
+        "pk": 10,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-15T09:07:15.788Z",
+            "created_by": 1,
+            "updated_at": "2025-10-15T09:07:15.788Z",
+            "updated_by": 1,
+            "name": "Leads",
+            "parent": 9,
+            "is_favourite": false,
+            "report_folder_owner": 1
+        }
+    },
+    {
+        "model": "reports.reportfolder",
+        "pk": 11,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-15T09:21:48.906Z",
+            "created_by": 1,
+            "updated_at": "2025-10-15T09:21:48.906Z",
+            "updated_by": 1,
+            "name": "Opportunity Folder",
+            "parent": 9,
+            "is_favourite": false,
+            "report_folder_owner": 1
+        }
+    },
+    {
+        "model": "reports.report",
+        "pk": 19,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-15T09:09:39.569Z",
+            "created_by": 1,
+            "updated_at": "2025-10-15T09:10:07.773Z",
+            "updated_by": 1,
+            "report_owner": 1,
+            "name": "Leads by Source",
+            "module": {
+                "app_label": "leads",
+                "model": "lead"
+            },
+            "folder": 10,
+            "selected_columns": "title,first_name,last_name,lead_company,industry",
+            "row_groups": "lead_source",
+            "column_groups": "",
+            "aggregate_columns": "",
+            "filters": "{}",
+            "chart_type": "pie",
+            "chart_field": null,
+            "chart_field_stacked": null,
+            "is_favourite": false,
+            "shared_with": []
+        }
+    },
+    {
+        "model": "reports.report",
+        "pk": 20,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-15T09:13:32.989Z",
+            "created_by": 1,
+            "updated_at": "2025-10-15T09:13:32.989Z",
+            "updated_by": 1,
+            "report_owner": 1,
+            "name": "Converted Leads",
+            "module": {
+                "app_label": "leads",
+                "model": "lead"
+            },
+            "folder": 10,
+            "selected_columns": "title,first_name,last_name,industry,annual_revenue",
+            "row_groups": "",
+            "column_groups": "",
+            "aggregate_columns": "",
+            "filters": "{\"is_convert\": {\"value\": \"True\", \"operator\": \"exact\", \"logic\": \"and\", \"original_field\": \"is_convert\"}}",
+            "chart_type": "bar",
+            "chart_field": null,
+            "chart_field_stacked": null,
+            "is_favourite": false,
+            "shared_with": []
+        }
+    },
+    {
+        "model": "reports.report",
+        "pk": 21,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-15T09:17:32.179Z",
+            "created_by": 1,
+            "updated_at": "2025-10-15T09:19:24.828Z",
+            "updated_by": 1,
+            "report_owner": 1,
+            "name": "Leads by Owner",
+            "module": {
+                "app_label": "leads",
+                "model": "lead"
+            },
+            "folder": 10,
+            "selected_columns": "title,first_name,last_name,annual_revenue",
+            "row_groups": "lead_owner",
+            "column_groups": "",
+            "aggregate_columns": "",
+            "filters": "",
+            "chart_type": "bar",
+            "chart_field": null,
+            "chart_field_stacked": null,
+            "is_favourite": false,
+            "shared_with": []
+        }
+    },
+    {
+        "model": "reports.report",
+        "pk": 22,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-15T09:20:31.253Z",
+            "created_by": 1,
+            "updated_at": "2025-10-15T09:20:59.160Z",
+            "updated_by": 1,
+            "report_owner": 1,
+            "name": "Leads by Status",
+            "module": {
+                "app_label": "leads",
+                "model": "lead"
+            },
+            "folder": 10,
+            "selected_columns": "title,first_name,last_name,annual_revenue",
+            "row_groups": "lead_status",
+            "column_groups": "",
+            "aggregate_columns": "",
+            "filters": "",
+            "chart_type": "donut",
+            "chart_field": null,
+            "chart_field_stacked": null,
+            "is_favourite": false,
+            "shared_with": []
+        }
+    },
+    {
+        "model": "reports.report",
+        "pk": 23,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-15T09:22:42.317Z",
+            "created_by": 1,
+            "updated_at": "2025-10-15T09:23:17.897Z",
+            "updated_by": 1,
+            "report_owner": 1,
+            "name": "Opportunities by Stage",
+            "module": {
+                "app_label": "opportunities",
+                "model": "opportunity"
+            },
+            "folder": 11,
+            "selected_columns": "name,amount,close_date,opportunity_score",
+            "row_groups": "stage",
+            "column_groups": "",
+            "aggregate_columns": "",
+            "filters": "",
+            "chart_type": "scatter",
+            "chart_field": null,
+            "chart_field_stacked": null,
+            "is_favourite": false,
+            "shared_with": []
+        }
+    },
+    {
+        "model": "reports.report",
+        "pk": 24,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-10-15T09:25:11.733Z",
+            "created_by": 1,
+            "updated_at": "2025-10-15T09:25:11.733Z",
+            "updated_by": 1,
+            "report_owner": 1,
+            "name": "Opportunities by Source",
+            "module": {
+                "app_label": "opportunities",
+                "model": "opportunity"
+            },
+            "folder": 11,
+            "selected_columns": "name,amount,expected_revenue,close_date",
+            "row_groups": "lead_source",
+            "column_groups": "",
+            "aggregate_columns": "",
+            "filters": "",
+            "chart_type": "bar",
+            "chart_field": null,
+            "chart_field_stacked": null,
+            "is_favourite": false,
+            "shared_with": []
+        }
+    }
+]

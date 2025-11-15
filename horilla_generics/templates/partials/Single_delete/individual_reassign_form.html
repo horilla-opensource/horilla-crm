@@ -1,0 +1,156 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+
+<style>
+    .delete-select {
+        width: 200px;
+    }
+</style>
+<div id="messages-container" style="display: none;">
+    {% for message in messages %}
+        <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+    {% endfor %}
+</div>
+<div class="bg-white rounded-lg shadow p-6 min-w-[700px]">
+    <div class="flex justify-between items-center mb-2">
+        <h3 class="text-md font-semibold mb-2">{% trans 'Individual Reassign or Delete Dependencies' %}</h3>
+        <button onclick="closeDeleteModal()" class="text-gray-500 hover:text-red-500 text-xl">
+            <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+        </button>
+    </div>
+    <p class="text-sm text-gray-600 mb-4">
+        {% trans 'Choose actions for each dependent' %} {{ model_verbose_name }} {% trans 'before deleting' %} "{{ object }}".
+    </p>
+    <form hx-post="{{ search_url }}" hx-push-url="false" hx-target="#modalBox" hx-swap="innerHTML">
+        <input type="hidden" name="delete_mode" value="{{ delete_mode }}">
+        {% csrf_token %}
+
+        <!-- Container for infinite scroll -->
+        <div id="individual-records-container" class="max-h-96 overflow-y-auto mb-4">
+            <div id="individual-records-list">
+                {% for record in dependent_records|slice:":8" %}
+                    <div class="flex items-center gap-2 mb-2" data-record-id="{{ record.id }}">
+                        <span class="text-sm text-gray-600 flex-grow min-w-0 overflow-hidden text-ellipsis">{{ record }}</span>
+                        <div class="delete-select">
+                            <select name="new_target_{{ record.id }}" class="js-example-basic-single headselect">
+                                <option value="" selected>{% trans 'Select Target' %}</option>
+                                {% for target in available_targets %}
+                                    <option value="{{ target.id }}">{{ target }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% if is_nullable %}
+                            <form style="display: inline;" hx-post="{{ search_url }}" hx-target="#modalBox" hx-swap="innerHTML" hx-push-url="false">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="set_null_action">
+                                <input type="hidden" name="record_id" value="{{ record.id }}">
+                                <input type="hidden" name="main_record_id" value="{{ record_id }}">
+                                <input type="hidden" name="delete_mode" value="{{ delete_mode }}">
+                                <button type="submit" hx-on::before-request="this.classList.add('opacity-50')" hx-on::after-request="this.classList.remove('opacity-50')" class="text-sm px-1 py-2 bg-[#6b7280] text-white rounded-md hover:bg-[#4b5563]" style="width:80px;" title="{% trans 'Set to Null' %}">
+                                    {% trans 'Set Null' %}
+                                </button>
+                            </form>
+                        {% endif %}
+
+
+                        <form style="display: inline;" hx-post="{{ search_url }}" hx-target="closest div[data-record-id='{{ record.id }}']" hx-swap="outerHTML" hx-push-url="false">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="soft_delete_record">
+                            <input type="hidden" name="record_id" value="{{ record.id }}">
+                            <input type="hidden" name="main_record_id" value="{{ record_id }}">
+                            <input type="hidden" name="delete_mode" value="{{ delete_mode }}">
+                            <button type="submit"
+                                    class="w-24 flex justify-center text-xs rounded-md py-1.5 bg-primary-300 border border-primary-400 hover:text-primary-600 hover:border-primary-600 transition duration-300"
+                                    hx-on::before-request="this.classList.add('opacity-50')"
+                                    hx-on::after-request="this.classList.remove('opacity-50')"
+                                    title="{% trans 'Soft Delete' %}">
+                                {% trans 'Soft Delete' %}
+                            </button>
+                        </form>
+
+
+                        <form style="display: inline;" hx-post="{{ search_url }}" hx-target="closest div[data-record-id='{{ record.id }}']" hx-swap="outerHTML" hx-push-url="false">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="delete_single_record">
+                            <input type="hidden" name="record_id" value="{{ record.id }}">
+                            <input type="hidden" name="main_record_id" value="{{ record_id }}">
+                            <input type="hidden" name="delete_mode" value="{{ delete_mode }}">
+                            <button type="submit"
+                                    class="w-24 flex justify-center text-xs rounded-md py-1.5 bg-primary-300 border border-primary-400 hover:text-primary-600 hover:border-primary-600 transition duration-300"
+                                    hx-on::before-request="this.classList.add('opacity-50')"
+                                    hx-on::after-request="this.classList.remove('opacity-50')"
+                                    title="{% trans 'Hard Delete' %}">
+                                {% trans 'Hard Delete' %}
+                            </button>
+                        </form>
+
+                        <input type="hidden" name="action_{{ record.id }}" value="" id="action_{{ record.id }}">
+                    </div>
+                {% empty %}
+                    <p class="text-sm text-gray-600">{% trans 'No dependent records found.' %}</p>
+                {% endfor %}
+            </div>
+
+            <!-- Sentinel for infinite scroll -->
+            {% if dependent_records|length >= 8 and has_more_individual_records %}
+                <div id="individual-sentinel"
+                     hx-get="{{ search_url }}?action=load_more_individual_records&record_id={{ record_id }}&page=2&per_page=8&delete_mode={{ delete_mode }}"
+                     hx-target="#individual-records-list"
+                     hx-swap="beforeend"
+                     hx-push-url="false"
+                     hx-trigger="intersect once"
+                     hx-indicator="#individualLoadingIndicator">
+                    <div id="individualLoadingIndicator" class="htmx-indicator">
+                        <div class="flex justify-center items-center p-4">
+                            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#e54f38]"></div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <input type="hidden" name="action" value="individual_action">
+        <input type="hidden" name="record_id" value="{{ record_id }}">
+        <input type="hidden" name="view_id" value="{{ view_id|safe }}">
+        <div class="flex justify-end gap-2">
+            <button onclick="closeModal()" class="text-sm px-6 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                {% trans 'Cancel' %}
+            </button>
+            <button type="submit" class="text-sm px-6 py-2 bg-[#21b442] text-white rounded-md hover:bg-[#198230]" hx-indicator="#individual-spinner">
+                <span class="flex items-center gap-2">
+                    <span id="individual-spinner" class="htmx-indicator">
+                        <img src="{% static '/assets/icons/spinner.svg' %}" alt="Loading..." width="25" />
+                    </span>
+                    {% trans 'Confirm' %}
+                </span>
+            </button>
+        </div>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Select2
+            $('.js-example-basic-single').select2({
+                placeholder: "Select Target",
+                allowClear: true
+            });
+
+            // Sync select value with action input (no immediate submission)
+            $('.js-example-basic-single').on('change', function() {
+                var recordId = $(this).attr('name').replace('new_target_', '');
+                var actionInput = $('#action_' + recordId);
+                var selectValue = $(this).val();
+                actionInput.val(selectValue ? 'reassign' : '');
+                logger.debug(`Selected value for ${recordId}: ${selectValue}`);
+            });
+        });
+
+        function setAction(recordId, action) {
+            var actionInput = document.getElementById('action_' + recordId);
+            actionInput.value = action;
+            if (action !== 'reassign') {
+                document.querySelector('select[name="new_target_' + recordId + '"]').value = '';
+            }
+        }
+    </script>
+</div>

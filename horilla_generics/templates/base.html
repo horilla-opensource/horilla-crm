@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+{% load static i18n horilla_tags%}
+{% block content %}
+<div class="flex modelcontent">
+  	{% include "components/sub_sidebar.html" %}
+    <div id="mainContent" class="custom-scroll flex-[1_0] leftspace  transition-all duration-300 ease-in-out pt-0 overflow-hidden">
+      <div id="navBar" class="w-full" hx-get="{{ nav_url}}?{{ request.GET.urlencode}}" hx-trigger="load"></div>
+      <!--  -->
+      <div  style="height: 70px;">
+      </div>
+      <!-- main content -->
+      <div class="p-5" id="mainSession"  hx-get="{% if request.GET.kanban == 'true' %}{{ kanban_url }}?{{ request.GET.urlencode}}{% if filter_form %}&hx_trigger={{filter_form}}{% endif %}{% elif not list_url and kanban_url  %}{{ kanban_url }}?{{ request.GET.urlencode}}{% if filter_form %}&hx_trigger={{filter_form}}{% endif %}{% else %}{{ list_url }}?{{ request.GET.urlencode}}{% if filter_form %}&hx_trigger={{filter_form}}{% endif %}{% endif%}" hx-trigger="load"
+      hx-indicator="#loading-indicator"  hx-disinherit="*">
+          <div id="loading-indicator" class="htmx-indicator" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;  display: flex; align-items: center; justify-content: center;">
+            <div class="flex justify-center items-center p-4">
+                <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#e54f38]"></div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+</div>
+{% endblock content %}

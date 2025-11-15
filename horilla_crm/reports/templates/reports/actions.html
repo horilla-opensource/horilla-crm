@@ -1,0 +1,43 @@
+{% load static %} {% load i18n %} {% load horilla_tags %}
+<div class="flex rounded-md overflow-hidden">
+    {% has_perm "reports.change_report" as can_change_report %}
+    {% if can_change_report or request.user.is_superuser or instance.dashboard_owner == request.user %}
+        <button class="w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] hover:bg-[#e0e0e0] transition duration-300 items-center"
+            hx-post="{% url 'reports:mark_report_favourite' instance.id %}?{{ request.GET.urlencode}}"
+            hx-swap="outerHTML"
+            hx-trigger="click">
+            <i class="fa-solid fa-star {% if instance.is_favourite %}text-[#e54f38]{% else %}text-[#fdd8d3] {% endif %}"></i>
+        </button>
+        {% comment %} <button
+            hx-swap="outerHTML"
+            hx-trigger="click">
+            <i class="fas fa-file-export "></i>
+        </button> {% endcomment %}
+        <button class="w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] hover:bg-[#e0e0e0] transition duration-300 items-center"
+            hx-get="{% url 'reports:update_report' instance.id %}?{{ request.GET.urlencode}}"
+            hx-target="#modalBox"
+            hx-swap="innerHTML"
+            onclick="openModal()">
+            <img src={% static 'assets/icons/edit.svg' %} alt="" width="17" class="w-4 h-4" />
+        </button>
+        <button class="w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] hover:bg-[#e0e0e0] transition duration-300 items-center"
+            hx-get="{% url 'reports:move_report_to_folder' instance.id %}?{{ request.GET.urlencode}}"
+            hx-target="#modalBox"
+            hx-swap="innerHTML"
+            onclick="openModal()">
+            <img src={% static 'assets/icons/a2.svg' %} alt="" width="21" class="w-4 h-4"  />
+        </button>
+    {% endif %}
+    {% has_perm "reports.delete_report" as can_delete_report %}
+    {% if can_delete_report %}
+        <button class="w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] hover:bg-[#e0e0e0] transition duration-300 items-center"
+            hx-post="{% url 'reports:delete_report' instance.id %}?{{ request.GET.urlencode}}"
+            hx-target="#deleteModeBox"
+            hx-swap="innerHTML"
+            onclick="openDeleteModeModal()"
+            hx-vals='{"check_dependencies": "true"}'>
+            <img src={% static 'assets/icons/a4.svg' %} alt="" width="17" class="w-4 h-4" />
+        </button>
+    {% endif %}
+
+</div>

@@ -1,0 +1,376 @@
+{% load static i18n %}
+
+<div class="flex justify-between items-center p-5 pb-0">
+    <h3 class="text-lg font-semibold">{% trans "Insert Fields" %}</h3>
+    <button onclick="closeContentModal()" class="text-gray-500 hover:text-red-500 text-xl">
+        <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+    </button>
+</div>
+
+<div class="p-5">
+    {% if error %}
+        <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-2 rounded mb-4">
+            {{ error }}
+        </div>
+    {% else %}
+        <div class="mb-4">
+            <p class="text-sm text-gray-600 mb-2">
+                {% trans "Select fields to insert into your email template." %}
+            </p>
+        </div>
+        <input type="hidden" id="selectedFieldsStore" value="">
+        <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-3 border-[1px] border-[#dddddd] rounded-md p-3">
+                <ul id="custom-tabs" class="bg-white flex flex-col space-y-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                    {% if has_model_name %}
+                        <li class="mb-0">
+                            <button
+                                type="button"
+                                hx-get="{% url 'horilla_mail:field_selection' %}?model_name={{ model_name }}&object_id={{ object_id }}&tab_type=instance"
+                                hx-target="#tab-content"
+                                hx-select="#tab-content"
+                                hx-swap="outerHTML"
+                                hx-indicator="#loading-spinner"
+                                class="tab-btn items-center p-2 rounded-md {% if tab_type == 'instance' %}text-white bg-primary-600{% else %}bg-transparent text-[#3d3d3d]{% endif %} w-full flex gap-3"
+                                onclick="preserveSelections(); setActiveTab(this);">
+                                <div class="flex justify-between w-full">
+                                    <div class="flex gap-2 items-center">
+                                        <i class=""></i>
+                                        {% trans "Instance" %}
+                                    </div>
+                                </div>
+                            </button>
+                        </li>
+                    {% endif %}
+                    <li class="mb-0">
+                        <button
+                          type="button"
+                          {% if has_model_name %}
+                          hx-get="{% url 'horilla_mail:field_selection' %}?model_name={{ model_name }}&object_id={{ object_id }}&tab_type=user"
+                          {% else %}
+                          hx-get="{% url 'horilla_mail:field_selection' %}?tab_type=user"
+                          {% endif %}
+                          hx-target="#tab-content"
+                        hx-select="#tab-content"
+                          hx-swap="outerHTML"
+                          hx-indicator="#loading-spinner"
+                          class="tab-btn items-center p-2 rounded-md {% if tab_type == 'user' %}text-white bg-primary-600{% else %}bg-transparent text-[#3d3d3d]{% endif %} w-full flex gap-3"
+                          onclick="preserveSelections(); setActiveTab(this);">
+                          <div class="flex justify-between w-full">
+                            <div class="flex gap-2 items-center">
+                              <i class=""></i>
+                              {% trans "User" %}
+                            </div>
+                          </div>
+                        </button>
+                    </li>
+                    <li class="mb-0">
+                        <button
+                          type="button"
+                          {% if has_model_name %}
+                          hx-get="{% url 'horilla_mail:field_selection' %}?model_name={{ model_name }}&object_id={{ object_id }}&tab_type=company"
+                          {% else %}
+                          hx-get="{% url 'horilla_mail:field_selection' %}?tab_type=company"
+                          {% endif %}
+                          hx-target="#tab-content"
+                           hx-select="#tab-content"
+                          hx-swap="outerHTML"
+                          hx-indicator="#loading-spinner"
+                          class="tab-btn items-center p-2 rounded-md {% if tab_type == 'company' %}text-white bg-primary-600{% else %}bg-transparent text-[#3d3d3d]{% endif %} w-full flex gap-3"
+                          onclick="preserveSelections(); setActiveTab(this);">
+                          <div class="flex justify-between w-full">
+                            <div class="flex gap-2 items-center">
+                              <i class=""></i>
+                              {% trans "Company" %}
+                            </div>
+                          </div>
+                        </button>
+                    </li>
+                    <li class="mb-0">
+                        <button
+                          type="button"
+                          {% if has_model_name %}
+                            hx-get="{% url 'horilla_mail:field_selection' %}?model_name={{ model_name }}&object_id={{ object_id }}&tab_type=request"
+                          {% else %}
+                            hx-get="{% url 'horilla_mail:field_selection' %}?tab_type=request"
+                          {% endif %}
+                          hx-target="#tab-content"
+                          hx-select="#tab-content"
+                          hx-swap="outerHTML"
+                          hx-indicator="#loading-spinner"
+                          class="tab-btn items-center p-2 rounded-md {% if tab_type == 'request' %}text-white bg-primary-600{% else %}bg-transparent text-[#3d3d3d]{% endif %} w-full flex gap-3"
+                          onclick="preserveSelections(); setActiveTab(this);">
+                          <div class="flex justify-between w-full">
+                            <div class="flex gap-2 items-center">
+                              <i class=""></i>
+                              {% trans "Request" %}
+                            </div>
+                          </div>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div id="tab-content" class="col-span-9">
+                <!-- Loading spinner -->
+                <div id="loading-spinner" class="htmx-indicator text-center py-4">
+                    <svg class="animate-spin h-8 w-8 mx-auto text-primary-600" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+
+                <form id="fieldSelectionForm">
+                    <div class="max-h-96 overflow-y-auto custom-scroll">
+                        <!-- Direct Model Fields -->
+                        {% if model_fields %}
+                            <div class="mb-6">
+                                <h4 class="font-medium text-gray-700 mb-3 flex items-center">
+                                    {% if tab_type == 'instance' %}
+                                        {% trans "Direct Fields" %}
+                                    {% elif tab_type == 'user' %}
+                                        {% trans "User Fields" %}
+                                    {% elif tab_type == 'company' %}
+                                        {% trans "Company Fields" %}
+                                    {% elif tab_type == 'request' %}
+                                        {% trans "Request Fields" %}
+                                    {% endif %}
+                                </h4>
+                                <div class="grid grid-cols-3 gap-4 mb-4">
+                                    {% for field in model_fields %}
+                                        <div class="flex items-center gap-2">
+                                            <input type="checkbox"
+                                                   name="field_{{ field.name }}"
+                                                   value="{{ field.name }}"
+                                                   id="field_{{ field.name }}"
+                                                   data-template="{{ field.template_syntax }}"
+                                                   class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-600 cursor-pointer">
+                                            <label class="text-sm text-color-600 cursor-pointer" for="field_{{ field.name }}">
+                                                {{ field.verbose_name }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <!-- Foreign Key Fields - Only show for instance tab -->
+                        {% if foreign_key_fields %}
+                            <div class="mb-6">
+                                <h4 class="font-medium text-gray-700 mb-3 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    {% trans "Related Fields" %}
+                                </h4>
+
+                                {% regroup foreign_key_fields by header as grouped_fk_fields %}
+                                {% for group in grouped_fk_fields %}
+                                    <div class="border border-primary-300 rounded mr-2 mb-2">
+                                        <button type="button" class="flex justify-between items-center px-1 py-3 text-left text-gray-800 font-medium transition gap-2 w-full" onclick="toggleAccordion(this)">
+                                            <svg class="ms-0 w-4 h-4 transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-4 4-4-4"></path>
+                                            </svg>
+                                            <div class="flex gap-3 w-full font-medium text-sm">
+                                                {{ group.grouper }} ({{ group.list|length }})
+                                            </div>
+                                        </button>
+                                        <div class="accordion-content text-sm text-dark-500 transition-all duration-300 overflow-hidden max-h-0">
+                                            <div class="px-4 border-t border-primary-300 pt-2">
+                                                <div class="grid grid-cols-3 gap-2 py-2">
+                                                    {% for field in group.list %}
+                                                        <div class="flex items-center gap-2">
+                                                            <input type="checkbox"
+                                                                   name="field_{{ field.name|slugify }}"
+                                                                   value="{{ field.name }}"
+                                                                   id="field_{{ field.name|slugify }}"
+                                                                   data-template="{{ field.template_syntax }}"
+                                                                   class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-600 cursor-pointer">
+                                                            <label class="text-xs text-color-600 cursor-pointer" for="field_{{ field.name|slugify }}">
+                                                                {{ field.verbose_name|truncatechars:25 }}
+                                                            </label>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <!-- Reverse Relationship Fields - Only show for instance tab -->
+                        {% if reverse_relation_fields %}
+                            <div class="mb-6">
+                                <h4 class="font-medium text-gray-700 mb-3 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414L2.586 7l3.707-3.707a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    {% trans "Reverse Related Fields" %}
+                                </h4>
+
+                                {% regroup reverse_relation_fields by header as grouped_reverse_fields %}
+                                {% for group in grouped_reverse_fields %}
+                                    <div class="border border-primary-300 rounded mr-2 mb-2">
+                                        <button type="button" class="flex justify-between items-center px-1 py-3 text-left text-gray-800 font-medium transition gap-2 w-full" onclick="toggleAccordion(this)">
+                                            <svg class="ms-0 w-4 h-4 transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-4 4-4-4"></path>
+                                            </svg>
+                                            <div class="flex gap-3 w-full font-medium text-sm">
+                                                {{ group.grouper|title|slice:":20" }}{% if group.grouper|length > 20 %}...{% endif %} ({{ group.list|length }})
+                                            </div>
+                                        </button>
+                                        <div class="accordion-content text-sm text-dark-500 transition-all duration-300 overflow-hidden max-h-0">
+                                            <div class="px-4 border-t border-primary-300 pt-2">
+                                                <div class="grid grid-cols-3 gap-2 py-2">
+                                                    {% for field in group.list %}
+                                                        <div class="flex items-center gap-2">
+                                                            <input type="checkbox"
+                                                                   name="field_{{ field.name|slugify }}"
+                                                                   value="{{ field.name }}"
+                                                                   id="field_{{ field.name|slugify }}"
+                                                                   data-template="{{ field.template_syntax }}"
+                                                                   class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-600 cursor-pointer">
+                                                            <label class="text-xs text-color-600 cursor-pointer" for="field_{{ field.name|slugify }}">
+                                                                {{ field.verbose_name|truncatechars:25 }}
+                                                            </label>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if not model_fields and not foreign_key_fields and not reverse_relation_fields %}
+                        <div class="text-center text-gray-500 py-8">
+                            <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2-2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                            </svg>
+                            <p class="text-sm">{% trans "No fields available for this model" %}</p>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div class="p-4 flex justify-between items-center">
+    <div class="flex gap-2 justify-end w-full">
+        <button type="button"
+                onclick="insertSelectedFields()"
+                class="text-sm px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-800 transition duration-300">
+            {% trans "Insert Selected Fields" %}
+        </button>
+    </div>
+</div>
+
+<script>
+    let globalSelectedFields = [];
+
+    function preserveSelections() {
+        const checkboxes = document.querySelectorAll('#fieldSelectionForm input[type="checkbox"]:checked');
+        checkboxes.forEach(checkbox => {
+            const template = checkbox.getAttribute('data-template');
+            const uniqueKey = checkbox.id + '_' + template;
+
+            if (template && !globalSelectedFields.some(item => item.uniqueKey === uniqueKey)) {
+                globalSelectedFields.push({
+                    id: checkbox.id,
+                    template: template,
+                    value: checkbox.value,
+                    uniqueKey: uniqueKey
+                });
+            }
+        });
+
+        document.getElementById('selectedFieldsStore').value = JSON.stringify(globalSelectedFields);
+    }
+
+    function restoreSelections() {
+        const storedValue = document.getElementById('selectedFieldsStore').value;
+        if (storedValue) {
+            try {
+                globalSelectedFields = JSON.parse(storedValue);
+            } catch (e) {
+                globalSelectedFields = [];
+            }
+        }
+
+        globalSelectedFields.forEach(field => {
+            const checkbox = document.getElementById(field.id);
+            if (checkbox && checkbox.getAttribute('data-template') === field.template) {
+                checkbox.checked = true;
+            }
+        });
+    }
+
+    document.body.addEventListener('htmx:afterSwap', function(evt) {
+        if (evt.target.id === 'tab-content') {
+            restoreSelections();
+        }
+    });
+
+    function toggleAccordion(button) {
+        const content = button.nextElementSibling;
+        const arrow = button.querySelector('svg');
+
+        if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+            content.style.maxHeight = '0px';
+            arrow.style.transform = 'rotate(0deg)';
+        } else {
+            content.style.maxHeight = content.scrollHeight + 'px';
+            arrow.style.transform = 'rotate(180deg)';
+        }
+    }
+
+    function setActiveTab(clickedBtn) {
+        const tabButtons = document.querySelectorAll("#custom-tabs .tab-btn");
+        tabButtons.forEach((btn) => {
+            btn.classList.remove("bg-primary-600", "text-white");
+            btn.classList.add("bg-transparent", "text-[#3d3d3d]");
+        });
+
+        clickedBtn.classList.remove("bg-transparent", "text-[#3d3d3d]");
+        clickedBtn.classList.add("bg-primary-600", "text-white");
+    }
+
+
+    function insertSelectedFields() {
+        preserveSelections();
+        if (globalSelectedFields.length === 0) {
+
+            return;
+        }
+
+        const fieldsText = globalSelectedFields.map(field => field.template).join(' ');
+
+        if (typeof summernoteInitialized !== 'undefined' && summernoteInitialized && $('#summernote').length) {
+            const currentContent = $('#summernote').summernote('code');
+
+            $('#summernote').summernote('insertText', fieldsText);
+            $('#summernote').summernote('focus');
+        } else {
+            const activeElement = document.activeElement;
+            if (activeElement && (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'INPUT')) {
+                const start = activeElement.selectionStart;
+                const end = activeElement.selectionEnd;
+                const value = activeElement.value;
+
+                activeElement.value = value.substring(0, start) + fieldsText + value.substring(end);
+                activeElement.selectionStart = activeElement.selectionEnd = start + fieldsText.length;
+                activeElement.focus();
+            }
+        }
+
+        globalSelectedFields = [];
+        document.getElementById('selectedFieldsStore').value = '';
+
+        closeContentModal();
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        restoreSelections();
+    });
+</script>

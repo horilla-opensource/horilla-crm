@@ -1,0 +1,11 @@
+{% extends "error/error.html" %}
+{% load static i18n %}
+{% block content %}
+    <img src="{% static 'assets/img/405.svg' %}" alt="Error 405" width="400" class="mx-auto">
+    <h2 class="text-2xl font-bold mb-4">{% trans "Method Not Allowed" %}</h2>
+    <p class="mb-4">{% trans "The request method is not allowed for this resource." %}</p>
+    <a href="/" class="text-sm px-6 py-3 bg-primary-600 rounded-md hover:bg-primary-800
+                    transition duration-300 text-white">
+            {% trans "Go to Dashboard" %}
+    </a>
+{% endblock %}

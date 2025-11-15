@@ -1,0 +1,26 @@
+{% load static %} {% load i18n %} {% load horilla_tags %}
+<div class="flex items-center gap-5">
+
+    <button
+        hx-get="{% url 'reports:update_report' instance.id %}?{{ request.GET.urlencode}}"
+        hx-target="#modalBox"
+        hx-swap="innerHTML"
+        onclick="openModal()">
+        <img src={% static 'assets/icons/edit.svg' %} alt="" width="17" class="w-4 h-4" />
+    </button>
+    <button
+        hx-post="{% url 'reports:delete_report' instance.id %}?{{ request.GET.urlencode}}"
+        hx-target="#deleteModeBox"
+        hx-swap="innerHTML"
+        onclick="openDeleteModeModal()"
+        hx-vals='{"check_dependencies": "true"}'>
+        <img src={% static 'assets/icons/a4.svg' %} alt="" width="17" class="w-4 h-4" />
+    <button
+        hx-get="{% url 'reports:move_report_to_folder' instance.id %}?{{ request.GET.urlencode}}"
+        hx-target="#modalBox"
+        hx-swap="innerHTML"
+        onclick="openModal()">
+        <img src={% static 'assets/icons/a2.svg' %} alt="" width="21" class="w-4 h-4"  />
+    </button>
+
+</div>

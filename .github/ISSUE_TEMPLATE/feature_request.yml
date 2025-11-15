@@ -1,0 +1,37 @@
+name: "Feature request - CRM"
+about: "Suggest an improvement, enhancement or new feature for Horilla CRM."
+title: "[FEATURE] "
+labels: ["enhancement"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please provide as much detail as you can so we can evaluate and prioritize it.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: A short summary of the feature you are requesting.
+      placeholder: e.g. Add CSV import for contacts
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation / Use case
+      description: Explain why this feature is important and who it benefits.
+      placeholder: e.g. I need to import 10k contacts from our legacy system to Horilla CRM.
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed solution
+      description: Describe the solution you'd like to see, including any UI or API details if relevant.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe any alternative approaches you've considered.
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Any other context, screenshots, links or resources that help explain the request.

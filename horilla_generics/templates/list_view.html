@@ -1,0 +1,393 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<style>
+    .htmx-indicator{
+        display:none;
+
+    }
+    .htmx-request .htmx-indicator{
+        display:inline;
+    }
+    .htmx-request.htmx-indicator{
+        display:inline;
+    }
+
+
+</style>
+<div id="{{ view_id|safe }}">
+    <div id="messages-container" style="display: none;">
+        {% for message in messages %}
+            <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+        {% endfor %}
+    </div>
+    <button id="reloadButton"  hidden hx-get="{{ request.path }}?{{request.GET.urlencode}}" hx-target="#{{ view_id|safe }}" hx-trigger="click" hx-swap="outerHTML" hx-select="#{{ view_id|safe }}">click</button>
+    {% if filter_set_class %}
+        {% include "filterpanel.html" %}
+    {% endif %}
+    <!-- Modal for column selection -->
+    {% if bulk_select_option %}
+        <div id="exportModal"
+            class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 bg-[#00000030]">
+            <div id="exportBox"
+                class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md modal-content opacity-0 scale-95 transition-all duration-300 min-w-[850px]">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-md font-semibold">{% trans 'Select Columns to Export (Optional)'%}</h2>
+                    <button onclick="closeExport()" class="text-gray-500 hover:text-gray-500 text-xl">
+                        <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+                    </button>
+                </div>
+
+                <form id="exportForm" action="{{ search_url }}" method="POST">
+                    {% csrf_token %}
+                    <label for="exportFormat" class="text-xs text-color-600">{% trans 'Export Format'%}</label>
+                    <div class="flex w-full">
+                        <select id="exportFormat" name="export_format" class="js-example-basic-single headselect"
+                            style="width: 100%">
+                            <option value="xlsx" selected>{% trans 'Excel'%}</option>
+                            <option value="csv">{% trans 'CSV'%}</option>
+                            <option value="pdf">{% trans 'PDF'%}</option>
+                        </select>
+                    </div>
+                    <!-- Available Columns Section -->
+                    <h3 class="text-sm font-semibold mb-1">{% trans 'Available Columns'%}</h3>
+                    <p class="text-sm text-[#474747] mb-5">{% trans 'Select which columns to export'%}</p>
+
+                    <div class="grid grid-cols-3 gap-4 mb-4">
+                        {% for column in columns %}
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" name="expo_avail_{{column.1}}" value="{{ column.1 }}" id="expo_avail_{{ column.1 }}"
+                                    class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-600 cursor-pointer"
+                                    checked>
+                                <label class="text-sm text-color-600 cursor-pointer" for="expo_avail_{{ column.1 }}">
+                                    {{ column.0 }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Add Additional Columns Section -->
+                    <div class="mb-4">
+                        <h3 class="text-sm font-semibold mb-1">{% trans 'Add Additional Columns'%}</h3>
+                        <p class="text-sm text-[#474747] mb-5">{% trans 'Select more fields you want to export' %}</p>
+                        <div class="grid grid-cols-3 gap-4 mb-5 max-h-48 overflow-y-auto">
+                            {% for field in filter_fields %}
+                                <div class="flex items-center gap-2 ">
+                                    <input type="checkbox" name="expo_add_{{field.name}}" value="{{ field.name }}" id="expo_add_{{ field.name }}"
+                                        class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-600 cursor-pointer" />
+                                    <label class="text-sm text-color-600" for="expo_add_{{ field.name }}">
+                                        {{ field.verbose_name }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <input type="hidden" id="exportRecordIds" name="record_ids">
+
+                    <div class="flex justify-end gap-2">
+                        <button type="submit"  onclick="closeExport();$('.unselect-all-btn').click();"
+                            class="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-800" hx-indicator="#exportSpinner">
+                            <span class="flex items-center gap-2">
+                                    {% trans 'Export'%}
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if queryset %}
+        <div id="tableview-{{ view_id|safe }}">
+            {% if bulk_select_option %}
+                <div class="flex gap-1 items-center flex-wrap mb-3">
+                    <div class="flex gap-1 flex-wrap">
+                        <button
+                            class="text-xs px-4 py-2 bg-[#0aa10a1a] rounded-md hover:bg-[#0ba10a] transition duration-300 text-[#0ba10a] border border-[#0aa10a46] hover:text-[white]"
+                            onclick="selectAll(true, '{{ view_id|safe }}')"
+                            id="select-all-btn-{{ view_id|safe }}">
+                            <i class="fa-solid fa-check pe-1"></i> {% trans 'Select'%} ({{ total_records_count }})
+                        </button>
+
+                        <button
+                            class="unselect-all-btn text-xs px-4 py-2 bg-[#ba10bf2a] rounded-md hover:bg-[#ba10bf] transition duration-300 text-[#ba10bf] border border-[#ba10bf2a] hover:text-[white]"
+                            onclick="selectAll(false, '{{ view_id|safe }}')"
+                            id="unselect-all-btn-{{ view_id|safe }}"
+                            style="display: none;">
+                            <i class="fa-solid fa-xmark" style="padding-right: 0.25rem;"></i>
+                            {% trans 'Unselect'%} (<span id="unselect-text-{{ view_id|safe }}" class="text-xs font-medium">0</span>)
+                        </button>
+
+                        {% if bulk_export_option  %}
+                            <button
+                                class="text-xs px-4 py-2 bg-[#e1850d23] rounded-md hover:bg-[#e1850d] transition duration-300 text-[#e1850d] border border-[#e1850d34] hover:text-[white]"
+                                onclick="exportSelected('{{ view_id|safe }}')"
+                                id="export-all-btn-{{ view_id|safe }}"
+                                style="display: none;">
+                                <i class="fa-solid fa-file pe-1"></i>
+                                {% trans 'Export Selected'%}
+                            </button>
+                        {% endif %}
+
+                        {% if bulk_update_option %}
+                            <button
+                                class="text-xs px-4 py-2 bg-[#d5095726] rounded-md hover:bg-[#d50957] transition duration-300 text-[#d50957] border border-[#d5095742] hover:text-[white]"
+                                hx-post="{{ search_url }}"
+                                hx-target="#modalBox"
+                                hx-swap="innerHTML"
+                                hx-push-url="false"
+                                hx-trigger="click"
+                                hx-vals='js:{"bulk_update_form": "true", "selected_ids": JSON.stringify(selectedRecordIds("{{ view_id|safe }}"))}'
+                                hx-on::after-request="openModal()"
+                                id="bulk-update-btn-{{ view_id|safe }}"
+                                style="display: none;">
+                                <i class="fa-solid fa-pen pe-1"></i>
+                                {% trans 'Bulk Update' %}
+                            </button>
+                        {% endif %}
+
+                        {% if bulk_delete_enabled %}
+                            {% has_perm app_label|add:".delete_"|add:model_name|lower as has_delete_perm %}
+                            {% if has_delete_perm %}
+                                <button
+                                    class="text-xs px-4 py-2 bg-[#c0392b26] rounded-md hover:bg-[#c0392b] transition duration-300 text-[#c0392b]  border border-[#c0392b42] hover:text-[white]"
+                                    hx-post="{{ search_url }}"
+                                    hx-target="#deleteModeBox"
+                                    hx-swap="innerHTML"
+                                    hx-push-url="false"
+                                    {% comment %} hx-trigger="click" {% endcomment %}
+                                    hx-trigger="doRequest"
+                                    hx-vals='js:{"delete_mode_form": "true", "selected_ids": JSON.stringify(selectedRecordIds("{{ view_id|safe }}"))}'
+                                    id="bulk-delete-btn-{{ view_id|safe }}"
+                                    hx-on::after-request="openDeleteModeModal()"
+                                    style="display: none;"
+                                    _="on click call doBulkDeleteRequest(me)">
+                                    <i class="fa-solid fa-trash pe-1"></i>
+                                    {% trans 'Bulk Delete' %}
+                                </button>
+                            {% endif%}
+                        {% endif%}
+                        {% for bulk_action in custom_bulk_actions %}
+                            <button
+                                class="text-xs px-4 py-2 {% if bulk_action.bg_color %}bg-[{{ bulk_action.bg_color }}]{% else %}bg-[#009dff25]{% endif %} rounded-md {% if bulk_action.hover_bg_color %}hover:bg-[{{ bulk_action.hover_bg_color }}]{% endif %} transition duration-300 {% if bulk_action.text_color %}text-[{{ bulk_action.text_color }}]{% else %}text-[#009fff]{% endif %} border {% if bulk_action.border_color %}border-[{{ bulk_action.border_color }}]{% else %}border-[#009dff41]{% endif %} {% if bulk_action.hover_text_color %}hover:text-[{{ bulk_action.hover_text_color }}]{% else %}hover:text-white{% endif %}"
+                                {% if bulk_action.onclick %}
+                                    onclick="{{ bulk_action.onclick }}('{{ view_id|safe }}')"
+                                {% else %}
+                                    hx-{{ bulk_action.method|default:'post' }}="{{ bulk_action.url }}"
+                                    hx-target="{{ bulk_action.target|default:'#modalBox' }}"
+                                    hx-swap="{{ bulk_action.swap|default:'innerHTML' }}"
+                                    hx-push-url="false"
+                                    hx-trigger="{{ bulk_action.trigger|default:'click' }}"
+                                    hx-vals='js:{"action": "{{ bulk_action.name }}", "selected_ids": JSON.stringify(selectedRecordIds("{{ view_id|safe }}"))}'
+                                    {% if bulk_action.after_request %}
+                                        hx-on::after-request="{{ bulk_action.after_request }}"
+                                    {% else %}
+                                        hx-on::after-request="openModal()"
+                                    {% endif %}
+                                    {% if bulk_action.hx_click %}
+                                        hx-on:click="{{ bulk_action.hx_click }}"
+                                    {% endif %}
+                                {% endif %}
+                                id="bulk-action-{{ bulk_action.name }}-{{ view_id|safe }}"
+                                style="display: none;">
+                                <i class="fa-solid {{ bulk_action.icon|default:'fa-cogs' }} pe-1"></i>
+                                {{ bulk_action.label|default:bulk_action.name|title }}
+                            </button>
+                        {% endfor %}
+
+                        <p class="text-xs px-4 py-2 pe-2 bg-[#009dff25] border border-[#009dff41] font-medium rounded-md text-[#009fff] w-max"
+                            id="total-selected-count-{{ view_id|safe }}"
+                            style="display: none;">
+                            {% trans 'Selected'%} (<span id="selected-text-{{ view_id|safe }}" class="text-xs font-medium">{{ total_records_count }}</span>)
+                        </p>
+                    </div>
+
+                    <div class="ml-auto">
+                        {% if view_type|slice:":11" == "saved_list_" %}
+                            <button
+                                class="text-xs px-4 py-2 bg-[#98153b1f] rounded-md hover:bg-[#98153b] transition duration-300 text-[#98153b] border border-[1px solid #ff004929] hover:text-[white]"
+                                id="delete-list-btn"
+                                hx-post="{% url 'horilla_generics:delete_saved_list' %}?{{ request.GET.urlencode }}"
+                                hx-vals='{"saved_list_id": "{{ view_type|slice:'11:' }}","main_url": "{{ main_url|escapejs }}","model_name" : "{{ model_name|urlencode }}"}'
+                                hx-target="#mainContent"
+                                hx-select="#mainContent"
+                                hx-swap="outerHTML"
+                                hx-push-url="true"
+                                hx-trigger='confirmed'
+                                hx-on:click = "hxConfirm(this,'Are you sure you want to delete this saved list?');">
+                                <i class="fa-solid fa-trash pe-1"></i>
+                                {% trans 'Delete List' %}
+                            </button>
+                        {% endif %}
+                        {% for additional_action in additional_action_button %}
+                            <button
+                                class="text-xs px-4 py-2 {% if additional_action.bg_color %}bg-[{{ additional_action.bg_color }}]{% else %}bg-[#009dff25]{% endif %} rounded-md {% if additional_action.hover_bg_color %}hover:bg-[{{ additional_action.hover_bg_color }}]{% endif %} transition duration-300 {% if additional_action.text_color %}text-[{{ additional_action.text_color }}]{% else %}text-[#009fff]{% endif %} mb-3 border {% if additional_action.border_color %}border-[{{ additional_action.border_color }}]{% else %}border-[#009dff41]{% endif %} {% if additional_action.hover_text_color %}hover:text-[{{ additional_action.hover_text_color }}]{% else %}hover:text-white{% endif %}"
+                                {% if additional_action.onclick %}
+                                    onclick="{{ additional_action.onclick }}('{{ view_id|safe }}')"
+                                {% else %}
+                                    hx-{{ additional_action.method|default:'post' }}="{{ additional_action.url }}"
+                                    hx-target="{{ additional_action.target|default:'#modalBox' }}"
+                                    hx-swap="{{ additional_action.swap|default:'innerHTML' }}"
+                                    hx-push-url="false"
+                                    hx-trigger="{{ additional_action.trigger |default:'click'}}"
+                                    {% if additional_action.after_request %}
+                                        hx-on::after-request="{{ additional_action.after_request }}"
+                                    {% else %}
+                                        hx-on::after-request="openModal()"
+                                    {% endif %}
+                                    {% if additional_action.hx_click %}
+                                        hx-on:click="{{ additional_action.hx_click }}"
+                                    {% endif %}
+                                {% endif %}
+                                id="additional-action-{{ additional_action.name }}-{{ view_id|safe }}">
+                                <i class="fa-solid {{ additional_action.icon|default:'fa-cogs' }} pe-1"></i>
+                                {{ additional_action.label|default:additional_action.name|title }}
+                            </button>
+                        {% endfor %}
+
+                        {% if clear_session_button_enabled and bulk_select_option%}
+                            <button
+                                class="text-xs px-4 py-2 bg-[#ff00491f] rounded-md hover:bg-[#ff0049] transition duration-300 text-[#ff0049] border border-[1px solid #ff004929] hover:text-[white]"
+                                onclick="clearSelections('{{ view_id|safe }}')"
+                                id="clear-select-btn-{{ view_id|safe }}">
+                                <i class="fa-solid fa-delete-left pe-1"></i>
+                                {% trans 'Clear Session' %}
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="custom-scroll relative overflow-hidden overflow-y-auto overflow-x-auto {% if table_width %} h-[calc(100vh_-_245px)] {% endif %} {% if table_height %} [h-51vh] [max-h-unset]  {% endif %} {{ table_height_as_class }} [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] bg-white rounded-lg max-h-fit z-0  {% if table_class %}  block text-[.8rem] {% endif %}"
+                id="table-container-{{view_id|safe}}" data-view-id="{{view_id|safe}}" data-record-ids="{{ selected_ids_json }}"
+                data-total-records="{{ total_records_count }}">
+                <table class="w-full {% if not table_class %} border-separate border-spacing-0  {% endif %}">
+                    <thead class="sticky top-0 {% if table_class %} bg-primary-300 text-primary-600 {% else %} bg-white  {% endif %}  z-50">
+                        <tr>
+                            {% if bulk_select_option %}
+                                <th class="text-sm sticky left-0 {% if table_class %} bg-primary-300 {% endif %} z-50 top-0 font-bold text-left p-3 border-[1px] border-[solid] border-[#efefef]" style="width: 50px;">
+                                    <div class="flex items-center justify-center">
+                                        <input type="checkbox" title="Select Visible Items"
+                                        data-role="select-all"
+                                        name="select_all_{{view_id|safe}}"
+                                            class="w-4 h-4 {% if table_class %} bg-white {% else %} bg-[#E9EDF7] {% endif %}rounded-sm accent-[#e54f38]" />
+                                    </div>
+                                </th>
+                            {% endif %}
+
+                            {% for cell in columns %}
+                                <th
+                                    {% if forloop.first %}
+                                        class="sticky top-0 {% if bulk_select_option %}left-[40px]{% else %}left-0{% endif %} {% if table_class %}text-sm bg-primary-300 {% else %} text-[.8rem] bg-white font-bold border-[.3px] border-[#e9e9e9] text-left p-2 rounded-tl-md {% endif %} z-50 font-bold text-left p-3 whitespace-nowrap"
+                                    {% else %}
+                                        class="sticky top-0 font-bold text-left p-3 {% if not table_class %} text-[.8rem] font-bold border-[.3px] border-[#e9e9e9] text-left p-2  {% else %} text-sm whitespace-nowrap {% endif %}"
+                                    {% endif %}
+                                    data-field="{{ cell.1 }}"
+                                    {% with field_name=cell.1 header_attrs_for_field=header_attrs|lookup:cell.1 %}
+                                        {% for attr_name, attr_value in header_attrs_for_field.items %}
+                                            {{ attr_name }}="{{ attr_value }}"
+                                        {% endfor %}
+                                        {% if not header_attrs_for_field.id %}
+                                            id="col-{{ cell.1 }}"
+                                        {% endif %}
+                                        {% if not header_attrs_for_field.style %}
+                                            style="width:200px"
+                                        {% endif %}
+                                    {% endwith %}>
+
+                                    {% if enable_sorting and cell.1 not in exclude_columns_from_sorting %}
+                                        <a href="#"
+                                        class="flex w-max justify-between gap-3"
+                                            hx-get="{{ main_url }}?{{ request.GET.urlencode }}&sort={{ cell.1 }}&direction={% if current_sort == cell.1 and current_direction == 'asc' %}desc{% else %}asc{% endif %}"
+                                            hx-target="{% if sorting_target %}{{ sorting_target }}{% else %}#mainSession, #tableview-{{ view_id|safe }}{% endif %}" hx-select="#mainSession, #tableview-{{ view_id|safe }}" hx-swap="outerHTML"
+                                            hx-push-url="false" >
+                                            {% trans cell.0 %}
+                                            <span
+                                                class="sort-icon {% if current_sort == cell.1 %}sort-{{ current_direction }}{% endif %}">
+                                                {% if current_sort == cell.1 and current_direction == 'asc' %}
+                                                    ▲
+                                                {% elif current_sort == cell.1 and current_direction == 'desc' %}
+                                                    ▼
+                                                {% else %}
+                                                    ⇅
+                                                {% endif %}
+                                            </span>
+                                        </a>
+                                    {% else %}
+                                        {% trans cell.0 %}
+                                    {% endif %}
+                                </th>
+                            {% endfor %}
+
+                            {% if visible_actions or action_method %}
+                                <th class="sticky top-0 right-0 font-bold text-left p-3 {% if table_class %} bg-primary-300 text-sm  {% else %} text-[.8rem] bg-white font-bold border-[.3px] border-[#e9e9e9] text-left p-2 rounded-tr-md {% endif %} z-50 w-[180px]">
+                                    {% trans 'Actions' %}
+                                </th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody id="data-container-{{view_id}}">
+                        {% include "partials/list_view_rows.html" %}
+                    </tbody>
+                </table>
+                <div id="loadingIndicator" class="htmx-indicator">
+                    <div class="flex justify-center items-center p-4">
+                        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#e54f38]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        {% if no_record_section %}
+            <div class="flex justify-between items-center {% if table_width %} h-20 {% endif %}">
+            </div>
+            <img
+                src="{% static 'assets/img/not-found.svg' %}"
+                alt="" class="w-60  m-auto mb-4 mt-5"
+            />
+            {% if view_type|slice:":11" == "saved_list_" %}
+                <p class="text-sm text-center pb-3">
+                    {% blocktrans with model=model_verbose_name view=saved_list_name %}
+                    Nothing to show yet. The {{ view }} list doesn’t have any data.
+                    {% endblocktrans %}
+                </p>
+            {% else %}
+                <p class="text-sm text-center pb-3">
+                    {% if no_record_msg %}
+                        {{no_record_msg}}
+                    {% else %}
+                    {% trans ' Nothing to show yet. Please add your' %} {{model_verbose_name}}.
+                    {% endif %}
+                </p>
+            {% endif %}
+            {% if view_type|slice:":11" == "saved_list_" %}
+                <button
+                    class="text-xs px-4 py-2 bg-white rounded-md  transition duration-300 bg-primary-600 text-white   m-auto flex"
+                    id="delete-list-btn"
+                    hx-post="{% url 'horilla_generics:delete_saved_list' %}?{{ request.GET.urlencode }}"
+                    hx-vals='{"saved_list_id": "{{ view_type|slice:'11:' }}","main_url": "{{ main_url|escapejs }}","model_name" : "{{ model_name|urlencode }}"}'
+                    hx-target="#mainContent"
+                    hx-select="#mainContent"
+                    hx-swap="outerHTML"
+                    hx-push-url="true"
+                    hx-trigger='confirmed'
+                    hx-on:click = "hxConfirm(this,'Are you sure you want to delete this saved list?');">
+                    <i class="fa-solid fa-trash pe-1"></i>
+                    {% trans 'Delete List' %}
+            </button>
+            {% else %}
+                {% if no_record_add_button.url %}
+                    <button
+                        hx-get="{{ no_record_add_button.url }}"
+                        hx-target="{{ no_record_add_button.target|default:'#modalBox' }}"
+                        hx-swap="{{ no_record_add_button.swap|default:'innerHTML' }}"
+                        onclick="{{ no_record_add_button.after_request|default:'openModal()' }}"
+                        class="{{ no_record_add_button.class|default:'text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white] m-auto flex' }}"
+                        {% if no_record_add_button.attrs %}{{ no_record_add_button.attrs|safe }}{% endif %}>
+                        {{ no_record_add_button.title|default:" Add New" }}
+                    </button>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</div>

@@ -1,0 +1,25 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<ul class="py-2 text-sm text-gray-700">
+    {% for item in recently_viewed %}
+        <li>
+            <a
+                href="{{ main_url }}/{{ item.id }}"
+                class="block px-4 py-2 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                hx-get="{{ main_url }}/{{ item.id }}"
+                hx-target="#mainSession"
+                hx-swap="outerHTML"
+                hx-push-url="true"
+            >
+                {{ item }}
+            </a>
+        </li>
+    {% empty %}
+        <li>
+            <span class="block px-4 py-2 text-gray-500 text-[.8rem]">
+                No recently viewed items
+            </span>
+        </li>
+    {% endfor %}
+</ul>

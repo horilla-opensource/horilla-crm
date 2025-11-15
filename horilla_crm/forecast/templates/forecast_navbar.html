@@ -1,0 +1,78 @@
+{% load static i18n horilla_tags %}
+<div class="bg-white px-5 border-b border-b-dark-50 fixed w-fill-available z-20">
+    <div class="flex flex-wrap items-center gap-2 justify-between">
+        <div class="flex items-center gap-4">
+            <h3 class="text-md font-semibold">{% if has_view_own and not has_view_all %}{% trans "My Forecast" %}{% else %}{% trans "Forecast" %}{% endif %}</h3>
+            {% if type_count > 0 %}
+                {% if  has_view_all %}
+                    <div id="user-data-container" class="w-48">
+                        <select id="user-data"
+                            class="js-example-basic-single w-48"
+                            hx-get="{% url 'forecast:forecast_view' %}?{% if not query_string %}{{ request.GET.urlencode }}{% else %}section={{ request.GET.section }}{% endif %}"
+                            hx-push-url="true"
+                            hx-target="#forecast-tab-content"
+                            hx-include="#fiscal-year-data"
+                            hx-history="false"
+                            hx-trigger="change"
+                            hx-select="#forecast-tab-content"
+                            hx-swap="outerHTML"
+                            name="user_id">
+
+                            {% if show_all_users_option %}
+                                <option value="">{% trans "All Users" %}</option>
+                            {% endif %}
+
+                            <!-- Always show logged-in user first -->
+                            <option value="{{ request.user.pk }}"
+                                data-img="{% if request.user.profile %}{{ request.user.profile.url }}{% else %}{{ request.user.get_avatar }}{% endif %}"
+                                {% if request.GET.user_id == request.user.pk|stringformat:"s" %}selected{% endif %}>
+                                {% trans "My Forecast" %}
+                            </option>
+
+                            <!-- Show all other users after (only if has_view_all) -->
+                            {% if has_view_all %}
+                                {% for user in users %}
+                                    {% if user != request.user %}
+                                        <option value="{{ user.pk }}"
+                                            data-img="{% if user.profile %}{{ user.profile.url }}{% else %}{{ user.get_avatar }}{% endif %}"
+                                            {% if request.GET.user_id == user.pk|stringformat:"s" %}selected{% endif %}>
+                                            {{ user }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="flex items-center gap-8 h-[70px]">
+            <div class="flex items-center gap-2 h-[70px]">
+                {% if type_count > 0 %}
+                    <select
+                        class="js-example-basic-single w-full"
+                        hx-get="{% url 'forecast:forecast_view' %}?{% if not query_string %}{{ request.GET.urlencode }}{% else %}section={{ request.GET.section }}{% endif %}"
+                        hx-target="#forecast-tab-content"
+                        hx-trigger="change"
+                        hx-include="#user-data"
+                        hx-push-url="true"
+                        hx-history="false"
+                        id="fiscal-year-data"
+                        hx-select="#forecast-tab-content"
+                        hx-swap="outerHTML"
+                        name="fiscal_year_id">
+                        <option value="">{% trans "Select Fiscal Year" %}</option>
+                        {% for fiscal_year in fiscal_years %}
+                        <option value="{{ fiscal_year.id }}"
+                            {% if fiscal_year.id == selected_instance.id %}selected{% endif %}>
+                            {{ fiscal_year.name }} ({{ fiscal_year.start_date|date:"d/m/Y" }} - {{ fiscal_year.end_date|date:"d/m/Y" }})
+                            {% if fiscal_year.id == current_instance.id %} {% trans "- Current" %}{% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

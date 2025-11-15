@@ -1,0 +1,6 @@
+{% if is_role_based %}
+    <div class="flex flex-col">
+        <label for="{{ form.role.id_for_label }}" class="text-xs text-color-600">{{ form.role.label }}</label>
+        {{ form.role }}
+    </div>
+{% endif %}

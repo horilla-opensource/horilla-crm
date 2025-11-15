@@ -1,0 +1,92 @@
+{% extends "settings/settings.html" %}
+{% load static i18n %}
+
+{% block settings %}
+<div id="opportunity-team-settings">
+    {% include "messages.html" %}
+    <button id="reloadButton" hidden hx-get="{{ request.path }}?{{request.GET.urlencode}}" hx-target="#opportunity-team-settings" hx-swap="outerHTML" hx-select="#opportunity-team-settings">click</button>
+
+<div class="p-3">
+    <!-- Header -->
+    <div class="mb-6">
+        <h1 class="text-md font-bold text-gray-900 mb-2">{% trans "Team Selling Setup" %}</h1>
+        <p class="text-gray-600 text-sm">
+            {% trans "Configure opportunity team settings to enable collaboration among sales team members" %}
+        </p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="bg-white rounded-lg shadow-sm border text-sm border-[#efefef] overflow-hidden">
+        <!-- Status Banner -->
+        <div class="border-b border-[#efefef] px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    {% if team_selling_enabled %}
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-check text-green-600 text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold ">{% trans "Team Selling is Enabled" %}</h3>
+                            <p class="text-sm">{% trans "Opportunity teams are available across your system" %}</p>
+                        </div>
+                    {% else %}
+                        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-circle-xmark text-gray-600 text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900">{% trans "Team Selling is Disabled" %}</h3>
+                            <p class="text-sm text-gray-600">{% trans "Enable to start using opportunity teams" %}</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Toggle Button Container -->
+                <div id="team-selling-toggle-container">
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input
+                            type="checkbox"
+                            class="sr-only peer"
+                            hx-post="{% url 'opportunities:toggle_team_selling' %}"
+                            hx-trigger="confirmed"
+                            {% if team_selling_enabled %}
+                            hx-on:click="hxConfirm(this,'Are you sure you want to disable Team Selling?')"
+                            {% else %}
+                            hx-on:click="hxConfirm(this,'Are you sure you want to enable Team Selling?')"
+                            {% endif %}
+                            hx-vals='{"action": "{% if team_selling_enabled %}disable{% else %}enable{% endif %}"}'
+                            {% if team_selling_enabled %}checked{% endif %}>
+                        <div class="relative w-11 h-5 bg-gray-200 rounded-full
+                                    peer peer-checked:bg-primary-600
+                                    after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                                    after:bg-white after:rounded-full after:h-4 after:w-4
+                                    after:transition-all peer-checked:after:translate-x-6">
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Section -->
+        <div class="px-6 py-6">
+            <div class="mb-6">
+                <h3 class="font-semibold text-gray-900 mb-3">
+                    <i class="fa-solid fa-circle-info text-primary-600 mr-2"></i>
+                    {% trans "About Team Selling" %}
+                </h3>
+                <div class="prose prose-sm text-gray-600">
+                    <p class="mb-3">
+                        {% trans "Opportunity Teams help multiple users to better collaborate on opportunities by defining a role for each team member, setting record-level access individually, and viewing teams in list views and reports." %}
+                    </p>
+                    <p class="mb-3">
+                        {% if  team_selling_enabled %}
+                        {% trans "When disabled, all existing opportunity teams and their members have been deleted." %}
+                        {% else %}
+                        {% trans "When enabled, opportunity teams are available throughout the application. Users may prepare default opportunity teams for speedy setup of new opportunities." %}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

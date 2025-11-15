@@ -1,0 +1,21 @@
+{% load i18n %}
+<div class="flex justify-between flex-wrap text-primary-600">
+    <div class="flex flex-col gap-1.5">
+        <span class="text-xs font-bold  uppercase tracking-wide">
+            {% trans "TOTAL PERCENT" %}
+        </span>
+        <div class="flex items-center">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold {% if total_percentage == 100 or not split_type.totals_100_percent %}bg-green-500 text-white{% else %}bg-red-600 text-white{% endif %}">
+                {{ total_percentage|floatformat:2 }}%
+            </span>
+        </div>
+    </div>
+    <div class="flex flex-col gap-1.5">
+        <span class="text-xs font-bold  uppercase tracking-wide">
+            {% trans "TOTAL AMOUNT" %}
+        </span>
+        <span class="text-sm font-bold text-gray-600">
+            {{ currency }} {{ total_amount|floatformat:2 }}
+        </span>
+    </div>
+</div>

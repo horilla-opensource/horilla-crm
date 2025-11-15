@@ -1,0 +1,285 @@
+{% load static i18n horilla_tags %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="{% static 'assets/js/tailwind/tailwind.js' %}"></script>
+        <script src="{% static 'assets/js/tailwind.config.js' %}"></script>
+        <script src="{% static 'assets/js/htmx/htmx.min.js' %}"></script>
+        <link href="{% static 'assets/css/flowbite/flowbite.min.css' %}" rel="stylesheet" />
+        <script src=" {% static 'assets/js/flowbite/flowbite.min.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'assets/fontawesome/css/all.min.css' %}" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="{% static 'assets/css/googlefonts/css2.css' %}" rel="stylesheet" />
+        <script src="{% static 'assets/js/cloudflare/jquery.min.js' %}"></script>
+        <script src="{% static 'assets/js/cloudflare/chart.min.js' %}"></script>
+        <script src="{% static 'assets/js/cloudflare/htmx.min.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" />
+        <link rel="stylesheet" href="{% static 'assets/css/calendar.css' %}" />
+        <link href="{% static 'assets/css/select2.min.css' %}" rel="stylesheet" />
+        <link rel="stylesheet" href="{% static 'assets/css/sweetalert_toast/toast.css' %}" />
+        {% comment %}
+        comment this line for window.confirm
+        <script src="https://unpkg.com/htmx.org@1.9.6"
+            integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous">
+        </script>
+        {% endcomment %}
+        <script src="{% static 'assets/js/sweetalert2.js' %} "></script>
+        <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}" />
+        <script src="https://unpkg.com/hyperscript.org@0.9.7"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+        <script src="https://cdn.balkan.app/orgchart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
+
+        <title>Horilla CRM </title>
+
+    </head>
+
+    <body class="bg-secondary-50 font-[Inter,_sans-serif]">
+        <!-- Main Content -->
+        <div class="ml-[4.8rem] h-screen">
+            <!-- Start Include Header -->
+            <div id="header">{% include 'components/header.html' %}</div>
+            <!-- End Include Header -->
+
+            {% block content %} {% endblock content %}
+
+            <!-- Start Include Modals -->
+            {% include "components/horilla_modals.html"%}
+            <!-- End Include Modals -->
+        </div>
+
+        <!-- Start Include Sidebar -->
+        <div id="sidebar">{% include 'components/sidebar.html' %}</div>
+        <!-- End Include Sidebar -->
+
+        <button id="reloadMessagesButton" hx-get="{% url 'horilla_core:reload_messages' %}" hx-swap="afterend" hidden
+            hx-target="#reloadMessages"></button>
+        <div id="reloadMessages">
+            {% include "messages.html" %}
+        </div>
+
+
+        <!-- custom select -->
+        <script src="{% static 'assets/js/jquery/jquery-3.7.1.js' %}"></script>
+        <script src="{% static 'assets/js/select2.min.js' %}"></script>
+
+        <script>
+
+            $(document).ready(function() {
+                $('.js-example-basic-single').select2(
+                    {
+                        templateResult: formatOption,
+                        templateSelection: formatOption,
+                    }
+                );
+                $('.js-example-basic-multiple').each(function () {
+                    if (!$(this).hasClass('select2-hidden-accessible')) {
+                        $(this).select2({
+                            placeholder: $(this).data('placeholder') || 'Select options...',
+                            allowClear: true
+                        });
+                    }
+                });
+            });
+
+            $(document).on("htmx:afterSettle", function (event) {
+                var target = $(event.target);
+                target.find(".js-example-basic-single").each(function () {
+                    if ($(this).hasClass("select2-hidden-accessible")) {
+                        $(this).select2("destroy");
+                    }
+                });
+                target.find(".js-example-basic-single").select2({
+                    templateResult: formatOption,
+                    templateSelection: formatOption,
+                    width: "100%"
+                });
+                initializeSelect2Pagination();
+                setTimeout(function () {
+                    showMessages();
+                }, 200);
+                $('.js-example-basic-multiple').each(function () {
+                    if (!$(this).hasClass('select2-hidden-accessible')) {
+                        $(this).select2({
+                            placeholder: $(this).data('placeholder') || 'Select options...',
+                            allowClear: true
+                        });
+                    }
+                });
+            });
+
+            htmx.onLoad(function (content) {
+                initFlowbite();
+            });
+
+            document.querySelectorAll(".custom-select").forEach((select) => {
+                const selected = select.querySelector(".selected");
+                const dropdown = select.querySelector(".dropdown");
+                const options = select.querySelectorAll(".option");
+                const span = selected.querySelector("span");
+
+                selected.addEventListener("click", () => {
+                    dropdown.classList.toggle("opacity-0");
+                    dropdown.classList.toggle("scale-y-95");
+                    dropdown.classList.toggle("pointer-events-none");
+                });
+
+                options.forEach((option) => {
+                    option.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        span.textContent = option.textContent;
+                        dropdown.classList.add(
+                            "opacity-0",
+                            "scale-y-95",
+                            "pointer-events-none"
+                        );
+                    });
+                });
+
+                document.addEventListener("click", (e) => {
+                    if (!select.contains(e.target)) {
+                        dropdown.classList.add(
+                            "opacity-0",
+                            "scale-y-95",
+                            "pointer-events-none"
+                        );
+                    }
+                });
+            });
+
+            function initSidebar() {
+                const sideMenu = document.getElementById("sideMenu");
+                const toggleBtn = document.getElementById("toggleSideMenu");
+                const arrowIcon = document.getElementById("arrowIcon");
+                const mainContent = document.getElementById("mainContent");
+                const kanbanView = document.getElementById("kanbanview");
+
+                if (!sideMenu || !toggleBtn || !arrowIcon || !mainContent) {
+                    return; // if elements not yet in DOM, skip
+                }
+
+                let isCollapsed = false;
+
+                function collapseMenu() {
+                    sideMenu.classList.add("w-0");
+                    sideMenu.classList.remove("w-[230px]");
+                    arrowIcon.classList.add("scale-x-[-1]");
+                    mainContent.classList.remove("leftspace");
+
+                    if (kanbanView) {
+                        kanbanView.classList.add("w-full");
+                        kanbanView.classList.remove("ml-[230px]");
+                    }
+                    isCollapsed = true;
+                }
+
+                function expandMenu() {
+                    sideMenu.classList.remove("w-0");
+                    sideMenu.classList.add("w-[230px]");
+                    arrowIcon.classList.remove("scale-x-[-1]");
+                    mainContent.classList.add("leftspace");
+
+                    if (kanbanView) {
+                        kanbanView.classList.remove("w-full");
+
+                    }
+                    isCollapsed = false;
+                }
+
+                // Toggle button click
+                toggleBtn.onclick = () => {
+                    if (isCollapsed) {
+                        expandMenu();
+                    } else {
+                        collapseMenu();
+                    }
+                };
+
+                // Initial adjust
+                function adjustSidebar() {
+                    if (window.innerWidth < 992) {
+                        collapseMenu();
+                    } else {
+                        expandMenu();
+                    }
+                }
+                adjustSidebar();
+
+                // On resize
+                window.onresize = adjustSidebar;
+            }
+
+            document.addEventListener("DOMContentLoaded", initSidebar);
+
+            document.body.addEventListener("htmx:afterSwap", initSidebar);
+            document.body.addEventListener("htmx:afterOnLoad", initSidebar);
+
+            function showDiv(idToShow) {
+                const divs = document.querySelectorAll('div[id^="sec"]');
+                divs.forEach((div) => {
+                    div.style.display = div.id === idToShow ? "block" : "none";
+                });
+            }
+
+            window.onload = () => showDiv("sec1");
+
+            $(document).ready(function () {
+                $(".filtermenu").on("click", function () {
+                    $("#filterpanel").toggleClass("hidden visible");
+                });
+
+                $(".closebtn").on("click", function () {
+                    $("#filterpanel").removeClass("visible").addClass("hidden");
+                });
+            });
+
+            $(document).ready(function () {
+                $("#tableBtn").on("click", function () {
+                    $("[id^='tableview']").removeClass("hidden");
+                    $("#kanbanview").addClass("hidden");
+                });
+
+                $("#kanbanBtn").on("click", function () {
+                    $("#kanbanview").removeClass("hidden");
+                    $("[id^='tableview']").addClass("hidden");
+                });
+            });
+
+            document.body.addEventListener("htmx:configRequest", (event) => {
+                event.detail.headers["X-CSRFToken"] = "{{ csrf_token }}";
+            });
+
+            {% comment %} window.APP_SECTION_MAPPING = {{ app_section_mapping | safe }}; {% endcomment %}
+
+            document.addEventListener('htmx:afterSwap', function (evt) {
+                if (evt.detail.target.id === 'settings-content') {
+                    const scripts = evt.detail.target.querySelectorAll('script');
+                    scripts.forEach(script => {
+                        const newScript = document.createElement('script');
+                        newScript.textContent = script.textContent;
+                        document.body.appendChild(newScript);
+                        script.remove();
+                    });
+                }
+            });
+
+
+        </script>
+
+        <script src="{% url 'javascript-catalog' %}"></script>
+        <script src="{% static 'assets/js/global.js' %}"></script>
+        <script src="{% static 'assets/js/horilla_charts.js' %}"></script>
+        <script src="{% static 'assets/js/calendar.js' %}"></script>
+        <script src="{% static 'assets/js/full_calendar.js' %}"></script>
+        {% load_registered_js as register_js %}
+        {% for js_file in register_js %}
+        <script src="{% static js_file %}"></script>
+        {% endfor %}
+
+    </body>
+</html>

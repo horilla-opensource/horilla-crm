@@ -1,0 +1,5 @@
+<div id="messages-container" style="display: none;">
+    {% for message in messages %}
+        <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+    {% endfor %}
+</div>

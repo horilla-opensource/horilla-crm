@@ -1,0 +1,126 @@
+
+{% load static i18n horilla_tags %}
+{% if has_company %}
+  <div class="ps-3">
+    <div id="messages-container" style="display: none;">
+      {% for message in messages %}
+          <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+      {% endfor %}
+    </div>
+    <div class="flex gap-2 flex-wrap justify-between items-center h-auto sm:h-14 mb-5 sm:mb-2">
+      <h3 class="text-md font-semibold">{% trans 'Fiscal Year' %}</h3>
+      <div class="flex flex-wrap gap-2">
+        <button class="text-sm border-[1px] border-[solid]  rounded-[5px] px-4 py-2 text-[#e54f38] flex gap-3 btn-with-icon border-[#e54f38] transition-[.3s]"
+            hx-get="{% url 'horilla_core:fiscal_year_calendar' obj.id %}"
+            hx-target="#contentModal"
+            hx-swap="innerHTML"
+            hx-on:click="openContentModal()"
+            id="preview-calendar-btn">
+            {% trans ' Preview Calendar' %}
+        </button>
+        <button
+          id="toggleFiscalBtn"
+          class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+          hx-get="{% url 'horilla_core:fiscal_year_form_edit' obj.id %}"
+          hx-target="#modalBox"
+          hx-trigger="click"
+          hx-on:click="openModal()">
+          {% trans ' Manage Fiscal Year' %}
+        </button>
+      </div>
+    </div>
+    <div id="fiscal-year-container">
+      <div class="grid grid-cols-1 gap-4">
+      <div class="text-sm flex flex-col md:flex-row">
+        <span class="text-dark-200 font-semibold w-80">
+          {{ obj|verbose_name:"fiscal_year_type" }}
+        </span>
+        <span class="flex-1 text-dark-200">
+          <span class="pe-2">:</span>
+            {{ obj.get_fiscal_year_type_display }}
+        </span>
+      </div>
+      {% if obj.fiscal_year_type == 'standard' %}
+        <div class="text-sm flex flex-col md:flex-row">
+          <span class="text-dark-200 font-semibold w-80"
+            >{{ obj|verbose_name:"start_date_month" }}
+          </span>
+          <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{ obj.get_start_date_month_display }}
+          </span>
+        </div>
+        <div class="text-sm flex flex-col md:flex-row">
+          <span class="text-dark-200 font-semibold w-80"
+            >{{ obj|verbose_name:"display_year_based_on" }}
+          </span>
+          <span class="flex-1 text-dark-200"
+            ><span class="pe-2">:</span>{{ obj.get_display_year_based_on_display}}</span
+          >
+        </div>
+      {% else %}
+        <div class="text-sm flex flex-col md:flex-row">
+          <span class="text-dark-200 font-semibold w-80">
+            {{ obj|verbose_name:"format_type" }}
+          </span>
+          <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{ obj.get_format_type_display }}
+          </span>
+        </div>
+        {% if obj.format_type == 'year_based' %}
+          <div class="text-sm flex flex-col md:flex-row">
+            <span class="text-dark-200 font-semibold w-80">
+              {{ obj|verbose_name:"year_based_format" }}
+            </span>
+            <span class="flex-1 text-dark-200">
+              <span class="pe-2">:</span>
+              {{ obj.get_year_based_format_display}}
+            </span>
+          </div>
+        {% else %}
+          <div class="text-sm flex flex-col md:flex-row">
+            <span class="text-dark-200 font-semibold w-80">
+              {{ obj|verbose_name:"quarter_based_format" }}
+            </span>
+            <span class="flex-1 text-dark-200">
+              <span class="pe-2">:</span>
+              {{ obj.get_quarter_based_format_display}}
+            </span>
+          </div>
+        {% endif %}
+        <div class="text-sm flex flex-col md:flex-row">
+          <span class="text-dark-200 font-semibold w-80">
+            {% trans 'Start Date' %}
+          </span>
+          <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{ start_date }}
+          </span>
+        </div>
+        <div class="text-sm flex flex-col md:flex-row">
+          <span class="text-dark-200 font-semibold w-80">
+            {{ obj|verbose_name:"display_year_based_on" }}
+          </span>
+          <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{ obj.get_display_year_based_on_display }}
+          </span>
+        </div>
+        <div class="text-sm flex flex-col md:flex-row">
+          <span class="text-dark-200 font-semibold w-80">
+            {{ obj|verbose_name:"period_display_option" }}
+          </span>
+          <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{ obj.get_period_display_option_display }}<br> &nbsp
+            {% if obj.period_display_option == 'number_by_year' %}(P1,P2,P3......P12){% else %}( Q1 P1, Q2 P2, Q3 P3, Q1 P1, Q2 P2,...Q4 P3 ){% endif %}
+          </span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  </div>
+{% else %}
+  {% trans "No active company" %}
+{% endif %}

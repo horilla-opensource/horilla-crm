@@ -1,0 +1,10 @@
+{% load static i18n %}
+
+<div class="flex flex-wrap justify-between items-center h-14">
+    <h3 class="text-md font-semibold">{% trans 'Business Hours' %}</h3>
+    <button class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+        hx-get="{% url 'horilla_core:business_hour_create_form' %}" hx-target="#modalBox" hx-swap="innerHTML" onclick="openModal()">
+        {% trans 'Add Business Hour' %}
+    </button>
+</div>
+<div id="mainSession"  hx-get="{% url 'horilla_core:business_hour_list_view' %}" hx-trigger="load"></div>

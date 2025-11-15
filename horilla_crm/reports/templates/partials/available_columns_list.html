@@ -1,0 +1,26 @@
+{% load reports_tags %}
+{% load i18n %}
+{% for field in available_fields %}
+  {% if field.name not in report.selected_columns_list %}
+    <button
+      class="mb-1 bg-dark-50 rounded-md px-1.5 py-2 text-xs font-medium w-full text-left relative before:content-['+'] before:right-2 before:absolute before:text-lg before:top-0 before:bottom-0 before:m-auto"
+      hx-post="{% url 'reports:add_column' report.pk %}"
+      hx-vals='{"field_name": "{{ field.name }}"}'
+      hx-target="#report-content"
+      hx-select="#report-content"
+      hx-select-oob="#nav-actions"
+      hx-swap="outerHTML"
+      hx-headers='{"HX-Trigger": "refreshReport"}'>
+      {{ field.verbose_name|title }}
+    </button>
+  {% else %}
+    <div class="text-center text-gray-500 py-4 text-xs">
+        {% trans 'You are already selected this field' %}
+    </div>
+
+  {% endif %}
+{% empty %}
+  <div class="text-center text-gray-500 py-4 text-xs">
+    {% trans 'No matching columns found' %}
+  </div>
+{% endfor %}

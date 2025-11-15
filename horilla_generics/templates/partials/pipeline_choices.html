@@ -1,0 +1,43 @@
+{% load static %}
+{% load horilla_tags %}
+<div id="messages-container" style="display: none;">
+  {% for message in messages %}
+      <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+  {% endfor %}
+</div>
+<ul class="probar flex gap-4 text-sm" id="kanban-choices">
+    {% for choice in pipeline_choices %}
+      <li class="flex-auto relative after:[content:''] after:absolute {% if choice.4 %}after:bg-[url({% static '/assets/icons/tri2-end.svg' %})] {% elif choice.2 %} after:bg-[url({% static '/assets/icons/tri1.svg' %})] {% elif choice.3 %} after:bg-[url({% static '/assets/icons/tri3-b.svg' %})] {% else %} after:bg-[url({% static '/assets/icons/tri3.svg' %})] {% endif %} after:right-[-28px] after:z-0 after:w-[32px] after:h-[32px] after:top-[0] after:bottom-[0] after:m-auto after:bg-no-repeat after:bg-contain after:bg-center  before:[content:''] before:absolute {% if choice.4 %} before:bg-[url({% static 'assets/icons/tri3-end.svg' %})] {% elif choice.2 %} before:bg-[url({% static 'assets/icons/tri2-g.svg' %})] {% elif choice.3 %} before:bg-[url({% static '/assets/icons/tri2-b.svg' %})] {% else %}before:bg-[url({% static 'assets/icons/tri2.svg' %})] {% endif %} before:left-[0] before:z-0 before:w-[32px] before:h-[32px] before:top-[0] before:bottom-[0] before:m-auto before:bg-no-repeat before:bg-contain before:bg-center">
+                  <button
+                      class="{% if choice.4 %}bg-primary-600 text-white hover:font-bold
+                            {% elif choice.2 %}bg-[#40ce2d2c] text-[#3dcf2a] hover:text-[#0ba10a]
+                            {% elif choice.3 %}bg-[#3f86e43a] text-[#3f86e4] hover:text-[#044fb3]
+                            {% else %}bg-[#F0F0F0] text-[#666] hover:text-[#464444]{% endif %}
+                            ps-8 px-3 py-1.5 w-full whitespace-nowrap transition duration-300"
+                      {% if choice.4 and final_stage_action %}
+                        {% for key, value in final_stage_action.items %}
+                        {% if key != "title" %}
+                              {{ key }}="{{ value|safe }}"
+                          {% endif %}
+                        {% endfor %}
+                      {% else %}
+                        hx-post="{% url 'horilla_generics:update_pipeline' pk=obj.id %}"
+                        hx-vals='{"pipeline_update": "true","pipeline_value": "{{ choice.1 }}","model_name": "{{model_name }}","app_label": "{{ app_label }}","pipeline_field": "{{ pipeline_field }}"}'
+                        hx-target="#kanban-choices"
+                        hx-trigger="confirmed"
+                        hx-swap="outerHTML"
+                        hx-on:click="hxConfirm(this,'Are you sure you want to change the <span class=&quot;text-primary-600&quot;>{{pipeline_field_verbose_name}}</span> to <span class=&quot;text-primary-600&quot;>{{ choice.0 }}</span> ?');"
+                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                      {% endif %}
+                    >
+                        {{ choice.0 }}
+                    </button>
+
+
+      </li>
+
+    {% endfor %}
+  </ul>
+  {% if pipeline_update %}
+  <script>$('#reloadButton').click();</script>
+  {% endif %}

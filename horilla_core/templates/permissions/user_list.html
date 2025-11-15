@@ -1,0 +1,31 @@
+{% load i18n %}
+{% for user in users %}
+    <div class="border-[1px] border-[solid] border-[#efefef] rounded-md bg-white mb-2 htmx-sentinel"
+        {% if users.has_next and forloop.last %}
+            hx-get="{% url 'horilla_core:load_more_users' %}?page={{ page_obj.next_page_number }}"
+            hx-trigger="intersect once" hx-swap="afterend" hx-target="this" hx-indicator="#loadingIndicator"
+        {% endif %}>
+        <button type="button"
+            class="flex justify-between items-center w-full px-4 py-3 text-left text-gray-800 font-medium transition"
+            hx-get="{% url 'horilla_core:load_user_permissions' user.id %}" hx-target="#accordion-content-{{ user.id }}"
+            hx-swap="innerHTML" hx-trigger="doRequest" _="on click if isElementVisible(me) trigger doRequest"
+            hx-indicator="#loadingIndicator-{{ user.id }}" hx-on:click="toggleAccordion(this)">
+            <div class="flex gap-10 w-full font-medium text-sm">
+                {{ user.get_full_name|default:user.username }}
+                {% if user.role %}
+                    ( {{ user.role }} )
+                {% endif %}
+            </div>
+            <svg class="ms-5 w-4 h-4 transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+        <div id="accordion-content-{{ user.id }}"
+             class="accordion-content text-sm text-dark-500 overflow-hidden overflow-y-auto h-[420px]"
+             style="max-height: 0;">
+        </div>
+    </div>
+{% empty %}
+    <p class="text-gray-500 text-sm">{% trans "No users available." %}</p>
+{% endfor %}

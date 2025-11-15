@@ -1,0 +1,146 @@
+{% extends "login.html" %}
+{% load static i18n %}
+{% block login %}
+<div id="initialize-role" class="bg-white p-[20px] rounded-md shadow sec1 w-[900px]">
+    <div class="flex justify-between items-center p-5">
+        <h2 class="text-lg font-semibold">{% trans "Initialize Database" %}</h2>
+    </div>
+    <div class="p-5 py-0">
+        <ul class="progress">
+            {% for step in progress_steps %}
+                <li {% if step.active %}class="active"{% endif %}>
+                    <div class="sec {% if forloop.counter0 > 0 %}flex flex-col {% if forloop.last %}items-end{% else %}items-center{% endif %}{% endif %}">
+                        <span class="bg-[#e54f38] h-[30px] w-[30px] flex items-center justify-center rounded-[50px] text-[white]">
+                            {{ step.step }}
+                        </span>
+                        <p class="text-[.8rem] mb-0">{% trans step.title %}</p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="p-5">
+        <h2 class="text-lg font-semibold mb-3">{% trans "Role" %}</h2>
+        {% if roles %}
+            <ul class="flex gap-1 mb-3">
+                {% for role in roles %}
+                    <li class="flex gap-2 text-xs border border-[#cacaca] rounded-full px-2 py-1">
+                        <span class="cursor-pointer"
+                            hx-get="{% url 'horilla_core:initialize_database_role' %}?edit_role={{ role.id }}&company_id={{ company_id }}"
+                            hx-target="#initialize-role"
+                            hx-swap="outerHTML"
+                            hx-select="#initialize-role"
+                            title="Click to edit">
+                            {{ role.role_name }}{% if role.parent_role %} (Parent: {{ role.parent_role.role_name }}){% endif %}
+                        </span>
+                        <button hx-post="{% url 'horilla_core:initialize_database_role' %}"
+                                hx-target="#initialize-role"
+                                hx-swap="outerHTML"
+                                hx-select="#initialize-role"
+                                hx-vals='{"delete_role": "{{ role.id }}", "company_id": "{{ company_id }}"}'
+                                class="cursor-pointer"
+                                title="Delete role">
+                            <svg class="text-[#e54f38]" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24">
+                                <g fill="none" fill-rule="evenodd">
+                                    <path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/>
+                                    <path fill="currentColor" d="m12 14.122l5.303 5.303a1.5 1.5 0 0 0 2.122-2.122L14.12 12l5.304-5.303a1.5 1.5 0 1 0-2.122-2.121L12 9.879L6.697 4.576a1.5 1.5 0 1 0-2.122 2.12L9.88 12l-5.304 5.304a1.5 1.5 0 1 0 2.122 2.12z"/>
+                                </g>
+                            </svg>
+                        </button>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form id="role-form" hx-post="{% url 'horilla_core:initialize_database_role' %}" hx-target="#initialize-role" hx-swap="outerHTML" hx-select="#initialize-role">
+            {% csrf_token %}
+            <input type="hidden" name="company_id" value="{{ company_id }}">
+            {% if edit_role %}
+                <input type="hidden" name="edit_role_id" value="{{ edit_role.id }}">
+            {% endif %}
+            <div id="roleForm" class="grid grid-cols-12 gap-4">
+                <div class="col-span-{% if edit_role and roles|length <= 1 %}5{% elif not edit_role and not roles %}5{% else %}3{% endif %}">
+                    <label class="text-sm text-color-600">{% trans "Role Name" %}</label>
+                    <input type="text" name="role_name" placeholder="Enter role name"
+                        value="{% if edit_role %}{{ edit_role.role_name }}{% endif %}"
+                        class="text-color-600 p-2 placeholder:text-xs font-normal pr-[40px] w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600" required />
+                </div>
+                <div class="col-span-{% if edit_role and roles|length <= 1 %}5{% elif not edit_role and not roles %}5{% else %}4{% endif %}">
+                    <label class="text-sm text-color-600">{% trans "Role Description" %}</label>
+                    <textarea name="description" placeholder="Description..." rows="1"
+                        class="text-color-600 p-2 placeholder:text-xs font-normal pr-[40px] w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600" required>{% if edit_role %}{{ edit_role.description }}{% endif %}</textarea>
+                </div>
+                {% if edit_role %}
+                    {% if roles|length > 1 %}
+                        <div class="col-span-3">
+                            <label class="text-sm text-color-600">{% trans "Parent Role" %}</label>
+                            <div class="w-full pt-1">
+                                <select name="parent_role" class="js-example-basic-single">
+                                    <option value="">{% trans "Select Parent Role" %}</option>
+                                    {% for role in roles %}
+                                        {% if role.id != edit_role.id %}
+                                            <option value="{{ role.id }}"
+                                                {% if edit_role.parent_role and role.id == edit_role.parent_role.id %}selected{% endif %}>
+                                                {{ role.role_name }}
+                                            </option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    {% if roles %}
+                        <div class="col-span-3">
+                            <label class="text-sm text-color-600">{% trans "Parent Role" %}</label>
+                            <div class="w-full pt-1">
+                                <select name="parent_role" class="js-example-basic-single">
+                                    <option value="">{% trans "Select Parent Role" %}</option>
+                                    {% for role in roles %}
+                                        <option value="{{ role.id }}">{{ role.role_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                <div class="col-span-2 flex items-end pb-3">
+                    <button type="submit"
+                        class="mt-7 text-sm p-2 bg-primary-600 hover:bg-secondary-600 w-full flex gap-2 justify-center rounded-md text-white [transition:.3s]">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M21 7v12q0 .825-.587 1.413T19 21H5q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h12zm-9 11q1.25 0 2.125-.875T15 15t-.875-2.125T12 12t-2.125.875T9 15t.875 2.125T12 18m-6-8h9V6H6z" />
+                        </svg>
+                        {% if edit_role %}
+                            {% trans "Update" %}
+                        {% else %}
+                            {% trans "Save" %}
+                        {% endif %}
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        {% if roles %}
+            <div class="flex justify-end mt-4">
+                <button hx-post="{% url 'horilla_core:initialize_database_role' %}"
+                        hx-target="#initialize-role"
+                        hx-swap="outerHTML"
+                        hx-include="#role-form"
+                        hx-vals='{"next_step": "true"}'
+                        hx-push-url="{{push_url}}"
+                        hx-select="#{{select_id}}"
+                        class="border-[1px] border-[#e54f38] hover:border-[#9b210f] hover:bg-secondary-600 rounded-[5px] px-[15px] py-[8px] text-[#e54f38] flex gap-3 btn-with-icon border-[#e54f38] [transition:.3s] hover:text-[white]">
+                        {% if is_last %}
+                            {% trans "Sign In" %}
+                        {% else %}
+                            {% trans "Next Step" %}
+                        {% endif %}
+                    <img src="{% static 'assets/icons/ar3.svg' %}" alt="" />
+                </button>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock login %}

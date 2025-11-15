@@ -1,0 +1,94 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<div class="bg-white rounded-lg shadow p-6 min-w-[500px]">
+    <div class="flex justify-between items-center mb-2">
+        <h3 class="text-md font-semibold mb-2">{% trans "Soft Delete Confirmation" %}</h3>
+        {% comment %} <button onclick="closeConfirm(this)" class="text-gray-500 hover:text-red text-xl pt-0">
+            <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+        </button> {% endcomment %}
+    </div>
+        <p class="text-sm text-gray-600 mb-2">
+            {% trans "Deletable Records" %} : <strong>{{ can_delete_count }}</strong>
+        </p>
+        {% if cannot_delete %}
+            <p class="text-sm text-gray-600 mb-4">
+            {% trans "Protected Records" %}:
+            </p>
+            <div class="border border-primary-300 rounded-md bg-white mb-3 h-[400px] overflow-y-auto overflow-hidden">
+                {% for item in cannot_delete %}
+                    <div class="border-b border-primary-300">
+                        <button
+                            type="button"
+                            class="flex justify-between items-center px-1 py-3 text-left text-gray-800 font-medium transition gap-2 w-full"
+                            onclick="toggleAccordion(this)"
+                            >
+                            <svg
+                                class="ms-0 w-4 h-4 transform transition-transform"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                >
+                                <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 9l-4 4-4-4"
+                                />
+                            </svg>
+                            <div class="flex gap-20 font-medium text-sm flex-1 w-full justify-between pr-2">
+                                {{ item.name }}
+                                <span class="ml-12 gap-5 text-gray-500">({% trans "Soft Delete" %})</span>
+                            </div>
+                        </button>
+                        <div class="accordion-content text-sm text-dark-500 transition-all duration-300 overflow-hidden max-h-0">
+                            <ul class="px-4 border-t border-primary-300 pt-3">
+                                {% for dep in item.dependencies %}
+                                    <li class="py-1 text-[.85rem] flex justify-between items-center">
+                                        <span>{{ dep.model_name }} ({{ dep.count }})</span>
+                                    </li>
+                                    {% if dep.records %}
+                                        <ul class="list-disc ml-4 mt-1 mb-2 text-sm text-[#333]">
+                                            {% for record in dep.records|slice:":5" %}
+                                                <li>{{ record }}</li>
+                                            {% endfor %}
+                                            {% if dep.count > 5 %}
+                                                ass="italic">... and {{ dep.count|add:"-5" }} more</li>
+                                            {% endif %}
+                                        </ul>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {%endfor%}
+            </div>
+        {% endif %}
+
+            <div class="flex justify-end gap-2">
+                {% if cannot_delete or can_delete %}
+                <!-- Confirm Delete (Hard Delete Non-Dependent) -->
+                    <form method="post" action="{{ search_url }}" hx-post="{{ search_url }}"
+                        hx-push-url="false" hx-on::after-request="closeDeleteModal();closeDeleteModeModal();"
+                        hx-vals='{"selected_ids": {{ selected_ids_json|safe }}, "delete_type": "soft", "action": "bulk_delete", "confirm_delete":"true"}'>
+                        {% csrf_token %}
+                        <input type="hidden" name="record_ids" value='{{ selected_ids_json|safe }}'>
+                        <input type="hidden" name="view_id" value='{{ view_id|safe }}'>
+                        <button type="submit"
+                            class="text-sm px-6 py-2 bg-[#21b442] text-white rounded-md hover:bg-[#198230] transition duration-300">
+                            {% trans "Confirm Delete" %}
+                        </button>
+                    </form>
+                {% else %}
+                    <button class="text-sm px-4 py-2 bg-gray-400 rounded-md text-white cursor-not-allowed" disabled
+                            style="background-color: #9ca3af; color: #ffffff;">
+                        {% trans "No Records to Delete" %}
+                    </button>
+                {% endif %}
+                <button onclick="closeConfirm(this)"
+                    class="text-sm px-6 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                    {% trans "Cancel" %}
+                </button>
+            </div>
+      </div>

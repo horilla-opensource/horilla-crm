@@ -1,0 +1,80 @@
+{% load static i18n %}
+<div class="flex justify-between p-5 pb-0">
+    <h2 class="text-lg font-semibold">{% trans "Select Mail Template" %}</h2>
+    <button id="close" class="text-gray-500 hover:text-red-500 text-xl" onclick="closeModal();">
+        <img src="{% static 'assets/icons/close.svg' %}" alt="">
+    </button>
+</div>
+<div class="pt-0 p-5">
+    <form method="post" class="space-y-3">
+        {% csrf_token %}
+        <div>{{ form.template }}</div>
+        <div class="flex justify-end">
+            <button
+                class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-white"
+                type="button"
+                onclick="selectTemplate()">
+                {% trans "Select Template" %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function selectTemplate() {
+        const templateSelect = document.querySelector('select[name="template"]');
+
+        if (!templateSelect || !templateSelect.value) {
+            alert('Please select a template');
+            return;
+        }
+
+        const selectedOption = templateSelect.options[templateSelect.selectedIndex];
+        const templateId = templateSelect.value;
+
+        fetch(`{% url 'horilla_mail:get_template_content' %}?template_id=${templateId}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                let targetWindow = window;
+
+                if (window.opener && window.opener.$) {
+                    targetWindow = window.opener;
+                } else if (window.parent && window.parent !== window && window.parent.$) {
+                    targetWindow = window.parent;
+                } else if (window.top && window.top !== window && window.top.$) {
+                    targetWindow = window.top;
+                }
+
+
+                if (targetWindow.$ && targetWindow.$('#summernote').length) {
+                    const $summernote = targetWindow.$('#summernote');
+
+                    if ($summernote.next('.note-editor').length) {
+                        $summernote.summernote('code', data.body);
+                        targetWindow.$('#message_content').val(data.body);
+                        closeModal();
+                    } else {
+                        console.error('Summernote not initialized');
+                    }
+                } else {
+                    localStorage.setItem('selectedTemplate', JSON.stringify({
+                        body: data.body,
+                        timestamp: Date.now()
+                    }));
+                    closeModal();
+                }
+            } else {
+                console.error('Error getting template content:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>

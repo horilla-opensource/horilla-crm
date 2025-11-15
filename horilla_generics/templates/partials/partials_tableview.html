@@ -1,0 +1,71 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<div id="tableview-">
+  <div class="relative overflow-x-auto overflow-y-scroll h-[70vh] [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] bg-white rounded-lg" id="table-container">
+    <table class="w-full">
+      <thead class="sticky top-0 bg-white">
+        <tr>
+          <th class="text-sm sticky top-0 font-bold border-[1px] border-[solid] border-[#dddddd] text-left p-3">
+            <div class="flex items-center justify-center">
+              <input type="checkbox" value="" class="w-4 h-4 border border-[#cfcfcf] rounded-sm accent-[#e54f38]" />
+            </div>
+          </th>
+          {% for cell in columns %}
+          <th class="text-sm sticky top-0 font-bold border-[1px] border-[solid] border-[#dddddd] text-left p-3" data-field="{{ cell.1 }}">
+            <a href="#" hx-get="{{search_url}}?{{ request.GET.urlencode }}&sort={{ cell.1 }}&direction={% if current_sort == cell.1 and current_direction == 'asc' %}desc{% else %}asc{% endif %}"
+               hx-target="#{{view_id|safe}}"
+               hx-swap="outerHTML"
+               hx-push-url="true">
+              {{ cell.0 }}
+              <span class="sort-icon {% if current_sort == cell.1 %}sort-{{ current_direction }}{% endif %}">
+                {% if current_sort == cell.1 and current_direction == 'asc' %}
+                  ▲
+                {% elif current_sort == cell.1 and current_direction == 'desc' %}
+                  ▼
+                {% else %}
+                  ⇅
+                {% endif %}
+              </span>
+            </a>
+          </th>
+          {% endfor %}
+          {% if actions or action_method %}
+          <th class="text-sm sticky top-0 font-bold border-[1px] border-[solid] border-[#dddddd] text-left p-3">Actions</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in queryset %}
+        <tr>
+          <td class="text-sm border-[1px] border-[solid] border-[#dddddd] text-left p-3">
+            <div class="flex items-center justify-center">
+              <input type="checkbox" value="" class="w-4 h-4 border border-[#cfcfcf] rounded-sm accent-[#e54f38]" />
+            </div>
+          </td>
+          {% for cell in columns %}
+          <td class="text-sm border-[1px] border-[solid] border-[#dddddd] text-left p-3">
+            {{ data|get_field:cell.1|safe }}
+          </td>
+          {% endfor %}
+          {% if actions %}
+          {% if not action_method %}
+          <td class="text-sm border-[1px] border-[solid] border-[#dddddd] text-left p-3">
+            <div class="flex gap-3">
+              {% for action in actions %}
+              {{ action|render_action_button:data }}
+              {% endfor %}
+            </div>
+          </td>
+          {% else %}
+          <td class="text-sm border-[1px] border-[solid] border-[#dddddd] text-left p-3">
+            {{ data|get_field:action_method|safe }}
+          </td>
+          {% endif %}
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

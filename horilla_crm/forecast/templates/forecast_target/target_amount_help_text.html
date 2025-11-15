@@ -1,0 +1,5 @@
+{% if row_id == '0' %}
+    <div id="target_amount_help_text" class="text-xs text-gray-500 mt-1">{{ help_text }}</div>
+{% else %}
+    <div id="target_amount_help_text_{{ row_id }}" class="text-xs text-gray-500 mt-1">{{ help_text }}</div>
+{% endif %}

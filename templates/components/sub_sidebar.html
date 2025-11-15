@@ -1,0 +1,37 @@
+{% load static i18n horilla_tags %}
+<div class="relative h-full" id="sideMenuContainer">
+    <button id="toggleSideMenu"
+        class="fixed top-[5.5rem] w-[20px] z-40 transition-all duration-300 ease-in-out focus-visible:outline-0">
+        <img src="{% static 'assets/icons/menuarrow.svg' %}" alt="" class="transition-transform duration-300"
+            id="arrowIcon" />
+    </button>
+    <div id="sideMenu"
+        class="w-[230px] fixed transition-all duration-300 bg-white border-r border-r-primary-400 overflow-hidden h-[calc(100vh-89px)] z-30">
+
+        <button id="hiddenReloadSidebar" type="button" class="hidden" data-app-label="{{ current_app_label }}">Reload Sidebar</button>
+        {% with current_items=sub_section_menu|get_item:current_section %}
+            {% if current_items %}
+                <ul class="flex flex-col gap-[5px] p-5 pt-8" id="subSidebar" hx-swap-oob="true">
+                    {% for item in current_items %}
+                        {% if not item.perm or request.user|has_super_user:item.perm %}
+                            <li class="subSidebarItem">
+                                <a id="{{ item.app_label }}" href="{{ item.url }}?section={{ current_section }}"
+                                    data-section="{{ current_section }}"
+                                    {% for attr, value in item.attrs.items %}
+                                        {{ attr }}="{{ value }}"
+                                    {% endfor %}
+                                    class="sidebar-link group flex items-center gap-3 text-sm px-3 py-2 rounded-md hover:bg-primary-600 transition duration-300 hover:text-white">
+                                    {% if item.icon %}
+                                        <img src="{% static item.icon %}" alt="" width="19" class="transition duration-300" />
+                                    {% endif %}
+                                    {{ item.label }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
+</div>

@@ -1,0 +1,49 @@
+#!/bin/bash
+# Post-removal script for horilla-crm
+
+set -e
+
+APP_USER="horilla-crm"
+APP_GROUP="horilla-crm"
+APP_DIR="/opt/horilla-crm"
+CONFIG_DIR="/etc/horilla-crm"
+VAR_DIR="/var/lib/horilla-crm"
+LOG_DIR="/var/log/horilla-crm"
+
+case "$1" in
+    purge)
+        # Remove user and group (only on purge)
+        if getent passwd "$APP_USER" > /dev/null 2>&1; then
+            deluser --quiet --system "$APP_USER" || true
+        fi
+
+        if getent group "$APP_GROUP" > /dev/null 2>&1; then
+            delgroup --quiet --system "$APP_GROUP" || true
+        fi
+
+        # Remove configuration files
+        rm -rf "$CONFIG_DIR"
+
+        # Ask user about data removal
+        echo "Horilla-CRM has been removed."
+        echo "Data files are preserved in:"
+        echo "  - $VAR_DIR (database and media files)"
+        echo "  - $LOG_DIR (log files)"
+        echo ""
+        echo "To completely remove all data, run:"
+        echo "  sudo rm -rf $VAR_DIR $LOG_DIR"
+        ;;
+
+    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+        # Don't remove data on package removal/upgrade
+        ;;
+
+    *)
+        echo "postrm called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

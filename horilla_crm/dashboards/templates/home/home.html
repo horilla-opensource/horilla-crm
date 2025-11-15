@@ -1,0 +1,362 @@
+{% extends "index.html" %} {% load static %} {% load horilla_tags %}
+{% load i18n %} {% load dashboard_tags %} {% block content %}
+<div class="flex modelcontent">
+  <div class="relative h-full" id="sideMenuContainer">
+      <div id="messages-container" style="display: none;">
+          {% for message in messages %}
+          <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+          {% endfor %}
+      </div>
+  </div>
+</div>
+
+  <div id="mainContent" class="flex-[1_0] transition-all duration-300 ease-in-out pt-0 overflow-hidden overflow-y-auto h-[100vh]">
+    <div class="p-2 sm:p-5" id="home-view">
+      <div class="pb-6">
+        <div class="flex flex-wrap justify-between gap-2 mb-2 items-center">
+          <h1 class="text-xl font-bold text-gray-800">
+            {% trans "Welcome" %}, {{ user.get_full_name|default:user.username }}
+          </h1>
+          <a
+            href="{% url 'dashboards:dashboard_list_view' %}?section=analytics"
+            class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+            {% trans "View All Dashboards" %}
+          </a>
+        </div>
+
+        <p class="text-gray-600">
+          {% trans "Get started by creating your first dashboard or explore the overview below." %}
+        </p>
+      </div>
+    </div>
+
+    <div class="p-2 sm:p-5" id="dashboard-detail-view">
+      {% if has_components %}
+        <!-- KPI Components - Always at the top -->
+        {% with kpi_components=components|filter_by_type:'kpi' %}
+          {% if kpi_components %}
+            <div class="mb-4">
+              <div class="grid grid-cols-12 gap-2 sm:gap-3">
+                {% for component in kpi_components %}
+                <div
+                  class="col-span-12 sm:col-span-6 lg:col-span-3 kpi-component-fixed"
+                >
+                  <div
+                    hx-get="{% url 'dashboards:component_chart' component_id=component.id %}"
+                    hx-trigger="load"
+                    hx-swap="innerHTML"
+                    class="w-full h-full"
+                  >
+                    <div
+                      class="text-gray-500 text-sm flex items-center justify-center h-full"
+                    >
+                      {% trans "Loading KPI..." %}
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <!-- Other Components - Charts and Tables (Reorderable) -->
+        {% with non_kpi_components=components|filter_by_type_exclude:'kpi' %}
+          {% if non_kpi_components %}
+            <div>
+              {% if kpi_components %}
+              <h4 class="text-lg font-medium mb-4 text-gray-700">
+                {% trans "Charts & Data" %}
+              </h4>
+              {% endif %}
+              <div class="grid grid-cols-12 gap-3" id="reorderable-components">
+                {% for component in non_kpi_components %}
+                <div class="col-span-6" data-component-id="{{ component.id }}">
+                  <div
+                    class="shadow-sm bg-white rounded-lg z-0 p-4 overflow overflow-hidden"
+                  >
+                    <div class="flex items-center justify-between mb-3">
+                      <h3 class="text-md font-semibold">{{ component.name }}</h3>
+                    </div>
+                    {% if component.component_type == 'chart' %}
+                    <div
+                      class="chart-container relative w-full"
+                      style="height: 344px"
+                    >
+                      <div
+                        hx-get="{% url 'dashboards:component_chart' component_id=component.id %}"
+                        hx-trigger="load"
+                        hx-swap="innerHTML"
+                        class="w-full h-full"
+                      >
+                        <div
+                          class="text-gray-500 text-sm flex items-center justify-center h-full"
+                        >
+                          {% trans " Loading chart..." %}
+                        </div>
+                      </div>
+                    </div>
+                    {% if component.reports %}
+                        <div class="mt-3 flex items-center gap-2 text-xs text-gray-600">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-primary-300 rounded-md">
+                                <i class="fa-solid fa-file-lines text-black"></i>
+                                <span class="font-bold">{% trans "Created From report" %}</span>
+                                <a href="{% url 'reports:report_detail' component.reports.pk %}?section=analytics"
+                                class="text-primary-600 hover:text-blue-800 font-bold"
+                                hx-get="{% url 'reports:report_detail' component.reports.pk %}?section=analytics"
+                                hx-target="#mainContent"
+                                hx-swap="outerHTML"
+                                hx-select="#mainContent"
+                                hx-push-url="true"
+                                hx-select-oob="#sideMenuContainer">
+                                    {{component.reports.name}}
+                                </a>
+                            </span>
+                        </div>
+                    {% endif %}
+                    {% elif component.component_type == 'table_data' %}
+                    <div>
+                      {% with ctx=table_contexts|lookup:component.id %}
+                        {% unpack_context ctx %} {% include "list_view.html" %}
+                      {% endwith %}
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        {% endwith %}
+      {% else %}
+        <div class="flex flex-col items-center justify-center min-h-[400px] text-center background bg-white">
+          <div class="mb-6">
+            <svg
+              class="w-20 h-20 text-gray-300 mx-auto"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              ></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-700 mb-2">
+            {% trans 'No Components Added'%}
+          </h3>
+          <p class="text-gray-500 mb-6 max-w-md">
+            {% trans "This dashboard doesn't have any components yet. Add charts,
+            tables, KPIs, or targets to visualize your data." %}
+          </p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+
+
+<script src="{% static 'assets/js/horilla_charts.js' %}"></script>
+<script>
+  $(document).ready(function () {
+    initializeSelect2();
+    initializeReorderTabs();
+    bindEventHandlers();
+  });
+
+  function initializeSelect2() {
+    $("#exportFormat").select2({
+      width: "100%",
+      theme: "default",
+    });
+
+    $("select").on("select2:select", function (e) {
+      this.dispatchEvent(new Event("change"));
+    });
+  }
+
+  function initializeReorderTabs() {
+    switchReorderTab("components");
+  }
+
+  function bindEventHandlers() {
+    $("#componentReorderForm").on("submit", handleComponentReorderSubmit);
+    $("#kpiReorderForm").on("submit", handleKpiReorderSubmit);
+
+    $("#reorderModal").on("click", handleModalOutsideClick);
+
+    $("#reorderModal .bg-white").on("click", function (e) {
+      e.stopPropagation();
+    });
+  }
+
+  function exportChart(chartId, chartName, format) {
+    const $chartDom = $("#" + chartId);
+
+    if ($chartDom.length === 0) {
+      console.error("Chart DOM element not found for ID:", chartId);
+      alert("Failed to export chart: Chart element not found.");
+      return;
+    }
+
+    if (
+      typeof EChartsConfig === "undefined" ||
+      typeof echarts === "undefined"
+    ) {
+      console.error("EChartsConfig or echarts not available");
+      alert("Failed to export chart: Required libraries are not available.");
+      return;
+    }
+
+    const myChart = echarts.getInstanceByDom($chartDom[0]);
+
+    if (myChart) {
+      EChartsConfig.exportChart(myChart, chartName, format);
+    } else {
+      console.error("Chart instance not found for ID:", chartId);
+      alert("Failed to export chart: Chart instance not found.");
+    }
+  }
+
+  function openReorderModal() {
+    $("#reorderModal").removeClass("hidden");
+    $("body").css("overflow", "hidden");
+  }
+
+  function closeReorderModal() {
+    $("#reorderModal").addClass("hidden");
+    $("body").css("overflow", "auto");
+  }
+
+  function switchReorderTab(tabType) {
+    const $componentsTab = $("#tab-components");
+    const $kpiTab = $("#tab-kpi");
+    const $componentsContent = $("#tab-components-content");
+    const $kpiContent = $("#tab-kpi-content");
+
+    $componentsContent.addClass("hidden");
+    $kpiContent.addClass("hidden");
+
+    $componentsTab
+      .removeClass("text-primary-600 border-b-2 border-primary-600")
+      .addClass("text-[#333]");
+    $kpiTab
+      .removeClass("text-primary-600 border-b-2 border-primary-600")
+      .addClass("text-[#333]");
+
+    if (tabType === "components") {
+      $componentsContent.removeClass("hidden");
+      $componentsTab
+        .removeClass("text-[#333]")
+        .addClass("text-primary-600 border-b-2 border-primary-600");
+      $componentsTab.attr("aria-selected", "true");
+      $kpiTab.attr("aria-selected", "false");
+    } else {
+      $kpiContent.removeClass("hidden");
+      $kpiTab
+        .removeClass("text-[#333]")
+        .addClass("text-primary-600 border-b-2 border-primary-600");
+      $kpiTab.attr("aria-selected", "true");
+      $componentsTab.attr("aria-selected", "false");
+    }
+  }
+
+  function moveComponent(componentId, direction, tabType) {
+    const listId = tabType === "kpi" ? "kpiOrderList" : "componentOrderList";
+    const $list = $("#" + listId);
+    const $currentItem = $list.find(`li[data-component-id="${componentId}"]`);
+
+    if ($currentItem.length === 0) return;
+
+    if (direction === "up") {
+      const $prevItem = $currentItem.prev();
+      if ($prevItem.length) {
+        $currentItem.insertBefore($prevItem);
+      }
+    } else if (direction === "down") {
+      const $nextItem = $currentItem.next();
+      if ($nextItem.length) {
+        $currentItem.insertAfter($nextItem);
+      }
+    }
+
+    updateComponentOrder(tabType);
+  }
+
+  function updateComponentOrder(tabType) {
+    const listId = tabType === "kpi" ? "kpiOrderList" : "componentOrderList";
+    const inputsContainerId =
+      tabType === "kpi" ? "kpiOrderInputs" : "componentOrderInputs";
+
+    const $list = $("#" + listId);
+    const $items = $list.find("li[data-component-id]");
+    const $inputsContainer = $("#" + inputsContainerId);
+
+    $inputsContainer.empty();
+
+    $items.each(function (index) {
+      const componentId = $(this).data("component-id");
+      const $input = $("<input>", {
+        type: "hidden",
+        name: "component_order",
+        value: componentId,
+      });
+      $inputsContainer.append($input);
+    });
+  }
+
+  function handleComponentReorderSubmit(e) {
+    e.preventDefault();
+    submitReorderForm(this, "components");
+  }
+
+  function handleKpiReorderSubmit(e) {
+    e.preventDefault();
+    submitReorderForm(this, "kpi");
+  }
+
+  function submitReorderForm(form, type) {
+    const $form = $(form);
+    const formData = new FormData(form);
+    const csrfToken = $("[name=csrfmiddlewaretoken]").val();
+
+    $.ajax({
+      url: form.action,
+      method: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      headers: {
+        "X-CSRFToken": csrfToken,
+      },
+      success: function (data) {
+        if (data.success) {
+          closeReorderModal();
+          window.location.reload();
+        } else {
+          alert("Error: " + (data.error || `Failed to reorder ${type}`));
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error:", error);
+        alert(`An error occurred while reordering ${type}`);
+      },
+    });
+  }
+
+  function handleModalOutsideClick(e) {
+    if (e.target === this) {
+      closeReorderModal();
+    }
+  }
+
+  window.exportChart = exportChart;
+  window.openReorderModal = openReorderModal;
+  window.closeReorderModal = closeReorderModal;
+  window.switchReorderTab = switchReorderTab;
+  window.moveComponent = moveComponent;
+</script>
+
+{% endblock %}

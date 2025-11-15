@@ -1,0 +1,139 @@
+{% load static i18n horilla_tags %}
+<div class="ps-3" id="company-detail-view">
+    <button id="reloadButton" hidden   hx-get="{{ request.META.HTTP_REFERER }}?{{request.GET.urlencode}}" hx-target="#company-information"  hx-swap="outerHTML" hx-select="#company-information" hx-select-oob="#dropdown-companies">click</button>
+    <div class="flex flex-wrap justify-between items-center h-14 mb-3">
+        <div class="flex items-center gap-2">
+        {% if obj.icon %}
+            <img src="{{ obj.icon.url }}" alt="logo" class="w-11 h-11 rounded-full">
+        {% else %}
+            <img src="{{ obj.get_avatar }}" alt="logo" class="w-11 h-11 rounded-full">
+        {% endif %}
+        <h3 class="text-md font-semibold">
+        {{ obj.name }}
+        </h3>
+        </div>
+        {% if request.active_company %}
+        <button id="profile-edit-btn" hx-get="{% url 'horilla_core:edit_company' obj.pk %}?details=true" hx-on:click="openModal()" hx-target="#modalBox">
+            <img src="{% static '/assets/icons/edit.svg' %}" alt="" width="15" />
+        </button>
+        {% endif %}
+    </div>
+    <div class="grid columns-1 lg:grid-cols-2 gap-4">
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40">
+            {{ obj|verbose_name:"name"}}
+        </span>
+        <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{ obj.name}}
+            </span>
+        </div>
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40">
+            {{ obj|verbose_name:"contact_number"}}
+        </span>
+        <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{ obj.contact_number }}
+            </span>
+        </div>
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40">
+            {{ obj|verbose_name:"fax"}}
+        </span>
+        <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{obj.fax}}
+        </span>
+        </div>
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40">
+            {{ obj|verbose_name:"website"}}
+        </span>
+        <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{ obj.website }}
+        </span>
+        </div>
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40">
+            {{ obj|verbose_name:"email"}}
+        </span>
+        <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{ obj.email }}
+            </span>
+        </div>
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40">
+            {% trans 'Address' %}
+        </span>
+        <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>{{obj.city}},
+            {{obj.state}}, {{obj.country.name}}<br>
+            &nbsp;&nbsp;&nbsp;{{ obj.zip_code}}
+        </span>
+        </div>
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40"
+            >{{ obj|verbose_name:"country"}}
+        </span>
+        <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>{{obj.country.name}} ({{obj.country}})
+        </span>
+        </div>
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40">
+            {{ obj|verbose_name:"state"}}
+        </span>
+        <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{ obj.state}}
+        </span>
+        </div>
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40">{{ obj|verbose_name:"time_zone"}}
+        </span>
+        <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{obj.time_zone}}
+        </span>
+        </div>
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40">
+            {{obj|verbose_name:"language"}}
+        </span>
+        <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{ obj.get_language_display }} ({{obj.language}})
+        </span>
+        </div>
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40"
+        >
+            {{ obj|verbose_name:"currency"}}
+        </span>
+        <span class="flex-1 text-dark-200"
+            ><span class="pe-2">:</span>{{ obj.get_currency_display }} ({{obj.currency}})</span
+        >
+        </div>
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40">
+            {{ obj|verbose_name:"no_of_employees"}}
+        </span>
+        <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{obj.no_of_employees}}
+        </span>
+        </div>
+        <div class="text-sm flex flex-col sm:flex-row">
+        <span class="text-dark-200 font-semibold w-40">
+            {{ obj|verbose_name:"annual_revenue"}}
+        </span>
+        <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{obj.annual_revenue}}
+        </span>
+        </div>
+    </div>
+</div>

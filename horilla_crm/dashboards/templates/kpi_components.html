@@ -1,0 +1,93 @@
+{% load static i18n %}
+<div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer w-full relative"
+    hx-get="{{ kpi_url }}?section={{ section }}"
+    hx-target="#mainContent"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+    hx-disinherit="*"
+    hx-select="#mainContent"
+    hx-select-oob="#sideMenuContainer">
+
+    {% if not is_home_view %}
+    <!-- Dropdown positioned absolutely in top-right -->
+    <div class="absolute top-4 right-4" onclick="event.stopPropagation();">
+        <div class="relative dropdown-wrapper">
+            <button
+                id="dropdownbtn-{{ component_id }}"
+                type="button"
+                class="flex items-center justify-center w-6 h-6 rounded-md hover:bg-gray-100 transition-colors z-0 relative"
+            >
+                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-content absolute bg-white rounded-lg shadow-lg min-w-[150px] py-2 right-0 border border-gray-200 z-[9]">
+                <ul class="text-sm py-1" aria-labelledby="dropdownbtn-{{ component_id }}">
+                    <li>
+                        <a href="#" class="px-4 py-1.5 hover:text-primary-600 hover:bg-gray-50 transition duration-300 text-sm gap-4 items-center flex w-full"
+                        hx-get="{% url 'dashboards:component_update' pk=component_id %}?{{ query_string }}"
+                        onclick="openModal();"
+                        hx-target="#modalBox"
+                        hx-swap="innerHTML"
+                        hx-push-url="false">
+                            {% trans "Update" %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="px-4 py-1.5 hover:text-primary-600 hover:bg-gray-50 transition duration-300 text-sm gap-4 items-center flex w-full"
+                            hx-get="{% url 'dashboards:component_delete' component_id %}?{{ query_string }}"
+                            hx-target="#deleteModeBox"
+                            hx-swap="innerHTML"
+                            hx-trigger="click"
+                            hx-push-url="false"
+                            onclick="openDeleteModeModal();"
+                            hx-vals='{"check_dependencies": "true"}'>
+                           {% trans " Delete" %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="px-4 py-1.5 hover:text-primary-600 hover:bg-gray-50 transition duration-300 text-sm gap-4 items-center flex w-full"
+                            hx-get="{% url 'dashboards:move_to_another_dashboard' component_id %}?{{ query_string }}"
+                            hx-target="#modalBox"
+                            hx-swap="innerHTML"
+                            hx-trigger="click"
+                            hx-push-url="false"
+                            onclick="openModal()">
+                           {% trans " Add to Another Dashboard" %}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="flex items-center gap-4 pr-8">
+        <!-- Icon with robust image handling -->
+        <div class="{{ bg_color }} p-3 rounded-xl flex items-center justify-center" style="min-width: 48px; min-height: 48px;">
+            {% if icon_url %}
+                <div class="w-6 h-6 flex items-center justify-center relative">
+                    <img
+                        src="{{ icon_url }}"
+                        alt="KPI Icon"
+                        class="max-w-full max-h-full object-contain"
+                        style="width: auto; height: auto; max-width: 24px; max-height: 24px;"
+                        onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-chart-line {{ icon_color }} text-xl\'></i>';"
+                    >
+                </div>
+            {% else %}
+                <i class="fas fa-chart-line {{ icon_color }} text-xl"></i>
+            {% endif %}
+        </div>
+
+        <!-- KPI Data -->
+        <div>
+            <p class="text-gray-500 text-sm mb-1">{{ component_name }}</p>
+            <div class="flex items-center gap-3">
+                <p class="text-2xl font-bold text-gray-900">
+                    {{ formatted_value }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

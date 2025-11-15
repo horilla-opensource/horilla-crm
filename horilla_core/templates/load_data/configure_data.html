@@ -1,0 +1,231 @@
+{% extends "login.html" %}
+{% load static i18n %}
+{% block login %}
+
+<div id="load-sec" class="bg-white p-[20px] rounded-md shadow w-[900px] max-h-[90vh] overflow-y-auto">
+  <div class="p-5">
+    <h2 class="text-lg font-semibold mb-2">{% trans "Configure Demo Data" %}</h2>
+    <p class="mb-5 text-sm text-color-600">
+      {% trans "Select the number of records to load for each data type" %}
+    </p>
+
+    <form id="configure-data-form" method="post" action="{% url 'horilla_core:configure_demo_data' %}">
+      {% csrf_token %}
+
+      <div class="space-y-4">
+        {% for entity in entities %}
+        <div class="ps-4 border border-[#e1e0e0] rounded-lg p-2">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-semibold text-sm text-primary-600">{{ entity.display_name }}</h3>
+            </div>
+            <select name="{{ entity.key }}" class="js-example-basic-single w-[120px] headselect border border-[#e1e0e0] rounded-md px-3 py-2 text-sm focus:border-primary-600 focus:outline-none">
+              {% for option in entity.options %}
+              <option value="{{ option.value }}" {% if option.value == entity.default %}selected{% endif %}>
+                {{ option.label }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        {% empty %}
+        <div class="text-center text-sm text-gray-500 py-4">
+          {% trans "No configurable entities found" %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Warning -->
+      <div class="mt-4 p-3 bg-yellow-50 border border-[#f3edb0] rounded-lg">
+        <p class="text-xs text-yellow-800">
+          <strong>{% trans "Note:" %}</strong> {% trans "Loading large datasets may take several minutes. Higher values will require more processing time and storage space." %}
+        </p>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-between pt-5">
+        <button
+          type="button"
+          hx-get="{% url 'horilla_core:load_data' %}"
+          hx-target="#load-sec"
+          hx-select="#load-sec"
+          hx-swap="outerHTML"
+          class="border-[1px] border-primary-600 bg-primary-300 hover:bg-primary-600 rounded-[5px] px-[15px] py-[8px] text-[#e54f38] flex gap-3 btn-with-icon [transition:.3s] hover:text-[white]">
+          {% trans "Back" %}
+        </button>
+
+        <button
+          type="submit"
+          class="bg-primary-600 rounded-[5px] px-[15px] py-[8px] text-[#e54f38] flex gap-3 btn-with-icon [transition:.3s] text-[white]">
+          {% trans "Start Loading" %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock login %}
+
+{% comment %} {% extends "login.html" %}
+{% load static i18n %}
+{% block login %}
+
+<div id="load-sec" class="bg-white p-[20px] rounded-md shadow w-[900px] max-h-[90vh] overflow-y-auto">
+  <div class="p-5">
+    <h2 class="text-lg font-semibold mb-2">{% trans "Configure Demo Data" %}</h2>
+    <p class="mb-5 text-sm text-color-600">
+      {% trans "Select the number of records to load for each data type" %}
+    </p>
+
+    <form id="configure-data-form" method="post" action="{% url 'horilla_core:configure_demo_data' %}">
+      {% csrf_token %}
+
+      <div class="space-y-4">
+        <!-- Users -->
+        <div class="ps-4 border border-[#e1e0e0] rounded-lg p-2">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-semibold text-sm text-primary-600">{% trans "Users" %}</h3>
+            </div>
+            <select name="users_count" class="js-example-basic-single w-[120px] headselect border border-[#e1e0e0] rounded-md px-3 py-2 text-sm focus:border-primary-600 focus:outline-none">
+              <option value="500" selected>500</option>
+              <option value="1000">1,000</option>
+              <option value="2000">2,000</option>
+              <option value="4000">4,000</option>
+              <option value="8000">8,000</option>
+              <option value="10000">Above 8000</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Leads -->
+        <div class="ps-4 border border-[#e1e0e0] rounded-lg p-2">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-semibold text-sm text-primary-600">{% trans "Leads" %}</h3>
+            </div>
+            <select name="leads_count" class="js-example-basic-single w-[120px] headselect border border-[#e1e0e0] rounded-md px-3 py-2 text-sm focus:border-primary-600 focus:outline-none">
+              <option value="500" selected>500</option>
+              <option value="1000">1,000</option>
+              <option value="2000">2,000</option>
+              <option value="4000">4,000</option>
+              <option value="8000">8,000</option>
+              <option value="15000">Above 8000</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Opportunities -->
+        <div class="ps-4 border border-[#e1e0e0] rounded-lg p-2">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-semibold text-sm text-primary-600">{% trans "Opportunities" %}</h3>
+            </div>
+            <select name="opportunities_count" class="js-example-basic-single w-[120px] headselect border border-[#e1e0e0] rounded-md px-3 py-2 text-sm focus:border-primary-600 focus:outline-none">
+              <option value="500" selected>500</option>
+              <option value="1000">1,000</option>
+              <option value="2000">2,000</option>
+              <option value="4000">4,000</option>
+              <option value="8000">8,000</option>
+              <option value="10000">10,000+</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Campaigns -->
+        <div class="ps-4 border border-[#e1e0e0] rounded-lg p-2">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-semibold text-sm text-primary-600">{% trans "Campaigns" %}</h3>
+            </div>
+            <select name="campaigns_count" class="js-example-basic-single w-[120px] headselect border border-[#e1e0e0] rounded-md px-3 py-2 text-sm focus:border-primary-600 focus:outline-none">
+              <option value="500" selected>500</option>
+              <option value="1000">1,000</option>
+              <option value="2000">2,000</option>
+              <option value="4000">4,000</option>
+              <option value="8000">8,000</option>
+              <option value="15000">Above 8000</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Accounts -->
+        <div class="ps-4 border border-[#e1e0e0] rounded-lg p-2">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-semibold text-sm text-primary-600">{% trans "Accounts" %}</h3>
+            </div>
+            <select name="accounts_count" class="js-example-basic-single w-[120px] headselect border border-[#e1e0e0] rounded-md px-3 py-2 text-sm focus:border-primary-600 focus:outline-none">
+              <option value="500" selected>500</option>
+              <option value="1000">1,000</option>
+              <option value="2000">2,000</option>
+              <option value="4000">4,000</option>
+              <option value="8000">8,000</option>
+              <option value="15000" >Above 8000</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Contacts -->
+        <div class="ps-4 border border-[#e1e0e0] rounded-lg p-2">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-semibold text-sm text-primary-600">{% trans "Contacts" %}</h3>
+            </div>
+            <select name="contacts_count" class="js-example-basic-single w-[120px] headselect border border-[#e1e0e0] rounded-md px-3 py-2 text-sm focus:border-primary-600 focus:outline-none">
+              <option value="500" selected>500</option>
+              <option value="1000">1,000</option>
+              <option value="2000">2,000</option>
+              <option value="4000">4,000</option>
+              <option value="8000">8,000</option>
+              <option value="15000" >Above 8000</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Warning -->
+      <div class="mt-4 p-3 bg-yellow-50 border border-[#f3edb0] rounded-lg">
+        <p class="text-xs text-yellow-800">
+          <strong>{% trans "Note:" %}</strong> {% trans "Loading large datasets may take several minutes. Higher values will require more processing time and storage space." %}
+        </p>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-between pt-5">
+        <button
+          type="button"
+          hx-get="{% url 'horilla_core:load_data' %}"
+          hx-target="#load-sec"
+          hx-select="#load-sec"
+          hx-swap="outerHTML"
+          class="border-[1px] border-primary-600 bg-primary-300  hover:bg-primary-600 rounded-[5px] px-[15px] py-[8px] text-[#e54f38] flex gap-3 btn-with-icon [transition:.3s] hover:text-[white]">
+          {% trans "Back" %}
+        </button>
+
+        <button
+          type="submit"
+          class="bg-primary-600 rounded-[5px] px-[15px] py-[8px] text-[#e54f38] flex gap-3 btn-with-icon [transition:.3s] text-[white]">
+          {% trans "Start Loading" %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function setAllValues(value) {
+    const selects = document.querySelectorAll('#configure-data-form select');
+    selects.forEach(select => {
+      // Find the closest option value
+      const options = Array.from(select.options);
+      const closest = options.reduce((prev, curr) => {
+        return Math.abs(parseInt(curr.value) - value) < Math.abs(parseInt(prev.value) - value) ? curr : prev;
+      });
+      select.value = closest.value;
+    });
+  }
+</script>
+
+{% endblock login %} {% endcomment %}

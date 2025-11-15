@@ -1,0 +1,71 @@
+{% extends "index.html" %}
+{% load static i18n horilla_tags%}
+{% block content %}
+<div class="modelcontent">
+    <div id="mainContent" class="p-4">
+        <h3 class="text-md font-semibold">{% trans 'My Settings' %}</h3>
+        <div class="grid grid-cols-12 gap-3 pt-3">
+            <div class="col-span-12 xl:col-span-2">
+                <div id="my-settings-sidebar" class="bg-white rounded-xl [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)]">
+                    <div class="p-5 py-3 border-b border-b-[#ebebeb]">
+                        <div class="flex gap-2 items-center relative cursor-pointer hover:text-primary-600 transition duration-300 flex py-.5 {% is_active 'horilla_core:my_profile_view' %}"
+                            hx-get="{% url 'horilla_core:my_profile_view' %}?{{request.GET.urlencode}}"
+                            hx-target="#my-settings-content" hx-select="#my-profile-view"
+                            hx-select-oob="#my-settings-sidebar" hx-trigger="click" hx-push-url="true">
+                            <div class="rounded-full relative flex items-center ">
+                                {% if request.user.profile %}
+                                    <img src="{{ request.user.profile.url }}" alt="Profile Image" class="w-[35px] h-[35px] rounded-full object-cover" />
+                                {% else %}
+                                    <img src="{{ request.user.get_avatar }}" alt="Avatar" class="w-[35px] h-[35px] rounded-full object-cover" />
+                                {% endif %}
+                            </div>
+                            <div class="font-semibold text-sm transition duration-300">
+                                <div class="whitespace-nowrap">{{ request.user.get_full_name }}</div>
+                                <div class="text-xs text-dark-200 font-semibold pt-1">
+                                    {{ request.user.role }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <ul>
+                            {% for item in my_settings_menu %}
+                                <li class="py-1.5">
+                                    <a role="button" href="{{ item.url }}?{{ request.GET.urlencode }}"
+                                        {% for attr, value in item.attrs.items %}
+                                            {{ attr }}="{{ value }}"
+                                        {% endfor %}
+                                        class="font-medium text-[.85rem] hover:text-primary-600 transition duration-300 flex py-.5 {% is_active item.active_urls %}">
+                                        {% trans item.title %}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-12 xl:col-span-10">
+                <div class="bg-white rounded-xl [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] p-5 h-full xl:h-[calc(_100vh_-_160px_)] overflow-hidden overflow-y-auto"
+                    id="my-settings-content">
+                    {% block my_settings %}
+                        <div hx-get="{% url 'horilla_core:my_profile_view' %}?{{request.GET.urlencode}}"
+                            hx-target="#my-settings-content" hx-select="#my-profile-view" hx-trigger="load"
+                            hx-push-url="true" hx-select-oob="#my-settings-sidebar">
+                        </div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("select").on("select2:select", function (e) {
+            $(this).closest("select")[0].dispatchEvent(new Event("change"));
+        });
+    });
+    $(document).ready(function () {
+        $("select:visible").select2()
+    });
+</script>
+{% endblock content %}

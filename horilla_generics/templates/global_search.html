@@ -1,0 +1,120 @@
+{% extends "index.html" %}
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+{% block content %}
+<div class="flex modelcontent">
+
+  {% if request.GET.section and request.GET.section != 'home' %}
+    {% include "components/sub_sidebar.html" %}
+  {% else %}
+  <div class="relative h-full" id="sideMenuContainer">
+
+  </div>
+  {% endif %}
+
+    <div id="mainContent"
+      class="flex-[1_0] transition-all duration-300 ease-in-out pt-0 overflow-hidden overflow-y-auto h-[100vh] {% if request.GET.section and request.GET.section != 'home' %}  leftspace {% endif %}">
+        <div class="p-5">
+          {% if total_results > 0  %}
+          <div class="flex gap-3">
+
+            <div class="{% if request.GET.section and request.GET.section != 'home' %}w-[865px]{% else %}w-[1100px]{% endif %}">
+              <p class="mb-5 text-sm font-medium">{% trans "We searched for" %} "{{ query }}"</p>
+
+              <!-- Loading spinner -->
+              <div id="loading-spinner" class="htmx-indicator flex justify-center py-4">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+              </div>
+
+              <div id="tab-content" class="bg-white rounded-lg shadow-sm">
+                <div class="p-0">
+                    {{ first_tab_content|safe }}
+                </div>
+              </div>
+            </div>
+
+            <div class="w-[250px]  overflow-hidden overflow-x-auto">
+              <div class="bg-[#25c32417] border border-[#25c32429] text-[#21b320] font-medium text-sm px-3 py-1.5 flex gap-4 items-center justify-center rounded-md mb-2">
+                <span>
+                  Search : {{ query }}
+                </span>
+                <button hx-get="{{ previous_url|default:'/' }}?section={{ request.GET.section }}"
+                hx-target="#mainContent"
+                hx-select="#mainContent"
+                hx-push-url="true"
+                hx-on:click="$('#header-search').val('')"
+                hx-swap="outerHTML">
+                <img src="{% static '/assets/icons/close1.svg' %}" alt="" width="10" />
+                </button>
+              </div>
+              <ul id="custom-tabs" class="bg-white flex flex-col space-y-1 text-sm font-normal text-gray-500 dark:text-gray-400 border-[1px] border-[#dddddd] rounded-md p-3">
+                {% for model_name, results in search_results.items %}
+                  <li class="mb-0">
+                    <button
+                      type="button"
+                      hx-get="{% url 'horilla_generics:global_search' %}?q={{ query|urlencode }}&tab_model={{ model_name }}{% if request.GET.section %}&section={{ request.GET.section }}{% endif %}"
+                      hx-target="#tab-content"
+                      hx-indicator="#loading-spinner"
+                      class="tab-btn items-center p-2 rounded-md {% if forloop.first %}text-white bg-primary-600{% else %}bg-transparent text-[#3d3d3d]{% endif %} w-full flex gap-3"
+                      onclick="setActiveTab(this)">
+                      <div class="flex justify-between w-full">
+                        <div class="flex gap-2 items-center">
+                          <i class="{{ model_config.model_name.icons.icon }} {{ model_config.model_name.icons.text_color }}"></i>
+                          {{ model_name }}
+                        </div>
+                        <span class="bg-white text-primary-600 p-2 h-6 font-semibold rounded-full flex items-center justify-center">
+                          {{ results.count }}
+                        </span>
+                      </div>
+                    </button>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          {% else %}
+          <div class="flex justify-between">
+            <p class="mb-5 text-sm font-medium">{% trans "We searched for" %} "{{ query }}"</p>
+            <div class="bg-[#25c32417] border border-[#25c32429] text-[#21b320] font-medium text-sm px-3 py-1.5 flex gap-4 items-center justify-center rounded-md mb-2">
+              <span>
+                Search : {{ query }}
+              </span>
+              <button hx-get="{{ previous_url|default:'/' }}"
+              hx-target="#mainContent"
+              hx-select="#mainContent"
+              hx-push-url="true"
+              hx-swap="outerHTML"
+              hx-on:click="$('#header-search').val('')">
+              <img src="{% static '/assets/icons/close1.svg' %}" alt="" width="10" />
+              </button>
+            </div>
+          </div>
+          <img
+              src="{% static 'assets/img/not-found.svg' %}"
+              alt="" class="w-60  m-auto mb-4 mt-5"
+          />
+          <p class="text-sm text-center mb-3">
+             {% trans 'No search results found' %}.
+          </p>
+          {% endif %}
+        </div>
+
+        <script>
+          function setActiveTab(clickedBtn) {
+            // Update tab button styles
+            const tabButtons = document.querySelectorAll("#custom-tabs .tab-btn");
+            tabButtons.forEach((btn) => {
+              btn.classList.remove("bg-primary-600", "text-white");
+              btn.classList.add("bg-transparent", "text-[#3d3d3d]");
+            });
+
+            // Update selected tab button style
+            clickedBtn.classList.remove("bg-transparent", "text-[#3d3d3d]");
+            clickedBtn.classList.add("bg-primary-600", "text-white");
+          }
+        </script>
+
+      </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,81 @@
+{% extends "settings/settings.html" %}
+{% load horilla_tags i18n  static %}
+{% block settings %}
+
+{% has_perm "horilla_core.view_scoringrule" as can_view_scoringrule %}
+{% if can_view_scoringrule %}
+  <div id="scoring-rule-view">
+    <div id="messages-container" style="display: none;">
+      {% for message in messages %}
+          <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+      {% endfor %}
+    </div>
+    <button id="reloadButton"  hidden hx-get="{{ request.path }}?{{request.GET.urlencode}}" hx-target="#scoring-rule-view" hx-trigger="click" hx-swap="outerHTML" hx-select="#scoring-rule-view">click</button>
+    <div id="navBar" hx-get="{{ nav_url}}?{{request.GET.urlencode}}&obj={{current_obj.pk}}&model_name={{current_obj.module}}" hx-trigger="load">
+    </div>
+    {% if scoring_criteria %}
+      <table class="w-full overflow-hidden overflow-y-auto">
+        <thead class="bg-primary-300 text-primary-600 z-50">
+          <tr>
+            <th class="text-sm p-3 rounded-tl-md rounded-tr-md" colspan="4">
+              {% trans "Criteria" %}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for score_crite in scoring_criteria %}
+            <tr>
+              <td class="text-sm border border-[#efefef] text-left p-3">
+                {{ forloop.counter }}
+              </td>
+              <td class="text-sm border border-[#efefef] text-left p-3">
+                {% for condition in score_crite.conditions.all %} {{ condition.field|humanize_field_name }} {{ condition.get_operator_display }} {{ condition.value|humanize_field_name }} {% if not forloop.last %} {{ condition.get_logical_operator_display }} {% endif %} {% endfor %}
+              </td>
+              <td class="text-sm border border-[#efefef] text-left p-3">
+                {{ score_crite.get_operation_type_display }} {{ score_crite.points }} {% trans "Points" %}
+              </td>
+              {% has_perm "horilla_core.change_scoringrule" as can_change_scoringrule %}
+              {% has_perm "horilla_core.delete_scoringrule" as can_delete_scoringrule %}
+              {% if can_change_scoringrule or can_delete_scoringrule %}
+                <td class="text-sm border border-[#efefef] text-left p-3 w-[100px]">
+                  <div class="flex gap-3 items-center">
+                    {% if can_change_scoringrule %}
+                      <button hx-get="{% url 'horilla_core:scoring_rule_criteria_edit_form' score_crite.pk  %}"
+                        hx-target="#modalBox" hx-swap="innerHTML" onclick="openModal()" >
+                        <img src="{% static '/assets/icons/a1.svg' %}" alt="" width="16" />
+                      </button>
+                    {% endif %}
+                    {% if can_delete_scoringrule %}
+                        <button
+                          hx-post="{% url 'horilla_core:scoring_rule_criteria_delete' score_crite.pk  %}"
+                          hx-target="#deleteModeBox"
+                          hx-swap="innerHTML"
+                          hx-trigger="click"
+                          hx-vals='{"check_dependencies": "true"}'
+                          onclick="openDeleteModeModal()">
+                            <img src="{% static '/assets/icons/a4.svg' %}" alt="" width="16" />
+                        </button>
+                    {% endif %}
+                  </div>
+                </td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <br>
+    {% else %}
+      <div class="flex justify-between items-center h-20">
+      </div>
+      <img
+          src="{% static 'assets/img/not-found.svg' %}"
+          alt="" class="w-60  m-auto mb-4 mt-5"/>
+      <p class="text-sm text-center mb-3">
+        {% trans "Nothing to show yet. Please add your Criteria" %}
+      </p>
+    {% endif %}
+  </div>
+{% else %}
+  {% include "error/403.html" %}
+{% endif %}
+{% endblock%}

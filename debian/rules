@@ -1,0 +1,94 @@
+#!/usr/bin/make -f
+
+# Debian package build rules for Horilla-CRM
+# See debhelper(7) for details
+
+# Enable all hardening features
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# Python interpreter to use
+PYTHON3 = python3
+
+# Application directories
+APP_DIR = /opt/horilla-crm
+VENV_DIR = $(APP_DIR)/venv
+CONFIG_DIR = /etc/horilla-crm
+VAR_DIR = /var/lib/horilla-crm
+LOG_DIR = /var/log/horilla-crm
+
+%:
+	dh $@ --with python3,systemd --buildsystem=pybuild
+
+override_dh_auto_clean:
+	rm -rf build/
+	find . -name "*.pyc" -delete
+	find . -name "__pycache__" -type d -exec rm -rf {} + || true
+
+override_dh_auto_build:
+	# Create virtual environment
+	$(PYTHON3) -m venv $(CURDIR)/debian/tmp-venv
+
+	# Install dependencies in virtual environment
+	$(CURDIR)/debian/tmp-venv/bin/pip install --upgrade pip setuptools wheel
+	$(CURDIR)/debian/tmp-venv/bin/pip install -r requirements.txt
+	$(CURDIR)/debian/tmp-venv/bin/pip install gunicorn==22.0.0 whitenoise==6.7.0 psycopg2-binary==2.9.9
+
+	# Collect static files (using temporary settings for build)
+	DJANGO_SETTINGS_MODULE=horilla.settings \
+	SECRET_KEY=build-time-secret \
+	$(CURDIR)/debian/tmp-venv/bin/python manage.py collectstatic --noinput --clear
+
+override_dh_auto_install:
+	# Create directory structure
+	mkdir -p $(CURDIR)/debian/horilla-crm$(APP_DIR)
+	mkdir -p $(CURDIR)/debian/horilla-crm$(CONFIG_DIR)
+	mkdir -p $(CURDIR)/debian/horilla-crm$(VAR_DIR)
+	mkdir -p $(CURDIR)/debian/horilla-crm$(LOG_DIR)
+	mkdir -p $(CURDIR)/debian/horilla-crm/usr/lib/systemd/system
+	mkdir -p $(CURDIR)/debian/horilla-crm/usr/bin
+
+	# Copy application files
+	cp -r . $(CURDIR)/debian/horilla-crm$(APP_DIR)/
+
+	# Remove unwanted files from app directory
+	rm -rf $(CURDIR)/debian/horilla-crm$(APP_DIR)/debian
+	rm -rf $(CURDIR)/debian/horilla-crm$(APP_DIR)/.git*
+	rm -rf $(CURDIR)/debian/horilla-crm$(APP_DIR)/docker
+	rm -rf $(CURDIR)/debian/horilla-crm$(APP_DIR)/Dockerfile*
+	rm -rf $(CURDIR)/debian/horilla-crm$(APP_DIR)/docker-compose*
+	rm -rf $(CURDIR)/debian/horilla-crm$(APP_DIR)/test*.json
+
+	# Copy virtual environment
+	cp -r $(CURDIR)/debian/tmp-venv/* $(CURDIR)/debian/horilla-crm$(VENV_DIR)/
+
+	# Create configuration files
+	echo "# Horilla-CRM Configuration" > $(CURDIR)/debian/horilla-crm$(CONFIG_DIR)/horilla-crm.conf
+	echo "DJANGO_SETTINGS_MODULE=horilla.settings" >> $(CURDIR)/debian/horilla-crm$(CONFIG_DIR)/horilla-crm.conf
+	echo "SECRET_KEY=change-this-in-production" >> $(CURDIR)/debian/horilla-crm$(CONFIG_DIR)/horilla-crm.conf
+	echo "DEBUG=0" >> $(CURDIR)/debian/horilla-crm$(CONFIG_DIR)/horilla-crm.conf
+	echo "ALLOWED_HOSTS=localhost,127.0.0.1" >> $(CURDIR)/debian/horilla-crm$(CONFIG_DIR)/horilla-crm.conf
+	echo "CSRF_TRUSTED_ORIGINS=http://localhost:8000" >> $(CURDIR)/debian/horilla-crm$(CONFIG_DIR)/horilla-crm.conf
+
+	# Create management wrapper script
+	echo '#!/bin/bash' > $(CURDIR)/debian/horilla-crm/usr/bin/horilla-crm-manage
+	echo 'cd /opt/horilla-crm' >> $(CURDIR)/debian/horilla-crm/usr/bin/horilla-crm-manage
+	echo 'source /opt/horilla-crm/venv/bin/activate' >> $(CURDIR)/debian/horilla-crm/usr/bin/horilla-crm-manage
+	echo 'export $$(cat /etc/horilla-crm/horilla-crm.conf | xargs)' >> $(CURDIR)/debian/horilla-crm/usr/bin/horilla-crm-manage
+	echo 'exec python manage.py "$$@"' >> $(CURDIR)/debian/horilla-crm/usr/bin/horilla-crm-manage
+	chmod +x $(CURDIR)/debian/horilla-crm/usr/bin/horilla-crm-manage
+
+override_dh_auto_test:
+	# Skip tests during package build
+	# Tests can be run manually with: horilla-crm-manage test
+
+override_dh_installinit:
+	# Use systemd instead of init scripts
+	dh_installinit --no-start
+
+override_dh_systemd_enable:
+	dh_systemd_enable --name=horilla-crm
+
+override_dh_systemd_start:
+	dh_systemd_start --no-start
+
+.PHONY: build clean install

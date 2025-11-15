@@ -1,0 +1,90 @@
+ {% load i18n %}
+ {% load static %}
+<div id="step3">
+    {% if single_import %}
+    <div class="flex justify-between items-center mb-2">
+        <h2 class="text-md font-semibold">Import {{ module }}</h2>
+        <button type="button" onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-xl cursor-pointer">
+            <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+        </button>
+    </div>
+    {% endif %}
+    <ul class="progress mb-8 overflow-hidden overflow-x-auto">
+        <li class="active">
+            <div class="sec">
+                <span class="bg-primary-600 h-8 w-8 flex items-center justify-center rounded-full text-[white]">1</span>
+                <p class="text-sm mt-2 text-[#737791] font-medium text-center lg:text-left">{% trans "Upload Files" %}</p>
+            </div>
+        </li>
+        <li class="active">
+            <div class="sec flex [flex-flow:column] items-center">
+                <span class="bg-primary-600 h-8 w-8 flex items-center justify-center rounded-full text-[white]">2</span>
+                <p class="text-sm mt-2 text-[#737791] font-medium text-center lg:text-inherit">{% trans "Map Fields" %}</p>
+            </div>
+        </li>
+        <li class="active">
+            <div class="sec flex [flex-flow:column] items-center">
+                <span class="bg-primary-600 h-8 w-8 flex items-center justify-center rounded-full text-[white]">3</span>
+                <p class="text-sm mt-2 text-[#737791] font-medium text-center lg:text-inherit">{% trans "Action" %}</p>
+            </div>
+        </li>
+        <li>
+            <div class="sec flex [flex-flow:column] items-end">
+                <span class="bg-white border border-dark-50 h-8 w-8 flex items-center justify-center rounded-full text-[gray] absolute top-[0] right-[0]">4</span>
+                <p class="text-sm mt-2 text-[#737791] font-medium text-center lg:text-inherit">{% trans "Import" %}</p>
+            </div>
+        </li>
+    </ul>
+
+    {% if error_message %}
+        <div class="bg-primary-100 border border-primary-400 text-primary-600 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ error_message }}</span>
+        </div>
+    {% endif %}
+
+    <form hx-post="{% url 'horilla_core:import_step3' %}" hx-target="#import-container" hx-swap="innerHTML">
+        {% csrf_token %}
+        <div class="flex items-center gap-4 mb-5">
+            <label for="" class="text-sm text-color-600">{% trans "Import Option:" %}</label>
+            <div class="radio-group flex gap-6">
+                <label class="flex items-center gap-2">
+                    <input hidden type="radio" name="import_option" value="1"
+                           {% if selected_import_option == '1' or not selected_import_option %}checked{% endif %}>
+                    <span class="custom-radio"></span>
+                    <span>{% trans "Create new record" %}</span>
+                </label>
+                <label class="flex items-center gap-2">
+                    <input hidden type="radio" name="import_option" value="2" {% if selected_import_option == '2' %}checked{% endif %}>
+                    <span class="custom-radio"></span>
+                    <span>{% trans "Update existing" %}</span>
+                </label>
+                <label class="flex items-center gap-2">
+                    <input hidden type="radio" name="import_option" value="3" {% if selected_import_option == '3' %}checked{% endif %}>
+                    <span class="custom-radio"></span>
+                    <span>{% trans "Create new and update existing" %}</span>
+                </label>
+            </div>
+        </div>
+        <div class="flex flex-col gap-1 mb-8">
+            <label for="" class="text-xs text-color-600">{% trans "Record match by" %}</label>
+            <select name="match_fields" multiple class="js-example-basic-multiple headselect w-full">
+                {% for field in model_fields %}
+                    <option value="{{ field.name }}" {% if field.name in selected_match_fields %}selected{% endif %}>{{ field.verbose_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="flex gap-2 justify-between">
+            <button type="button"
+                hx-get="{% url 'horilla_core:import_step2' %}"
+                hx-target="#import-container"
+                hx-swap="innerHTML"
+                class="backBtn btn-with-icon flex gap-3 text-sm px-5 py-2 rounded-md text-[#E54F38] bg-[#ffefed] hover:bg-[#e54f38] hover:text-[white] transition duration-300 cursor-pointer">
+                {% trans "Previous" %}
+            </button>
+            <button type="submit"
+                class="nextBtn text-sm px-5 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                {% trans "Next" %}
+            </button>
+        </div>
+    </form>
+</div>

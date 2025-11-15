@@ -1,0 +1,10 @@
+<label class="inline-flex items-center cursor-pointer">
+  <input type="checkbox"
+  class="sr-only peer" {% if instance.is_active %} checked {% endif %}
+  hx-post="{% url 'horilla_core:scoring_rule_activate' instance.id %}?{{ request.GET.urlencode}}"
+  value="{{instance.is_active}}"
+  hx-swap="innerHTML"
+  hx-trigger="change"
+  >
+  <div class="relative w-11 h-5 bg-gray-200 rounded-full peer peer-checked:bg-primary-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-6"></div>
+</label>

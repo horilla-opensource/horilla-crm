@@ -1,0 +1,64 @@
+{% extends "settings/my_settings.html" %}
+{% load static i18n %}
+
+{% block my_settings %}
+<div id="regional-formating-view">
+    <div id="messages-container" class="hidden">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    <button id="reloadButton" hidden hx-get="{{ request.path }}?{{request.GET.urlencode}}" hx-target="#regional-formating-view" hx-trigger="click" hx-swap="outerHTML" hx-select="#regional-formating-view">click</button>
+    <form id="regional-formating-form">
+        {% csrf_token %}
+        <h3 class="text-md font-semibold mb-4">
+            {% trans 'Regional Formatting'%}
+        </h3>
+        <div class="pb-4 rounded-md mb-3 border border-primary-400">
+            <h3 class="text-md font-semibold mb-2 border-b border-primary-400 p-2 bg-primary-100 text-primary-600">{% trans 'Date Time Format'%}</h3>
+            <div class="grid grid-cols-2 gap-5 p-4 pt-0">
+            <div>
+                <label class="text-xs text-color-600">{% trans 'Date Time Format'%}</label>
+                {{ form.date_time_format }}
+            </div>
+            <div>
+                <label class="text-xs text-color-600">{% trans 'Date Format'%}</label>
+                {{ form.date_format }}
+            </div>
+            <div>
+                <label class="text-xs text-color-600">{% trans 'Time Format' %}</label>
+                {{ form.time_format }}
+            </div>
+            </div>
+        </div>
+
+        <div class="pb-4 rounded-md mb-3 border border-primary-400">
+            <h3 class="text-md font-semibold mb-2 border-b border-primary-400 p-2 bg-primary-100 text-primary-600">{%trans 'Language and Time Zone'%}</h3>
+            <div class="grid grid-cols-2 gap-5 p-4 pt-0">
+            <div>
+                <label class="text-xs text-color-600">{% trans 'Language'%}</label>
+                {{ form.language }}
+            </div>
+            <div>
+                <label class="text-xs text-color-600">{% trans 'Time Zone'%}</label>
+                {{ form.time_zone }}
+            </div>
+            </div>
+        </div>
+
+        <div class="pb-4 rounded-md mb-3 border border-primary-400">
+            <h3 class="text-md font-semibold mb-2 border-b border-primary-400 p-2 bg-primary-100 text-primary-600">{% trans 'Currency'%}</h3>
+            <div class="grid grid-cols-2 gap-5 p-4 pt-0">
+            <div>
+                <label class="text-xs text-color-600">{% trans 'Currency' %}</label>
+                {{ form.currency }}
+            </div>
+            <div>
+                <label class="text-xs text-color-600">{%trans 'Number Format'%}</label>
+                {{ form.number_grouping }}
+            </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

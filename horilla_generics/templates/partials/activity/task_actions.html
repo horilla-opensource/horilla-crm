@@ -1,0 +1,22 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<div class="flex gap-6">
+  <button>
+    <img src={% static 'assets/icons/edit.svg' %} alt="" width="17" />
+  </button>
+
+    <button
+        hx-post="{{ search_url }}"
+        hx-target="#deleteBox"
+        hx-swap="innerHTML"
+        hx-push-url="false"
+        hx-vals='js:{"delete_mode_form": "true", "selected_ids": JSON.stringify([{{ object_id }}]), "view_id": "{{ view_id|safe }}"}'        hx-on::after-request="openDeleteModeModal()"
+        >
+    <img src={% static 'assets/icons/a4.svg' %} alt="" width="21" />
+  </button>
+
+
+
+  </div>
+</div>

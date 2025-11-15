@@ -1,0 +1,35 @@
+{% load horilla_tags %}
+{% load static %}
+<div class="stage-item bg-[#efefef96] rounded-md px-3 py-2 flex gap-2 justify-between items-center mb-2 w-full">
+  <div class="flex gap-2 items-center w-full">
+    <div class="cursor-move drag-handle">
+      <img src="{% static 'assets/icons/drag.svg' %}" alt="Drag" width="16" />
+    </div>
+    <div class="w-[60%]">
+      <input type="text" name="stage_name_custom[]" value="{{ stage.name }}" class="w-full border border-[#efefef] rounded-md px-2 py-1">
+    </div>
+    <div class="w-20">
+      <input type="number" name="stage_order_custom[]" value="{{ stage.order }}"  class="w-full border border-[#efefef] rounded-md px-2 py-1 ">
+    </div>
+    <div class="w-20">
+      <input type="number" name="stage_probability_custom[]" value="{{ stage.probability }}" class="w-full border border-[#efefef] rounded-md px-2 py-1 ">
+    </div>
+    <div class="flex items-center w-50">
+      <span class="w-full">
+        <input type="checkbox" id="ch1" name="stage_is_final_custom[]" value="{{ forloop.counter0 }}" {% if stage.is_final %}checked{% endif %}
+          class="w-4 h-4 border border-[#cfcfcf] rounded-sm accent-[#e54f38] mr-2" />
+        <label for="ch1" class="cursor-pointer text-sm">Final</label>
+      </span>
+    </div>
+    <div>
+      <button type="button"
+        hx-post="{% url 'horilla_core:remove_stage' company.id %}"
+        hx-target="#custom-stage-collapse"
+        hx-swap="innerHTML"
+        hx-include="closest form"
+        hx-vals='{"remove_index": {{ forloop.counter0 }}}'>
+        <img src="{% static '/assets/icons/close.svg' %}" alt="" width="10">
+      </button>
+    </div>
+  </div>
+</div>

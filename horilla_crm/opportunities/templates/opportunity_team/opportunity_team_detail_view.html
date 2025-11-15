@@ -1,0 +1,18 @@
+{% extends "settings/my_settings.html" %}
+{% load static i18n %}
+
+{% block my_settings %}
+
+<div id="opportunity-team-view">
+    <div id="messages-container" style="display: none;">
+        {% for message in messages %}
+            <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+        {% endfor %}
+    </div>
+    <button id="reloadButton"  hidden hx-get="{{ request.path }}?{{request.GET.urlencode}}" hx-target="#opportunity-team-view" hx-trigger="click" hx-swap="outerHTML" hx-select="#opportunity-team-view">click</button>
+    <div id="navBar" hx-get="{{ nav_url}}?{{request.GET.urlencode}}&obj={{current_obj.pk}}" hx-trigger="load">
+    </div>
+    <div id="mainSession" class="pt-2" hx-get="{{ list_url }}?{{request.GET.urlencode}}&obj={{current_obj.pk}}" hx-trigger="load">
+    </div>
+</div>
+{% endblock %}

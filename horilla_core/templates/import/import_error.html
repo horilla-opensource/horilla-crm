@@ -1,0 +1,25 @@
+{% load i18n %}
+<div id="import-error" class="text-center py-8">
+    <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+        <div class="flex items-center justify-center mb-4">
+            <div class="bg-red-100 rounded-full p-3">
+                <i class="fa-solid fa-exclamation-triangle text-red-600 text-2xl"></i>
+            </div>
+        </div>
+        <h3 class="text-lg font-semibold text-red-800 mb-2">{% trans "Import Failed" %}</h3>
+        <p class="text-red-600 mb-4">{% trans "There was an error during the import process:" %}</p>
+        <div class="bg-white border border-red-200 rounded p-3 mb-4">
+            <code class="text-sm text-red-700">{{ error }}</code>
+        </div>
+        <div class="flex gap-3 justify-center">
+            <button onclick="history.back()"
+                    class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition duration-300">
+                {% trans "Go Back" %}
+            </button>
+            <a href="{% url 'horilla_core:import_data' %}"
+               class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-800 transition duration-300">
+                {% trans "Start Over" %}
+            </a>
+        </div>
+    </div>
+</div>

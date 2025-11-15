@@ -1,0 +1,175 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+{% for data in queryset %}
+    <tr
+        {% if forloop.last and has_next %}
+            class="htmx-sentinel"
+            hx-get="{{search_url}}?{{ search_params }}&page={{ next_page }}"
+            hx-trigger="intersect once"
+            hx-select="#data-container-{{view_id}} tr"
+            hx-swap="beforeend"
+            hx-target="#data-container-{{view_id}}"
+            hx-indicator="#loadingIndicator"
+        {% endif %}>
+        {% if bulk_select_option %}
+            <td class="sticky left-0 bg-white z-40 text-sm border-[1px] border-[solid] border-[#efefef] text-left p-3">
+                <div class="flex items-center justify-center">
+                    <input
+                        type="checkbox"
+                        name="selected_ids"
+                        value="{{ data.id }}"
+                        data-role="row-select"
+                        class="w-4 h-4 bg-[#E9EDF7] rounded-sm accent-[#e54f38]"
+                        onclick="updateActionButtonsVisibility();"
+                    />
+                </div>
+            </td>
+        {% endif %}
+        {% for cell in columns %}
+            <td
+                {% with field_name=cell.1 col_attrs_for_field=col_attrs|lookup:cell.1 %}
+                    {% for attr_name, attr_value in col_attrs_for_field.items %}
+                        {% if attr_name != 'class' and attr_name != 'style' %}
+                            {{ attr_name }}="{{ attr_value|format:data|safe }}"
+                        {% endif %}
+                    {% endfor %}
+                    {% if forloop.first %}
+                        class="sticky bg-white z-40 {% if bulk_select_option %}left-[40px]{% else %}left-0{% endif %}{% if table_class %}  text-sm border-[1px] border-[solid] border-[#efefef] text-left p-3 {% else %}  text-[.8rem] border-[.3px] border-[#e9e9e9] text-left p-2 {% endif %}{% if forloop.parentloop.last %}rounded-bl-md {% endif %}  {% if col_attrs_for_field.class %} {{ col_attrs_for_field.class }}{% endif %}
+                        {{ raw_attrs.class }}"
+                    {% else %}
+                        class="bg-white {% if table_class %}text-sm border-[1px] border-[solid] border-[#efefef] text-left p-3 {% else %}  text-[.8rem] border-[.3px] border-[#e9e9e9] text-left p-2 {% endif %} {% if col_attrs_for_field.class %} {{ col_attrs_for_field.class }}{% endif %}
+                        {{ raw_attrs.class }}"
+                    {% endif %}
+                    style="{% if col_attrs_for_field.style %} {{ col_attrs_for_field.style }}{% endif %}{{ raw_attrs.style }}"
+                    {% if col_attrs_for_field.sort_url %} data-sort-url="{{ col_attrs_for_field.sort_url|safe }}" data-id="{{ data.id|safe }}" {% endif %}
+                {% endwith %}
+                {% for r_atts, r_value in raw_attrs.items %}
+                    {% if r_atts != 'class' and r_atts != 'style' %}
+                        {{ r_atts }}="{{ r_value|format:data|safe }}"
+                    {% endif %}
+                {% endfor %}>
+
+                <div class="flex gap-4 items-center relative truncate">
+                    {% with field_name=cell.1 col_attrs_for_field=col_attrs|lookup:cell.1 %}
+                        {% if  col_attrs_for_field.is_draggable == 'true' %}
+                            <div class="cursor-move drag-handle">
+                                <img src="{% static 'assets/icons/drag.svg' %}" alt="Drag" width="16" />
+                            </div>
+                        {% endif%}
+                        {{ data|get_field:cell.1|escape }}
+                    {% endwith %}
+                </div>
+            </td>
+        {% endfor %}
+        {% if visible_actions or action_method %}
+            <td class="sticky right-0 bg-white {% if table_class %} text-sm border-[1px] border-[solid] border-[#efefef] text-left p-3 {% else %} text-[.8rem] border-[.3px] border-[#e9e9e9] text-left p-2  {% endif %} {% if forloop.last %} rounded-br-md {% endif %}">
+                {% if visible_actions %}
+                    <div class="flex tablebtn">
+                        {% if use_dropdown %}
+                            <div class="relative dropdown-wrapper">
+                                <button
+                                    id="dropdownbtn-{{ data.id }}"
+                                    type="button"
+                                    class="flex">
+                                    <img src="{% static 'assets/icons/down.svg' %}" width="15" alt="More actions" />
+                                </button>
+
+                                <div class="dropdown-content absolute z-20 bg-white rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_8%)] min-w-[150px] py-2 right-0">
+                                    <ul class="text-sm py-1" aria-labelledby="dropdownbtn-{{ data.id }}">
+                                        {% for action in dropdown_actions %}
+                                            <li>
+                                                <a
+                                                    class="px-4 py-1.5 hover:text-primary-600 transition duration-300 text-sm gap-4 items-center flex w-full"
+                                                    {% if action.attrs %}{{ action.attrs|format:data|safe }}{% endif %}>
+                                                    {% if action.src %}
+                                                        <img src="{% static action.src %}" alt="{{ action.action }}" {% if action.img_class %}class="{{ action.img_class }}"{% endif %} />
+                                                    {% endif %}
+                                                    {% if action.icon %}
+                                                        <button>
+                                                            <i class="fa-solid {{ action.icon|default:'fa-cogs' }} pe-1"></i>
+                                                        </button>
+                                                    {% endif %}
+                                                    {{ action.action }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            {# Show visible actions alongside dropdown #}
+                            {% for action in visible_actions %}
+                                {{ action|render_action_button:data }}
+                            {% endfor %}
+                        {% else %}
+                            {# Show all actions without dropdown #}
+                            {% for action in visible_actions %}
+                                {{ action|render_action_button:data }}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% else %}
+                    {{ data|get_field:action_method|safe }}
+                {% endif %}
+            </td>
+        {% endif %}
+    </tr>
+{% endfor %}
+<script>
+    $(document).ready(function () {
+       const $tableBody = $('[id^="data-container"]');
+        if ($tableBody.length) {
+            const sortUrl = $tableBody.find('[data-sort-url]').first().attr('data-sort-url');
+            new Sortable($tableBody[0], {
+                animation: 150,
+                handle: '.drag-handle',
+                onEnd: function (evt) {
+                    if (!sortUrl) {
+                        console.error("No sort URL defined for drag reordering");
+                        return;
+                    }
+
+                    const rowIds = [];
+                    $tableBody.find('tr').each(function() {
+                        const id = $(this).find('[data-id]').first().attr('data-id');
+                        if (id) rowIds.push(id);
+                    });
+
+                    $.ajax({
+                        url: sortUrl,
+                        method: "POST",
+                        data: {
+                            'ids': rowIds,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                // Add a small delay and error handling
+                                setTimeout(function() {
+                                    try {
+                                        const $reloadButton = $('#reloadButton');
+                                        if ($reloadButton.length) {
+                                            htmx.trigger('#reloadButton', 'click');
+                                        } else {
+                                            window.location.reload();
+                                        }
+                                    } catch (error) {
+                                        console.error("Error clicking reload button:", error);
+                                        // Fallback to direct reload
+                                        window.location.reload();
+                                    }
+                                }, 100);
+                            }
+                        },
+                        error: function(xhr) {
+                            console.error("Error updating order:", xhr.responseText);
+                            // Just reload on error
+                            window.location.reload();
+                        }
+                    });
+                }
+            });
+        }
+    });
+</script>

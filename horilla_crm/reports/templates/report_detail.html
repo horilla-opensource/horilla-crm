@@ -1,0 +1,442 @@
+{% extends "index.html" %}
+{% load static reports_tags horilla_tags %}
+{% load i18n %}
+{% block content %}
+
+<div class="flex modelcontent">
+    {% include "components/sub_sidebar.html" %}
+    <div id="mainContent" class="flex-[1_0] leftspace transition-all duration-300 ease-in-out pt-0">
+        <button hidden id="reloadButton" hx-get="{% url 'reports:report_detail' report.pk %}?{{request.GET.urlencode}}" hx-target="#report-content" hx-trigger="click" hx-swap="outerHTML" hx-select="#report-content">click</button>
+        <div class="bg-white px-5 border-b border-b-dark-50 fixed w-fill-available z-20">
+            <div class="flex items-center gap-2 justify-between">
+                <div class="flex items-start">
+                    <button class=""
+                    hx-get="{{ previous_url }}"
+                    hx-target="#mainContent"
+                    hx-select-oob="#sideMenuContainer"
+                    hx-swap="outerHTML"
+                    hx-select="#mainContent"
+                    hx-push-url="true" >
+                    <i class="fas fa-arrow-left mr-2"></i>
+                </button>
+                    <div>
+                        <h3 class="text-md font-semibold">{{ report.name }}</h3>
+                        <p class="text-xs">{% trans "Report:" %} {{ report.module_verbose_name }}</p>
+                    </div>
+                </div>
+                <div id="nav-actions"  class="flex items-center gap-5 h-[70px]">
+                    <div class="flex items-center">
+                        <button onclick="$('#reloadButton').click();"
+                        ><img src="{% static 'assets/icons/l5.svg' %}" alt="" width="17" /></button>
+                    </div>
+                    {% if panel_open %}
+                        {% if has_unsaved_changes %}
+                            <div class="flex items-center">
+                                <button id="saveBtn"
+                                        title="Save"
+                                        hx-post="{% url 'reports:save_report_changes' report.pk %}"
+                                        hx-trigger="click"
+                                        hx-target="#mainContent"
+                                        hx-swap="outerHTML"
+                                        hx-select="#mainContent"
+                                        >
+                                        <img src="{% static 'assets/icons/save.svg' %}" alt="" width="16" />
+                                </button>
+                            </div>
+                            <div class="flex items-center">
+                                <button id="discardBtn"
+                                        title="Discard Changes"
+                                        hx-post="{% url 'reports:discard_report_changes' report.pk %}"
+                                        hx-trigger="click"
+                                        hx-target="#mainContent"
+                                        hx-swap="outerHTML"
+                                        hx-select="#mainContent"
+                                        >
+                                        <img src="{% static 'assets/icons/close.svg' %}" alt="" width="16" />
+                                </button>
+                            </div>
+                        {% else %}
+                            <div class="flex items-center">
+                                <button id="closeBtn"
+                                        title="Close Panel"
+                                        hx-get="{% url 'reports:report_detail' report.pk %}"
+                                        hx-target="#mainContent"
+                                        hx-swap="outerHTML"
+                                        hx-select="#mainContent">
+                                        <img src="{% static 'assets/icons/close.svg' %}" alt="" width="16" />
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <!-- Edit button when panel is closed -->
+                        <div class="flex items-center">
+                            <button id="toggleBtn"
+                                    title="Edit Report"
+                                    hx-get="{% url 'reports:report_update' report.pk %}"
+                                    hx-target="#panel"
+                                    hx-swap="outerHTML"
+                                    hx-headers='{"HX-Trigger": "togglePanel"}'>
+                                <img src="{% static 'assets/icons/pen.svg' %}" alt="" width="16" />
+                            </button>
+                        </div>
+                    {% endif %}
+                    <div class="flex items-center relative">
+                        <button id="exportDropdownButton"
+                                data-dropdown-toggle="exportDropdown"
+                                type="button"
+                                class="flex items-center">
+                            {% comment %} <i class="fas fa-file-export mr-2"></i> {% endcomment %}
+                            <img src="{% static 'assets/icons/down.svg' %}" alt="" width="15" class="ml-1" />
+                        </button>
+                        <!-- Dropdown menu -->
+                        <div id="exportDropdown"
+                             class="z-10 hidden bg-white rounded-lg shadow-lg min-w-[160px] absolute top-8 right-0">
+                            <ul class="text-sm" aria-labelledby="exportDropdownButton">
+                                <li>
+                                    <a href="{% url 'reports:report_export' report.pk %}?format=excel"
+                                       class="block px-4 py-2 hover:bg-gray-100 flex items-center">
+                                        <i class="fas fa-file-excel text-green-600 mr-2"></i>
+                                        Excel (.xlsx)
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'reports:report_export' report.pk %}?format=csv"
+                                       class="block px-4 py-2 hover:bg-gray-100 flex items-center">
+                                        <i class="fas fa-file-csv text-blue-600 mr-2"></i>
+                                        CSV (.csv)
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'reports:report_export' report.pk %}?format=pdf"
+                                       class="block px-4 py-2 hover:bg-gray-100 flex items-center">
+                                        <i class="fas fa-file-pdf text-red-600 mr-2"></i>
+                                        PDF (.pdf)
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex p-5 pt-24" id="report-content">
+            <div class="sec1" style="flex: 1 0">
+                {% if has_unsaved_changes %}
+                    <div class="bg-primary-100 border border-primary-500 rounded-lg p-3 mb-4">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-primary-600" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-primary-600">
+                                   {% trans 'You have unsaved changes. Click'%} <strong>{% trans 'Save' %}</strong> {% trans 'to keep your changes or' %} <strong>{% trans 'Discard' %}</strong> {% trans 'to revert.' %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="flex justify-between items-center mb-3">
+                    <ul class="flex gap-3 text-sm items-center">
+                        <li>
+                            <a href="" class="bg-[#25c32417] border border-[solid] border-[#25c32429] text-[#21b320] font-medium text-xs px-3 py-1.5 flex items-center justify-center rounded-md">
+                                {% trans 'Total Count' %} - {{ total_count }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="grid grid-cols-12 gap-4 mb-4">
+                    <div class="col-span-12 ">
+                        <div class="[box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] bg-white rounded-lg p-3 h-full">
+                            <h3 class="text-sm font-semibold mb-3">{% trans 'Detail table' %}</h3>
+                            <div id="details-table"> {% include 'list_view.html' %}</div>
+                        </div>
+                    </div>
+                    <div class="col-span-12">
+                        <div class="h-full overflow-x-auto custom-scroll [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] bg-white rounded-lg z-0 p-4" id="pivot-table">
+                            <h3 class="text-sm font-semibold mb-3">{% trans 'Pivot table' %}</h3>
+                            {% include 'partials/pivot_table.html' %}
+                        </div>
+                    </div>
+                    <div class="col-span-12">
+                        <div class="[box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] bg-white rounded-lg p-3 h-full" id="chart-container">
+                            <div class="flex justify-between">
+                                <h3 class="text-sm font-semibold mb-3"> {% trans 'Report Chart' %} </h3>
+                                <div class="relative dropdown-wrapper">
+                                    <button id="dropdownLeftEndButton" type="button" class="flex w-[30px] justify-end">
+                                        <img src="{% static 'assets/icons/down.svg' %}" alt="" width="15" />
+                                    </button>
+                                    <div class="dropdown-content absolute z-10 bg-white rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_8%)] min-w-[150px] py-2 right-0">
+                                        <ul class="text-sm z-50 relative" aria-labelledby="dropdownLeftEndButton">
+                                            <li><a href="#" class="block px-3 py-1.5 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                                                  hx-get="{% url 'reports:change_chart_type' report.pk %}"
+                                                  hx-on:click="openModal();"
+                                                  hx-target="#modalBox"
+                                                  hx-swap="innerHTML"
+                                                  >{% trans 'Change Chart' %}</a></li>
+                                                  <li><a href="#" class="block px-3 py-1.5 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                                                    hx-get="{% url 'reports:change_chart_field' report.pk %}"
+                                                    hx-on:click="openModal();"
+                                                    hx-target="#modalBox"
+                                                    hx-swap="innerHTML"
+                                                    >{% trans 'Change Field' %}</a></li>
+                                                <li><a href="#" class="block px-3 py-1.5 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                                                        onclick="exportChartAsPDF('chart-{{ report.pk }}', 'report_{{ report.pk }}')">Export as PDF</a></li>
+                                                  <li><a href="#" class="block px-3 py-1.5 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                                                        onclick="EChartsConfig.exportChart(window.reportChartInstance_{{ report.pk }}, 'report_{{ report.pk }}', 'png')">Export as PNG</a></li>
+                                            <li><a href="#" class="block px-3 py-1.5 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                                                hx-get="{% url 'dashboards:report_to_dashboard' %}?report_id={{report.pk}}"
+                                                hx-on:click="openModal();"
+                                                hx-target="#modalBox"
+                                                hx-swap="innerHTML">Add to Dashboard</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-xs mb-2">{% trans 'Record Count:' %} {{ total_count }}</p>
+                            {% if chart_data.error %}
+                                <p class="text-red-500">{{ chart_data.error }}</p>
+                            {% else %}
+                            <div class="flex justify-between items-center">
+                                <div id="chart-{{ report.pk }}" style="width: 100%; height: 250px; max-width:800px;"></div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="panel"
+                 class="transition-all duration-300 overflow-hidden overflow-x-auto {% if panel_open %}w-80{% else %}w-0{% endif %} bg-white [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] rounded-lg h-[calc(100vh_-_220px)] ms-4"
+                 {% if panel_open %}hx-get="{% url 'reports:report_update' report.pk %}" hx-trigger="load" hx-swap="outerHTML"{% endif %}>
+            </div>
+            <script>
+                (function() {
+                    const REPORT_ID = '{{ report.pk }}';
+                    const CHART_CONTAINER_ID = `chart-${REPORT_ID}`;
+                    const CHART_INSTANCE_KEY = `reportChartInstance_${REPORT_ID}`;
+
+                    let initializationAttempts = 0;
+                    const MAX_ATTEMPTS = 10;
+                    const RETRY_DELAY = 200;
+
+                    // Function to export chart as PDF
+                    window.exportChartAsPDF = function(chartId, filename) {
+                        try {
+                            if (!window.jspdf || !window.jspdf.jsPDF) {
+                                console.error('jsPDF library is not loaded.');
+                                alert('Failed to export PDF: jsPDF library is not loaded.');
+                                return;
+                            }
+
+                            const chartInstance = window[`reportChartInstance_${chartId.split('-')[1]}`];
+                            if (!chartInstance || chartInstance.isDisposed()) {
+                                console.error('Chart instance not found or disposed for ID:', chartId);
+                                alert('Failed to export PDF: Chart instance not available.');
+                                return;
+                            }
+
+                            chartInstance.resize();
+
+                            const imgData = chartInstance.getDataURL({
+                                pixelRatio: 2,
+                                backgroundColor: '#fff',
+                                excludeComponents: ['toolbox']
+                            });
+
+                            if (!imgData) {
+                                console.error('Failed to generate chart image data.');
+                                alert('Failed to export PDF: Could not generate chart image.');
+                                return;
+                            }
+
+                            const { jsPDF } = window.jspdf;
+                            const pdf = new jsPDF({
+                                orientation: 'landscape',
+                                unit: 'px',
+                                format: [800, 400]
+                            });
+
+                            const imgProps = pdf.getImageProperties(imgData);
+                            const pdfWidth = pdf.internal.pageSize.getWidth();
+                            const pdfHeight = pdf.internal.pageSize.getHeight();
+                            const imgWidth = 700;
+                            const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+                            const x = (pdfWidth - imgWidth) / 2;
+                            const y = (pdfHeight - imgHeight) / 2;
+
+                            pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+                            pdf.save(`${filename}.pdf`);
+                        } catch (error) {
+                            console.error('Error exporting chart as PDF:', error);
+                            alert('Failed to export PDF: An error occurred.');
+                        }
+                    };
+
+                    function cleanupChart() {
+                        // Clean up existing chart instance
+                        if (window[CHART_INSTANCE_KEY]) {
+                            try {
+                                if (!window[CHART_INSTANCE_KEY].isDisposed()) {
+                                    window[CHART_INSTANCE_KEY].dispose();
+                                }
+                            } catch (e) {
+                                console.warn('Error disposing chart:', e);
+                            }
+                            window[CHART_INSTANCE_KEY] = null;
+                        }
+                    }
+
+                    function initChart() {
+                        {% if not chart_data.error %}
+                            const chartContainer = document.getElementById(CHART_CONTAINER_ID);
+
+                            // Check if container exists and is visible
+                            if (!chartContainer) {
+                                console.warn(`Chart container #${CHART_CONTAINER_ID} not found. Attempt ${initializationAttempts + 1}/${MAX_ATTEMPTS}`);
+
+                                if (initializationAttempts < MAX_ATTEMPTS) {
+                                    initializationAttempts++;
+                                    setTimeout(initChart, RETRY_DELAY);
+                                }
+                                return false;
+                            }
+
+                            // Check if required libraries are loaded
+                            if (typeof echarts === 'undefined' || typeof EChartsConfig === 'undefined') {
+                                console.warn(`ECharts or EChartsConfig not loaded. Attempt ${initializationAttempts + 1}/${MAX_ATTEMPTS}`);
+
+                                if (initializationAttempts < MAX_ATTEMPTS) {
+                                    initializationAttempts++;
+                                    setTimeout(initChart, RETRY_DELAY);
+                                }
+                                return false;
+                            }
+
+                            try {
+                                // Clean up any existing instance
+                                cleanupChart();
+
+                                // Initialize new chart instance
+                                const chartInstance = echarts.init(chartContainer);
+                                window[CHART_INSTANCE_KEY] = chartInstance;
+
+                                const chartConfig = {
+                                    type: '{{ chart_data.type|lower|safe|default:"pie" }}',
+                                    labels: {{ chart_data.labels|safe|default:"[]" }},
+                                    data: {{ chart_data.data|safe|default:"[]" }},
+                                    colors: EChartsConfig.getDynamicColors({{ chart_data.labels|length|default:0 }}),
+                                    labelField: '{{ chart_data.label_field|title|safe|default:"Count" }}',
+                                    stackedData: {{ chart_data.stacked_data|safe|default:"{}" }},
+                                    hasMultipleGroups: {{ chart_data.has_multiple_groups|yesno:"true,false" }},
+                                    urls : {{ chart_data.urls|safe|default:"[]"}}
+                                };
+
+                                const option = EChartsConfig.getChartOption(chartConfig);
+                                chartInstance.setOption(option, true);
+
+                                const chartUrls = {{ chart_data.urls|safe|default:"[]" }};
+                                if (chartUrls && chartUrls.length > 0) {
+                                    EChartsConfig.attachClickHandler(chartInstance, chartUrls);
+                                    console.log('Click handlers attached for report chart navigation');
+                                }
+
+                                // Force resize after a short delay
+                                setTimeout(() => {
+                                    if (chartInstance && !chartInstance.isDisposed()) {
+                                        chartInstance.resize();
+                                    }
+                                }, 100);
+
+                                console.log('Chart initialized successfully');
+                                initializationAttempts = 0; // Reset counter on success
+                                return true;
+
+                            } catch (error) {
+                                console.error('Error initializing chart:', error);
+                                if (initializationAttempts < MAX_ATTEMPTS) {
+                                    initializationAttempts++;
+                                    setTimeout(initChart, RETRY_DELAY);
+                                }
+                                return false;
+                            }
+                        {% endif %}
+                    }
+
+                    // Global resize handler (attached once)
+                    let resizeTimeout;
+                    function handleResize() {
+                        clearTimeout(resizeTimeout);
+                        resizeTimeout = setTimeout(() => {
+                            const chartInstance = window[CHART_INSTANCE_KEY];
+                            if (chartInstance && !chartInstance.isDisposed()) {
+                                chartInstance.resize();
+                            }
+                        }, 250);
+                    }
+
+                    // Remove existing resize listener if any
+                    window.removeEventListener('resize', handleResize);
+                    window.addEventListener('resize', handleResize);
+
+                    // Initialize chart on page load
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', initChart);
+                    } else {
+                        initChart();
+                    }
+
+                    // Reinitialize chart after HTMX updates
+                    document.body.addEventListener('htmx:afterSettle', function(event) {
+                        if (event.target.id === 'report-content' ||
+                            event.target.id === 'mainContent' ||
+                            event.target.id === 'chart-container') {
+
+                            initializationAttempts = 0; // Reset counter
+                            setTimeout(initChart, 150);
+                        }
+                    });
+
+                    // Handle before swap to clean up
+                    document.body.addEventListener('htmx:beforeSwap', function(event) {
+                        if (event.target.id === 'report-content' || event.target.id === 'mainContent') {
+                            cleanupChart();
+                        }
+                    });
+
+                    // Handle refreshReport trigger
+                    document.body.addEventListener('htmx:afterRequest', function(event) {
+                        if (event.detail.requestConfig.headers['HX-Trigger'] === 'refreshReport') {
+                            htmx.ajax('GET', '{% url "reports:report_update" report.pk %}', {
+                                target: '#panel',
+                                swap: 'outerHTML'
+                            });
+                        }
+                    });
+                })();
+
+                // Export dropdown handler
+                document.addEventListener('DOMContentLoaded', function() {
+                    const dropdownButton = document.getElementById('exportDropdownButton');
+                    const dropdownMenu = document.getElementById('exportDropdown');
+
+                    if (dropdownButton && dropdownMenu) {
+                        dropdownButton.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            dropdownMenu.classList.toggle('hidden');
+                        });
+
+                        document.addEventListener('click', function(e) {
+                            if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                                dropdownMenu.classList.add('hidden');
+                            }
+                        });
+                    }
+                });
+            </script>
+        </div>
+    </div>
+</div>
+{% endblock %}

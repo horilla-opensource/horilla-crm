@@ -1,0 +1,60 @@
+{% load static i18n horilla_tags %}
+<div class="flex gap-3 items-center justify-between">
+    <div class="relative dropdown-wrapper z-20">
+        <button id="dropdownbtn-{{ instance.id }}" type="button" class="flex">
+        <img
+            src="{% static 'assets/icons/down.svg' %}"
+            width="15"
+            alt="More actions"
+        />
+        </button>
+        <div
+        class="dropdown-content absolute z-10 bg-white rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_8%)] min-w-[150px] py-2 right-0">
+            <ul class="text-sm py-1" aria-labelledby="dropdownbtn-{{ instance.id }}">
+                <li>
+                <a
+                    href="#"
+                    class="block px-4 py-2 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                    >{% trans "Delete" %}</a>
+                </li>
+                <li>
+                <a
+                    href="#"
+                    class="block px-4 py-2 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                    >{% trans "Export" %}</a
+                >
+                </li>
+                <li>
+                <a
+                    href="#"
+                    class="block px-4 py-2 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                    >{% trans "Move" %}</a
+                >
+                </li>
+                <li>
+                <a
+                    href="#"
+                    class="block px-4 py-2 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                    >{% trans "Favourite" %}</a
+                >
+                </li>
+                <li>
+                <a
+                    href="#"
+                    class="block px-4 py-2 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                    >{% trans "Duplicate" %}</a
+                >
+                </li>
+            </ul>
+        </div>
+    </div>
+    <button>
+        <img src={% static 'assets/icons/a1.svg' %} alt="" width="17" />
+    </button>
+    <button data-modal-target="default-modal4" data-modal-toggle="default-modal4">
+        <img src={% static 'assets/icons/a2.svg' %} alt="" width="19" />
+    </button>
+    <button>
+        <img src={% static 'assets/icons/a3.svg' %} alt="" width="21" />
+    </button>
+</div>

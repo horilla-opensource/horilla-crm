@@ -1,0 +1,20 @@
+{% load static i18n %}
+<div class="p-5">
+    <button onclick="closeContentModal()" class="text-gray-500 hover:text-red-500 text-xl">
+        <img src="{% static 'assets/icons/close.svg' %}" alt="{% trans 'Close' %}" />
+    </button>
+    <div>
+        <div class="border border-gray-200 rounded-lg p-4 bg-white max-h-[500px] overflow-y-auto">
+            <div class="text-sm text-gray-600 mb-3 font-medium border-b pb-2">
+               {% trans " Email Template Preview" %}
+            </div>
+            <div class="email-preview-content">
+                {% if body  %}
+                    {{ body|safe }}
+                {% else %}
+                    <p class="text-gray-400 italic">{% trans "No content to preview" %}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

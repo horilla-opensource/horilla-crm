@@ -1,0 +1,23 @@
+{% extends "settings/settings.html" %}
+{% load static i18n horilla_tags %}
+
+{% block settings %}
+{% has_perm "horilla_core.view_horillauser" as can_view_user %}
+{% if can_view_user %}
+
+    <div id="users-view">
+        <div id="navBar" hx-get="{{ nav_url}}?{{request.GET.urlencode}}" hx-trigger="load">
+        </div>
+        <div id="mainSession" hx-get="{% if request.GET.kanban == 'true' %}{{ kanban_url }}?{{ request.GET.urlencode}}{% if filter_form %}&hx_trigger={{filter_form}}{% endif %}{% else %}{{ list_url }}?{{ request.GET.urlencode}}{% if filter_form %}&hx_trigger={{filter_form}}{% endif %}{% endif%}" hx-trigger="load"  hx-indicator="#loading-indicator">
+            <div id="loading-indicator" class="htmx-indicator" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;  display: flex; align-items: center; justify-content: center; ">
+                <div class="flex justify-center items-center p-4">
+                    <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#e54f38]"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% else %}
+    {% include "error/403.html" %}
+{% endif %}
+{% endblock %}

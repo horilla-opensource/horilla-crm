@@ -1,0 +1,21 @@
+{% load static i18n %}
+
+<div class="flex tablebtn">
+    <button class="group relative w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] hover:bg-[#e0e0e0] transition duration-300 items-center {% if disabled %} cursor-not-allowed {% endif%}"
+        hx-delete="{% url 'opportunities:delete_split_row' instance.id %}?delete=true"
+        hx-trigger="confirmed"
+        {% if disabled %} disabled {% endif%}
+        onclick="hxConfirm(this, '{% trans 'Are you sure you want to delete this split?' %}');"
+        hx-swap="innerHTML"
+        aria-label="{% trans 'Delete Split' %}">
+        <img src="{% static 'assets/icons/a4.svg' %}" alt="{% trans 'Delete' %}" width="17" class="w-4 h-4 {% if disabled %} opacity-50 {% endif%}" />
+        <div class="min-w-max z-40 absolute h-auto py-[3px] px-[15px] right-[40px] top-0 bg-[#000000] text-[.7rem] rounded-[5px] text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            {% if disabled %}
+             <p>{% trans "Cannot delete opportunity owner" %}</p>
+             {% else %}
+             <p>{% trans "Delete" %}</p>
+             {% endif%}
+
+        </div>
+    </button>
+</div>

@@ -1,0 +1,271 @@
+{% load i18n %}
+<div class="w-full h-full" id="value-container-{{ row_id }}">
+  {% if operator == 'isnull' or operator == 'isnotnull' %}
+  <!-- For null operators, we don't need a value input -->
+  <div class="flex items-center justify-center gap-8">
+    <input type="hidden" name="value" value="" />
+    <span class="pl-10 pr-4 py-2 text-dark-400   w-64"
+    >{% trans 'No value needed' %}</span>
+  </div>
+  {% elif operator == 'between' %}
+  <!-- Between range fields -->
+
+    {% if field_info.type == 'date' %}
+    <div class="h-full pt-1 flex gap-2">
+        <div class="h-full w-3/6">
+            <input
+              type="date"
+              name="start_value"
+              class="w-full h-full startValue  text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+              placeholder="Start"
+            />
+        </div>
+        <div class="h-full w-3/6">
+            <input
+              type="date"
+              name="end_value"
+              class="w-full h-full endValue  text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+              placeholder="End"
+            />
+        </div>
+    </div>
+    {% elif field_info.type == 'datetime' %}
+    <div class="h-full pt-1 flex gap-2">
+        <div class="h-full w-3/6">
+            <input
+              type="date"
+              name="start_value"
+              class="w-full h-full startValue text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+              placeholder="Start"
+            />
+        </div>
+        <div class="h-full w-3/6">
+            <input
+              type="date"
+              name="end_value"
+              class="w-full h-full endValue text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+              placeholder="End"
+            />
+        </div>
+    </div>
+    {% elif field_info.type == 'number' %}
+    <div class="h-full pt-1 flex gap-2">
+        <div class="h-full">
+            <input
+              type="number"
+              step="1"
+              name="start_value"
+              class="w-full h-full startValue  text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+              placeholder="Start"
+            />
+        </div>
+        <div class="h-full">
+            <input
+              type="number"
+              step="1"
+              name="end_value"
+              class="w-full  h-full endValue  text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+
+              placeholder="End"
+            />
+        </div>
+    </div>
+
+    {% elif field_info.type == 'float' %}
+    <div class="h-full pt-1 flex gap-2">
+        <div class="h-full" >
+            <input
+              type="number"
+              step="any"
+              name="start_value"
+              class="w-full  h-full startValue  text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+
+              placeholder="Start"
+            />
+        </div>
+        <div class="h-full">
+            <input
+              type="number"
+              step="any"
+              name="end_value"
+              class="w-full  h-full endValue  text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+
+              placeholder="End"
+            />
+        </div>
+    </div>
+    {% elif field_info.type == 'decimal' %}
+    <div class="h-full pt-1 flex gap-2">
+        <div class="h-full">
+            <input
+              type="number"
+              step="any"
+              name="start_value"
+              class="w-full  h-full startValue  text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+
+              placeholder="Start"
+            />
+        </div>
+        <div class="h-full">
+            <input
+              type="number"
+              step="any"
+              name="end_value"
+              class="w-full  h-full endValue  text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+
+              placeholder="End"
+            />
+        </div>
+    </div>
+    {% else %}
+    <div class="h-full pt-1 flex gap-2">
+        <div class="h-full">
+            <input
+              type="text"
+              name="start_value"
+              class="startValue h-full  text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+
+              placeholder="Start"
+            />
+        </div>
+        <div class="h-full">
+            <input
+              type="text"
+              name="end_value"
+              class="endValue  h-full text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+
+              placeholder="End"
+            />
+        </div>
+    </div>
+    {% endif %}
+    <!-- Hidden field to store combined between value -->
+
+
+  {% elif field_info.type == 'boolean' %}
+  <!-- Boolean field uses radio buttons -->
+  <div class="flex gap-4">
+    <label class="inline-flex items-center">
+      <input
+        type="radio"
+        name="value[{{ row_id }}]"
+        value="true"
+        class="mr-2"
+      />
+      <span>True</span>
+    </label>
+    <label class="inline-flex items-center">
+      <input
+        type="radio"
+        name="value[{{ row_id }}]"
+        value="false"
+        class="mr-2"
+      />
+      <span>False</span>
+    </label>
+  </div>
+
+  {% elif field_info.type == 'choice' %}
+  <!-- Choice field uses dropdown -->
+  <select name="value" class="js-example-basic-single w-full">
+    <option value="">{% trans 'Select an option'%}</option>
+    {% for choice in field_info.choices %}
+    <option value="{{ choice.value }}">{{ choice.label }}</option>
+    {% endfor %}
+  </select>
+  {% elif field_info.type == 'foreignkey' %}
+  <!-- Choice field uses dropdown -->
+  <select name="value" class="select2-pagination w-full" data-url="{% url 'horilla_generics:model_select2' field_info.app_label field_info.model %}">
+    <option value="">{% trans 'Select an option'%}</option>
+    {% for choice in field_info.choices %}
+    <option value="{{ choice.value }}">{{ choice.label }}</option>
+    {% endfor %}
+  </select>
+
+
+  {% elif field_info.type == 'multichoice' %}
+  <!-- Multi-choice field uses checkboxes -->
+  <div class="flex flex-col gap-2">
+    {% for choice in field_info.choices %}
+    <label class="inline-flex items-center">
+      <input
+        type="checkbox"
+        name="value"
+        value="{{ choice.value }}"
+        class="mr-2"
+      />
+      <span>{{ choice.label }}</span>
+    </label>
+    {% endfor %}
+  </div>
+
+  {% elif field_info.type == 'date' %}
+  <!-- Date field -->
+  <div class="h-full pt-1">
+    <input
+      type="date"
+      name="value"
+      class="w-full h-full text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 text-sm"
+    />
+  </div>
+
+  {% elif field_info.type == 'datetime' %}
+  <!-- Datetime field -->
+  <div class="h-full pt-1">
+    <input
+      type="datetime-local"
+      name="value"
+      class="w-full  h-full text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 text-sm"
+    />
+  </div>
+
+  {% elif field_info.type == 'number' %}
+  <!-- Number field -->
+  <div class="h-full pt-1">
+    <input
+      type="number"
+      step="1"
+      name="value"
+      class="w-full h-full text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 text-sm"
+    />
+  </div>
+
+  {% elif field_info.type == 'float' %}
+  <!-- Float field -->
+  <div class="h-full pt-1">
+    <input
+      type="number"
+      step="any"
+      name="value"
+      class="w-full h-full  text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 text-sm"
+    />
+  </div>
+
+  {% elif field_info.type == 'decimal' %}
+  <!-- Float field -->
+  <div class="h-full pt-1">
+    <input
+      type="number"
+      step="any"
+      name="value"
+      class="w-full h-full text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 text-sm"
+    />
+  </div>
+
+  {% else %}
+  <!-- Default text field -->
+  <div class="h-full pt-1">
+    <input
+      type="text"
+      name="value"
+      class="w-full h-full  text-color-600 px-2 py-1.5 border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm"
+      placeholder="Enter value"
+    />
+  </div>
+  {% endif %}
+</div>
+<script>
+  document.addEventListener('htmx:afterSettle', function(event) {
+    initializeSelect2Pagination();
+});
+</script>

@@ -1,0 +1,84 @@
+ {% load i18n %}
+ {% load static %}
+<div id="step4">
+    {% if single_import %}
+    <div class="flex justify-between items-center mb-2">
+        <h2 class="text-md font-semibold">Import {{ module }}</h2>
+        <button type="button" onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-xl cursor-pointer">
+            <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+        </button>
+    </div>
+    {% endif %}
+    <ul class="progress mb-8 overflow-hidden overflow-x-auto">
+        <li class="active">
+            <div class="sec">
+                <span class="bg-primary-600 h-8 w-8 flex items-center justify-center rounded-full text-[white]">1</span>
+                <p class="text-sm mt-2 text-[#737791] font-medium text-center lg:text-left">{% trans "Upload Files" %}</p>
+            </div>
+        </li>
+        <li class="active">
+            <div class="sec flex [flex-flow:column] items-center">
+                <span class="bg-primary-600 h-8 w-8 flex items-center justify-center rounded-full text-[white]">2</span>
+                <p class="text-sm mt-2 text-[#737791] font-medium text-center lg:text-inherit">{% trans "Map Fields" %}</p>
+            </div>
+        </li>
+        <li class="active">
+            <div class="sec flex [flex-flow:column] items-center">
+                <span class="bg-primary-600 h-8 w-8 flex items-center justify-center rounded-full text-[white]">3</span>
+                <p class="text-sm mt-2 text-[#737791] font-medium text-center lg:text-inherit">{% trans "Action" %}</p>
+            </div>
+        </li>
+        <li class="active">
+            <div class="sec flex [flex-flow:column] items-end">
+                <span class="bg-primary-600 h-8 w-8 flex items-center justify-center rounded-full text-[white] absolute top-[0] right-[0]">4</span>
+                <p class="text-sm mt-2 text-[#737791] font-medium text-center lg:text-inherit">{% trans "Import" %}</p>
+            </div>
+        </li>
+    </ul>
+
+    <div class="grid grid-cols-2 gap-4 mb-8">
+        <div class="text-sm flex">
+            <span class="text-dark-200 w-40">{% trans "Module" %}</span>
+            <span class="flex-1 text-dark-200"><span class="pe-2">:</span>{{ import_data.module }}</span>
+        </div>
+        <div class="text-sm flex">
+            <span class="text-dark-200 w-40">{% trans "Import Action" %}</span>
+            <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>
+                {% if import_data.import_option == '1' %}{% trans "Create New" %}
+                {% elif import_data.import_option == '2' %}{% trans "Update Existing" %}
+                {% else %}{% trans "Create New and Update Existing" %}
+                {% endif %}
+            </span>
+        </div>
+        <div class="text-sm flex">
+            <span class="text-dark-200 w-40">{% trans "File" %}</span>
+            <span class="flex-1 text-dark-200"><span class="pe-2">:</span>{{ import_data.original_filename }}</span>
+        </div>
+        <div class="text-sm flex">
+            <span class="text-dark-200 w-40">{% trans "Mapped" %}</span>
+            <span class="flex-1 text-dark-200"><span class="pe-2">:</span>{{ mapped_count }} {% trans "Fields" %}</span>
+        </div>
+        <div class="text-sm flex">
+            <span class="text-dark-200 w-40">{% trans "Unmapped" %}</span>
+            <span class="flex-1 text-dark-200"><span class="pe-2">:</span>{{ unmapped_count }} {% trans "Fields" %}</span>
+        </div>
+    </div>
+
+    <form hx-post="{% url 'horilla_core:import_step4' %}" hx-target="#import-container" hx-swap="innerHTML">
+        {% csrf_token %}
+        <div class="flex gap-2 justify-between">
+            <button type="button"
+                hx-get="{% url 'horilla_core:import_step3' %}"
+                hx-target="#import-container"
+                hx-swap="innerHTML"
+                class="backBtn btn-with-icon flex gap-3 text-sm px-5 py-2 rounded-md text-[#E54F38] bg-[#ffefed] hover:bg-[#e54f38] hover:text-[white] transition duration-300 cursor-pointer">
+                {% trans "Previous" %}
+            </button>
+            <button type="submit"
+                class="nextBtn text-sm px-5 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                {% trans "Import" %}
+            </button>
+        </div>
+    </form>
+</div>

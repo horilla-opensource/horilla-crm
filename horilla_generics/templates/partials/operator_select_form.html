@@ -1,0 +1,6 @@
+<select name="condition_operator_{{ index }}" class="normal-select headselect w-full text-sm">
+    <option value="">Select Operator</option>
+    {% for op in operator_choices %}
+        <option value="{{ op.0 }}">{{ op.1 }}</option>
+    {% endfor %}
+</select>

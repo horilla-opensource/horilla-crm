@@ -1,0 +1,15 @@
+{% extends "settings/settings.html" %}
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+
+{% block settings %}
+<div id="department-view">
+    <div id="navBar" hx-get="{{ nav_url}}?{{request.GET.urlencode}}" hx-trigger="load">
+    </div>
+    <div id="mainSession" class="pt-5" hx-get="{{ list_url }}?{{request.GET.urlencode}}" hx-trigger="load">
+    </div>
+</div>
+
+
+{% endblock %}

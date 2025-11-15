@@ -1,0 +1,44 @@
+{% load static %}
+{% load i18n %}
+<div class="relative bg-white rounded-lg shadow-sm">
+    <div class="p-5">
+        <div class="flex justify-between items-center mb-2">
+            <h2 class="text-md font-semibold">{% trans "Add Notes and Attachment" %}</h2>
+            <button type="button" onclick="closeModal();" class="text-gray-500 hover:text-red-500 text-xl">
+                <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+            </button>
+        </div>
+        <form hx-post="{{ form_url }}?{{request.GET.urlencode}}" hx-encoding="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="{{ form.title.id_for_label }}" class="text-xs">
+                    {{ form.title.label }}
+                </label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.title.errors }}</p>
+                {% endif %}
+            </div>
+            <div>
+                {{ form.file }}
+                {% if form.file.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.file.errors }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ form.description.id_for_label }}" class="text-xs text-color-600 mb-1 block">
+                    {{ form.description.label }}
+                </label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.description.errors }}</p>
+                {% endif %}
+            </div>
+            <div class="flex justify-end pt-0">
+                <button type="submit" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                    {% trans "Save" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

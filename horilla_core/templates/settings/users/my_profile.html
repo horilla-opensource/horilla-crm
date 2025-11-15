@@ -1,0 +1,143 @@
+{% extends "settings/my_settings.html" %}
+{% load horilla_tags i18n  static %}
+{% block my_settings %}
+<div id="my-profile-view">
+    <div id="messages-container" style="display: none;">
+        {% for message in messages %}
+            <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+        {% endfor %}
+    </div>
+    <button id="reloadButton"  hidden hx-get="{{ request.path }}?{{request.GET.urlencode}}" hx-target="#my-profile-view" hx-trigger="click" hx-swap="outerHTML" hx-select="#my-profile-view">click</button>
+    <div class="mb-4">
+      <div class="flex justify-between items-center mb-2">
+        <div class="flex gap-4 items-center relative">
+          <div class="relative flex items-center">
+            {% if request.user.profile %}
+                <img src="{{ request.user.profile.url }}" alt="Profile Image" class="w-[35px] h-[35px] rounded-full object-cover" />
+            {% else %}
+                <img src="{{ request.user.get_avatar }}" alt="Avatar" class="w-[35px] h-[35px] rounded-full object-cover" />
+            {% endif %}
+          </div>
+          <div class="font-semibold transition duration-300">{{request.user.get_full_name}}</div>
+        </div>
+        <div class="flex gap-2 mb-2">
+          <button class="border rounded-md p-3 border-dark-50"
+                hx-get="{% url 'horilla_core:user_edit_form' request.user.pk %}"
+                hx-target="#modalBox"
+                hx-swap="innerHTML"
+                onclick="openModal()">
+                <img src="{% static '/assets/icons/edit.svg' %}" alt="" width="15" />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="details-content">
+        <h3 class="text-sm font-semibold bg-primary-300 text-primary-600 rounded-md p-3 mb-4">
+            {% trans 'Personal Information' %}
+        </h3>
+        <div class="p-2 grid grid-cols-2 gap-4 mb-5">
+        <div class="text-sm flex">
+            <span class="text-dark-200 font-semibold w-40"> {% trans 'First Name' %} </span>
+            <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{request.user.first_name}}
+            </span>
+        </div>
+        <div class="text-sm flex">
+            <span class="text-dark-200 font-semibold w-40">{% trans 'Last Name' %} </span>
+            <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>
+            {{request.user.last_name}}
+            </span>
+        </div>
+        <div class="text-sm flex">
+            <span class="text-dark-200 font-semibold w-40"> {{ request.user|verbose_name:"email"}} </span>
+            <span class="flex-1 text-dark-200">
+            <span class="pe-2">:</span>{{request.user.email}}</span
+            >
+        </div>
+        <div class="text-sm flex">
+            <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"contact_number"}}</span>
+            <span class="flex-1 text-dark-200"
+            ><span class="pe-2">:</span>{{request.user.contact_number}}</span
+            >
+        </div>
+        </div>
+        <h3 class="text-sm font-semibold bg-primary-300 text-primary-600 rounded-md p-3 mb-4">
+            {% trans 'Address' %}
+        </h3>
+        <div class="p-2 grid grid-cols-2 gap-4 mb-5">
+            <div class="text-sm flex">
+                <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"city"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ request.user.city}}</span>
+            </div>
+            <div class="text-sm flex">
+                <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"state"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ request.user.state}}</span>
+            </div>
+            <div class="text-sm flex">
+                <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"country"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ request.user.get_country_display}}</span>
+            </div>
+            <div class="text-sm flex">
+                <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"zip_code"}}</span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ request.user.zip_code}}</span>
+            </div>
+        </div>
+        <h3 class="text-sm font-semibold bg-primary-300 text-primary-600 rounded-md p-3 mb-4">
+            {% trans 'Work Info' %}
+        </h3>
+        <div class="p-2 grid grid-cols-2 gap-4 mb-5">
+            <div class="text-sm flex">
+                <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"company"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ request.user.company}}</span>
+            </div>
+            <div class="text-sm flex">
+                <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"department"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ request.user.department}}</span>
+            </div>
+            <div class="text-sm flex">
+                <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"role"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ request.user.role}}</span>
+            </div>
+        </div>
+        <h3 class="text-sm font-semibold bg-primary-300 text-primary-600 rounded-md p-3 mb-4">
+            {% trans 'Localization' %}
+        </h3>
+        <div class="p-2 grid grid-cols-2 gap-4 mb-5">
+
+            <div class="text-sm flex">
+                <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"language"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ request.user.get_language_display}}</span>
+            </div>
+            <div class="text-sm flex">
+                <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"time_zone"}} </span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ request.user.time_zone}}</span>
+            </div>
+            <div class="text-sm flex">
+                <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"currency"}} </span>
+                <span class="flex-1 text-dark-200"><span class="pe-2">:</span>{{ request.user.currency}}</span>
+            </div>
+            <div class="text-sm flex">
+                <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"date_format"}}</span>
+                <span class="flex-1 text-dark-200"
+                ><span class="pe-2">:</span>{{ request.user.get_date_format_display}}</span>
+            </div>
+            <div class="text-sm flex">
+                <span class="text-dark-200 font-semibold w-40">{{ request.user|verbose_name:"time_format"}}</span>
+                <span class="flex-1 text-dark-200">
+                <span class="pe-2">:</span>{{ request.user.get_time_format_display}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+[
+  {
+    "model": "horilla_core.company",
+    "pk": 1,
+    "fields": {
+      "name": "Horilla",
+      "email": "horilla@gmail.com",
+      "website": "http://demo.horilla.com/",
+      "icon": "horilla_core/company/icon/horilla-logo-ec60473b-cffe6865-7d1946ee.png",
+      "contact_number": "9876543210",
+      "fax": "F555",
+      "annual_revenue": "123456.00",
+      "no_of_employees": 400,
+      "hq": false,
+      "city": "calicut",
+      "state": "Kerala",
+      "country": "IN",
+      "zip_code": "656565",
+      "language": "en",
+      "time_zone": "GMT",
+      "currency": "INR",
+      "time_format": "%I:%M:%S %p",
+      "date_format": "%Y-%m-%d",
+      "activate_multiple_currencies": true,
+      "created_at": "2025-09-17T11:02:03.547Z",
+      "updated_at": "2025-09-17T11:02:03.547Z",
+      "created_by": null,
+      "updated_by": null
+    }
+  },
+  {
+    "model": "horilla_core.company",
+    "pk": 3,
+    "fields": {
+      "name": "Horilla Inc",
+      "email": "jessicabarnes@hall-braun.com",
+      "website": "https://www.edwards-lopez.net/",
+      "icon": "",
+      "contact_number": "4112726949360",
+      "fax": null,
+      "annual_revenue": null,
+      "no_of_employees": 100,
+      "hq": false,
+      "city": "Port Courtney",
+      "state": "Washington",
+      "country": "CM",
+      "zip_code": "09621",
+      "language": "en",
+      "time_zone": "Asia/Oral",
+      "currency": "USD",
+      "time_format": "%I:%M:%S %p",
+      "date_format": "%Y-%m-%d",
+      "activate_multiple_currencies": false,
+      "created_at": "2025-10-13T15:46:33.793Z",
+      "updated_at": "2025-10-13T15:46:33.793Z",
+      "created_by": null,
+      "updated_by": null
+    }
+  }
+]

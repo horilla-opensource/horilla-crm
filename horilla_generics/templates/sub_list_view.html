@@ -1,0 +1,50 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+{% load horilla_tags %}
+{% if queryset %}
+    <table class="w-full border-separate border-spacing-0 overflow-hidden">
+      <thead>
+        <tr>
+            {% for cell in columns %}
+          <th id = "col-{{cell.1}}"
+            class="text-[.8rem] font-bold border-[1px] border-[solid] border-[#dddddd] text-left p-2 rounded-tl-md">
+           {{ cell.0 }}
+          </th>
+          {% endfor %}
+          {% if visible_actions or action_method%}
+          <th
+            class="text-[.8rem] font-bold border-[1px] border-[solid] border-[#dddddd] text-left p-2 rounded-tr-md">
+            Actions
+          </th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in queryset %}
+        <tr>
+            {% for cell in columns %}
+          <td
+            class="text-[.8rem] border-[1px] border-[solid] border-[#dddddd] text-left p-2 rounded-bl-md">
+           {{ data|get_field:cell.1|safe }}
+          </td>
+          {% endfor %}
+         {% if visible_actions or action_method %}
+          <td
+            class="text-[.8rem] border-[1px] border-[solid] border-[#dddddd] text-left p-2 rounded-br-md">
+            <div class="flex gap-3">
+              <button>
+                <img src="/assets/icons/a1.svg" alt="" width="17" />
+              </button>
+
+              <button>
+                <img src="/assets/icons/a4.svg" alt="" width="13" />
+              </button>
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}

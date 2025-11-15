@@ -1,0 +1,3511 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-13 16:19+0530\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "The page you are looking for does not exist or may have been moved."
+msgstr ""
+
+msgid "Add column to list"
+msgstr "Ajouter une colonne à la liste"
+
+msgid "Customer Role"
+msgstr "Rôle du client"
+
+msgid "Department"
+msgstr "Département"
+
+msgid "Start Date"
+msgstr "Date de début"
+
+msgid "Effective date for these conversion rates"
+msgstr "Date d'entrée en vigueur de ces taux de conversion"
+
+msgid ""
+"Changing the default will update the current default business hour. Enable "
+"to set this as default; disable to allow another. Proceed?"
+msgstr ""
+"Modifier la valeur par défaut modifiera l'heure d'ouverture par défaut "
+"actuelle. Activez pour définir cette valeur par défaut ; désactivez pour en "
+"autoriser une autre. Continuer ?"
+
+msgid "You can select a maximum of 5 days for 24×5 business hours."
+msgstr ""
+"Vous pouvez sélectionner un maximum de 5 jours pour les heures ouvrables 24h/"
+"24 et 5j/7."
+
+msgid "Password"
+msgstr ""
+
+msgid "Enter a secure password"
+msgstr ""
+
+msgid "Confirm Password"
+msgstr ""
+
+msgid "Enter the same password again for verification"
+msgstr ""
+
+msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+msgstr ""
+
+msgid "Leave blank to keep current password"
+msgstr ""
+
+msgid "Username is required."
+msgstr ""
+
+msgid "A user with this username already exists."
+msgstr ""
+
+msgid "The two password fields must match."
+msgstr ""
+
+msgid "Password is required for new users."
+msgstr ""
+
+msgid "Password must be at least 8 characters long."
+msgstr ""
+
+msgid "Role"
+msgstr "Rôle"
+
+msgid "Select the role to assign to users."
+msgstr "Sélectionnez le rôle à attribuer aux utilisateurs."
+
+msgid "Users"
+msgstr "Utilisateurs"
+
+msgid "Select one or more users to assign to the role."
+msgstr "Sélectionnez un ou plusieurs utilisateurs à attribuer au rôle."
+
+msgid "The following user(s) are already assigned to this role"
+msgstr "Les utilisateurs suivants sont déjà affectés à ce rôle"
+
+msgid "Groups"
+msgstr "Groupes"
+
+msgid "Permissions"
+msgstr "Autorisations"
+
+msgid "Super Users"
+msgstr "Super utilisateurs"
+
+msgid "Role does not exist"
+msgstr ""
+
+msgid "User does not exist"
+msgstr ""
+
+msgid "User Does not Exist"
+msgstr ""
+
+msgid "Please select at least one user."
+msgstr "Veuillez sélectionner au moins un utilisateur."
+
+msgid "Please select at least one permission."
+msgstr "Veuillez sélectionner au moins une autorisation."
+
+#, python-brace-format
+msgid ""
+"Successfully assigned {permissions_count} permission(s) to {users_count} "
+"user(s)."
+msgstr ""
+"{permissions_count} autorisation(s) ont été attribuées avec succès à "
+"{users_count} utilisateur(s)."
+
+#, python-brace-format
+msgid "Error assigning permissions: {error}"
+msgstr "Erreur lors de l'attribution des autorisations : {error}"
+
+msgid "Role Does not Exist"
+msgstr ""
+
+msgid "First Name"
+msgstr "Prénom"
+
+msgid "Super User Status"
+msgstr "Statut de super utilisateur"
+
+msgid "Import Data"
+msgstr "Importer des données"
+
+msgid "Import History"
+msgstr "Historique d'importation"
+
+msgid "Regional & Formatting"
+msgstr "Régional et formatage"
+
+msgid "Login History"
+msgstr "se connecter histoire"
+
+msgid "Holiday"
+msgstr "vacances"
+
+msgid "English"
+msgstr "Anglais"
+
+msgid "French"
+msgstr "Français"
+
+msgid "German"
+msgstr "Allemande"
+
+msgid "Spanish"
+msgstr "Espagnol"
+
+msgid "Italian"
+msgstr "Italien"
+
+msgid "Portuguese"
+msgstr "portugais"
+
+msgid "No Grouping"
+msgstr "Aucun regroupement"
+
+msgid "Company Name"
+msgstr "Nom de l'entreprise"
+
+msgid "Email Address"
+msgstr "Adresse email"
+
+msgid "Website"
+msgstr "Site web"
+
+msgid "Company Icon"
+msgstr "Icône de l'entreprise"
+
+msgid "Contact Number"
+msgstr "Numéro de contact"
+
+msgid "Fax Number"
+msgstr "Numéro de fax"
+
+msgid "Annual Revenue"
+msgstr "Revenu annuel"
+
+msgid "Number of Employees"
+msgstr "Nombre d'employés"
+
+msgid "Head quarter"
+msgstr "Quartier général"
+
+msgid "City"
+msgstr "Ville"
+
+msgid "State/Province"
+msgstr "État/Province"
+
+msgid "Country"
+msgstr "Pays"
+
+msgid "ZIP/Postal Code"
+msgstr "Zip / code postal"
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "Time Zone"
+msgstr "Fuseau horaire"
+
+msgid "Currency"
+msgstr "Devise"
+
+msgid "Time Format"
+msgstr "Format de l'heure"
+
+msgid "Date Format"
+msgstr "Format des dates"
+
+msgid "Activate Multiple Currencies"
+msgstr "Activer plusieurs devises"
+
+msgid "Created At"
+msgstr "Créé à"
+
+msgid "Updated At"
+msgstr "Actualizado at"
+
+msgid "Branch"
+msgstr "Sucursal"
+
+msgid "Branches"
+msgstr "Sucursales"
+
+msgid "Department Name"
+msgstr "Nom du département"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Departments"
+msgstr "Départements"
+
+msgid "Roles"
+msgstr "Rôles"
+
+msgid "conversion rate from default currency"
+msgstr "taux de conversion de la devise par défaut"
+
+msgid "Conversion Rate"
+msgstr "Taux de conversion"
+
+msgid "Number grouping format"
+msgstr "Format de regroupement de nombres"
+
+msgid "Default Currency"
+msgstr "Default Currency"
+
+msgid "Mark this currency as the default for the system"
+msgstr "Marquer cette devise comme devise par défaut pour le système"
+
+msgid "Multiple Currency"
+msgstr "Plusieurs devises"
+
+msgid "Multiple Currencies"
+msgstr "Plusieurs devises"
+
+msgid "Profile Image"
+msgstr "Image de profil"
+
+msgid "Company"
+msgstr "Entreprise"
+
+msgid "Preferred Currency"
+msgstr "Devise préférée"
+
+msgid "Date Time Format"
+msgstr "Format de date et d'heure"
+
+msgid "Number Grouping"
+msgstr "Agrupación numérica"
+
+msgid "User"
+msgstr "Utilisateur"
+
+msgid "Column User"
+msgstr "Utilisateur de la colonne"
+
+msgid "Standard Fiscal Year"
+msgstr "Año fiscal estándar"
+
+msgid "Custom Fiscal Year"
+msgstr "Año fiscal a medida"
+
+msgid "Fiscal Year Type"
+msgstr "Tipo de ejercicio fiscal"
+
+msgid "Year Based"
+msgstr " año basado"
+
+msgid "Quarter Based"
+msgstr "Basé trimestre"
+
+msgid "Format"
+msgstr "Format"
+
+msgid ""
+"4-4-5 In each quarter, Period 1 has 4 weeks, Period 2 has 4 weeks, Period 3 "
+"has 5 weeks"
+msgstr ""
+"4-4-5 Dans chaque trimestre, la période 1 a 4 semaines, la période 2 a 4 "
+"semaines, la période 3 a 5 semaines"
+
+msgid ""
+"4-5-4 In each quarter, Period 1 has 4 weeks, Period 2 has 5 weeks, Period 3 "
+"has 4 weeks"
+msgstr ""
+"4-5-4 Dans chaque trimestre, la période 1 a 4 semaines, la période 2 a 5 "
+"semaines, la période 3 a 4 semaines"
+
+msgid ""
+"5-4-4 In each quarter, Period 1 has 5 weeks, Period 2 has 4 weeks, Period 3 "
+"has 4 weeks"
+msgstr ""
+"5-4-4 Dans chaque trimestre, la période 1 a 5 semaines, la période 2 a 4 "
+"semaines, la période 3 a 4 semaines"
+
+msgid "Quarter Based Format"
+msgstr "Format trimestriel"
+
+msgid ""
+"3-3-3-4 Quarter 1 has 3 Periods, Quarter 2 has 3 Periods, Quarter 3 has 3 "
+"Periods, Quarter 4 has 4 Periods"
+msgstr ""
+"3-3-3-4 Le trimestre 1 comporte 3 périodes, le trimestre 2 comporte 3 "
+"périodes, le trimestre 3 comporte 3 périodes, le trimestre 4 comporte 4 "
+"périodes"
+
+msgid ""
+"3-3-4-3 Quarter 1 has 3 Periods, Quarter 2 has 3 Periods, Quarter 3 has 4 "
+"Periods, Quarter 4 has 3 Periods"
+msgstr ""
+"3-3-4-3 Le trimestre 1 comporte 3 périodes, le trimestre 2 comporte 3 "
+"périodes, le trimestre 3 comporte 4 périodes, le trimestre 4 comporte 3 "
+"périodes"
+
+msgid ""
+"3-4-3-3 Quarter 1 has 3 Periods, Quarter 2 has 4 Periods, Quarter 3 has 3 "
+"Periods, Quarter 4 has 3 Periods"
+msgstr ""
+"3-4-3-3 Le trimestre 1 comporte 3 périodes, le trimestre 2 comporte 4 "
+"périodes, le trimestre 3 comporte 3 périodes, le trimestre 4 comporte 3 "
+"périodes"
+
+msgid ""
+"4-3-3-3 Quarter 1 has 4 Periods, Quarter 2 has 3 Periods, Quarter 3 has 3 "
+"Periods, Quarter 4 has 3 Periods"
+msgstr ""
+"4-3-3-3 Le trimestre 1 comporte 4 périodes, le trimestre 2 comporte 3 "
+"périodes, le trimestre 3 comporte 3 périodes, le trimestre 4 comporte 3 "
+"périodes"
+
+msgid "Year Based Format"
+msgstr "Format basé sur l'année"
+
+msgid "January"
+msgstr "Janvier"
+
+msgid "February"
+msgstr "février"
+
+msgid "March"
+msgstr "mars"
+
+msgid "April"
+msgstr "avril"
+
+msgid "May"
+msgstr "Mayo"
+
+msgid "June"
+msgstr "juin"
+
+msgid "July"
+msgstr "juillet"
+
+msgid "August"
+msgstr "août"
+
+msgid "September"
+msgstr "Septembre"
+
+msgid "October"
+msgstr "Octobre"
+
+msgid "November"
+msgstr "Novembre"
+
+msgid "December"
+msgstr "Décembre"
+
+msgid "Start Date Month"
+msgstr "Date de début Mois"
+
+msgid "Start Date Day"
+msgstr "Date de début Jour"
+
+msgid "Sunday"
+msgstr "Dimanche"
+
+msgid "Monday"
+msgstr "Lundi"
+
+msgid "Tuesday"
+msgstr "Mardi"
+
+msgid "Wednesday"
+msgstr "Mercredi"
+
+msgid "Thursday"
+msgstr "Jeudi"
+
+msgid "Friday"
+msgstr "Vendredi"
+
+msgid "Saturday"
+msgstr "Samedi"
+
+msgid "Week Start Day"
+msgstr "jour de début de la semaine"
+
+msgid "Starting Year"
+msgstr "Année de début"
+
+msgid "Ending Year"
+msgstr "Année de fin"
+
+msgid "Display Fiscal Year Based On"
+msgstr "Afficher l'année fiscale en fonction de"
+
+msgid "Year"
+msgstr "année"
+
+msgid "Quarter"
+msgstr "Quart"
+
+msgid "Period"
+msgstr "période"
+
+msgid "Number Weeks By"
+msgstr "Numerar semanas po"
+
+msgid "Number by Year"
+msgstr "Nombre par anné"
+
+msgid "Number by Quarter"
+msgstr "Nombre par Quart "
+
+msgid "Period Display Option"
+msgstr "Option d'affichage de la période"
+
+msgid "Fiscal Year"
+msgstr "fiscale anné"
+
+msgid "Fiscal Years"
+msgstr "fiscale Années"
+
+msgid "Fiscal Year Configuration"
+msgstr "fiscale anné Configuration"
+
+msgid "End Date"
+msgstr "Date de fin"
+
+msgid "Fiscal Year Name"
+msgstr "fiscale anné nom"
+
+msgid "Is Current"
+msgstr "Est à jour"
+
+msgid "Fiscal Year Instance"
+msgstr "fiscale anné Instancia"
+
+msgid "Fiscal Year Instances"
+msgstr "fiscale anné Instancias"
+
+msgid "Quarter Name"
+msgstr "Quart nom"
+
+msgid "Quarter Number"
+msgstr "quart nombre "
+
+msgid "Quarters"
+msgstr "quarts"
+
+msgid "Period Name"
+msgstr "période nom"
+
+msgid "Period Number"
+msgstr "période nombre"
+
+msgid "Periods"
+msgstr "périodes"
+
+msgid "Weekly"
+msgstr "hebdomadaire"
+
+msgid "Monthly"
+msgstr "mensuelle"
+
+msgid "Yearly"
+msgstr "annuelle"
+
+msgid "On Day"
+msgstr "sur jour"
+
+msgid "On the"
+msgstr "sur la"
+
+msgid "On every"
+msgstr "sur chaque"
+
+msgid "Holiday Name"
+msgstr "festivo nom"
+
+msgid "All Users"
+msgstr "tous les utilisateurs"
+
+msgid "Specific Users"
+msgstr "Utilisateurs spécifiques"
+
+msgid "Recurring"
+msgstr "Récurrente"
+
+msgid "Holiday Frequency"
+msgstr "Fréquence des vacances"
+
+msgid "Recurs Every (weeks)"
+msgstr "Se reproduit toutes les (semaines)"
+
+msgid "Monthly Repeat Type"
+msgstr "Type de répétition mensuelle"
+
+msgid "Day of Month"
+msgstr "Jour du mois"
+
+msgid "Monthly Interval"
+msgstr "Intervalle mensuel"
+
+msgid "Day of Week"
+msgstr "Jour de la semaine"
+
+msgid "Week of Month"
+msgstr "Semaine de mois"
+
+msgid "Yearly Repeat Type"
+msgstr "Type de répét annuelle"
+
+msgid "Month"
+msgstr "Mois"
+
+msgid "Holidays"
+msgstr "vacances"
+
+msgid "Start date cannot be after end date"
+msgstr "La date de début ne peut pas être postérieure à la date de fin"
+
+msgid "Frequency is required for recurring holidays"
+msgstr "La fréquence est requise pour les vacances récurrentes"
+
+msgid "Weekly days must be specified for weekly recurrence"
+msgstr ""
+"Les jours de la semaine doivent être spécifiés pour la récurrence "
+"hebdomadaire"
+
+msgid "Recurs every weeks must be at least 1"
+msgstr "Les répétitions chaque semaine doivent être au moins 1"
+
+msgid "Day of month is required for monthly recurrence"
+msgstr "Le jour du mois est requis pour la récurrence mensuelle"
+
+msgid "Both day of week and week of month are required for monthly recurrence"
+msgstr ""
+"Le jour de la semaine et la semaine du mois sont requis pour la récurrence "
+"mensuelle"
+
+msgid "Please select a valid monthly repeat type"
+msgstr "Veuillez sélectionner un type de répétition mensuelle valide"
+
+msgid "Month is required for yearly recurrence"
+msgstr "Le mois est requis pour la récurrence annuelle"
+
+msgid "Day of month is required for yearly recurrence"
+msgstr "Le jour du mois est requis pour la récurrence annuelle"
+
+msgid "Both week of month and day of week are required for yearly recurrence"
+msgstr ""
+"La semaine du mois et le jour de la semaine sont requis pour la récurrence "
+"annuelle"
+
+msgid "Please select a valid yearly repeat type"
+msgstr "Veuillez sélectionner un type de répétition annuelle valide"
+
+msgid "1st"
+msgstr "1er"
+
+msgid "2nd"
+msgstr "2ème"
+
+msgid "3rd"
+msgstr "3ème"
+
+msgid "4th"
+msgstr "4ème"
+
+msgid "5th"
+msgstr "5ème"
+
+msgid "One-time holiday"
+msgstr "Festivo de una sola vez"
+
+msgid "Weekly on {}"
+msgstr "Hebdomadaire sur {}"
+
+msgid "Every {} weeks on {}"
+msgstr "Toutes les {} semaines le {}"
+
+msgid "Monthly on day {}"
+msgstr "Mensuel le jour {}"
+
+msgid "Every {} months on day {}"
+msgstr "Tous les {} mois le jour {}"
+
+msgid "Monthly on {} {} of month"
+msgstr "Mensuel le {} {} du mois"
+
+msgid "Every {} months on {} {} of month"
+msgstr "Tous les {} mois, le {} {} du mois"
+
+msgid "Yearly on {} {}"
+msgstr "Annuellement le {} {}"
+
+msgid "Yearly on {} {} of {}"
+msgstr "Annuellement le {} {} du {}"
+
+msgid "Custom recurrence"
+msgstr "Récurrence personnalisée"
+
+msgid "Conversion rate from default currency"
+msgstr "Taux de conversion de devise par défaut"
+
+msgid "The date from which this conversion rate is effective"
+msgstr "La date à partir de laquelle ce taux de conversion est effectif"
+
+msgid "Dated Conversion Rate"
+msgstr "Taux de conversion daté"
+
+msgid "Dated Conversion Rates"
+msgstr "Taux de conversion datés"
+
+msgid "Deleted At"
+msgstr "Supprimé à"
+
+msgid "Retention Period (Days)"
+msgstr "rétention période (jours)"
+
+msgid "Team Role Name"
+msgstr "Nom du rôle de l'équipe"
+
+msgid "Team Role"
+msgstr "Rôle d'équipe"
+
+msgid "Team Roles"
+msgstr "Rôles de l'équipe"
+
+msgid "Customer Role Name"
+msgstr "Client role name"
+
+msgid "Customer Roles"
+msgstr "Rôles des clients"
+
+msgid "Partner Role Name"
+msgstr "Nom du rôle du partenaire"
+
+msgid "Partner Role"
+msgstr "Rôle partenaire"
+
+msgid "Partner Roles"
+msgstr "Rôles partenaire"
+
+msgid "Scoring Rule"
+msgstr "Règle de notation"
+
+msgid "Scoring Rules"
+msgstr "Règles de notation"
+
+msgid "Scoring Criterion"
+msgstr "Critères de notation"
+
+msgid "Scoring Criteria"
+msgstr "Critères de notation"
+
+msgid "Scoring Condition"
+msgstr "Condition de notation"
+
+msgid "Scoring Conditions"
+msgstr "Conditions de notation"
+
+msgid "Title"
+msgstr "Titre"
+
+#, fuzzy
+#| msgid "Related Object ID"
+msgid "Related Object Type"
+msgstr "ID de l'objet associé"
+
+msgid "Related Object ID"
+msgstr "ID de l'objet associé"
+
+msgid "File"
+msgstr "fichier"
+
+msgid "Notes"
+msgstr "Notes"
+
+#, fuzzy
+#| msgid "Mail Attachment"
+msgid "Horilla Attachment"
+msgstr "Pièce jointe"
+
+#, fuzzy
+#| msgid "Mail Attachments"
+msgid "Horilla Attachments"
+msgstr "Pièces jointes"
+
+msgid "Currency Code"
+msgstr "Code devise"
+
+msgid "Add Currency"
+msgstr "Ajouter devise"
+
+msgid "Edit Currency Information"
+msgstr "Modifier les informations sur la devise"
+
+msgid "partner role"
+msgstr "rôle de partenaire"
+
+msgid "Record Name"
+msgstr "Nom de l'enregistrem"
+
+msgid "Type"
+msgstr "Taper"
+
+msgid "Deleted By"
+msgstr "Supprimé par"
+
+msgid "The requested data does not exist."
+msgstr ""
+
+msgid "Recycle bin policy updated successfully!"
+msgstr "La politique relative aux déchets a été mise à jour avec succès !"
+
+msgid "Your preferences have been updated successfully."
+msgstr "Vos préférences ont été mises à jour avec succès."
+
+msgid "There was an error updating your preferences."
+msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences."
+
+msgid "The requested user does not exist."
+msgstr ""
+
+msgid "Create New Rule Criteria"
+msgstr "Créer de nouveaux critères de règle"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Save and add another"
+msgstr "Enregistrez et ajoutez un autre"
+
+msgid "Save and continue editing"
+msgstr "Enregistrer et continuer l'édition"
+
+msgid "Company Information"
+msgstr "Informations sur l'entreprise"
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "Localization"
+msgstr "Localisation"
+
+msgid "Manage Custom Stages"
+msgstr "Gérer les étapes personnalisées"
+
+msgid "Add Stage"
+msgstr "Agregar etapa"
+
+msgid " Changes"
+msgstr "Changements"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Permission Denied"
+msgstr "Autorisation refusée"
+
+msgid "You do not have permission to view this page."
+msgstr "Vous n'avez pas la permission de voir cette page."
+
+msgid "Page Not Found"
+msgstr ""
+
+#, fuzzy
+#| msgid "Move to Dashboard"
+msgid "Go to Dashboard"
+msgstr "Déplacer vers le tableau de bord"
+
+msgid "Method Not Allowed"
+msgstr ""
+
+msgid "The request method is not allowed for this resource."
+msgstr ""
+
+msgid ""
+"You are allowed to access the settings, but some details are hidden due to "
+"limited permissions."
+msgstr ""
+"Vous êtes autorisé à accéder aux paramètres, mais certains détails sont "
+"masqués en raison d'autorisations limitées."
+
+msgid "Edit"
+msgstr "mise à jour"
+
+msgid "Are you sure you want to delete this holiday?"
+msgstr "Etes-vous sûr de vouloir supprimer ce jour férié ?"
+
+msgid "Delete"
+msgstr "supprimer"
+
+msgid "Download"
+msgstr "Télécharger"
+
+msgid "Upload Files"
+msgstr "Télécharger des fichiers"
+
+msgid "Map Fields"
+msgstr "Champs de carte"
+
+msgid "Action"
+msgstr "Action"
+
+msgid "Import"
+msgstr "importer"
+
+msgid "Select Module"
+msgstr "Sélectionnez module"
+
+msgid "Choose Module"
+msgstr "Choisir le module"
+
+msgid "Import Name"
+msgstr "Nom d'importation"
+
+msgid "Upload File"
+msgstr "Suba le fichier"
+
+msgid "File already uploaded"
+msgstr "Fichier déjà Suba"
+
+msgid "CSV, XLS, XLSX ( Max 10MB )"
+msgstr "CSV, XLS, XLSX ( Max 10MB )"
+
+msgid "Next"
+msgstr "suivante"
+
+#, fuzzy
+#| msgid "Import Name"
+msgid "Import Failed"
+msgstr "Nom d'importation"
+
+#, fuzzy
+#| msgid "There was an error updating your preferences."
+msgid "There was an error during the import process:"
+msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences."
+
+msgid "Go Back"
+msgstr ""
+
+#, fuzzy
+#| msgid "Start Date"
+msgid "Start Over"
+msgstr "Date de début"
+
+msgid "Model Field"
+msgstr "Champ de modèle"
+
+msgid "File Header"
+msgstr "En-tête de fichier"
+
+msgid "Default Values"
+msgstr "Valeurs par défaut"
+
+msgid "Sample Data"
+msgstr "Exemples de données"
+
+msgid "Status"
+msgstr "Statut"
+
+msgid "Select Header"
+msgstr "Sélectionnez l'en-tête"
+
+msgid "Select Default Value"
+msgstr "Sélectionnez la valeur par défaut"
+
+msgid "Auto Mapped"
+msgstr "Cartographie automatique"
+
+msgid "Not Mapped"
+msgstr "Non mappé"
+
+msgid "No model fields available"
+msgstr "Aucun champ modèl disponible"
+
+msgid "Previous"
+msgstr "Précédent"
+
+msgid "Import Option:"
+msgstr "Option d'importation :"
+
+msgid "Create new record"
+msgstr "Créer un nouvel enregistrement"
+
+msgid "Update existing"
+msgstr "Mettre à jour existant"
+
+msgid "Create new and update existing"
+msgstr "Créer de nouveaux éléments et mettre à jour les éléments existants"
+
+msgid "Record match by"
+msgstr "Record de match par"
+
+msgid "Module"
+msgstr "Module"
+
+msgid "Import Action"
+msgstr "Action d'importation"
+
+msgid "Create New"
+msgstr "Créer nouveau"
+
+msgid "Update Existing"
+msgstr "Mettre à jour l'existant"
+
+msgid "Create New and Update Existing"
+msgstr "Créez-en un nouveau et mettez à jour celui existant"
+
+msgid "Mapped"
+msgstr "Cartographié"
+
+msgid "Fields"
+msgstr "Champs"
+
+msgid "Unmapped"
+msgstr "Non mappé"
+
+msgid "Import Completed Successfully!"
+msgstr "Importation terminée avec succès !"
+
+msgid "Your data has been imported successfully."
+msgstr "Vos données ont été importées avec succès."
+
+msgid "Records Created"
+msgstr "Enregistrements créés"
+
+msgid "Records Updated"
+msgstr "Enregistrements Mis à jour"
+
+msgid "Errors"
+msgstr "Erreurs"
+
+msgid "Total Rows Processed:"
+msgstr "Nombre total de lignes traitées :"
+
+msgid "Success Rate:"
+msgstr "Taux de réussite:"
+
+msgid "Errors encountered:"
+msgstr "Erreurs rencontrées :"
+
+msgid "Download Full Error Report"
+msgstr "Télécharger le rapport d'erreur complet"
+
+msgid "... and"
+msgstr "... et"
+
+msgid "more errors."
+msgstr "plus d'erreurs."
+
+msgid "Download the full report above to see all errors."
+msgstr "Téléchargez le rapport complet ci-dessus pour voir toutes les erreurs."
+
+msgid "Import More Data"
+msgstr "Importer plus de données"
+
+msgid "Import Wizard"
+msgstr "Assistant d'importation"
+
+msgid "Map Values for"
+msgstr ""
+
+#, fuzzy
+#| msgid "File Header"
+msgid "File Value"
+msgstr "En-tête de fichier"
+
+msgid "Replace With"
+msgstr ""
+
+msgid "Initialize Database"
+msgstr "Initialiser base de données"
+
+msgid "Company  Information"
+msgstr "Informations sur l'entreprise"
+
+#, fuzzy
+#| msgid "Database Authenticatio"
+msgid "Database Authentication"
+msgstr "Authentification de la base de données"
+
+msgid "Authenticate with your password intialize the Horilla  Database"
+msgstr ""
+"Authentifiez-vous avec votre mot de passe pour initialiser la base de "
+"données Horilla"
+
+msgid "Authenticate"
+msgstr "Authentifier"
+
+msgid "Role Name"
+msgstr "Nom du rôle"
+
+msgid "Role Description"
+msgstr "Description du rôle"
+
+msgid "Parent Role"
+msgstr "Rôle partenaire"
+
+msgid "Select Parent Role"
+msgstr "sélectionner le rôle parent"
+
+msgid "Update"
+msgstr "mise à jour"
+
+msgid "Sign In"
+msgstr "Se connecter"
+
+msgid "Next Step"
+msgstr "Next Step"
+
+msgid "Sign Up"
+msgstr "S'inscrire"
+
+msgid "Please sign up to access the Horilla CRM"
+msgstr "Veuillez vous inscrire pour accéder au CRM Horilla"
+
+msgid "Assign Users"
+msgstr "Attribuer des utilisateurs"
+
+msgid "Select users"
+msgstr "sélectionner des utilisateurs"
+
+msgid "Select All"
+msgstr "Tout sélectionner"
+
+msgid "User Groups"
+msgstr "Groupes d'utilisateurs"
+
+msgid "Add Groups"
+msgstr "Ajouter des groupes"
+
+msgid "Groups and Permissions"
+msgstr "Groupes et autorisations"
+
+msgid "Members"
+msgstr "membres"
+
+msgid "User Permissions"
+msgstr "Autorisations utilisateur"
+
+msgid "Search users..."
+msgstr "Rechercher utilisateurs..."
+
+msgid "Assign"
+msgstr "Attribuer"
+
+msgid "Add Member"
+msgstr "Ajouter membre"
+
+msgid "No users available."
+msgstr "Aucun utilisateur disponible."
+
+msgid "Regional Formatting"
+msgstr "Formatage régional"
+
+msgid "Language and Time Zone"
+msgstr "Langue et fuseau horaire"
+
+msgid "Number Format"
+msgstr "Format des nombres"
+
+msgid "Role Hierarchy"
+msgstr "Hiérarchie rôles"
+
+msgid "Add Role"
+msgstr "ajouter rôle"
+
+#, fuzzy
+#| msgid "No search results found"
+msgid "No roles found"
+msgstr "Aucun résultat de recherche trouvé"
+
+msgid "Criteria"
+msgstr "Critères"
+
+msgid "Points"
+msgstr "Points"
+
+msgid "Nothing to show yet. Please add your Criteria"
+msgstr "Rien à afficher pour l'instant. Veuillez ajouter vos critères."
+
+msgid "Business Hours"
+msgstr "entreprise heures"
+
+msgid "Add Business Hour"
+msgstr "ajouter entreprise heures"
+
+msgid "Add"
+msgstr "ajouter"
+
+msgid "Current Default Currency"
+msgstr "Devise par défaut actuelle"
+
+msgid "Please create or activate your company."
+msgstr "Veuillez créer ou activer votre entreprise."
+
+msgid "Conversion Rates"
+msgstr "Taux de conversion"
+
+msgid "Active Currencies"
+msgstr "Devises actives"
+
+msgid "Preview in Calendar"
+msgstr "Aperçu dans le calendrier"
+
+msgid "Week"
+msgstr "Semaine"
+
+msgid " Preview Calendar"
+msgstr "Aperçu dans le calendrier"
+
+msgid " Manage Fiscal Year"
+msgstr "Gérer l'exercice fiscale"
+
+msgid "No active company"
+msgstr "Aucune entreprise active"
+
+msgid "Configuration Preview"
+msgstr "configuration aperçu"
+
+msgid "Period Display:"
+msgstr "Affichage des périodes :"
+
+msgid "Preview Calendar"
+msgstr "Aperçu dans le calendrier"
+
+msgid "Add Holidays"
+msgstr "Ajouter des jours fériés"
+
+msgid "Dated Exchange  Rates"
+msgstr "Taux de change datés"
+
+msgid "Select a Date Range"
+msgstr "Sélectionnez une plage de dates"
+
+msgid "New Exchange Rates"
+msgstr "Nouveaux taux de change"
+
+msgid "Currency Management"
+msgstr "Gestion des devises"
+
+msgid "Change Default Currency"
+msgstr "Changer devise par défaut"
+
+msgid "Edit Conversion Rates"
+msgstr "Modifier les taux de conversion"
+
+msgid "Dated Exchange Rates"
+msgstr "Taux de change datés"
+
+msgid "Enable Multiple Currency"
+msgstr "Activer plusieurs devises"
+
+msgid "My Settings"
+msgstr "Mes paramètres"
+
+msgid "Default Expire Days"
+msgstr "Jours d'expiration par défaut"
+
+msgid "Settings"
+msgstr "Paramètres"
+
+msgid "General"
+msgstr "générale"
+
+msgid "Mail"
+msgstr "mail"
+
+#, fuzzy
+#| msgid "E-Mail Server"
+msgid "Mail Server"
+msgstr "Serveur de messagerie"
+
+msgid "Azure Outlook"
+msgstr "Azur Outlook"
+
+msgid "Mail Template"
+msgstr "Modèle de courrier"
+
+msgid "Base"
+msgstr "Base"
+
+msgid "Data Mangement"
+msgstr "Gestion des données"
+
+msgid "Recycle Bin"
+msgstr "panier"
+
+msgid "Personal Information"
+msgstr "Informations personnelles"
+
+msgid "Last Name"
+msgstr "Nom de famille"
+
+msgid "Work Info"
+msgstr "Informations sur le travail"
+
+msgid "View Login History"
+msgstr "Afficher l'historique de connexion"
+
+msgid "Select"
+msgstr "Sélectionner"
+
+msgid "My Holidays"
+msgstr "Mes vacances"
+
+msgid "Holiday Type"
+msgstr "Type de vacances"
+
+msgid "Details"
+msgstr "Détails"
+
+msgid "Holiday Start Date"
+msgstr "Date de début des vacances"
+
+msgid "Holiday End Date"
+msgstr "Date de fin des vacances"
+
+msgid "My Login History"
+msgstr "Mon historique de connexion"
+
+msgid "Browser"
+msgstr "Navigateur"
+
+msgid "Login Time"
+msgstr "se connecter temps"
+
+msgid "Is Active"
+msgstr "Est actif"
+
+msgid "IP"
+msgstr "adresse IP"
+
+msgid "Kanban Settings"
+msgstr "Paramètres Kanban"
+
+msgid "Invalid credentials. Please check and try again."
+msgstr "Identifiants invalides. Veuillez vérifier et réessayer."
+
+msgid "This user is archived or blocked. Please contact support."
+msgstr "Cet utilisateur est archivé ou bloqué. Veuillez contacter le support."
+
+msgid "Login successful."
+msgstr "se connecter réussie."
+
+msgid "Business Hours "
+msgstr "Heures d'ouverture"
+
+msgid "Holidays "
+msgstr "Vacances"
+
+msgid "Currencies"
+msgstr "Devises"
+
+msgid "Recycle Bin Policy"
+msgstr "Politique relative aux déchets"
+
+msgid "Hour Type"
+msgstr "Type d'heure"
+
+msgid "Is Default"
+msgstr "Est défaut"
+
+msgid "Week Starts On"
+msgstr "semaine commence le"
+
+msgid "Business Days"
+msgstr "Jours ouvrables"
+
+msgid "Accounts"
+msgstr "Comptes"
+
+msgid "Select Account"
+msgstr "Sélectionnez compte"
+
+msgid "Select the account to assign as a child account."
+msgstr "Sélectionnez le compte à attribuer comme compte enfant."
+
+msgid "Please select an account."
+msgstr "Veuillez sélectionner un compte."
+
+msgid "This account already has a parent account assigned."
+msgstr "Ce compte a déjà un compte parent attribué."
+
+msgid "An account cannot be its own parent."
+msgstr "Un compte ne peut pas être son propre parent."
+
+msgid "Please select a valid account."
+msgstr "Veuillez sélectionner un compte valide."
+
+msgid "People"
+msgstr "Personnes"
+
+msgid "Web"
+msgstr "Web"
+
+msgid "Phone Inquiry"
+msgstr "Demande téléphonique"
+
+msgid "Partner Referral"
+msgstr "Référence de partenaire"
+
+msgid "Purchased List"
+msgstr "Liste achetée"
+
+msgid "Other"
+msgstr "Autre"
+
+msgid "Prospect"
+msgstr "Perspective"
+
+msgid "Customer - Direct"
+msgstr "Client - Direct"
+
+msgid "Customer - Channel"
+msgstr "Client - Canal"
+
+msgid "Channel Partner / Reseller"
+msgstr "Canal Partenaire / Revendeur"
+
+msgid "Installation Partner"
+msgstr "Partenaire d'installation"
+
+msgid "Technology Partner"
+msgstr "Partenaire technologique"
+
+msgid "Finance"
+msgstr "Finance"
+
+msgid "Healthcare"
+msgstr "Soins de santé"
+
+msgid "Manufacturing"
+msgstr "Fabrication"
+
+msgid "Agriculture"
+msgstr "Agriculture"
+
+msgid "Construction"
+msgstr "Construction"
+
+msgid "Banking"
+msgstr "Banque"
+
+msgid "Education"
+msgstr "Éducation"
+
+msgid "Insurance"
+msgstr "Assurance"
+
+msgid "Public"
+msgstr "Public"
+
+msgid "Private"
+msgstr "Privé"
+
+msgid "Subsidiary"
+msgstr "Filiale"
+
+msgid "Account Name"
+msgstr "Nom du compte"
+
+msgid "Account Number"
+msgstr "Numéro de compte"
+
+msgid "Account Owner"
+msgstr "Propriétaire du compte"
+
+msgid "Account Type"
+msgstr "Type de compte"
+
+msgid "Account Site"
+msgstr "Site du compte"
+
+msgid "Account Source"
+msgstr "Source du compte"
+
+msgid "Billing City"
+msgstr "Ville de facturation"
+
+msgid "Billing State"
+msgstr "État de facturation"
+
+msgid "Billing District"
+msgstr "Quartier de facturation"
+
+msgid "Billing Zip"
+msgstr "Code postal de facturation"
+
+msgid "Shipping City"
+msgstr "Ville de livraison"
+
+msgid "Shipping State"
+msgstr "État de livraison"
+
+msgid "Shipping District"
+msgstr "Quartier de livraison"
+
+msgid "Shipping Zip"
+msgstr "Code postal de livraison"
+
+msgid "Is Customer Portal"
+msgstr "Est un portail client"
+
+msgid "Customer Priority"
+msgstr "Priorité du client"
+
+msgid "Parent Account"
+msgstr "Compte parent"
+
+msgid "Is Partner"
+msgstr "Est un partenaire"
+
+msgid "Industry"
+msgstr "Secteur d'activité"
+
+msgid "Phone"
+msgstr "Téléphone"
+
+msgid "Fax"
+msgstr "Fax"
+
+msgid "Operating Hours"
+msgstr "Heures d'ouverture"
+
+msgid "Ownership"
+msgstr "Propriété"
+
+msgid "Rating"
+msgstr "Évaluation"
+
+#, fuzzy
+#| msgid "Account Source"
+msgid "Account Score"
+msgstr "Source du compte"
+
+msgid "Account"
+msgstr "Compte"
+
+msgid "Partner Account"
+msgstr "Compte partenaire"
+
+msgid "Partner Account Role"
+msgstr "Rôle du compte partenaire"
+
+msgid "Partner Account Roles"
+msgstr "Rôles du compte partenaire"
+
+msgid "Change Owner"
+msgstr "Changer le propriétaire"
+
+msgid "Child Accounts"
+msgstr "Comptes enfants"
+
+msgid "Related Contacts"
+msgstr "Contacts associés"
+
+msgid "Partner"
+msgstr "Partenaire"
+
+msgid "Add Contact Relationships"
+msgstr "Ajouter des relations de contact"
+
+msgid "Add Child Account"
+msgstr "Ajouter un compte enfant"
+
+msgid "You must be logged in to perform this action."
+msgstr "Vous devez être connecté pour effectuer cette action."
+
+msgid "No parent account specified in the request."
+msgstr "Aucun compte parent spécifié dans la demande."
+
+msgid "This account already has a parent account."
+msgstr "Ce compte a déjà un compte parent."
+
+msgid "Child account assigned successfully!"
+msgstr "Compte enfant attribué avec succès !"
+
+msgid "Invalid parent account ID format."
+msgstr "Format d'identifiant de compte parent invalide."
+
+msgid "An unexpected error occurred while assigning the child account."
+msgstr ""
+"Une erreur inattendue s'est produite lors de l'attribution du compte enfant."
+
+msgid "Account Partner"
+msgstr "Partenaire du compte"
+
+msgid "This partner role is already assigned to this account."
+msgstr "Ce rôle de partenaire est déjà attribué à ce compte."
+
+msgid "Activities"
+msgstr "Activités"
+
+msgid "Subject"
+msgstr "Sujet"
+
+msgid "Activity Type"
+msgstr "Type d'activité"
+
+msgid "Source"
+msgstr "Source"
+
+msgid "Related Content Type"
+msgstr "Type de contenu associé"
+
+msgid "Location"
+msgstr "Emplacement"
+
+msgid "All Day"
+msgstr "Toute la journée"
+
+msgid "Assigned To"
+msgstr "Assigné à"
+
+msgid "Participants"
+msgstr "Participants"
+
+msgid "Meeting Host"
+msgstr "Hôte de la réunion"
+
+msgid "Activity Owner"
+msgstr "Propriétaire de l'activité"
+
+msgid "Priority"
+msgstr "Priorité"
+
+msgid "Due Date"
+msgstr "Date d'échéance"
+
+msgid "Recipient Email"
+msgstr "E-mail du destinataire"
+
+msgid "Call Duration"
+msgstr "Durée de l'appel"
+
+msgid "Call Duration (Seconds)"
+msgstr "Durée de l'appel (secondes)"
+
+msgid "Call Type"
+msgstr "Type d'appel"
+
+msgid "Call Purpose"
+msgstr "Objet de l'appel"
+
+msgid "Activity"
+msgstr "Activité"
+
+msgid "Related To"
+msgstr "Lié à"
+
+msgid "Schedule"
+msgstr "Planification"
+
+msgid "Campaigns"
+msgstr "Campagnes"
+
+msgid "Select Campaign"
+msgstr "Sélectionner une campagne"
+
+msgid "Select campaign"
+msgstr "Sélectionner une campagne"
+
+msgid "Please select campaign."
+msgstr "Veuillez sélectionner une campagne."
+
+msgid "This campaign already has a parent campaign assigned."
+msgstr "Cette campagne a déjà une campagne parente attribuée."
+
+msgid "An campaign cannot be its own parent."
+msgstr "Une campagne ne peut pas être son propre parent."
+
+msgid "Please select a valid campaign."
+msgstr "Veuillez sélectionner une campagne valide."
+
+msgid "Campaign"
+msgstr "Campagne"
+
+msgid "Lead"
+msgstr "Prospect"
+
+msgid "Member Status"
+msgstr "Statut du membre"
+
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Campaign Member"
+msgstr "Membre de la campagne"
+
+msgid "Campaign Members"
+msgstr "Membres de la campagne"
+
+msgid "Campaign Name"
+msgstr "Nom de la campagne"
+
+msgid "Campaign Owner"
+msgstr "Propriétaire de la campagne"
+
+msgid "Campaign Currency"
+msgstr "Devise de la campagne"
+
+msgid "Expected Revenue"
+msgstr "Revenu attendu"
+
+msgid "Budget Cost"
+msgstr "Coût budgété"
+
+msgid "Actual Cost"
+msgstr "Coût réel"
+
+msgid "Expected Response (%)"
+msgstr "Taux de réponse attendu (%)"
+
+msgid "Number Sent in Campaign"
+msgstr "Nombre envoyé dans la campagne"
+
+msgid "Parent Campaign"
+msgstr "Campagne parente"
+
+msgid "Add Child Campaign"
+msgstr "Ajouter une campagne enfant"
+
+msgid "No parent campaign specified in the request."
+msgstr "Aucune campagne parente spécifiée dans la demande."
+
+msgid "A campaign cannot be its own parent."
+msgstr "Une campagne ne peut pas être son propre parent."
+
+msgid "This campaign already has a parent campaign."
+msgstr "Cette campagne a déjà une campagne parente."
+
+msgid "Child campaign assigned successfully!"
+msgstr "Campagne enfant attribuée avec succès !"
+
+msgid "Invalid parent campaign ID format."
+msgstr "Format d'identifiant de campagne parente invalide."
+
+msgid "Add to Campaign"
+msgstr "Ajouter à la campagne"
+
+msgid "Add Campaign Members"
+msgstr "Ajouter des membres à la campagne"
+
+msgid "Contacts"
+msgstr "Contacts"
+
+msgid "Select Contact"
+msgstr "Sélectionner un contact"
+
+msgid "Select the contact to assign as a child contact."
+msgstr "Sélectionnez le contact à attribuer comme contact enfant."
+
+msgid "Please select contact."
+msgstr "Veuillez sélectionner un contact."
+
+msgid "This contact already has a parent contact assigned."
+msgstr "Ce contact a déjà un contact parent attribué."
+
+msgid "An contact cannot be its own parent."
+msgstr "Un contact ne peut pas être son propre parent."
+
+msgid "Please select a valid contact."
+msgstr "Veuillez sélectionner un contact valide."
+
+msgid "Contact Owner"
+msgstr "Propriétaire du contact"
+
+msgid "Job Title"
+msgstr "Titre du poste"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Secondary Phone"
+msgstr "Téléphone secondaire"
+
+msgid "State"
+msgstr "État"
+
+msgid "Zip"
+msgstr "Code postal"
+
+msgid "Parent Contact"
+msgstr "Contact parent"
+
+msgid "Contact Source"
+msgstr "Source du contact"
+
+msgid "Birth Date"
+msgstr "Date de naissance"
+
+msgid "Assistant"
+msgstr "Assistant"
+
+msgid "Assistant Phone"
+msgstr "Téléphone de l'assistant"
+
+msgid "Languages"
+msgstr "Langues"
+
+msgid "Contact Currency"
+msgstr "Devise du contact"
+
+msgid "Is Primary"
+msgstr "Est principal"
+
+#, fuzzy
+#| msgid "Contact Source"
+msgid "Contact Score"
+msgstr "Source du contact"
+
+msgid "Contact Account Relationship"
+msgstr "Relation contact-compte"
+
+msgid "Contact Account Relationships"
+msgstr "Relations contact-compte"
+
+msgid "Contact Information"
+msgstr "Informations du contact"
+
+msgid "Address Information"
+msgstr "Informations d'adresse"
+
+msgid "Additional Information"
+msgstr "Informations supplémentaires"
+
+msgid "Child Contacts"
+msgstr "Contacts enfants"
+
+msgid "Add Account Contact Relationships"
+msgstr "Ajouter des relations compte-contact"
+
+msgid "Add Child Contact"
+msgstr "Ajouter un contact enfant"
+
+msgid "No parent contact specified in the request."
+msgstr "Aucun contact parent spécifié dans la demande."
+
+#, fuzzy
+#| msgid "An contact cannot be its own parent."
+msgid "A contact cannot be its own parent."
+msgstr "Un contact ne peut pas être son propre parent."
+
+#, fuzzy
+#| msgid "This contact already has a parent account."
+msgid "This contact already has a parent contact."
+msgstr "Ce contact a déjà un compte parent."
+
+msgid "Child contact assigned successfully!"
+msgstr "Contact enfant attribué avec succès !"
+
+msgid "Invalid parent contact ID format."
+msgstr "Format d'identifiant de contact parent invalide."
+
+#, fuzzy
+#| msgid "An unexpected error occurred while assigning the child account."
+msgid "An unexpected error occurred while assigning the child contact."
+msgstr ""
+"Une erreur inattendue s'est produite lors de l'attribution du compte enfant."
+
+msgid "Dashboards"
+msgstr "Tableaux de bord"
+
+msgid "Home"
+msgstr "Accueil"
+
+msgid "KPI Icon"
+msgstr "Icône KPI"
+
+msgid "Preview"
+msgstr "Aperçu"
+
+msgid "Select component type to see preview"
+msgstr "Sélectionnez le type de composant pour voir l'aperçu"
+
+msgid "Choose File"
+msgstr "Choisir un fichier"
+
+msgid "No file chosen"
+msgstr "Aucun fichier choisi"
+
+msgid "Conditions"
+msgstr "Conditions"
+
+msgid "Add components"
+msgstr "Ajouter des composants"
+
+msgid "Reorder"
+msgstr "Réorganiser"
+
+msgid "Loading KPI..."
+msgstr "Chargement du KPI..."
+
+msgid "Charts & Data"
+msgstr "Graphiques et données"
+
+msgid "Export as PNG"
+msgstr "Exporter en PNG"
+
+msgid "Export as PDF"
+msgstr "Exporter en PDF"
+
+msgid "Add to Another Dashboard"
+msgstr "Ajouter à un autre tableau de bord"
+
+msgid " Loading chart..."
+msgstr " Chargement du graphique..."
+
+msgid "No Components Added"
+msgstr "Aucun composant ajouté"
+
+msgid ""
+"This dashboard doesn't have any components yet. Add charts, tables, KPIs, or "
+"targets to visualize your data."
+msgstr ""
+"Ce tableau de bord n'a pas encore de composants. Ajoutez des graphiques, des "
+"tableaux, des KPI ou des objectifs pour visualiser vos données."
+
+msgid "Reorder Components"
+msgstr "Réorganiser les composants"
+
+msgid "Reorder KPIs"
+msgstr "Réorganiser les KPI"
+
+msgid "Chart"
+msgstr "Graphique"
+
+msgid "Table Data"
+msgstr "Données du tableau"
+
+msgid "No components to reorder"
+msgstr "Aucun composant à réorganiser"
+
+msgid "Save Component Order"
+msgstr "Enregistrer l'ordre des composants"
+
+msgid "KPI"
+msgstr "KPI"
+
+msgid "No KPI components to reorder"
+msgstr "Aucun composant KPI à réorganiser"
+
+msgid "Save KPI Order"
+msgstr "Enregistrer l'ordre des KPI"
+
+msgid "All Dashboards"
+msgstr "Tous les tableaux de bord"
+
+msgid "Folders"
+msgstr "Dossiers"
+
+msgid "All Folders"
+msgstr "Tous les dossiers"
+
+msgid "Favourites"
+msgstr "Favoris"
+
+msgid "Welcome"
+msgstr "Bienvenue"
+
+msgid "View All Dashboards"
+msgstr "Voir tous les tableaux de bord"
+
+msgid ""
+"Get started by creating your first dashboard or explore the CRM overview "
+"below."
+msgstr ""
+"Commencez par créer votre premier tableau de bord ou explorez la vue "
+"d'ensemble du CRM ci-dessous."
+
+msgid ""
+"You currently don't have access to dashboards. Please contact your "
+"administrator to request permissions or explore available features."
+msgstr ""
+"Vous n'avez actuellement pas accès aux tableaux de bord. Veuillez contacter "
+"votre administrateur pour demander des autorisations ou explorer les "
+"fonctionnalités disponibles."
+
+msgid "Records"
+msgstr "Enregistrements"
+
+msgid "Chart Added successfully!"
+msgstr "Graphique ajouté avec succès !"
+
+msgid "Move to Dashboard"
+msgstr "Déplacer vers le tableau de bord"
+
+msgid "Original component not found."
+msgstr "Composant d'origine introuvable."
+
+msgid "Chart successfully added to another dashboard!"
+msgstr "Graphique ajouté avec succès à un autre tableau de bord !"
+
+msgid "Forecast"
+msgstr "Prévision"
+
+msgid "Update Target"
+msgstr "Mettre à jour la cible"
+
+msgid "Deal Revenue Amount"
+msgstr "Montant du chiffre d'affaires de la transaction"
+
+msgid "Deal Revenue Expected Amount"
+msgstr "Montant du chiffre d'affaires attendu de la transaction"
+
+msgid "Deal Quantity"
+msgstr "Quantité de transactions"
+
+msgid "Forecast Type Name"
+msgstr "Nom du type de prévision"
+
+msgid "Forecast Type"
+msgstr "Type de prévision"
+
+msgid "Include Pipeline"
+msgstr "Inclure le pipeline"
+
+msgid "Include Best Case"
+msgstr "Inclure le meilleur cas"
+
+msgid "Include Commit"
+msgstr "Inclure l'engagement"
+
+msgid "Include Closed"
+msgstr "Inclure les clôturés"
+
+msgid "Forecast Types"
+msgstr "Types de prévision"
+
+msgid "Field Name"
+msgstr "Nom du champ"
+
+msgid "Operator"
+msgstr "Opérateur"
+
+msgid "Value"
+msgstr "Valeur"
+
+msgid "Logical Operator"
+msgstr "Opérateur logique"
+
+msgid "Order"
+msgstr "Ordre"
+
+msgid "Forecast Condition"
+msgstr "Condition de prévision"
+
+msgid "Forecast Conditions"
+msgstr "Conditions de prévision"
+
+msgid "Draft"
+msgstr "Brouillon"
+
+msgid "Submitted"
+msgstr "Soumis"
+
+msgid "Approved"
+msgstr "Approuvé"
+
+msgid "Rejected"
+msgstr "Rejetée"
+
+msgid "Forecast Name"
+msgstr "Nom de la prévision"
+
+msgid "Forecast Owner"
+msgstr "Propriétaire des prévisions"
+
+msgid "Target Amount"
+msgstr "Target amount"
+
+msgid "Pipeline Amount"
+msgstr "Montant du pipeline"
+
+msgid "Best Case Amount"
+msgstr "Montant dans le meilleur des cas"
+
+msgid "Commit Amount"
+msgstr "Commettre montante"
+
+msgid "Closed Amount"
+msgstr "Montant clôturé"
+
+msgid "Actual Amount"
+msgstr "Montant réel"
+
+msgid "Target Quantity"
+msgstr "Quantité cible"
+
+msgid "Pipeline Quantity"
+msgstr "Quantité de pipeline"
+
+msgid "Best Case Quantity"
+msgstr "meilleur cas Quantité"
+
+msgid "Commit Quantity"
+msgstr "Commettre Quantité"
+
+msgid "Closed Quantity"
+msgstr "Fermée Quantité"
+
+msgid "Actual Quantity"
+msgstr "réelle Quantité"
+
+msgid "Submitted At"
+msgstr "soumise à"
+
+msgid "Approved At"
+msgstr "Approuvée à"
+
+msgid "Approved By"
+msgstr "Approuvée par"
+
+msgid "Forecasts"
+msgstr "Prévisions"
+
+msgid "Assigned User"
+msgstr "Utilisateur attribué"
+
+msgid "Forecast Period"
+msgstr "Période de prévision"
+
+msgid "Target"
+msgstr "Cible"
+
+msgid "Target amount (revenue or quantity)"
+msgstr "Montant cible (revenu ou quantité)"
+
+msgid "Currency code (e.g., USD, EUR, INR)"
+msgstr "Code de devise (par exemple USD, EUR, INR)"
+
+msgid "Current Achievement"
+msgstr "Réalisation actuelle"
+
+msgid "Current achieved amount (auto-calculated)"
+msgstr "Montant actuel réalisé (calculé automatiquement)"
+
+msgid "Forecast Target"
+msgstr "Objectif de prévision"
+
+msgid "Forecast Targets"
+msgstr "Objectif de Cibles "
+
+msgid "User Revenue Target"
+msgstr "Objectif de revenus des utilisateurs"
+
+msgid "Individual revenue target for this user"
+msgstr "Objectif de revenu individuel pour cet utilisateur"
+
+msgid "User Quantity Target"
+msgstr "Cible de quantité utilisateur"
+
+msgid "Individual quantity target for this user"
+msgstr "Quantité cible individuelle pour cet utilisateur"
+
+msgid "Current Revenue Achieved"
+msgstr "Revenu actuel atteint"
+
+msgid "Current achieved revenue for this user"
+msgstr "Revenus actuels gagnés pour cet utilisateur"
+
+msgid "Current Quantity Achieved"
+msgstr "Quantité actuelle réalisée"
+
+msgid "Current achieved quantity for this user"
+msgstr "Quantité actuelle réalisée pour cet utilisateur"
+
+msgid "Forecast Target User"
+msgstr "Utilisateur cible de la prévision"
+
+msgid "Forecast Target Users"
+msgstr "Prévisions des utilisateurs cibles"
+
+msgid "deals"
+msgstr "transactions"
+
+msgid "Total:"
+msgstr "Total :"
+
+msgid "opportunities"
+msgstr "opportunités"
+
+msgid "Total Quantity:"
+msgstr "Quantité totale :"
+
+msgid "Total Amount:"
+msgstr "Montant total :"
+
+#, fuzzy
+#| msgid "Select users"
+msgid "Select User"
+msgstr "sélectionner des utilisateurs"
+
+#, fuzzy
+#| msgid "Selected"
+msgid "Select Period"
+msgstr "Sélectionné"
+
+#, fuzzy
+#| msgid "Forecast Type"
+msgid "Select Forecast Type"
+msgstr "Type de prévision"
+
+msgid "No Forecast Type set. Set it from settings."
+msgstr "Aucun type de prévision défini. Définissez-le dans les paramètres."
+
+msgid "Go To Forecast Type"
+msgstr "Aller au type de prévision"
+
+msgid "Achievement"
+msgstr "Réalisation"
+
+msgid "Gap"
+msgstr "Écart"
+
+msgid "Closed"
+msgstr "Clôturé"
+
+msgid "Commit Forecast"
+msgstr "Prévision engagée"
+
+msgid "Best Case"
+msgstr "Meilleur cas"
+
+msgid "Open Pipeline"
+msgstr "Pipeline ouvert"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Loading more users for"
+msgstr ""
+
+msgid "No forecast data available for this period"
+msgstr "Aucune donnée de prévision disponible pour cette période"
+
+msgid "Forecast Type:"
+msgstr "Type de prévision :"
+
+msgid "My Forecast"
+msgstr "Ma Prévision"
+
+msgid "Select Fiscal Year"
+msgstr "Sélectionner l'Année Fiscale"
+
+msgid "- Current"
+msgstr "- Actuelle"
+
+msgid "- Previous"
+msgstr "- Précédente"
+
+msgid "- Next"
+msgstr "- Suivante"
+
+msgid "Leads"
+msgstr "Prospects"
+
+msgid "Sales"
+msgstr "Ventes"
+
+msgid "Status Name"
+msgstr "Nom du Statut"
+
+msgid "Status Order"
+msgstr "Ordre du Statut"
+
+msgid "Status Color"
+msgstr "Couleur du Statut"
+
+msgid "Is Final Stage"
+msgstr "Est l'Étape Finale"
+
+msgid "Probability"
+msgstr "Probabilité"
+
+msgid "Lead Stage"
+msgstr "Étape du Prospect"
+
+msgid "Lead Stages"
+msgstr "Étapes du Prospect"
+
+msgid "Order must be a non-negative integer."
+msgstr "L'ordre doit être un nombre entier non négatif."
+
+msgid "Referral"
+msgstr "Référence"
+
+msgid "Event"
+msgstr "Événement"
+
+msgid "Social Media"
+msgstr "Réseaux Sociaux"
+
+msgid "Lead Owner"
+msgstr "Propriétaire du Prospect"
+
+msgid "Lead Currency"
+msgstr "Devise du Prospect"
+
+msgid "Lead Source"
+msgstr "Source du Prospect"
+
+msgid "Lead Status"
+msgstr "Statut du Prospect"
+
+msgid "Lead Company"
+msgstr "Entreprise du Prospect"
+
+msgid "Total Employees"
+msgstr "Nombre Total d'Employés"
+
+msgid "Requirements"
+msgstr "Exigences"
+
+#, fuzzy
+#| msgid "Lead Source"
+msgid "Lead Score"
+msgstr "Source du Prospect"
+
+msgid "Annual Revenue 3x"
+msgstr "Revenu Annuel 3x"
+
+msgid "Export"
+msgstr "Exporter"
+
+msgid "Move"
+msgstr ""
+
+#, fuzzy
+#| msgid "Favourites"
+msgid "Favourite"
+msgstr "Favoris"
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Lead Conversion"
+msgstr "Conversion du Prospect"
+
+msgid "Select Existing"
+msgstr "Sélectionner Existant"
+
+msgid "Opportunity"
+msgstr "Opportunité"
+
+msgid "Owner"
+msgstr "Propriétaire"
+
+msgid "Convert"
+msgstr "Convertir"
+
+msgid "Opportunity Name"
+msgstr "Nom de l'Opportunité"
+
+msgid "Select Opportunity"
+msgstr "Sélectionner une Opportunité"
+
+msgid "Please select an account first"
+msgstr "Veuillez d'abord sélectionner un compte"
+
+msgid "Select an account to see available opportunities"
+msgstr "Sélectionnez un compte pour voir les opportunités disponibles"
+
+msgid "Your lead has been converted"
+msgstr "Votre prospect a été converti"
+
+msgid "Go to Leads"
+msgstr "Aller aux Prospects"
+
+msgid "Get started by using default stages or adding your custom stages."
+msgstr ""
+"Commencez en utilisant les étapes par défaut ou en ajoutant vos étapes "
+"personnalisées."
+
+msgid "Select Lead Stages for"
+msgstr "Sélectionner les Étapes de Prospect pour"
+
+msgid "Default Stages"
+msgstr "Étapes par Défaut"
+
+msgid "Stages"
+msgstr "Étapes"
+
+msgid "Custom Stages"
+msgstr "Étapes Personnalisées"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Opportunities"
+msgstr "Opportunités"
+
+msgid "Threshold updated successfully"
+msgstr "Seuil mis à jour avec succès"
+
+msgid "Big Deal Alert"
+msgstr "Alerte Grosse Affaire"
+
+msgid "At least one valid condition row must be provided."
+msgstr "Au moins une ligne de condition valide doit être fournie."
+
+msgid "Opportunity Team"
+msgstr "Équipe de l'Opportunité"
+
+msgid "Open"
+msgstr "Ouvert"
+
+msgid "Closed Won"
+msgstr "Gagné Clôturé"
+
+msgid "Closed Lost"
+msgstr "Perdu Clôturé"
+
+msgid "Stage Name"
+msgstr "Nom de l'Étape"
+
+msgid "Stage Type"
+msgstr "Type d'Étape"
+
+msgid "Type of stage - Open, Closed Won, or Closed Lost"
+msgstr "Type d'étape - Ouvert, Gagné Clôturé ou Perdu Clôturé"
+
+msgid "Opportunity Stage"
+msgstr "Étape de l'Opportunité"
+
+msgid "Opportunity Stages"
+msgstr "Étapes de l'Opportunité"
+
+msgid "Amount"
+msgstr "Montant"
+
+msgid "Quantity"
+msgstr "Quantité"
+
+msgid "Close Date"
+msgstr "Date de Clôture"
+
+msgid "Stage"
+msgstr "Étape"
+
+msgid "Opportunity Score"
+msgstr "Score de l'Opportunité"
+
+msgid "Primary Campaign Source"
+msgstr "Source de Campagne Principale"
+
+msgid "Forecast Category"
+msgstr "Catégorie de Prévision"
+
+msgid "Delivery Installation Status"
+msgstr "Statut de Livraison/Installation"
+
+msgid "Main Competitors"
+msgstr "Principaux Concurrents"
+
+msgid "Order Number"
+msgstr "Numéro de Commande"
+
+msgid "Tracking Number"
+msgstr "Numéro de Suivi"
+
+msgid "Opportunity Currency"
+msgstr "Devise de l'Opportunité"
+
+msgid "Account Manager"
+msgstr "Gestionnaire de Compte"
+
+msgid "Channel Manager"
+msgstr "Gestionnaire de Canal"
+
+msgid "Executive Sponsor"
+msgstr "Sponsor Exécutif"
+
+msgid "Lead Qualifier"
+msgstr "Qualificateur de Prospects"
+
+msgid "Pre-Sales Consultant"
+msgstr "Consultant Avant-Vente"
+
+msgid "Sales Manager"
+msgstr "Responsable des Ventes"
+
+msgid "Sales Rep"
+msgstr "Représentant Commercial"
+
+msgid "Opportunity Owner"
+msgstr "Propriétaire de l'Opportunité"
+
+msgid "Read Only"
+msgstr "Lecture Seule"
+
+msgid "Read/Write"
+msgstr "Lecture/Écriture"
+
+msgid "Team Name"
+msgstr "Nom de l'Équipe"
+
+msgid "Opportunity Teams"
+msgstr "Équipes de l'Opportunité"
+
+msgid "Opportunity Access"
+msgstr "Accès à l'Opportunité"
+
+msgid "Member Role"
+msgstr "Rôle du Membre"
+
+msgid "Team Members"
+msgstr "Membres de l'Équipe"
+
+msgid "Opportunity team member"
+msgstr "Membre de l'équipe de l'opportunité"
+
+msgid "Opportunity team members"
+msgstr "Membres de l'équipe de l'opportunité"
+
+msgid "Team Member"
+msgstr "Membre de l'Équipe"
+
+msgid "Access Level"
+msgstr "Niveau d'Accès"
+
+msgid "Default Opportunity Member"
+msgstr "Membre par Défaut de l'Opportunité"
+
+msgid "Default Opportunity Members"
+msgstr "Membres par Défaut de l'Opportunité"
+
+msgid "Alert Name"
+msgstr "Nom de l'Alerte"
+
+msgid "Trigger Amount"
+msgstr "Montant de Déclenchement"
+
+msgid "Trigger Probability"
+msgstr "Probabilité de Déclenchement"
+
+msgid "Trigger alert when opportunity probability reaches this percentage"
+msgstr ""
+"Déclencher l'alerte lorsque la probabilité de l'opportunité atteint ce "
+"pourcentage"
+
+msgid "Sender Name"
+msgstr "Nom de l'Expéditeur"
+
+msgid "Sender Email"
+msgstr "Email de l'Expéditeur"
+
+msgid "Notify Emails"
+msgstr "Emails de Notification"
+
+msgid "Comma-separated emails to notify"
+msgstr "Emails à notifier séparés par des virgules"
+
+msgid "Notify CC Emails"
+msgstr "Emails en CC à Notifier"
+
+msgid "Notify BCC Emails"
+msgstr "Emails en CCI à Notifier"
+
+msgid "Notify Opportunity Owner"
+msgstr "Notifier le Propriétaire de l'Opportunité"
+
+msgid "Active"
+msgstr "Actif"
+
+msgid "Big Deal Alerts"
+msgstr "Alertes Grosse Affaire"
+
+msgid "Create Opportunity Team"
+msgstr "Créer une Équipe d'Opportunité"
+
+msgid "Add Members"
+msgstr "Ajouter des Membres"
+
+msgid "Update Team Member"
+msgstr "Mettre à Jour le Membre de l'Équipe"
+
+msgid " Nothing to show yet. Please add your Deal Alerts."
+msgstr ""
+" Rien à afficher pour le moment. Veuillez ajouter vos Alertes d'Affaire."
+
+msgid "Select Opportunity Stages for"
+msgstr "Sélectionner les Étapes d'Opportunité pour"
+
+msgid "Opportunity Information"
+msgstr "Informations sur l'Opportunité"
+
+msgid "Contact Roles"
+msgstr "Rôles de Contact"
+
+msgid "Add Contact Role"
+msgstr "Ajouter un Rôle de Contact"
+
+msgid "Reports"
+msgstr "Rapports"
+
+msgid "Analytics"
+msgstr "Analytique"
+
+#, fuzzy
+#| msgid "Reports"
+msgid " All Reports"
+msgstr "Rapports"
+
+#, fuzzy
+#| msgid "Reports"
+msgid "All Reports"
+msgstr "Rapports"
+
+msgid "You are already selected this field"
+msgstr "Vous avez déjà sélectionné ce champ"
+
+msgid "No matching columns found"
+msgstr "Aucune colonne correspondante trouvée"
+
+msgid "No fields found matching your search"
+msgstr ""
+
+msgid "R"
+msgstr ""
+
+#, fuzzy
+#| msgid "Cc"
+msgid "C"
+msgstr "Cc"
+
+msgid "A"
+msgstr ""
+
+msgid "Is"
+msgstr ""
+
+#, fuzzy
+#| msgid "Contacts"
+msgid "Contains"
+msgstr "Contacts"
+
+#, fuzzy
+#| msgid "Created At"
+msgid "Greater than"
+msgstr "Créé à"
+
+msgid "Less than"
+msgstr ""
+
+msgid "Greater or equal"
+msgstr ""
+
+msgid "Less or equal"
+msgstr ""
+
+msgid "Summary Report"
+msgstr "Rapport de Synthèse"
+
+msgid "Total Count"
+msgstr "Nombre Total"
+
+#, fuzzy
+#| msgid "Column User"
+msgid "Columns"
+msgstr "Utilisateur de la colonne"
+
+#, fuzzy
+#| msgid "No Grouping"
+msgid "Grouping"
+msgstr "Aucun regroupement"
+
+#, fuzzy
+#| msgid "Clear Filters"
+msgid "Filter"
+msgstr "Effacer les Filtres"
+
+#, fuzzy
+#| msgid "Applied Filters"
+msgid "Apply Filters"
+msgstr "Filtres Appliqués"
+
+msgid "Report:"
+msgstr "Rapport :"
+
+msgid "You have unsaved changes. Click"
+msgstr "Vous avez des modifications non enregistrées. Cliquez sur"
+
+msgid "to keep your changes or"
+msgstr "pour conserver vos modifications ou"
+
+msgid "Discard"
+msgstr "Abandonner"
+
+msgid "to revert."
+msgstr "pour annuler."
+
+msgid "Detail table"
+msgstr "Tableau détaillé"
+
+msgid "Pivot table"
+msgstr "Tableau croisé dynamique"
+
+msgid "Report Chart"
+msgstr "Graphique du Rapport"
+
+msgid "Change Chart"
+msgstr "Changer le Graphique"
+
+msgid "Change Field"
+msgstr "Changer le Champ"
+
+msgid "Record Count:"
+msgstr "Nombre d'Enregistrements :"
+
+msgid "Calendar"
+msgstr "Calendrier"
+
+msgid "Calendar Type"
+msgstr "Type de Calendrier"
+
+msgid "Color"
+msgstr "Couleur"
+
+msgid "Is Selected"
+msgstr "Est Sélectionné"
+
+msgid "User Calendar Preference"
+msgstr "Préférence de Calendrier de l'Utilisateur"
+
+msgid "User Calendar Preferences"
+msgstr "Préférences de Calendrier de l'Utilisateur"
+
+msgid "From"
+msgstr "De"
+
+msgid "To"
+msgstr "À"
+
+msgid "Reason"
+msgstr "Raison"
+
+msgid "User Unavailability"
+msgstr "Indisponibilité de l'Utilisateur"
+
+msgid "User Unavailabilities"
+msgstr "Indisponibilités de l'Utilisateur"
+
+#, fuzzy
+#| msgid "Mark as Unavailable"
+msgid "Mark Unavailable"
+msgstr "Marquer comme Indisponible"
+
+msgid "Today"
+msgstr "Aujourd'hui"
+
+msgid "Day"
+msgstr "Jour"
+
+msgid "Assigned to"
+msgstr "Assigné à"
+
+msgid "Mark as Complete"
+msgstr "Marquer comme Terminé"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Mark as Unavailable"
+msgstr "Marquer comme Indisponible"
+
+msgid "My Calendars"
+msgstr "Mes Calendriers"
+
+msgid "Display This Only"
+msgstr "Afficher Uniquement Ceci"
+
+msgid "Tasks"
+msgstr "Tâches"
+
+msgid "Events"
+msgstr "Événements"
+
+msgid "Meetings"
+msgstr "Réunions"
+
+msgid "Unavailability"
+msgstr "Indisponibilité"
+
+msgid "Preferences saved successfully"
+msgstr "Préférences enregistrées avec succès"
+
+msgid "Marked as completed successfully."
+msgstr "Marqué comme terminé avec succès."
+
+msgid "Mark Unavailability"
+msgstr "Marquer l'Indisponibilité"
+
+msgid "Call"
+msgstr "Appel"
+
+msgid "Pending Tasks"
+msgstr "Tâches en Attente"
+
+msgid "Completed Tasks"
+msgstr "Tâches Terminées"
+
+msgid "Pending Meetings"
+msgstr "Réunions en Attente"
+
+msgid "Completed Meetings"
+msgstr "Réunions Terminées"
+
+msgid "Pending Calls"
+msgstr "Appels en Attente"
+
+msgid "Completed Calls"
+msgstr "Appels Terminés"
+
+msgid "Mails"
+msgstr "Courriels"
+
+msgid "Drafts"
+msgstr "Brouillons"
+
+msgid "Scheduled"
+msgstr "Planifié"
+
+msgid "Pending Events"
+msgstr "Événements en Attente"
+
+msgid "Completed Events"
+msgstr "Événements Terminés"
+
+msgid "Select Fields to Display"
+msgstr "Sélectionner les Champs à Afficher"
+
+msgid "Available Fields"
+msgstr "Champs Disponibles"
+
+msgid "Visible Fields"
+msgstr "Champs Visibles"
+
+msgid "Add more filter"
+msgstr "Ajouter plus de filtres"
+
+msgid "Applied Filters"
+msgstr "Filtres Appliqués"
+
+msgid "Clear All"
+msgstr "Tout Effacer"
+
+msgid "Save to List"
+msgstr "Enregistrer dans la Liste"
+
+msgid "Clear"
+msgstr "Effacer"
+
+#, fuzzy
+#| msgid "Mail Attachment"
+msgid "Add Notes and Attachment"
+msgstr "Pièce jointe"
+
+msgid "Click to upload"
+msgstr ""
+
+msgid "Any file (Max 10MB)"
+msgstr ""
+
+#, fuzzy
+#| msgid "Is Selected"
+msgid "File selected"
+msgstr "Est Sélectionné"
+
+msgid "We searched for"
+msgstr "Nous avons recherché"
+
+msgid "No search results found"
+msgstr "Aucun résultat de recherche trouvé"
+
+msgid "Clear Filters"
+msgstr "Effacer les Filtres"
+
+msgid "New"
+msgstr "Nouveau"
+
+msgid "created"
+msgstr "créé"
+
+msgid "status"
+msgstr "statut"
+
+msgid "Added call task to this"
+msgstr "Tâche d'appel ajoutée à ceci"
+
+msgid "Send email to this"
+msgstr "Envoyer un email à ceci"
+
+msgid "Activity logged for this"
+msgstr "Activité enregistrée pour ceci"
+
+msgid "Event scheduled for this"
+msgstr "Événement planifié pour ceci"
+
+msgid "Meeting scheduled with this"
+msgstr "Réunion planifiée avec ceci"
+
+msgid "Action performed by"
+msgstr "Action effectuée par"
+
+msgid " No history available for this object."
+msgstr " Aucun historique disponible pour cet objet."
+
+msgid "Nothing to show yet. Please add your"
+msgstr "Rien à afficher pour le moment. Veuillez ajouter votre"
+
+msgid "Select Columns to Export (Optional)"
+msgstr "Sélectionner les Colonnes à Exporter (Optionnel)"
+
+msgid "Export Format"
+msgstr "Format d'Exportation"
+
+msgid "Excel"
+msgstr "Excel"
+
+msgid "CSV"
+msgstr "CSV"
+
+msgid "PDF"
+msgstr "PDF"
+
+msgid "Available Columns"
+msgstr "Colonnes Disponibles"
+
+msgid "Select which columns to export"
+msgstr "Sélectionnez les colonnes à exporter"
+
+msgid "Add Additional Columns"
+msgstr "Ajouter des Colonnes Supplémentaires"
+
+msgid "Select more fields you want to export"
+msgstr "Sélectionnez plus de champs à exporter"
+
+msgid "Unselect"
+msgstr "Désélectionner"
+
+msgid "Export Selected"
+msgstr "Exporter la Sélection"
+
+msgid "Bulk Update"
+msgstr "Mise à Jour en Masse"
+
+msgid "Bulk Delete"
+msgstr "Suppression en Masse"
+
+msgid "Selected"
+msgstr "Sélectionné"
+
+msgid "Delete List"
+msgstr "Supprimer la Liste"
+
+msgid "Clear Session"
+msgstr "Effacer la Session"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid " Nothing to show yet. Please add your"
+msgstr " Rien à afficher pour le moment. Veuillez ajouter votre"
+
+#, fuzzy
+#| msgid "Mail Attachments"
+msgid "Notes and  Attachments"
+msgstr "Pièces jointes"
+
+#, fuzzy
+#| msgid "Open Pipeline"
+msgid "Open file in new tab"
+msgstr "Pipeline ouvert"
+
+#, fuzzy
+#| msgid "Created"
+msgid "Created By"
+msgstr "Créé"
+
+#, fuzzy
+#| msgid "File"
+msgid "File Size"
+msgstr "fichier"
+
+msgid "Bulk Reassign Dependencies"
+msgstr "Réassignation en Masse des Dépendances"
+
+msgid "Reassign all dependent"
+msgstr "Réassigner tous les dépendants"
+
+msgid "to a new target before deleting"
+msgstr "à une nouvelle cible avant la suppression"
+
+msgid "New Target"
+msgstr "Nouvelle Cible"
+
+msgid "No other targets available"
+msgstr "Aucune autre cible disponible"
+
+msgid "Confirm"
+msgstr "Confirmer"
+
+msgid "Confirm Deletion"
+msgstr "Confirmer la Suppression"
+
+msgid "Deleting this"
+msgstr "Supprimer ceci"
+
+msgid "will also remove all its related"
+msgstr "supprimera également tous ses éléments liés"
+
+msgid "Are you sure you want to proceed ?"
+msgstr "Êtes-vous sûr de vouloir continuer ?"
+
+msgid "with Dependencies"
+msgstr "avec Dépendances"
+
+msgid "Confirm Delete"
+msgstr "Confirmer la Suppression"
+
+msgid "The"
+msgstr "Le"
+
+msgid "has dependencies and cannot be deleted directly."
+msgstr "a des dépendances et ne peut pas être supprimé directement."
+
+msgid "Reassign All"
+msgstr "Réassigner Tout"
+
+msgid "Reassign Individually"
+msgstr "Réassigner Individuellement"
+
+msgid "Delete All"
+msgstr "Tout Supprimer"
+
+msgid "Are you sure you want to delete the"
+msgstr "Êtes-vous sûr de vouloir supprimer le"
+
+msgid "Select Delete Mode"
+msgstr "Sélectionner le Mode de Suppression"
+
+msgid "Choose the deletion mode for"
+msgstr "Choisir le mode de suppression pour"
+
+msgid "Hard Delete"
+msgstr "Suppression Définitive"
+
+msgid "Soft Delete"
+msgstr "Suppression Logique"
+
+msgid "Individual Reassign or Delete Dependencies"
+msgstr "Réassigner ou Supprimer les Dépendances Individuellement"
+
+msgid "Choose actions for each dependent"
+msgstr "Choisir les actions pour chaque dépendant"
+
+msgid "before deleting"
+msgstr "avant la suppression"
+
+msgid "Select Target"
+msgstr "Sélectionner la Cible"
+
+msgid "Set to Null"
+msgstr "Définir comme Nul"
+
+msgid "Set Null"
+msgstr "Définir Nul"
+
+msgid "No dependent records found."
+msgstr "Aucun enregistrement dépendant trouvé."
+
+#, fuzzy
+#| msgid "Horilla  Configuration"
+msgid "Hard Delete Confirmation"
+msgstr "Configuration Horilla"
+
+msgid "Deletable Records"
+msgstr ""
+
+msgid "Protected Records"
+msgstr ""
+
+#, fuzzy
+#| msgid "Confirm Delete"
+msgid " Confirm Delete"
+msgstr "Confirmer la Suppression"
+
+#, fuzzy
+#| msgid "Bulk Update"
+msgid "Bulk Update Selected"
+msgstr "Mise à Jour en Masse"
+
+#, fuzzy
+#| msgid "No fields available for this model"
+msgid "No fields available for bulk update."
+msgstr "Aucun champ disponible pour ce modèle"
+
+msgid "Choose the deletion mode for the selected records"
+msgstr "Choisir le mode de suppression pour les enregistrements sélectionnés"
+
+msgid "Select Field"
+msgstr "Sélectionner le Champ"
+
+msgid "No value needed"
+msgstr "Aucune valeur nécessaire"
+
+msgid "and"
+msgstr "et"
+
+msgid "Select an option"
+msgstr "Sélectionner une option"
+
+msgid "Apply"
+msgstr ""
+
+#, fuzzy
+#| msgid "Soft Delete"
+msgid "Soft Delete Confirmation"
+msgstr "Suppression Logique"
+
+#, fuzzy
+#| msgid "Records Created"
+msgid "No Records to Delete"
+msgstr "Enregistrements créés"
+
+msgid "No related lists found for this"
+msgstr "Aucune liste associée trouvée pour ceci"
+
+msgid "New List View"
+msgstr "Nouvelle Vue de Liste"
+
+msgid "No filter parameters available."
+msgstr "Aucun paramètre de filtre disponible."
+
+msgid "List View Name"
+msgstr "Nom de la Vue de Liste"
+
+msgid "Add More"
+msgstr "Ajouter Plus"
+
+msgid "Related Lists"
+msgstr "Listes Associées"
+
+#, fuzzy
+#| msgid "Mail Attachments"
+msgid "Notes & Attachments"
+msgstr "Pièces jointes"
+
+msgid "History"
+msgstr "Historique"
+
+msgid "Send Email"
+msgstr "Envoyer un Email"
+
+msgid ""
+"Selected record is not associated with any company. Activate a company to "
+"proceed with deletion."
+msgstr ""
+"L'enregistrement sélectionné n'est associé à aucune entreprise. Activez une "
+"entreprise pour procéder à la suppression."
+
+msgid "To Email"
+msgstr "Email Destinataire"
+
+msgid "Enter email address to send test email"
+msgstr "Entrez l'adresse email pour envoyer un email de test"
+
+msgid "Enter the email address where you want to send the test email."
+msgstr "Entrez l'adresse email où vous souhaitez envoyer l'email de test."
+
+msgid "Please enter a valid email address."
+msgstr "Veuillez entrer une adresse email valide."
+
+msgid "Update Mail Template"
+msgstr "Mettre à Jour le Modèle d'Email"
+
+msgid "Update Template"
+msgstr "Mettre à Jour le Modèle"
+
+msgid "Create Mail Template"
+msgstr "Créer un Modèle d'Email"
+
+msgid "Save Template"
+msgstr "Enregistrer le Modèle"
+
+msgid "Mail template \"{}\" updated successfully."
+msgstr "Modèle d'email \"{}\" mis à jour avec succès."
+
+msgid "Mail template \"{}\" created successfully."
+msgstr "Modèle d'email \"{}\" créé avec succès."
+
+msgid "Please correct the errors below."
+msgstr "Veuillez corriger les erreurs ci-dessous."
+
+msgid "Token not refreshed, Login required"
+msgstr "Jeton non actualisé, connexion requise"
+
+msgid "Token refreshed successfully"
+msgstr "Jeton actualisé avec succès"
+
+msgid "E-Mail"
+msgstr "E-Mail"
+
+msgid "Outlook"
+msgstr "Outlook"
+
+msgid "Email Host"
+msgstr "Hôte Email"
+
+msgid "Email Port"
+msgstr "Port Email"
+
+msgid "Default From Mail"
+msgstr "Email d'Expédition par Défaut"
+
+msgid "Email Host Username"
+msgstr "Nom d'Utilisateur de l'Hôte Email"
+
+msgid "Display Name"
+msgstr "Nom d'Affichage"
+
+msgid "Email Authentication Password"
+msgstr "Mot de Passe d'Authentification Email"
+
+msgid "Use TLS"
+msgstr "Utiliser TLS"
+
+msgid "Use SSL"
+msgstr "Utiliser SSL"
+
+msgid "Fail Silently"
+msgstr "Échouer Silencieusement"
+
+msgid "Primary Mail Server"
+msgstr "Serveur de Messagerie Principal"
+
+msgid "By enabling this the display name will take from who triggered the mail"
+msgstr ""
+"En activant ceci, le nom d'affichage sera celui de la personne qui a "
+"déclenché l'email"
+
+msgid "Email Send Timeout (seconds)"
+msgstr "Délai d'Expiration d'Envoi d'Email (secondes)"
+
+msgid "Client ID"
+msgstr "ID Client"
+
+msgid "Client Secret"
+msgstr "Secret Client"
+
+msgid "Tenant ID"
+msgstr "ID Locataire"
+
+msgid ""
+"Use TLS and Use SSL are mutually exclusive,so only set one of those settings "
+"to True."
+msgstr ""
+"L'utilisation de TLS et SSL est mutuellement exclusive, donc définissez "
+"uniquement l'un de ces paramètres sur Vrai."
+
+msgid "This field is required"
+msgstr "Ce champ est obligatoire"
+
+msgid "Horilla  Configuration"
+msgstr "Configuration Horilla"
+
+msgid "Horilla Mail Configurations"
+msgstr "Configurations Horilla Mail"
+
+msgid "Cc"
+msgstr "Cc"
+
+msgid "Bcc"
+msgstr "Cci"
+
+msgid "Body"
+msgstr "Corps"
+
+msgid "Horilla Mail"
+msgstr "Horilla Mail"
+
+msgid "Horilla Mails"
+msgstr "Horilla Mails"
+
+msgid "Mail Attachment"
+msgstr "Pièce jointe"
+
+msgid "Mail Attachments"
+msgstr "Pièces jointes"
+
+msgid "Horilla Mail Template"
+msgstr "Modèle Horilla Mail"
+
+msgid "Horilla Mail Templates"
+msgstr "Modèles Horilla Mail"
+
+msgid "Save Changes?"
+msgstr "Enregistrer les modifications ?"
+
+msgid "Do you want to save your changes as a draft or discard them?"
+msgstr ""
+"Voulez-vous enregistrer vos modifications comme brouillon ou les supprimer ?"
+
+msgid "Save as Draft"
+msgstr "Enregistrer comme brouillon"
+
+#, fuzzy
+#| msgid "No related lists found for this"
+msgid "No emails found for"
+msgstr "Aucune liste associée trouvée pour ceci"
+
+msgid "Start typing to search emails..."
+msgstr ""
+
+msgid "Insert Fields"
+msgstr "Insérer des champs"
+
+msgid "Select fields to insert into your email template."
+msgstr "Sélectionnez les champs à insérer dans votre modèle d'e-mail."
+
+msgid "Instance"
+msgstr "Instance"
+
+msgid "Request"
+msgstr "Requête"
+
+msgid "Direct Fields"
+msgstr "Champs directs"
+
+msgid "User Fields"
+msgstr "Champs utilisateur"
+
+msgid "Company Fields"
+msgstr "Champs entreprise"
+
+msgid "Request Fields"
+msgstr "Champs de requête"
+
+msgid "Related Fields"
+msgstr "Champs liés"
+
+msgid "Reverse Related Fields"
+msgstr "Champs liés inversés"
+
+msgid "No fields available for this model"
+msgstr "Aucun champ disponible pour ce modèle"
+
+msgid "Insert Selected Fields"
+msgstr "Insérer les champs sélectionnés"
+
+msgid "Test Email Configuration"
+msgstr "Tester la configuration e-mail"
+
+msgid "Send Test Email"
+msgstr "Envoyer un e-mail de test"
+
+msgid "Send Mail"
+msgstr "Envoyer un e-mail"
+
+msgid "No mail server configured"
+msgstr ""
+
+#, fuzzy
+#| msgid "Related To"
+msgid "Related to"
+msgstr "Lié à"
+
+msgid "Message"
+msgstr ""
+
+msgid "Mail Preview"
+msgstr "Aperçu de l'e-mail"
+
+msgid "Email Snapshot"
+msgstr "Capture de l'e-mail"
+
+#, fuzzy
+#| msgid "From"
+msgid "From:"
+msgstr "De"
+
+msgid "No sender configured"
+msgstr ""
+
+msgid "No message content"
+msgstr ""
+
+msgid "This is how your email will look when sent"
+msgstr "Voici à quoi ressemblera votre e-mail une fois envoyé"
+
+msgid "Select content type (optional)"
+msgstr "Sélectionnez le type de contenu (facultatif)"
+
+msgid "Save as mail template"
+msgstr "Enregistrer comme modèle d'e-mail"
+
+msgid "Select Mail Template"
+msgstr "Sélectionner un modèle d'e-mail"
+
+msgid "Select Template"
+msgstr "Sélectionner un modèle"
+
+msgid " Email Template Preview"
+msgstr "Aperçu du modèle d'e-mail"
+
+msgid "No content to preview"
+msgstr "Aucun contenu à prévisualiser"
+
+msgid "Mail sent successfully"
+msgstr "E-mail envoyé avec succès"
+
+msgid "Something went wrong :"
+msgstr "Une erreur s'est produite :"
+
+msgid "Missing required fields: "
+msgstr "Champs obligatoires manquants : "
+
+msgid ""
+"Message body contains potentially dangerous content (XSS detected). Please "
+"remove any scripts or malicious code."
+msgstr ""
+
+msgid "Failed to send mail: "
+msgstr "Échec de l'envoi de l'e-mail : "
+
+msgid "Error sending mail: "
+msgstr "Erreur lors de l'envoi de l'e-mail : "
+
+msgid "No content to save as draft"
+msgstr "Aucun contenu à enregistrer comme brouillon"
+
+msgid "Draft saved successfully"
+msgstr "Brouillon enregistré avec succès"
+
+msgid "Error saving draft: "
+msgstr "Erreur lors de l'enregistrement du brouillon : "
+
+msgid "Draft discarded"
+msgstr "Brouillon supprimé"
+
+msgid "Error discarding draft: "
+msgstr "Erreur lors de la suppression du brouillon : "
+
+msgid "No notifications"
+msgstr "Aucune notification"
+
+msgid "Notifications"
+msgstr "Notifications"
+
+msgid "No unread notifications"
+msgstr "Aucune notification non lue"
+
+msgid "View all Notification"
+msgstr "Afficher toutes les notifications"
+
+msgid "All Notifications"
+msgstr "Toutes les notifications"
+
+msgid "Horilla CRM"
+msgstr "Horilla CRM"
+
+msgid "Recently Viewed"
+msgstr "Récemment consulté"
+
+msgid "No recent items"
+msgstr "Aucun élément récent"
+
+msgid "No companies available"
+msgstr "Aucune entreprise disponible"
+
+msgid "Logout"
+msgstr "Déconnexion"
+
+msgid "Welcome to Horilla CRM"
+msgstr "Bienvenue chez Horilla CRM"
+
+msgid "Please sign in to access your dashboard"
+msgstr "Veuillez vous connecter pour accéder à votre tableau de bord"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgid "Forgot Password?"
+msgstr "Mot de passe oublié ?"
+
+msgid "Load Demo Data"
+msgstr "Charger les données de démonstration"
+
+msgid "Send reset link"
+msgstr "Envoyer le lien de réinitialisation"
+
+msgid " Reset link will be sent to your registered email"
+msgstr ""
+"Le lien de réinitialisation sera envoyé à votre adresse e-mail enregistrée"
+
+msgid "Back to login"
+msgstr "Retour à la connexion"
+
+#~ msgid ""
+#~ "Successfully assigned {len(users)} user(s) to the role "
+#~ "'{form.cleaned_data['role']}'."
+#~ msgstr ""
+#~ "{len(users)} utilisateur(s) ont été attribués avec succès au rôle "
+#~ "« {form.cleaned_data['role']} »."
+
+#~ msgid "Updated"
+#~ msgstr "Mis à jour"
+
+#~ msgid "Achieved"
+#~ msgstr "Réalisé"
+
+#~ msgid "Missed"
+#~ msgstr "Manquée"
+
+#~ msgid "Revenue Target Snapshot"
+#~ msgstr "Aperçu de l'objectif de revenus"
+
+#~ msgid "Quantity Target Snapshot"
+#~ msgstr "Instantané de la cible de quantité"
+
+#~ msgid "Current Revenue Snapshot"
+#~ msgstr "Aperçu actuel des revenus"
+
+#~ msgid "Current Quantity Snapshot"
+#~ msgstr "Instantané de la quantité actuelle"
+
+#~ msgid "Changed By"
+#~ msgstr "Modifié par"
+
+#~ msgid "Forecast Target History"
+#~ msgstr "Historique de l'objectif de prévision"
+
+#~ msgid "Forecast Target Histories"
+#~ msgstr "Historiques des objectifs de prévision"
+
+#~ msgid "Change Reason"
+#~ msgstr "Raison du changement"
+
+#~ msgid "Forecast History"
+#~ msgstr "Historique de prévision"
+
+#~ msgid "Lead Stage Updated Successfully"
+#~ msgstr "Étape du Prospect Mise à Jour avec Succès"
+
+#~ msgid "Initialize Data Base"
+#~ msgstr "Initialiser la base de données"

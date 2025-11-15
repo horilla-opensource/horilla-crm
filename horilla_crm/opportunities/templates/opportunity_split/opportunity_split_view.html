@@ -1,0 +1,104 @@
+{% extends "settings/settings.html" %}
+{% load static i18n %}
+
+{% block settings %}
+
+{% if team_selling_enabled %}
+<div id="opportunity-split-view">
+    <button id="reloadButton"  hx-get="{{ request.path }}?{{request.GET.urlencode}}" hx-target="#opportunity-split-view" hx-swap="outerHTML" hx-select="#opportunity-split-view" hidden>click</button>
+    <div id="navBar" hx-get="{% url 'opportunities:opportunity_split_nav' %}?{{ request.GET.urlencode}}" hx-trigger="load">
+    </div>
+    <div class="text-sm font-semibold flex gap-2 relative mb-3">
+
+            {% trans 'Enable Opportunity split' %}
+        <label class="inline-flex items-center cursor-pointer">
+            <input
+                type="checkbox"
+                class="sr-only peer"
+                hx-post="{% url 'opportunities:toggle_opportunit_split' %}"
+                hx-trigger="confirmed"
+                {% if split_enabled %}
+                hx-on:click="hxConfirm(this,'Are you sure you want to disable Opportunity Split?')"
+                {% else %}
+                hx-on:click="hxConfirm(this,'Are you sure you want to enable Opportunity Split?')"
+                {% endif %}
+                hx-vals='{"action": "{% if split_enabled %}disable{% else %}enable{% endif %}"}'
+                {% if split_enabled %}checked{% endif %}>
+            <div class="relative w-11 h-5 bg-gray-200 rounded-full
+                        peer peer-checked:bg-primary-600
+                        after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                        after:bg-white after:rounded-full after:h-4 after:w-4
+                        after:transition-all peer-checked:after:translate-x-6">
+            </div>
+        </label>
+
+    </div>
+    {% if split_enabled %}
+        <div id="mainSession" class="mb-5"  hx-get="{% url 'opportunities:opportunity_split_list' %}?{{ request.GET.urlencode}}" hx-trigger="load">
+        </div>
+        <span class="flex">
+            <input
+                type="checkbox"
+                {% if allow_all_users_in_splits %}checked{% endif %}
+                id="ch2"
+                class="w-4 h-4 border border-[#cfcfcf] rounded-sm accent-[#e54f38] mr-2"
+                hx-post="{% url 'opportunities:toggle_allow_all_users_split' %}"
+                hx-trigger="confirmed"
+                {% if allow_all_users_in_splits %}
+                hx-on:click="hxConfirm(this,'Are you sure you want to restrict split members to only opportunity team members?')"
+                hx-vals='{"action": "disable_all_users"}'
+                {% else %}
+                hx-on:click="hxConfirm(this,'Are you sure you want to allow all users to be added in splits?')"
+                hx-vals='{"action": "enable_all_users"}'
+                {% endif %}
+            >
+            <div class="flex gap-1">
+                <label for="ch2" class="cursor-pointer text-sm font-medium text-[#666] italic">
+                    {% trans "Let users add members to opportunity teams while editing splits" %}
+                </label>
+                <span class="group relative ml-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="cursor-pointer text-[#a19e9e]" width="15" height="15" viewBox="0 0 20 20">
+                        <path fill="currentColor" d="M2.93 17.07A10 10 0 1 1 17.07 2.93A10 10 0 0 1 2.93 17.07m12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32M9 11V9h2v6H9zm0-6h2v2H9z"/>
+                    </svg>
+                    <div class="min-w-[200px] z-40 absolute h-max p-[10px] left-auto right-[1.5rem] top-0 bg-[#000000] text-[.7rem] rounded-[5px] text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                        <p>{% trans "When enabled, users can assign splits to any active user in the company,not just opportunity team members. This allows adding new members while editing splits." %}</p>
+                    </div>
+                </span>
+            </div>
+        </span>
+    {% else %}
+        <div class="mt-8 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-6 border border-[#efefef]">
+            <div class="flex items-start gap-6">
+                <div class="flex-shrink-0 w-[138px]">
+                    <img src="{% static '/assets/img/split.svg' %}" alt="">
+                </div>
+
+                <div class="flex-1 pl-4">
+                    <h4 class="font-semibold text-gray-800 mb-3">{% trans "Quick Tips for Opportunity Splits" %}</h4>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2">
+                            <span>{% trans "Enable opportunity splits to distribute revenue and credit among multiple team members" %}</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span>{% trans "Configure split fields to track different revenue types (Revenue, Overlay, Expected Revenue)" %}</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span>{% trans "Set percentage allocations for each team member to ensure proper credit distribution" %}</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span>{% trans "Choose whether to allow all users or restrict splits to opportunity team members only" %}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+
+</div>
+{% else %}
+<img src="{% static 'assets/img/not-found.svg' %}" alt="" class="w-60 m-auto mb-4 mt-5"/>
+<p class="text-sm text-center mb-3">{% trans 'Please Activate opporunity team settings' %}</p>
+{% endif %}
+{% endblock %}

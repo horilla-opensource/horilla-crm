@@ -1,0 +1,238 @@
+{% load i18n static %}
+
+<style>
+    .note-modal-backdrop{
+        z-index:39 !important;
+
+    }
+</style>
+
+<div class="flex justify-between p-5 pb-0">
+    <h2 class="text-lg font-semibold">{{ form_title|default:"Create Mail Template" }}</h2>
+    <button
+        id="close-template-btn"
+        onclick="closehorillaModal();"
+        class="text-gray-500 hover:text-red-500 text-xl">
+        <img src="{% static 'assets/icons/close.svg' %}" alt="" />
+    </button>
+</div>
+<div class="p-5 pt-2">
+    <form id="template-form"
+        hx-post="{{action_url}}"
+        hx-target="#horillaModalBox"
+        hx-indicator="#template-spinner"
+        hx-on::before-request="syncEditorContent()"
+        hx-on::after-request="handleFormResponse(event)">
+        {% csrf_token %}
+
+        <div class="overflow-hidden overflow-y-auto h-[600px]">
+            <label for="title" class="text-xs text-color-600">{{ form.title.label }}</label>
+            <input
+                type="text"
+                id="title"
+                name="title"
+                placeholder="Enter template title"
+                value="{{ form.title.value|default:'' }}"
+                class="mb-4 text-color-600 p-2 placeholder:text-xs w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600"
+                required />
+            {% if form.title.errors %}
+                <div class="text-red-500 text-xs mb-2">{{ form.title.errors.0 }}</div>
+            {% endif %}
+
+            <!-- Content Type Field -->
+            <div class="mb-4">
+                <label for="content_type" class="text-xs text-color-600"> {{ form.content_type.label }}</label>
+                <select
+                    name="content_type"
+                    id="content_type"
+                    class="js-example-basic-single w-full">
+                    <option value="">{% trans "Select content type (optional)" %}</option>
+                    {% for value, label in form.fields.content_type.choices %}
+                        <option value="{{ value }}" {% if form.content_type.value == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if form.content_type.errors %}
+                    <div class="text-red-500 text-xs mb-2">
+                        {{ form.content_type.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Template Body -->
+            <div class="flex justify-between items-center mb-1">
+                <label for="body" class="text-xs text-color-600">{{ form.body.label }}
+                </label>
+
+                <div class="flex gap-1">
+                    <button
+                        type="button"
+                        title="Insert Field"
+                        id="insert-field-btn"
+                        class="w-7 h-7 hover:bg-primary-600 hover:text-[white] transition-all p-[5px] border border-[#a8a8a8] hover:border-primary-600 flex items-center justify-center rounded-md"
+                        hx-get="{% url 'horilla_mail:field_selection' %}"
+                        hx-include="#content_type"
+                        hx-target="#contentModalBox"
+                        hx-on:click="openContentModal()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+                                <path stroke-width="2" d="M8 12h.009m3.986 0h.01m3.986 0H16" />
+                                <path stroke-width="1.5" d="M18 21c1.232 0 2.231-1.151 2.231-2.571c0-2.248-.1-3.743 1.442-5.52c.436-.502.436-1.316 0-1.818c-1.542-1.777-1.442-3.272-1.442-5.52C20.231 4.151 19.232 3 18 3M6 21c-1.232 0-2.231-1.151-2.231-2.571c0-2.248.1-3.743-1.442-5.52c-.436-.502-.436-1.316 0-1.818C3.835 9.352 3.769 7.84 3.769 5.57C3.769 4.151 4.768 3 6 3" />
+                            </g>
+                        </svg>
+                    </button>
+                    <button
+                        type="button"
+                        title="Preview"
+                        id="preview-template-btn"
+                        class="w-7 h-7 hover:bg-primary-600 hover:text-[white] transition-all p-[3px] border border-[#a8a8a8] hover:border-primary-600 flex items-center justify-center rounded-md"
+                        hx-post="{% url 'horilla_mail:mail_template_preview_view' %}"
+                        hx-include="#template_body"
+                        hx-target="#contentModalBox"
+                        hx-on:click="openContentModal()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <g fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="M20.188 10.934c.388.472.582.707.582 1.066s-.194.594-.582 1.066C18.768 14.79 15.636 18 12 18s-6.768-3.21-8.188-4.934c-.388-.472-.582-.707-.582-1.066s.194-.594.582-1.066C5.232 9.21 8.364 6 12 6s6.768 3.21 8.188 4.934Z" />
+                            </g>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="editor-container">
+                <textarea id="summernote" name="summernote"> {{ form.body.value|default:'' }}</textarea>
+            </div>
+            {% if form.body.errors %}
+              <div class="text-red-500 text-xs mt-2">{{ form.body.errors.0 }}</div>
+            {% endif %}
+
+            <input type="hidden" name="body" id="template_body" value="{{ form.body.value|default:'' }}">
+        </div>
+        <div class="flex justify-end gap-3">
+            <button
+                type="submit"
+                id="save-template-btn"
+                class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                <span class="flex items-center gap-2">
+                    <span id="template-spinner" class="htmx-indicator hidden">
+                        <img src="{% static 'assets/icons/spinner.svg' %}" alt="Loading..." width="20">
+                    </span>
+                    {% trans submit_text|default:"Save Template" %}
+                </span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+<script>
+    let summernoteInitialized = false;
+
+    function createSummernoteInstance() {
+        $('#summernote').summernote({
+            height: 300,
+            minHeight: 300,
+            maxHeight: 400,
+            focus: false,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video', 'hr']],
+                ['view', ['fullscreen', 'codeview']],
+                ['help', ['help']]
+            ],
+            callbacks: {
+                onChange: function(contents, $editable) {
+                    syncEditorContent();
+                },
+                onInit: function() {
+                    summernoteInitialized = true;
+                    restoreSummernoteContent();
+                }
+            }
+        });
+    }
+
+    function restoreSummernoteContent() {
+        const existingContent = $('#template_body').val();
+        if (existingContent && existingContent.trim() !== '' && summernoteInitialized) {
+            $('#summernote').summernote('code', existingContent);
+        }
+    }
+
+    function initMailForm() {
+        const editorContainer = document.getElementById('editor-container');
+        const summernoteElement = document.getElementById('summernote');
+
+        if (!editorContainer || !summernoteElement) return;
+
+        // Check if Summernote needs to be initialized
+        if (!summernoteInitialized || !$('#summernote').next('.note-editor').length) {
+            try {
+                // Destroy existing instance if it exists
+                if ($('#summernote').next('.note-editor').length) {
+                    $('#summernote').summernote('destroy');
+                }
+                summernoteInitialized = false;
+                createSummernoteInstance();
+            } catch (error) {
+                // Fallback: try once more
+                try {
+                    summernoteInitialized = false;
+                    createSummernoteInstance();
+                } catch (finalError) {
+                    console.error('Failed to initialize Summernote editor:', finalError);
+                }
+            }
+        }
+    }
+
+    function syncEditorContent() {
+        if (summernoteInitialized && $('#summernote').next('.note-editor').length) {
+            try {
+                const content = $('#summernote').summernote('code');
+                $("#template_body").val(content);
+                document.getElementById('template_body').value = content;
+            } catch (error) {
+                console.log('Error syncing editor content:', error);
+            }
+        }
+    }
+    $(document).on("click", "button[title='Preview']", syncEditorContent);
+
+    function cleanupEditor() {
+        if (summernoteEditor && summernoteEditor.length) {
+            try {
+                summernoteEditor.summernote('destroy');
+                summernoteEditor = null;
+            } catch (error) {
+                console.log('Error destroying Summernote:', error);
+            }
+        }
+    }
+
+    $(document).on("htmx:afterSwap", function(evt) {
+        if ($(evt.target).is('#horillaModalBox') || $(evt.detail.elt).is('#horillaModalBox')) {
+            setTimeout(function() {
+                initMailForm();
+            }, 100);
+        }
+    });
+
+    $(document).on('click', '#close-template-btn', function() {
+        cleanupEditor();
+    });
+
+    $(document).on('htmx:beforeSwap', function(evt) {
+        if ($(evt.target).is('#horillaModalBox')) {
+            cleanupEditor();
+        }
+    });
+</script>

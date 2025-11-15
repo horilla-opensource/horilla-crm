@@ -1,0 +1,161 @@
+<div class="mb-4 border-b border-[#dddddd]">
+    <ul
+        class="flex flex-nowrap overflow-hidden overflow-x-auto -mb-px text-sm font-medium text-center {{ background_class }}"
+        id="{{ view_id }}"
+        data-tabs-toggle="#{{ view_id }}-content"
+        data-tabs-active-classes="text-primary-600 border-b-2"
+        data-tabs-inactive-classes="text-[#333] hover:text-primary-600 hover:border-gray-300"
+        role="tablist"
+        {% if background_color %}style="background-color: {{ background_color }};"{% endif %}>
+        {% for tab in tabs %}
+            <li class="me-2" role="presentation">
+                <button
+                    class="inline-block px-5 py-3 text-sm border-b-2 rounded-t-lg transition duration-300 w-max"
+                    id="tab-{{ tab.id }}"
+                    data-tabs-target="#tab-{{ tab.id }}-content"
+                    type="button"
+                    role="tab"
+                    aria-controls="tab-{{ tab.id }}-content"
+                    aria-selected="{% if active_target == 'tab-'|add:tab.id|add:'-content' %}true{% else %}false{% endif %}"
+                    hx-get="{{ tab.url }}?{{request.GET.urlencode}}"
+                    hx-target="#inner-tab-{{ tab.id }}-content"
+                    hx-indicator="#tab-{{ tab.id }}-indicator"
+                    onclick="saveActiveTab('tab-{{ tab.id }}-content', '{{ request.path }}')">
+                    {{ tab.title }}
+                </button>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div id="{{ view_id }}-content" class="overflow-hidden {{ tab_class }}">
+    {% for tab in tabs %}
+        <div
+            class="{% if active_target != 'tab-'|add:tab.id|add:'-content' %}hidden{% endif %}"
+            id="tab-{{ tab.id }}-content"
+            role="tabpanel"
+            aria-labelledby="tab-{{ tab.id }}"
+            style="height:100%; position: relative;">
+
+            <!-- Loading Indicator Overlay -->
+            <div id="tab-{{ tab.id }}-indicator" class="htmx-indicator" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255); display: flex; align-items: center; justify-content: center; z-index: 50;">
+                <div class="flex justify-center items-center p-4">
+                    <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#e54f38]"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="inner-tab-{{ tab.id }}-content"
+                {% if active_target %}
+                    {% if active_target == 'tab-'|add:tab.id|add:'-content' %}
+                        hx-get="{{ tab.url }}?{{request.GET.urlencode}}" hx-trigger="load" hx-swap="innerHTML" hx-indicator="#tab-{{ tab.id }}-indicator"
+                    {% endif %}
+                {% else %}
+                    {% if forloop.first %}
+                        hx-get="{{ tab.url }}?{{request.GET.urlencode}}" hx-trigger="load" hx-swap="innerHTML" hx-indicator="#tab-{{ tab.id }}-indicator"
+                    {% endif %}
+                {% endif %}
+                style="height:100%">
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+function saveActiveTab(tabTarget, path) {
+    $.ajax({
+        url: '/active-tab/',
+        type: 'POST',
+        data: {
+            tab_target: tabTarget,
+            path: path,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+        },
+        error: function(xhr, status, error) {
+            console.error('Error saving active tab:', error);
+        }
+    });
+}
+</script>
+
+<style>
+.htmx-indicator {
+    display: none !important;
+}
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+    display: flex !important;
+}
+</style>
+{% comment %} <div class="mb-4 border-b border-[#dddddd]">
+    <ul
+        class="flex flex-nowrap overflow-hidden overflow-x-auto -mb-px text-sm font-medium text-center {{ background_class }}"
+        id="{{ view_id }}"
+        data-tabs-toggle="#{{ view_id }}-content"
+        data-tabs-active-classes="text-primary-600 border-b-2"
+        data-tabs-inactive-classes="text-[#333] hover:text-primary-600 hover:border-gray-300"
+        role="tablist"
+        {% if background_color %}style="background-color: {{ background_color }};"{% endif %}>
+        {% for tab in tabs %}
+            <li class="me-2" role="presentation">
+                <button
+                    class="inline-block px-5 py-3 text-sm border-b-2 rounded-t-lg transition duration-300 w-max"
+                    id="tab-{{ tab.id }}"
+                    data-tabs-target="#tab-{{ tab.id }}-content"
+                    type="button"
+                    role="tab"
+                    aria-controls="tab-{{ tab.id }}-content"
+                    aria-selected="{% if active_target == 'tab-'|add:tab.id|add:'-content' %}true{% else %}false{% endif %}"
+                    hx-get="{{ tab.url }}?{{request.GET.urlencode}}"
+                    hx-target="#inner-tab-{{ tab.id }}-content"
+                    onclick="saveActiveTab('tab-{{ tab.id }}-content', '{{ request.path }}')">
+                    {{ tab.title }}
+                </button>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div id="{{ view_id }}-content" class="overflow-hidden {{ tab_class }}">
+    {% for tab in tabs %}
+        <div
+            class="{% if active_target != 'tab-'|add:tab.id|add:'-content' %}hidden{% endif %}"
+            id="tab-{{ tab.id }}-content"
+            role="tabpanel"
+            aria-labelledby="tab-{{ tab.id }}"
+            style="height:100%">
+            <div class="tab-content" id="inner-tab-{{ tab.id }}-content"
+                {% if active_target %}
+                    {% if active_target == 'tab-'|add:tab.id|add:'-content' %}
+                        hx-get="{{ tab.url }}?{{request.GET.urlencode}}" hx-trigger="load" hx-swap="innerHTML"
+                    {% endif %}
+                {% else %}
+                    {% if forloop.first %}
+                        hx-get="{{ tab.url }}?{{request.GET.urlencode}}" hx-trigger="load" hx-swap="innerHTML"
+                    {% endif %}
+                {% endif %}
+                style="height:100%">
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+function saveActiveTab(tabTarget, path) {
+    $.ajax({
+        url: '/active-tab/',
+        type: 'POST',
+        data: {
+            tab_target: tabTarget,
+            path: path,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+        },
+        error: function(xhr, status, error) {
+            console.error('Error saving active tab:', error);
+        }
+    });
+}
+</script> {% endcomment %}

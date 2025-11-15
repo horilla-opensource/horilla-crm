@@ -1,0 +1,42 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+
+<div class="p-6">
+    <div class="flex justify-between items-center mb-2">
+        <h3 class="text-md font-semibold mb-2">{% trans 'Confirm Deletion' %}</h3>
+        <button onclick="CloseDeleteConfirmModal()" class="text-gray-500 hover:text-red-500 text-xl">
+            <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+        </button>
+    </div>
+    <p class="text-sm text-gray-600 mb-4 ">
+        {% trans 'Deleting this' %} <strong>{{ model_verbose_name }}</strong> {% trans 'will also remove all its related' %} <strong>{{ related_verbose_name_plural }}</strong><br> {% trans 'Are you sure you want to proceed ?' %}
+    </p>
+    <div class="flex justify-end gap-2">
+        <button onclick="CloseDeleteConfirmModal()" class="text-sm px-6 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+            {% trans 'Cancel' %}
+        </button>
+        <form
+              hx-post="{{ search_url }}"
+              hx-target="#deleteConfirmModalBox"
+              hx-swap="innerHTML"
+              hx-push-url="false"
+              hx-on::after-request="CloseDeleteConfirmModal();CloseDeleteModeModal();closeModal();$('.unselect-all-btn').click();">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="bulk_delete">
+            <input type="hidden" name="record_id" value="{{ record_id }}">
+            <input type="hidden" name="view_id" value="{{ view_id|safe }}">
+            <input type="hidden" name="delete_mode" value="{{ delete_mode }}">
+            <button type="submit"
+                    class="text-sm px-6 py-2 bg-[#21b442] text-white rounded-md hover:bg-[#198230]"
+                    hx-indicator="#confirm-delete-spinner">
+                <span class="flex items-center gap-2">
+                    <span id="confirm-delete-spinner" class="htmx-indicator">
+                        <img src="{% static '/assets/icons/spinner.svg' %}" alt="Loading..." width="25" />
+                    </span>
+                    {% trans 'Confirm' %}
+                </span>
+            </button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+
+<div class="flex items-center justify-center">
+    <input type="checkbox" id="final-list-{{ instance.id }}"  name="is-final-{{instance.id }}"   class="w-4 h-4 bg-[#E9EDF7] rounded-sm accent-[#e54f38]"
+           {% if instance.is_final %}checked{% endif %}
+           value="{{ instance.id }}"
+           hx-post="{% url 'leads:change_lead_stage_final' instance.id %}"
+           hx-trigger="confirmed"
+           hx-target="#final-list-{{ instance.id }}"
+           hx-swap="innerHTML"
+           hx-on:click="hxConfirm(this, 'Are you sure you want to change the final stage?')">
+</div>

@@ -1,0 +1,105 @@
+[
+
+    {
+        "model": "horilla_core.role",
+        "pk": 6,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-09-18T03:04:11.695Z",
+            "created_by": null,
+            "updated_at": "2025-09-18T03:04:11.695Z",
+            "updated_by": null,
+            "role_name": "CEO",
+            "parent_role": null,
+            "description": "CEO",
+            "permissions": []
+        }
+    },
+    {
+        "model": "horilla_core.role",
+        "pk": 7,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-09-18T03:04:20.251Z",
+            "created_by": null,
+            "updated_at": "2025-09-18T03:04:20.251Z",
+            "updated_by": null,
+            "role_name": "Sales Manager",
+            "parent_role": 6,
+            "description": "Sales Manager",
+            "permissions": []
+        }
+    },
+    {
+        "model": "horilla_core.role",
+        "pk": 8,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-09-18T03:04:27.639Z",
+            "created_by": null,
+            "updated_at": "2025-09-18T03:04:27.639Z",
+            "updated_by": null,
+            "role_name": "Support Manager",
+            "parent_role": 6,
+            "description": "Support Manager",
+            "permissions": []
+        }
+    },
+    {
+        "model": "horilla_core.role",
+        "pk": 9,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-09-18T03:04:41.437Z",
+            "created_by": null,
+            "updated_at": "2025-09-18T03:04:41.437Z",
+            "updated_by": null,
+            "role_name": "Marketing Manager",
+            "parent_role": 6,
+            "description": "Marketing Manager",
+            "permissions": []
+        }
+    },
+    {
+        "model": "horilla_core.role",
+        "pk": 10,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-09-18T03:04:58.539Z",
+            "created_by": null,
+            "updated_at": "2025-09-18T03:04:58.539Z",
+            "updated_by": null,
+            "role_name": "Sales  Representative",
+            "parent_role": 7,
+            "description": "Sales  Representative",
+            "permissions": []
+        }
+    },
+    {
+        "model": "horilla_core.role",
+        "pk": 11,
+        "fields": {
+            "is_active": true,
+            "additional_info": null,
+            "company": 1,
+            "created_at": "2025-09-18T03:05:18.674Z",
+            "created_by": null,
+            "updated_at": "2025-09-18T03:05:18.674Z",
+            "updated_by": null,
+            "role_name": "Sales Support",
+            "parent_role": 8,
+            "description": "Sales Support",
+            "permissions": []
+        }
+    }
+]

@@ -1,0 +1,62 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<div id="modalBox" class="relative bg-white rounded-lg shadow-sm">
+  <div class="p-5">
+    <div class="flex justify-between items-center mb-2">
+      <h2 class="text-md font-semibold">{% trans 'New List View' %}</h2>
+      <button
+        data-modal-hide="default-modal6"
+        onclick="closeModal()"
+        class="text-gray-500 hover:text-red-500 text-xl"
+      >
+        <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+      </button>
+    </div>
+    <form
+      hx-post="{% url 'horilla_generics:save_filter_list' %}?{% for key, value in request.GET.items %}{% if key == 'section' or key == 'search' %}{{ key }}={{ value }}&{% endif %}{% endfor %}"
+      hx-target="#mainContent"
+      hx-select="#mainContent"
+      hx-swap="outerHTML"
+      hx-push-url="true"
+      hx-on::after-request="closeModal()"
+    >
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="text-sm text-red-500 mb-2">
+          {% for error in form.non_field_errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if form.list_name.errors %}
+        <div class="text-sm text-red-500 mb-2">
+          {% for error in form.list_name.errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
+      {% endif %}
+      <input type="hidden" name="model_name" value="{{ form.initial.model_name|default:'Lead' }}">
+      <input type="hidden" name="main_url" value="{{ main_url|default:'' }}">
+      {% for key, values in query_params.items %}
+        {% for value in values %}
+          <input type="hidden" name="{{ key }}" value="{{ value }}">
+        {% endfor %}
+      {% empty %}
+        <p class="text-sm text-red-500 mb-2">{% trans 'No filter parameters available.' %}</p>
+      {% endfor %}
+      <div>
+        <label for="{{ form.list_name.id_for_label }}" class="text-xs text-color-600">{% trans 'List View Name' %}</label>
+        {{ form.list_name }}
+      </div>
+      <div class="flex justify-end p-5">
+        <button
+          type="submit"
+          class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+        >
+          {% trans 'Save' %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

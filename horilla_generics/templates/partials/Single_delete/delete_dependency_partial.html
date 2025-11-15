@@ -1,0 +1,17 @@
+{% load static %}
+{% load i18n %}
+
+{% for record in records %}
+    <li class="py-1">{{ record }}</li>
+{% endfor %}
+
+{% if has_more %}
+    <div id="sentinel-{{ related_name }}"
+         hx-get="{{ request.path }}?action=load_more_dependencies&related_name={{ related_name }}&record_id={{ record_id }}&page={{ next_page }}&per_page={{ per_page }}"
+         hx-target="#records-list-{{ related_name }}"
+         hx-swap="beforeend"
+         hx-push-url="false"
+         hx-trigger="intersect once"
+         hx-indicator="#mainloadingIndicator">
+    </div>
+{% endif %}

@@ -1,0 +1,77 @@
+{% load static %}
+{% load i18n %}
+
+<div class="p-5 bg-white rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-3">
+        <h2 class="text-md font-semibold">{% trans "Select Default Reports" %}</h2>
+        <button type="button" onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-xl">
+            <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+        </button>
+    </div>
+
+    <form
+      hx-post="{% url 'reports:create_selected_default_reports' %}"
+      hx-target="#modalBox"
+      hx-swap="innerHTML"
+    >
+      <!-- Select All Option -->
+      <div class="mb-2 p-2">
+        <label class="flex items-center text-sm font-semibold text-primary-600">
+          <input
+            type="checkbox"
+            id="master-select-all"
+            class="bg-[#E9EDF7]  w-4 h-4  rounded-sm accent-[#e54f38] mr-2"
+            onchange="toggleAllReports(this)"
+          >
+          {% trans "Select All" %}
+        </label>
+      </div>
+
+      <!-- Reports Grid (Two Columns) -->
+      <div class="max-h-[300px] overflow-y-auto custom-scroll">
+        <div class="grid grid-cols-2 gap-2">
+          {% for report in reports %}
+            <div class="border border-primary-300 rounded-lg p-2 hover:border-primary-600  transition-colors">
+              <label class="flex items-center space-x-3 cursor-pointer">
+                <input
+                  class="w-3 h-3 border border-[#cfcfcf] rounded-sm accent-[#e54f38] report-checkbox"
+                  type="checkbox"
+                  name="selected_reports"
+                  value="{{ report.name }}"
+                  onchange="updateSelectAll()"
+                >
+                <span class="flex-1 text-sm">{{ report.name }}</span>
+              </label>
+            </div>
+          {% empty %}
+            <p class="text-sm text-gray-500 text-center py-4 col-span-2">{% trans "No reports found." %}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-end space-x-2">
+        <button type="submit" class="px-3 py-1 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors">
+          {% trans "Create" %}
+        </button>
+      </div>
+    </form>
+</div>
+
+<script>
+function toggleAllReports(selectAllCheckbox) {
+  const reportCheckboxes = document.querySelectorAll('.report-checkbox');
+  reportCheckboxes.forEach(checkbox => {
+    checkbox.checked = selectAllCheckbox.checked;
+  });
+}
+
+function updateSelectAll() {
+  const reportCheckboxes = document.querySelectorAll('.report-checkbox');
+  const selectAllCheckbox = document.getElementById('master-select-all');
+  const allChecked = Array.from(reportCheckboxes).every(checkbox => checkbox.checked);
+  const anyChecked = Array.from(reportCheckboxes).some(checkbox => checkbox.checked);
+
+  selectAllCheckbox.checked = allChecked;
+  selectAllCheckbox.indeterminate = anyChecked && !allChecked;
+}
+</script>

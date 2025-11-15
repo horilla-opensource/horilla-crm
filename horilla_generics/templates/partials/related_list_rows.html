@@ -1,0 +1,26 @@
+<!-- components/related_list_rows.html -->
+{% load custom_tags %}
+{% for item in listview_context.queryset %}
+    <tr class="hover:bg-gray-50">
+        {% for column in listview_context.columns %}
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {% get_field_value item column.1 %}
+            </td>
+        {% endfor %}
+        {% if listview_context.actions %}
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                    {% for action in listview_context.actions %}
+                        <button class="text-indigo-600 hover:text-indigo-900"
+                                data-action="{{ action.action }}"
+                                data-item-id="{{ item.pk }}">
+                            <img src="{{ action.src }}"
+                                 class="{{ action.img_class }}"
+                                 alt="{{ action.action }}">
+                        </button>
+                    {% endfor %}
+                </div>
+            </td>
+        {% endif %}
+    </tr>
+{% endfor %}

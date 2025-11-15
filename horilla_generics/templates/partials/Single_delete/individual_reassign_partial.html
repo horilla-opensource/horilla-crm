@@ -1,0 +1,86 @@
+{% load static %}
+{% load i18n %}
+
+<div id="messages-container" style="display: none;">
+    {% for message in messages %}
+        <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+    {% endfor %}
+</div>
+{% for record in records %}
+    <div class="flex items-center gap-2 mb-2" data-record-id="{{ record.id }}">
+        <span class="text-sm text-gray-600 flex-grow min-w-0 overflow-hidden text-ellipsis">{{ record }}</span>
+        <div class="delete-select">
+            <select name="new_target_{{ record.id }}" class="js-example-basic-single headselect">
+                <option value="" selected>{% trans 'Select Target' %}</option>
+                {% for target in available_targets %}
+                    <option value="{{ target.id }}">{{ target }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if is_nullable %}
+            <form style="display: inline;" hx-post="{{ search_url }}" hx-target="#modalBox" hx-swap="innerHTML" hx-push-url="false">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="set_null_action">
+                <input type="hidden" name="record_id" value="{{ record.id }}">
+                <input type="hidden" name="main_record_id" value="{{ main_record_id }}">
+                <input type="hidden" name="delete_mode" value="{{ delete_mode }}">
+
+                <button type="submit" hx-on::before-request="this.classList.add('opacity-50')" hx-on::after-request="this.classList.remove('opacity-50')" class="text-sm px-1 py-2 bg-[#6b7280] text-white rounded-md hover:bg-[#4b5563]" style="width:80px;" title="{% trans 'Set to Null' %}">
+                    {% trans 'Set Null' %}
+                </button>
+            </form>
+        {% endif %}
+        <form style="display: inline;" hx-post="{{ search_url }}" hx-target="closest div[data-record-id='{{ record.id }}']" hx-swap="outerHTML" hx-push-url="false">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="soft_delete_record">
+            <input type="hidden" name="record_id" value="{{ record.id }}">
+            <input type="hidden" name="main_record_id" value="{{ record_id }}">
+            <input type="hidden" name="delete_mode" value="{{ delete_mode }}">
+            <button type="submit"
+                    class="w-24 flex justify-center text-xs rounded-md py-1.5 bg-primary-300 border border-primary-400 hover:text-primary-600 hover:border-primary-600 transition duration-300"
+                    hx-on::before-request="this.classList.add('opacity-50')"
+                    hx-on::after-request="this.classList.remove('opacity-50')"
+                    title="{% trans 'Soft Delete' %}">
+                {% trans 'Soft Delete' %}
+            </button>
+        </form>
+
+        <!-- Hard Delete Button -->
+        <button class="w-24 flex justify-center text-xs rounded-md py-1.5 bg-primary-300 border border-primary-400 hover:text-primary-600 hover:border-primary-600 transition duration-300"
+        hx-get="{{ search_url }}?action=delete_single_record&record_id={{ record.id }}&delete_type=hard&delete_mode={{ delete_mode }}" hx-target="#modalBox" hx-swap="innerHTML" hx-push-url="false" hx-on::before-request="this.classList.add('opacity-50')" hx-on::after-request="this.classList.remove('opacity-50')" class="text-sm px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-opacity" style="width:85px;" title="{% trans 'Hard Delete' %}">
+            {% trans 'Hard Delete' %}
+        </button>
+        {% comment %} <button hx-get="{{ search_url }}?action=delete_single_record&record_id={{ record.id }}" hx-target="#modalBox" hx-swap="innerHTML" hx-push-url="false" hx-on::before-request="this.classList.add('opacity-50')" hx-on::after-request="this.classList.remove('opacity-50')" class="text-sm px-2 py-1 transition-opacity" title="{% trans 'Delete this record' %}" style="width:30px;">
+            <img src="{% static 'assets/icons/a4.svg' %}" alt="Delete" class="inline w-4 h-4" />
+        </button> {% endcomment %}
+        <input type="hidden" name="action_{{ record.id }}" value="reassign" id="action_{{ record.id }}">
+    </div>
+{% endfor %}
+
+{% if has_more %}
+    <div id="individual-sentinel"
+         hx-get="{{ search_url }}?action=load_more_individual_records&record_id={{ main_record_id }}&page={{ next_page }}&per_page=8&delete_mode={{ delete_mode }}"
+         hx-target="#individual-records-list"
+         hx-swap="beforeend"
+         hx-push-url="false"
+         hx-trigger="intersect once"
+         hx-indicator="#individualLoadingIndicator">
+    </div>
+{% endif %}
+
+<script>
+// Reinitialize Select2 for new elements
+$(document).ready(function() {
+    $('.js-example-basic-single').select2({
+        placeholder: "Select Target",
+        allowClear: true
+    });
+
+    $('.js-example-basic-single').on('change', function() {
+        var recordId = $(this).attr('name').replace('new_target_', '');
+        var actionInput = $('#action_' + recordId);
+        var selectValue = $(this).val();
+        actionInput.val(selectValue ? 'reassign' : '');
+    });
+});
+</script>

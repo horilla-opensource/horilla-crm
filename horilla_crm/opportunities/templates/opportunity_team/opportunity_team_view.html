@@ -1,0 +1,13 @@
+{% extends "settings/my_settings.html" %}
+{% load static i18n %}
+
+{% block my_settings %}
+
+<div id="opportunity-team-view">
+    <div id="navBar" hx-get="{{ nav_url}}?{{ request.GET.urlencode}}" hx-trigger="load">
+    </div>
+    <div id="mainSession" class="pt-2"  hx-get="{{ list_url }}?{{ request.GET.urlencode}}" hx-trigger="load">
+    </div>
+</div>
+
+{% endblock %}

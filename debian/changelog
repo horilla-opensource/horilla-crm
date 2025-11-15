@@ -1,0 +1,28 @@
+horilla-crm (1.0.0-1) unstable; urgency=medium
+
+  * Initial release of Horilla-CRM Debian package
+  * Complete Customer Relationship Management system
+  * Features include:
+    - User Management with role-based access control
+    - Customer & Partner Contact Management
+    - Sales Pipeline with leads and opportunities tracking
+    - Campaign Management and Analytics
+    - Activity Tracking with calendar and communication logs
+    - Reporting & Forecasting tools with dashboards
+    - Real-time notifications via WebSocket
+    - Multi-language support
+    - Regional formatting and fiscal year configuration
+  * System integration:
+    - Systemd service configuration
+    - Automatic database migrations
+    - Static file collection
+    - Log rotation support
+    - Security hardening with dedicated user
+  * Supports multiple database backends:
+    - PostgreSQL (recommended)
+    - MySQL/MariaDB
+    - SQLite (development/testing)
+  * Web server integration ready for Nginx/Apache
+  * Redis support for WebSocket notifications
+
+ -- Horilla CRM Team <support@horilla.com>  Wed, 11 Sep 2025 00:00:00 +0000

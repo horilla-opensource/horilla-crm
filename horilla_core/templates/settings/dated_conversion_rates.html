@@ -1,0 +1,50 @@
+{% load i18n %}
+{% load static %}
+<div id="conversion-rate-form-container" class="relative bg-white rounded-lg shadow-sm">
+    <form method="post" hx-post="{% url 'horilla_core:dated_conversion_rate_view' %}" id="conversion-rate-form" hx-swap="outerHTML" hx-target="#conversion-rate-form-container">
+        {% csrf_token %}
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        <div class="p-5">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">{% trans 'Dated Conversion Rates' %}</h2>
+                <button type="button" onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-xl">
+                    <img src="{% static "assets/icons/close.svg" %}" alt="Close">
+                </button>
+            </div>
+            <div class="overflow-hidden overflow-y-auto pe-2">
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600 font-medium">{% trans 'Default Currency' %} : <span class="font-semibold"> {{ current_default.get_currency_display }} - ({{ current_default.currency }}) </span> </p>
+                </div>
+                <div class="mb-4">
+                    <label for="id_start_date" class="text-sm font-medium text-gray-700">{% trans 'Start Date' %}</label>
+                    <input type="date" name="start_date" id="id_start_date" required class="w-full border border-dark-50 rounded-md mt-1 p-2 text-sm focus-visible:outline-0 focus:border-primary-600">
+                </div>
+                <div class="space-y-4">
+                    <h3 class="text-sm font-semibold text-gray-800">{% trans 'Active Currencies' %}</h3>
+                    {% for currency in other_currencies %}
+                        <div class="flex items-center space-x-3">
+                            <span class="text-sm pt-2 font-medium text-gray-700 whitespace-nowrap">
+                                1 {{ current_default.currency }} =
+                            </span>
+                            <input type="number"
+                                   name="conversion_rate_{{ currency.currency }}"
+                                   id="id_conversion_rate_{{ currency.currency }}"
+                                   value="{{ currency.conversion_rate|default:'0.00' }}"
+                                   step="0.000001"
+                                   required
+                                   class="w-1/2 text-color-600 p-2 placeholder:text-xs w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600">
+                            <span class="text-sm font-medium text-gray-700 whitespace-nowrap">
+                                {{ currency.get_currency_display }} - ({{ currency.currency }})
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end p-5 pt-0">
+            <button type="submit" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-white">
+                {% trans "Save" %}
+            </button>
+        </div>
+    </form>
+</div>

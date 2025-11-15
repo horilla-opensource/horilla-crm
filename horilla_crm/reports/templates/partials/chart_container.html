@@ -1,0 +1,183 @@
+{% load static %}
+<div class="[box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] bg-white rounded-lg p-3 h-full" id="chart-container">
+    <div class="flex justify-between">
+        <h3 class="text-sm font-semibold mb-3">{{ report.chart_field|title|default:"Report" }} Chart</h3>
+        <div class="relative">
+            <button id="dropdownLeftEndButton" data-dropdown-toggle="dropdownLeftEnd12" data-dropdown-placement="left" type="button" class="flex">
+                <img src="{% static 'assets/icons/down.svg' %}" alt="" width="15" />
+            </button>
+            <div id="dropdownLeftEnd12" class="z-10 hidden bg-white rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] min-w-[160px] top-8 -right-[15px]">
+                <ul class="text-sm z-50 relative" aria-labelledby="dropdownLeftEndButton">
+                    <li><a href="#" class="block px-3 py-1.5 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                          hx-post="{% url 'reports:update_chart_type' report.pk %}"
+                          hx-vals='{"chart_type": "bar"}'
+                          hx-target="#chart-container"
+                          hx-swap="innerHTML"
+                          hx-headers='{"HX-Trigger": "refreshReport"}'>Bar Chart</a></li>
+                    <li><a href="#" class="block px-3 py-1.5 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                          hx-post="{% url 'reports:update_chart_type' report.pk %}"
+                          hx-vals='{"chart_type": "pie"}'
+                          hx-target="#chart-container"
+                          hx-swap="innerHTML"
+                          hx-headers='{"HX-Trigger": "refreshReport"}'>Pie Chart</a></li>
+                    <li><a href="#" class="block px-3 py-1.5 hover:text-primary-600 transition duration-300 text-[.8rem]"
+                          hx-post="{% url 'reports:update_chart_type' report.pk %}"
+                          hx-vals='{"chart_type": "line"}'
+                          hx-target="#chart-container"
+                          hx-swap="innerHTML"
+                          hx-headers='{"HX-Trigger": "refreshReport"}'>Line Chart</a></li>
+                    <li><a href="#" class="block px-3 py-1.5 hover:text-primary-600 transition duration-300 text-[.8rem]">Add to Dashboard</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <p class="text-xs mb-2">Record Count: {{ total_count }}</p>
+    {% if chart_data.error %}
+        <p class="text-red-500">{{ chart_data.error }}</p>
+    {% else %}
+        <div class="flex justify-between items-start">
+            <div class="h-[200px]">
+                <canvas id="chart-{{ report.pk }}"></canvas>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        {% if not chart_data.error %}
+            const ctx = document.getElementById('chart-{{ report.pk }}').getContext('2d');
+            const chartType = '{{ chart_data.type|lower|safe|default:"pie" }}';
+            const tension = chartType === 'line' ? 0.4 : 0;
+
+            const chartData = {
+                labels: {{ chart_data.labels|safe|default:"[]" }},
+                datasets: [{
+                    label: '{{ chart_data.label_field|title|safe|default:"Count" }}',
+                    data: {{ chart_data.data|safe|default:"[]" }},
+                    backgroundColor: {{ chart_data.colors|safe|default:"[]" }},
+                    borderColor: chartType === 'line' ? {{ chart_data.colors|safe|default:"[]" }} : 'transparent',
+                    borderWidth: chartType === 'line' ? 2 : 0,
+                    pointBackgroundColor: chartType === 'line' ? {{ chart_data.colors|safe|default:"[]" }} : 'transparent',
+                    pointRadius: chartType === 'line' ? 4 : 0,
+                    tension: tension,
+                    borderRadius: {
+                        topLeft: 4,
+                        topRight: 4,
+                        bottomLeft: 4,
+                        bottomRight: 4
+                    },
+                    barPercentage: 0.9,
+                    categoryPercentage: 0.8
+                }]
+            };
+
+            let legendConfig = {
+                display: true,
+                position: 'bottom',
+                labels: {
+                    boxWidth: 12,
+                    boxHeight: 12,
+                    usePointStyle: true,
+                    pointStyle: 'circle',
+                    padding: 10,
+                    font: {
+                        size: 12,
+                        family: "'Inter', sans-serif"
+                    }
+                }
+            };
+
+            {% if chart_data.type|lower|safe == 'bar' or chart_data.type|lower|safe == 'line' %}
+            legendConfig.labels.generateLabels = function(chart) {
+                const labels = chart.data.labels;
+                const dataset = chart.data.datasets[0];
+                const colors = dataset.backgroundColor;
+
+                return labels.map((label, index) => {
+                    const isHidden = dataset.data[index] === null;
+                    const originalColor = Array.isArray(colors) ? colors[index] : colors;
+
+                    return {
+                        text: label,
+                        fillStyle: originalColor,
+                        strokeStyle: originalColor,
+                        lineWidth: 0,
+                        pointStyle: 'circle',
+                        hidden: isHidden,
+                        index: index,
+                        datasetIndex: 0
+                    };
+                });
+            };
+
+            legendConfig.onClick = function(e, legendItem, legend) {
+                const chart = legend.chart;
+                const index = legendItem.index;
+                const dataset = chart.data.datasets[0];
+
+                if (chartType === 'bar' || chartType === 'line') {
+                    if (!chart.originalData) {
+                        chart.originalData = [...dataset.data];
+                    }
+
+                    if (dataset.data[index] === null) {
+                        dataset.data[index] = chart.originalData[index];
+                    } else {
+                        dataset.data[index] = null;
+                    }
+                } else {
+                    const meta = chart.getDatasetMeta(0);
+                    if (meta.data[index]) {
+                        meta.data[index].hidden = !meta.data[index].hidden;
+                    }
+                }
+
+                chart.update('none');
+            };
+            {% endif %}
+
+            new Chart(ctx, {
+                type: chartType,
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: legendConfig,
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: { size: 12, family: "'Inter', sans-serif" },
+                            bodyFont: { size: 12, family: "'Inter', sans-serif" },
+                            padding: 10
+                        }
+                    },
+                    scales: {
+                        {% if chart_data.type|lower|safe == 'pie' or chart_data.type|lower|safe == 'doughnut' %}
+                            x: { display: false },
+                            y: { display: false }
+                        {% else %}
+                            x: {
+                                beginAtZero: true,
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: '{{ chart_data.label_field|title|safe|default:"Count" }}'
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Value'
+                                }
+                            }
+                        {% endif %}
+                    }
+                }
+            });
+        {% endif %}
+    });
+</script>

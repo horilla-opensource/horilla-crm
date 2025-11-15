@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Community Discussions"
+    url: "https://github.com/horilla-opensource/horilla-crm/discussions"
+    about: "Ask usage questions and discuss ideas before opening an issue."
+issue_template:
+  - bug_report.yml
+  - feature_request.yml

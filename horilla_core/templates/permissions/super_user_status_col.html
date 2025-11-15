@@ -1,0 +1,21 @@
+<label class="inline-flex items-center cursor-pointer">
+  <input type="checkbox"
+         value=""
+         class="sr-only peer"
+         {% if instance.is_superuser %}checked{% endif %}
+         {% if superuser_count <= 1 %}disabled{% endif %}
+         {% if superuser_count > 1 %}
+           hx-post="{% url 'horilla_core:super_user_status' instance.pk %}"
+           hx-trigger="confirmed"
+           hx-on::after-request="$('#reloadMessagesButton').click();$('#reloadButton').click();"
+           hx-on:click="hxConfirm(this, 'Are you sure you want to change the user status?')"
+         {% endif %}
+         >
+  <div class="relative w-11 h-5 rounded-full bg-gray-200
+    {% if superuser_count <= 1 %}peer-checked:bg-primary-400 cursor-not-allowed {%else %} peer-checked:bg-primary-600{% endif %}
+    after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+    after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all
+    peer-checked:after:translate-x-6
+    {% if superuser_count <= 1 %}after:translate-x-6 after:opacity-50{% endif %}">
+  </div>
+</label>

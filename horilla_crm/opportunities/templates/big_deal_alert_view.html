@@ -1,0 +1,12 @@
+{% extends "settings/settings.html" %}
+{% load static i18n %}
+
+{% block settings %}
+<div id="big-deal-alert-view">
+    <div id="navBar" hx-get="{{ nav_url}}?{{request.GET.urlencode}}" hx-trigger="load">
+    </div>
+    <div id="mainSession" class="pt-5" hx-get="{{ list_url }}?{{request.GET.urlencode}}" hx-trigger="load">
+    </div>
+</div>
+
+{% endblock %}

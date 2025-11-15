@@ -1,0 +1,129 @@
+{% load static i18n horilla_tags %}
+
+<div class="relative dropdown-wrapper" id="notificationWrapper">
+    <button class="flex justify-center items-center group text-primary-600 w-8 h-8 lg:w-12 lg:h-12 bg-primary-100 hover:bg-primary-600 rounded-md transition duration-300 relative">
+        <i class="fas fa-bell transition duration-300 group-hover:text-white"></i>
+        <span id="notification-count"
+            class="notification-count absolute -top-2 -right-2 lg:-top-1 lg:-right-1 bg-red-500 text-white text-xs rounded-full min-w-[20px] h-5 px-1 flex items-center justify-center">
+            {% if unread_notifications.count > 30 %}
+                30+
+            {% else %}
+                {{ unread_notifications.count|default_if_none:"0" }}
+            {% endif %}
+        </span>
+    </button>
+    <div class="dropdown-content w-56 md:w-80 absolute z-10 bg-white rounded-lg shadow-card right-0">
+        <div class="flex justify-between items-center p-3 border-b border-b-dark-50">
+            <h5 class="font-semibold text-sm">{% trans 'Notifications'%}</h5>
+            <div class="flex gap-1">
+            <span
+                class="cursor-pointer text-xs group text-primary-600 w-7 h-7 bg-primary-100 hover:bg-primary-600 hover:text-white rounded-full transition duration-300 flex items-center justify-center">
+                <i class="fa-solid fa-volume-high"></i>
+            </span>
+            <button
+                hx-post="{% url 'horilla_notifications:mark_all_read' %}"
+                hx-target="#notificationWrapper"
+                hx-swap="outerHTML"
+                hx-on:click="setTimeout(() => $('#reloadMessagesButton').click(), 500)"
+                hx-on:afterRequest="updateNotificationCount();markAllDotsAsRead();"
+                class="cursor-pointer text-xs group text-primary-600 w-7 h-7 bg-primary-100 hover:bg-primary-600 hover:text-white rounded-full transition duration-300 flex items-center justify-center">
+                <i class="fa-solid fa-check-double"></i>
+            </button>
+            </div>
+        </div>
+
+        <div class="p-3">
+            <ul class="notification-list text-sm h-60 overflow-hidden overflow-y-auto">
+                {% for notification in unread_notifications %}
+                    <li id="notif-{{ notification.id }}"
+                        class="mb-3 cursor-pointer"
+                        hx-get="{% url 'horilla_notifications:open_notification' notification.id %}"
+                        hx-trigger="click"
+                        hx-swap="none">
+                        <div class="flex items-center justify-between">
+                        <span>{{ notification.message }}</span>
+                        <button
+                            hx-post="{% url 'horilla_notifications:mark_read' notification.id %}"
+                            hx-target="#notif-{{ notification.id }}"
+                            onclick="event.stopPropagation()"
+                            hx-on:click="setTimeout(() => {
+                                updateNotificationCount();
+                                toggleNotificationDot('all-notif-{{ notification.id }}');
+                            }, 500)"
+                            hx-swap="outerHTML"
+                            class="cursor-pointer text-xs group text-primary-600 w-6 h-6 bg-primary-100
+                                    hover:bg-primary-600 hover:text-white rounded-full transition duration-300 flex items-center justify-center">
+                            <i class="fa-solid fa-check text-[10px]"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-[#777777] mt-1">
+                            {{ notification.created_at|timesince }} ago by {{ notification.sender|default:"System" }}
+                        </p>
+                    </li>
+                {% empty %}
+                    <li class="dropdown-notif-message text-center text-xs text-gray-500 py-2">
+                        {% trans "No unread notifications" %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="p-3 border-t border-t-dark-50 flex justify-center">
+            <button
+                class="toggleSidemenu text-primary-600 text-xs flex justify-center font-semibold hover:text-[#ac3b2a] transition duration-300"
+                data-sidebar="sidebarModal3">{% trans "View all Notification" %}
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="sidebarModal hidden overflow-hidden overflow-y-auto" id="sidebarModal3">
+    <div class="">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-semibold flex items-center gap-2">
+                <button class="closebtn closeSidemenu" data-sidebar="sidebarModal3"><i class="fa-solid fa-angle-right"></i></button>
+                {% trans "All Notifications" %}
+            </h3>
+            <button
+                hx-post="{% url 'horilla_notifications:notification_all_delete' %}"
+                class="delete-all-notification text-primary-600 text-xs hover:text-red-600 transition duration-300"
+                hx-target="#sidebarModal3"
+                hx-on:click="setTimeout(() => {
+                    $('#reloadMessagesButton').click();
+                    deleteAllDropdownNotifications();
+                }, 500)"
+                hx-swap="innerHTML"
+                hx-on:htmx:afterRequest="deleteAllDropdownNotifications();">
+                {% trans "Clear All" %}
+            </button>
+        </div>
+        {% for notification in request.user.notifications.all %}
+            <div class="border border-dark-50 p-3 rounded-md mb-2 relative" id="all-notif-{{ notification.id }}">
+                <button
+                    hx-post="{% url 'horilla_notifications:notification_delete' notification.id %}"
+                    class="delete-notification absolute top-2 right-2 text-xs"
+                    hx-on:click="setTimeout(() => {
+                        $('#reloadMessagesButton').click()
+                        deleteDropdwonNotification('notif-{{ notification.id }}');
+                    }, 500)"
+                    data-target="#all-notif-{{ notification.id }}">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="flex items-start gap-2">
+                    {% if not notification.read %}
+                        <div class="notif-indicator w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                    {% else %}
+                        <div class="notif-indicator w-2 h-2 mt-2 flex-shrink-0"></div>
+                    {% endif %}
+                    <div class="flex-1 ">
+                        <h5 class="text-sm font-semibold mb-2">{{ notification.message }}</h5>
+                        <p class="text-xs text-[#777777] mt-1">
+                            {{ notification.created_at|timesince }} ago by {{ notification.sender|default:"System" }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="notification-message text-center text-xs text-gray-500 py-4">{% trans "No notifications" %}</div>
+        {% endfor %}
+    </div>
+</div>

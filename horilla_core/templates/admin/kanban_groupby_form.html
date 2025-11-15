@@ -1,0 +1,57 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <form {% if model_form %}action=""{% endif %} method="post" id="kanban_form" novalidate>
+        {% csrf_token %}
+        <div>
+            {% if show_model_selection %}
+                <!-- Step 1: Model Selection Form -->
+                <fieldset class="module aligned">
+                    <div class="form-row field-model_name">
+                        <div>
+                            <label for="id_model_name" class="required">{{ model_selection_form.model_name.label }}:</label>
+                            {{ model_selection_form.model_name }}
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="submit-row">
+                    <input type="submit" name="select_model" value="Select Model" class="default" style="float: left;">
+                </div>
+            {% endif %}
+
+            {% if show_full_form %}
+                <!-- Step 2: Full Form with Fields -->
+                <fieldset class="module aligned">
+                    <div class="form-row field-model_name">
+                        <div>
+                            <label for="id_display_model_name" class="required">Model name:</label>
+                            <input type="text" id="id_display_model_name" value="{{ model_name }}" readonly>
+                            {{ model_form.model_name }}
+                            <p class="help">Name of the model (e.g., 'myapp.Lead') to group by.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-row field-field_name">
+                        <div>
+                            <label for="id_field_name" class="required">Field name:</label>
+                            {{ model_form.field_name }}
+                            <p class="help">Name of the field that can be used for grouping (ChoiceField or ForeignKey).</p>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="submit-row">
+                    <input type="submit" value="{% trans 'Save' %}" class="default" name="_save">
+                    <input type="submit" value="{% trans 'Save and add another' %}" name="_addanother">
+                    <input type="submit" value="{% trans 'Save and continue editing' %}" name="_continue">
+                </div>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}

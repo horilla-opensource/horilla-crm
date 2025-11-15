@@ -1,0 +1,17 @@
+{% extends "settings/settings.html" %}
+{% load static i18n horilla_tags %}
+
+{% block settings %}
+{% has_perm "horilla_mail.view_horillaemailconfiguration" as can_view_mail_server %}
+{% if can_view_mail_server %}
+    <div id="outlook-server-view">
+        <div id="navBar" hx-get="{{ nav_url}}?{{request.GET.urlencode}}" hx-trigger="load">
+        </div>
+        <div id="mainSession" hx-get="{% if request.GET.kanban == 'true' %}{{ kanban_url }}?{{ request.GET.urlencode}}{% if filter_form %}&hx_trigger={{filter_form}}{% endif %}{% else %}{{ list_url }}?{{ request.GET.urlencode}}{% if filter_form %}&hx_trigger={{filter_form}}{% endif %}{% endif%}" hx-trigger="load">
+        </div>
+    </div>
+{% else %}
+    {% include "error/403.html" %}
+{% endif %}
+
+{% endblock %}

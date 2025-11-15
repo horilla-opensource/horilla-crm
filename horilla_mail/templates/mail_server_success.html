@@ -1,0 +1,43 @@
+<div style="max-width: 650px; margin: auto; background: white; border-radius: 12px; padding: 35px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+
+    <!-- Header -->
+    <h2 style="color: #000000; text-align: center; font-size: 24px; margin-bottom: 25px;">
+      Welcome to {{ company }}
+    </h2>
+
+    <!-- Intro -->
+    <p style="font-size: 14px; color: #333; line-height: 1.6;">
+      Hi {{ user }},
+    </p>
+
+    <p style="font-size: 14px; color: #333; line-height: 1.6;">
+      You have successfully configured your mail server in <strong>{{ company }}</strong>.
+      This test email confirms that your email settings are working correctly.
+      You can now send and receive system notifications, approvals, and updates across all {{ company }} applications.
+    </p>
+
+    <!-- Info Box -->
+    <div style="margin: 20px 0; padding: 15px; background: #fdf2f1; border-left: 4px solid #e54f38; border-radius: 6px;">
+      <p style="margin: 6px 0; font-size: 14px; color: #333;">
+        ✅ Your mail server is configured and ready to use.
+      </p>
+      <p style="margin: 6px 0; font-size: 14px; color: #333;">
+        📢 Now you can send and receive emails for requests, approvals, creations, updates, and more across {{ company }}.
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="text-align: center; margin-top: 25px;">
+      <a href="{{ button_url }}" style="display: inline-block; padding: 10px 20px; background-color: #e54f38; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; margin: 5px;">
+        Go to Dashboard
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+
+    <p style="font-size: 12px; color: #888; text-align: center; line-height: 1.5;">
+      This is a test mail message from <strong>{{ company }}</strong>.<br>
+      If you did not request this, please ignore this email.
+    </p>
+  </div>

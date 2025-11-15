@@ -1,0 +1,14 @@
+{% load static i18n %}
+<div class="p-5 relative bg-white rounded-lg shadow-sm w-fit min-w-full">
+
+    <div class="flex justify-between items-center mb-2">
+        <h2 class="text-md font-semibold">{% trans "Edit All Opportunity Splits" %}</h2>
+        <button type="button" onclick="closeContentModal()" class="text-gray-500 hover:text-red-500 text-xl cursor-pointer">
+            <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+        </button>
+    </div>
+    <div id="split-tabs"
+        hx-get="{% url 'opportunities:opportunity_splits' %}?{{ request.GET.urlencode }}"
+        hx-trigger="load">
+    </div>
+</div>

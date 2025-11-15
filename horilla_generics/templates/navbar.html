@@ -1,0 +1,288 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<div class="{% if border_enabled %} border-b border-b-primary-400 {% endif %} bg-white {% if nav_width %} px-5 fixed z-10 w-fill-available {% else %} flex justify-between items-center mb-2 w-full {% endif %}">
+  <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 justify-between w-full {% if not nav_width %} pb-3 {% endif %}">
+    <div class="flex items-center gap-4">
+      {% if navbar_indication %}
+        <button
+          {% for attr_name, attr_value in navbar_indication_attrs.items %}
+            {{ attr_name }}="{{ attr_value|safe }}"
+          {% endfor %}>
+          <i class="fas fa-arrow-left mr-2"></i>
+        </button>
+      {% endif %}
+      <h3 class="text-md font-semibold hidden lg:block">{{nav_title}}</h3>
+
+      {% if all_view_types %}
+        <div class="w-20 md:w-40">
+          <select
+            id="viewTypeSelect"
+            class="js-example-basic-single headselect mt-0"
+            name="view_type"
+            hx-get="{{ main_url }}?{% for key, value in request.GET.items %}{% if key != 'view_type' %}{{ key }}={{ value }}&{% endif %}{%endfor %}"
+            hx-target="#mainSession"
+            hx-select="#mainSession"
+            hx-select-oob="#navBar"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+            hx-trigger="change">
+            <option value="all" {% if view_type == 'all' %}selected{% endif %}>All Items</option>
+            {% if recently_viewed_option %}
+              <option value="recently_viewed" {% if view_type == 'recently_viewed' %}selected{% endif %}>Recently Viewed</option>
+            {% endif %}
+            <option value="recently_created" {% if view_type == 'recently_created' %}selected{% endif %}>Recently Created</option>
+            <option value="recently_modified" {% if view_type == 'recently_modified' %}selected{% endif %}>Recently Modified</option>
+            {% if custom_view_type %}
+              {% for key, value in custom_view_type.items %}
+                {% if value.name %}
+                  <option value="{{ key }}" {% if view_type == key %}selected{% endif %}>{{ value.name }}</option>
+                {% else %}
+                  <option value="{{ key }}" {% if view_type == key %}selected{% endif %}>{{ value }}</option>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+            {% for saved_list in request.user.saved_filter_lists.all %}
+              {% if saved_list.model_name == model_name %}
+                <option value="saved_list_{{ saved_list.id }}" {% if view_type == 'saved_list_'|add:saved_list.id|stringformat:"s" %}selected{% endif %}>
+                  {{ saved_list.name }}
+                </option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+        {% if pinned_view and pinned_view.view_type == view_type %}
+          <button
+            id="rotateBtn"
+            class="rotate-[40deg] hidden sm:block"
+            hx-post="{% url 'horilla_generics:pin_view' %}"
+            hx-vals='{"view_type": "{{ view_type }}", "model_name": "{{ model_name|escapejs }}","unpin": "true"}'
+            hx-target="#rotateBtn"
+            hx-select="#rotateBtn"
+            hx-swap="outerHTML">
+            <img id="pinIcon" src="{% static 'assets/icons/pin.svg' %}" alt="Pin" width="18" class="transition-transform duration-300" />
+          </button>
+        {% else %}
+          <button
+            id="rotateBtn"
+            class=" hidden sm:block"
+            hx-post="{% url 'horilla_generics:pin_view' %}"
+            hx-vals='{"view_type": "{{ view_type }}", "model_name": "{{ model_name|escapejs }}"}'
+            hx-target="#rotateBtn"
+            hx-select="#rotateBtn"
+            hx-swap="outerHTML">
+            <img id="pinIcon" src="{% static 'assets/icons/pin.svg' %}" alt="Pin" width="18" class="transition-transform duration-300" />
+          </button>
+        {% endif %}
+      {% endif %}
+    </div>
+    <div class="flex items-center {% if nav_width %} h-[70px] {% else %}  h-[40px] {% endif %} {% if gap_enabled %} gap-2 md:gap-4 {% else %} gap-1 {% endif %}">
+      {% if search_option %}
+        <div class="relative hidden sm:block">
+          <input
+            type="text"
+            id="searchInput"
+            name="search"
+            placeholder="Search"
+            class="text-color-600 px-2 py-1.5 pr-[40px] w-full border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm [transition:.3s] focus:border-primary-600"
+            value="{{ request.GET.search }}"
+            hx-get="{{ main_url }}?{% for key, value in request.GET.items %}{% if key != 'apply_filter' and  key != 'remove_filter' and key != 'field' and key != 'operator' and key != 'value' and key != 'search' %}{{ key }}={{ value }}&{% endif %}{% endfor %}{% if request.GET.field %}&apply_filter=true{% endif %}"
+            hx-trigger="keyup changed delay:500ms, search"
+            hx-target="#mainSession"
+            hx-select="#mainSession"
+            hx-swap="outerHTML"
+            hx-preserve="true"
+            hx-push-url="true"
+            hx-include="#filtercontainer input, #filtercontainer select"/>
+          <button
+            class="absolute right-3 top-0 bottom-0 m-auto cursor-pointer">
+            <img src="{% static './assets/icons/search.svg' %}" alt="" width="20" />
+          </button>
+        </div>
+      {% endif %}
+      <div class="flex items-center gap-1">
+        {% if reload_option %}
+          <div class="flex items-center">
+            <button onclick ="$('#reloadButton').click();"
+              class="hover:bg-[#f3f4f6] w-6 h-6 md:w-10 md:h-10 flex items-center justify-center rounded transition duration-300 cursor-pointer">
+              <img src="{% static 'assets/icons/l5.svg' %}" alt="" width="17" />
+            </button>
+          </div>
+        {% endif %}
+        {% if filter_option %}
+          <div
+            id="filterToggleWrapper"
+            class="{% if "apply_filter" in request.GET.urlencode or request.GET.search %}bg-[#f3f4f6]{% endif %} hover:bg-[#f3f4f6] w-6 h-6 md:w-10 md:h-10 flex items-center justify-center rounded transition duration-300 cursor-pointer"
+            hx-on:click="
+              const filterPanel = document.getElementById('filterpanel');
+              const filterContainer = document.getElementById('filtercontainer');
+              const wrapper = document.getElementById('filterToggleWrapper');
+
+              if (filterPanel.classList.contains('hidden')) {
+                // Open filter panel
+                filterPanel.classList.remove('hidden');
+                filterContainer.classList.remove('hidden');
+                void filterPanel.offsetHeight; // reflow
+                filterPanel.classList.add('visible');
+                filterContainer.classList.add('visible');
+
+                // Add background
+                wrapper.classList.add('bg-[#f3f4f6]');
+              } else {
+                // Close filter panel
+                filterPanel.classList.remove('visible');
+                filterContainer.classList.remove('visible');
+                setTimeout(() => {
+                  filterPanel.classList.add('hidden');
+                }, 300);
+
+                // Remove background
+                wrapper.classList.remove('bg-[#f3f4f6]');
+              }
+            ">
+            <button class="filtermenu">
+              <img src="{% static 'assets/icons/l4.svg' %}" alt="" width="14" />
+            </button>
+          </div>
+        {% endif %}
+
+
+        {% if not show_list_only %}
+          {% if not one_view_only  %}
+            <div class="hover:bg-[#f3f4f6] w-6 h-6 md:w-10 md:h-10 flex items-center justify-center rounded transition duration-300 cursor-pointer">
+              <button id="tableBtn"
+                hx-get="{{ main_url }}?{% for key, value in request.GET.items %}{% if key != 'list' and key != 'kanban' and  key != 'remove_filter' %}{{ key }}={{ value }}&{% endif %}{%endfor %}list=true&kanban=false"
+                hx-target="#mainSession"
+                hx-select="#mainSession"
+                hx-swap="outerHTML"
+                hx-select-oob="#navBar"
+                hx-include="[name='search']"
+                hx-push-url="true">
+                <img
+                  src="{% static 'assets/icons/l3.svg' %}"
+                  alt="Table View"
+                  width="17"
+                />
+              </button>
+            </div>
+            {% if kanban_url %}
+              <div class="hover:bg-[#f3f4f6] w-6 h-6 md:w-10 md:h-10 flex items-center justify-center rounded transition duration-300 cursor-pointer">
+                <button  id="kanbanBtn"
+                  hx-get="{{ kanban_view_url }}?{% for key, value in request.GET.items %}{% if key != 'list' and key != 'kanban' and  key != 'remove_filter' %}{{ key }}={{ value }}&{% endif %}{%endfor%}kanban=true"
+                  hx-target="#mainSession"
+                  hx-select="#mainSession"
+                  hx-swap="outerHTML"
+                  hx-select-oob="#navBar"
+                  hx-include="[name='search']"
+                  hx-push-url="true">
+                  <img
+                    src="{% static 'assets/icons/l2.svg' %}"
+                    alt="Kanban View"
+                    width="17"
+                  />
+                </button>
+              </div>
+            {% endif %}
+
+          {% endif %}
+          {% if actions and enable_actions %}
+            <div class="hover:bg-[#f3f4f6] w-6 h-6 md:w-10 md:h-10 flex items-center justify-center rounded transition duration-300 cursor-pointer">
+              <button
+                id="dropdownDefaultButton"
+                data-dropdown-toggle="dropdown"
+                type="button">
+                <img src="{% static 'assets/icons/l1.svg' %}" alt="" width="18" />
+              </button>
+              <div id="dropdown" class="z-10 hidden bg-white rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] min-w-[160px]">
+                <ul class="text-sm" aria-labelledby="dropdownDefaultButton">
+                  {% for action in actions %}
+                    <li>
+                      <a class="block px-4 py-2 hover:text-primary-600 transition duration-300 text-sm"
+                        {% if action.attrs %}{{ action.attrs|safe }}{% endif %}>
+                        {{action.action}}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+      <div>
+      {% if new_button.url and  not show_list_only  %}
+        <button
+          hx-get="{{ new_button.url }}?{{ request.GET.urlencode }}"
+          hx-target="{{ new_button.target|default:'#modalBox' }}"
+          hx-swap="{{ new_button.swap|default:'innerHTML' }}"
+          onclick="{{ new_button.onclick|default:'openModal()' }}"
+          class="{{ new_button.class|default:'text-xs px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]' }}"
+          {% if new_button.attrs %}
+            {% for attr_name, attr_value in new_button.attrs.items %}
+              {{ attr_name }}="{{ attr_value|safe }}"
+            {% endfor %}
+          {% endif %}>
+          {{ new_button.title|default:"New" }}
+        </button>
+      {% endif %}
+
+      {% if second_button.url %}
+        <button
+            hx-get="{{ second_button.url }}?{{ request.GET.urlencode }}"
+            hx-target="{{ second_button.target|default:'#modalBox' }}"
+            hx-swap="{{ second_button.swap|default:'innerHTML' }}"
+            onclick="{{ second_button.onclick|default:'openModal()' }}"
+            class="{{ second_button.class|default:'text-xs px-4 py-2 text-primary-600 rounded-md hover:bg-primary-600 transition duration-300 border border-primary-600 hover:text-white' }}"
+            {% if second_button.attrs %}
+              {% for attr_name, attr_value in second_button.attrs.items %}
+                {{ attr_name }}="{{ attr_value|safe }}"
+              {% endfor %}
+            {% endif %}>
+          {{ second_button.title|default:"Create" }}
+        </button>
+      {% endif %}
+    </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    if ($.fn.select2) {
+      $('.js-example-basic-single').select2({ width: "100%"});
+    }
+
+    const $select = $('select[name="view_type"]');
+    if ($select.length) {
+      const serverViewType = "{{ view_type|escapejs }}";
+      $select.val(serverViewType || 'all');
+
+      if ($select.hasClass('js-example-basic-single')) {
+        $select.trigger('change.select2');
+      }
+    }
+  });
+
+  $(document).on('htmx:beforeSwap', function(event) {
+    const $select = $('select[name="view_type"]');
+    if ($select.length) {
+      sessionStorage.setItem('currentViewType', $select.val());
+    }
+  });
+
+  $(document).on('htmx:afterSwap', function(event) {
+    const $select = $('select[name="view_type"]');
+    if ($select.length) {
+      const serverViewType = "{{ view_type|escapejs }}";
+      const storedValue = sessionStorage.getItem('currentViewType');
+      const valueToSet = serverViewType || storedValue || 'all';
+      $select.val(valueToSet);
+      if ($select.hasClass('js-example-basic-single')) {
+        if (!$select.data('select2')) {
+          $select.select2( { width: "100%"});
+        }
+        $select.trigger('change.select2');
+      }
+    }
+  });
+</script>

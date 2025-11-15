@@ -1,0 +1,316 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<div id="styled-activity" role="tabpanel" aria-labelledby="activity-tab" style="height:100%">
+    <div class="flex flex-col sm:flex-row gap-3" style="height:100%">
+        <div class="sm:w-[180px] w-full border-r-[1px] border-[#dddddd]">
+            <ul id="custom-tabs" class="flex flex-col space-y-1 text-sm font-normal text-gray-500 dark:text-gray-400 pr-3">
+                <li class="mb-0">
+                    <a href="#" data-tab="tab-tasks" class="tab-btn items-center px-5 py-2 text-white bg-primary-600 rounded-md w-full flex gap-3">
+                        <i class="fa-solid fa-list-check"></i> {% trans "Tasks" %}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-tab="tab-meetings" class="tab-btn items-center px-5 py-2 rounded-md bg-transparent text-[#3d3d3d] w-full flex gap-3">
+                        <i class="fa-solid fa-users"></i> {% trans "Meetings" %}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-tab="tab-call" class="tab-btn items-center px-5 py-2 rounded-md bg-transparent text-[#3d3d3d] w-full flex gap-3">
+                        <i class="fa-solid fa-phone"></i> {% trans "Call" %}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-tab="tab-email" class="tab-btn items-center px-5 py-2 rounded-md bg-transparent text-[#3d3d3d] w-full flex gap-3">
+                        <i class="fa-solid fa-envelope"></i> {% trans "Email" %}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-tab="tab-events" class="tab-btn items-center px-5 py-2 rounded-md bg-transparent text-[#3d3d3d] w-full flex gap-3">
+                        <i class="fa-solid fa-calendar-days"></i> {% trans "Events" %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="sm:flex-[1_0] w-full">
+            <div id="tab-contents">
+                 <!-- Task Tab -->
+                <div id="tab-tasks" class="tab-content block p-2 pt-0 text-sm">
+                    <div class="flex flex-wrap gap-y-2 justify-between mb-2">
+                         <ul id="followup-tabs" class="flex gap-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+                            <li>
+                                <a id="TaskTab" href="{% url 'activity:task_list' object_id=object_id %}?view_type=pending&content_type_id={{ content_type_id }}"
+                                   data-tab="pending"
+                                   class="fu-tab-btn inline-flex items-center px-3 py-1 text-white bg-primary-600 rounded-sm w-full text-xs"
+                                   hx-get="{% url 'activity:task_list' object_id=object_id %}?view_type=pending&content_type_id={{ content_type_id }}"
+                                   hx-target="#task-list-content"
+                                   hx-swap="innerHTML">
+                                   {% trans "Pending Tasks" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a id="TaskTab" href="{% url 'activity:task_list' object_id=object_id %}?view_type=completed&content_type_id={{ content_type_id }}"
+                                   data-tab="completed"
+                                   class="fu-tab-btn inline-flex items-center px-3 py-1 rounded-sm bg-primary-200 text-primary-600 w-full text-xs"
+                                   hx-get="{% url 'activity:task_list' object_id=object_id %}?view_type=completed&content_type_id={{ content_type_id }}"
+                                   hx-target="#task-list-content"
+                                   hx-swap="innerHTML">
+                                   {% trans "Completed Tasks" %}
+                                </a>
+                            </li>
+                        </ul>
+                        {% if add_task_button.url %}
+                            <button
+                                hx-get="{{ add_task_button.url }}?object_id={{ obj.pk }}&model_name={{obj|model_name}}&app_label={{app_label}}"
+                                hx-target="{{ add_task_button.target|default:'#modalBox' }}"
+                                hx-swap="{{ add_task_button.swap|default:'innerHTML' }}"
+                                onclick="{{ add_task_button.after_request|default:'openModal()' }}"
+                                class="{{ add_task_button.class|default:'text-xs px-4 py-1.5 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]' }}"
+                                {% if add_task_button.attrs %}{{ add_task_button.attrs|safe }}{% endif %}>
+                                {{ add_task_button.title|default:" Add Task" }}
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div id="task-list-content" class="text-[.8rem]"
+                         hx-get="{% url 'activity:task_list' object_id=object_id %}?view_type=pending&content_type_id={{ content_type_id }}"
+                         hx-trigger="load"
+                         hx-target="#task-list-content"
+                         hx-swap="innerHTML">
+                    </div>
+                </div>
+                <!-- Meetings Tab -->
+                <div id="tab-meetings" class="tab-content hidden p-2 pt-0 text-sm">
+                    <div class="flex flex-wrap gap-y-2 justify-between mb-2">
+                        <ul id="followup-tabs1" class="flex gap-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+                            <li>
+                                <a id="MeetingsTab" href="{% url 'activity:meeting_list' object_id=object_id %}?view_type=pending&content_type_id={{ content_type_id }}"
+                                   data-tab="pending"
+                                   class="fu-tab-btn inline-flex items-center px-3 py-1 text-white bg-primary-600 rounded-sm w-full text-xs"
+                                   hx-get="{% url 'activity:meeting_list' object_id=object_id %}?view_type=pending&content_type_id={{ content_type_id }}"
+                                   hx-target="#meeting-list-content"
+                                   hx-swap="innerHTML">
+                                   {% trans "Pending Meetings" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a id="MeetingsTab" href="{% url 'activity:meeting_list' object_id=object_id %}?view_type=completed&content_type_id={{ content_type_id }}"
+                                   data-tab="completed"
+                                   class="fu-tab-btn inline-flex items-center px-3 py-1 rounded-sm bg-primary-200 text-primary-600 w-full text-xs"
+                                   hx-get="{% url 'activity:meeting_list' object_id=object_id %}?view_type=completed&content_type_id={{ content_type_id }}"
+                                   hx-target="#meeting-list-content"
+                                   hx-swap="innerHTML">
+                                   {% trans "Completed Meetings" %}
+                                </a>
+                            </li>
+                        </ul>
+                        {% if add_meetings_button.url %}
+                            <button
+                                hx-get="{{ add_meetings_button.url }}?object_id={{ obj.pk }}&model_name={{obj|model_name}}&app_label={{app_label}}"
+                                hx-target="{{ add_meetings_button.target|default:'#modalBox' }}"
+                                hx-swap="{{ add_meetings_button.swap|default:'innerHTML' }}"
+                                onclick="{{ add_meetings_button.after_request|default:'openModal()' }}"
+                                class="{{ add_meetings_button.class|default:'text-xs px-4 py-1.5 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]' }}"
+                                {% if add_meetings_button.attrs %}{{ add_meetings_button.attrs|safe }}{% endif %}>
+                                {{ add_meetings_button.title|default:" Add Meetings" }}
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div id="meeting-list-content" class="text-[.8rem]"
+                         hx-get="{% url 'activity:meeting_list' object_id=object_id %}?view_type=pending&content_type_id={{ content_type_id }}"
+                         hx-trigger="revealed"
+                         hx-target="#meeting-list-content"
+                         hx-swap="innerHTML">
+                    </div>
+                </div>
+
+                <!-- Calls Tab -->
+                <div id="tab-call" class="tab-content hidden p-2 pt-0 text-sm">
+                    <div class="flex flex-wrap gap-y-2 justify-between mb-2">
+                        <ul id="followup-tabs2" class="flex gap-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+                            <li>
+                                <a id="CallsTab" href="{% url 'activity:call_list' object_id=object_id %}?view_type=pending&content_type_id={{ content_type_id }}"
+                                   data-tab="pending"
+                                   class="fu-tab-btn inline-flex items-center px-3 py-1 text-white bg-primary-600 rounded-sm w-full text-xs"
+                                   hx-get="{% url 'activity:call_list' object_id=object_id %}?view_type=pending&content_type_id={{ content_type_id }}"
+                                   hx-target="#call-list-content"
+                                   hx-swap="innerHTML">
+                                   {% trans "Pending Calls" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a id="CallsTab" href="{% url 'activity:call_list' object_id=object_id %}?view_type=completed&content_type_id={{ content_type_id }}"
+                                   data-tab="completed"
+                                   class="fu-tab-btn inline-flex items-center px-3 py-1 rounded-sm bg-primary-200 text-primary-600 w-full text-xs"
+                                   hx-get="{% url 'activity:call_list' object_id=object_id %}?view_type=completed&content_type_id={{ content_type_id }}"
+                                   hx-target="#call-list-content"
+                                   hx-swap="innerHTML">
+                                   {% trans "Completed Calls" %}
+                                </a>
+                            </li>
+                        </ul>
+                        {% if add_call_button.url %}
+                            <button
+                                hx-get="{{ add_call_button.url }}?object_id={{ obj.pk }}&model_name={{obj|model_name}}&app_label={{app_label}}"
+                                hx-target="{{ add_call_button.target|default:'#modalBox' }}"
+                                hx-swap="{{ add_call_button.swap|default:'innerHTML' }}"
+                                onclick="{{ add_call_button.after_request|default:'openModal()' }}"
+                                class="{{ add_call_button.class|default:'text-xs px-4 py-1.5 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]' }}"
+                                {% if add_call_button.attrs %}{{ add_call_button.attrs|safe }}{% endif %}>
+                                {{ add_call_button.title|default:" Add Call" }}
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div id="call-list-content" class="text-[.8rem]"
+                         hx-get="{% url 'activity:call_list' object_id=object_id %}?view_type=pending&content_type_id={{ content_type_id }}"
+                         hx-trigger="revealed"
+                         hx-target="#call-list-content"
+                         hx-swap="innerHTML">
+                    </div>
+                </div>
+
+                <!-- Emails Tab -->
+                <div id="tab-email" class="tab-content hidden p-2 pt-0 text-sm">
+                    <div class="flex flex-wrap gap-y-2 justify-between mb-2">
+                        <ul id="followup-tabs3" class="flex gap-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+                            <li>
+                                <button id="sent-email-tab"
+                                   data-tab="sent"
+                                   class="fu-tab-btn inline-flex items-center px-3 py-1 text-white bg-primary-600 rounded-sm w-full text-xs"
+                                   hx-get="{% url 'activity:email_list' object_id=object_id %}?view_type=sent&content_type_id={{ content_type_id }}"
+                                   hx-target="#email-list-content"
+                                   hx-swap="innerHTML">{% trans "Mails" %}
+                                </button>
+                            </li>
+                            <li>
+                                <button id="draft-email-tab"
+                                   data-tab="draft"
+                                   class="fu-tab-btn inline-flex items-center px-3 py-1 rounded-sm bg-primary-200 text-primary-600 w-full text-xs"
+                                   hx-get="{% url 'activity:email_list' object_id=object_id %}?view_type=draft&content_type_id={{ content_type_id }}"
+                                   hx-target="#email-list-content"
+                                   hx-swap="innerHTML">{% trans "Drafts" %}
+                                </button>
+                            </li>
+                            <li>
+                                <button id="scheduled-email-tab"
+                                   data-tab="scheduled"
+                                   class="fu-tab-btn inline-flex items-center px-3 py-1 rounded-sm bg-primary-200 text-primary-600 w-full text-xs"
+                                   hx-get="{% url 'activity:email_list' object_id=object_id %}?view_type=scheduled&content_type_id={{ content_type_id }}"
+                                   hx-target="#email-list-content"
+                                   hx-swap="innerHTML">{% trans "Scheduled" %}
+                                </button>
+                            </li>
+                        </ul>
+                        {% if add_email_button.url %}
+                            <button
+                                hx-get="{{ add_email_button.url }}?object_id={{ obj.pk }}&model_name={{obj|model_name}}"
+                                hx-target="{{ add_email_button.target|default:'#horillaModalBox' }}"
+                                hx-swap="{{ add_email_button.swap|default:'innerHTML' }}"
+                                onclick="{{ add_email_button.after_request|default:'openhorillaModal()' }}"
+                                class="{{ add_email_button.class|default:'text-xs px-4 py-1.5 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]' }}"
+                                {% if add_email_button.attrs %}{{ add_email_button.attrs|safe }}{% endif %}>
+                                {{ add_email_button.title|default:" Add Emails" }}
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div id="email-list-content" class="text-[.8rem]"
+                         hx-get="{% url 'activity:email_list' object_id=object_id %}?view_type=sent&content_type_id={{ content_type_id }}"
+                         hx-trigger="revealed"
+                         hx-target="#email-list-content"
+                         hx-swap="innerHTML">
+                    </div>
+                </div>
+
+                <!-- Events Tab -->
+                <div id="tab-events" class="tab-content hidden p-2 pt-0 text-sm">
+                    <div class="flex flex-wrap gap-y-2 justify-between mb-2">
+                        <ul id="followup-tabs4" class="flex gap-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+                            <li>
+                                <a id="EventTab" href="{% url 'activity:event_list' object_id=object_id %}?view_type=pending&content_type_id={{ content_type_id }}"
+                                   data-tab="pending"
+                                   class="fu-tab-btn inline-flex items-center px-3 py-1 text-white bg-primary-600 rounded-sm w-full text-xs"
+                                   hx-get="{% url 'activity:event_list' object_id=object_id %}?view_type=pending&content_type_id={{ content_type_id }}"
+                                   hx-target="#event-list-content"
+                                   hx-swap="innerHTML">{% trans "Pending Events" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a id="EventTab" href="{% url 'activity:event_list' object_id=object_id %}?view_type=completed&content_type_id={{ content_type_id }}"
+                                   data-tab="completed"
+                                   class="fu-tab-btn inline-flex items-center px-3 py-1 rounded-sm bg-primary-200 text-primary-600 w-full text-xs"
+                                   hx-get="{% url 'activity:event_list' object_id=object_id %}?view_type=completed&content_type_id={{ content_type_id }}"
+                                   hx-target="#event-list-content"
+                                   hx-swap="innerHTML">{% trans "Completed Events" %}
+                                </a>
+                            </li>
+                        </ul>
+                        {% if add_event_button.url %}
+                            <button
+                                hx-get="{{ add_event_button.url }}?object_id={{ obj.pk }}&model_name={{obj|model_name}}&app_label={{app_label}}"
+                                hx-target="{{ add_event_button.target|default:'#modalBox' }}"
+                                hx-swap="{{ add_event_button.swap|default:'innerHTML' }}"
+                                onclick="{{ add_event_button.after_request|default:'openModal()' }}"
+                                class="{{ add_event_button.class|default:'text-xs px-4 py-1.5 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]' }}"
+                                {% if add_event_button.attrs %}{{ add_event_button.attrs|safe }}{% endif %}>
+                                {{ add_event_button.title|default:" Add Events" }}
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div id="event-list-content" class="text-[.8rem]"
+                         hx-get="{% url 'activity:event_list' object_id=object_id %}?view_type=pending&content_type_id={{ content_type_id }}"
+                         hx-trigger="revealed"
+                         hx-target="#event-list-content"
+                         hx-swap="innerHTML">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const tabButtons = document.querySelectorAll("#custom-tabs .tab-btn");
+        const tabContents = document.querySelectorAll("#tab-contents .tab-content");
+
+        tabButtons.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const id = btn.getAttribute("data-tab");
+
+                tabButtons.forEach((b) => {
+                    b.classList.remove("bg-primary-600", "text-white");
+                    b.classList.add("bg-transparent", "text-[#3d3d3d]");
+                });
+                tabContents.forEach((c) => c.classList.add("hidden"));
+
+                document.getElementById(id).classList.remove("hidden");
+                btn.classList.remove("bg-transparent", "text-[#3d3d3d]");
+                btn.classList.add("bg-primary-600", "text-white");
+            });
+        });
+    })();
+
+    function setupTabGroup(tabListId, contentContainerId) {
+        const tabButtons = document.querySelectorAll(`#${tabListId} .fu-tab-btn`);
+
+        tabButtons.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                tabButtons.forEach((b) => {
+                    b.classList.remove("bg-primary-600", "text-white");
+                    b.classList.add("bg-primary-200", "text-primary-600");
+                });
+                btn.classList.remove("bg-primary-200", "text-primary-600");
+                btn.classList.add("bg-primary-600", "text-white");
+
+            });
+        });
+    }
+
+    setupTabGroup("followup-tabs", "task-list-content");
+    setupTabGroup("followup-tabs1", "meeting-list-content");
+    setupTabGroup("followup-tabs2", "call-list-content");
+    setupTabGroup("followup-tabs3", "email-list-content");
+    setupTabGroup("followup-tabs4", "event-list-content");
+</script>

@@ -1,0 +1,79 @@
+{% load static horilla_tags %}
+{% load i18n %}
+
+<style>
+    .htmx-indicator {
+        display: none;
+    }
+    .htmx-request .htmx-indicator {
+        display: inline;
+    }
+    .htmx-request.htmx-indicator {
+        display: inline;
+    }
+</style>
+
+{% csrf_token %}
+<div id="{{ view_id|safe }}" class="custom-scroll overflow-hidden overflow-x-auto">
+    {% if filter_set_class %}
+        {% include "filterpanel.html" %}
+    {% endif %}
+    <button id="reloadButton" hidden
+            hx-get="{{ request.path }}?{{request.GET.urlencode}}"
+            hx-target="#kanbanview"
+            hx-trigger="click"
+            hx-swap="outerHTML"
+            hx-select="#kanbanview">
+        click
+    </button>
+    {% if queryset %}
+        <div id="kanbanview" data-app-label="{{ app_label }}"
+            data-model-name="{{ model_name }}" data-csrf-token="{{ csrf_token }}"
+            data-allow-column-reorder="{% if allow_column_reorder %}true{% else %}false{% endif %}"
+            data-class-name="{{ class_name }}"
+            >
+            <div id="kanbancontainer"  class="relative flex gap-4">
+                {% include "partials/kanban_blocks.html" %}
+            </div>
+        </div>
+    {% else %}
+        <div class="flex justify-between items-center {% if table_width %} h-20 {% endif %}">
+        </div>
+        <img
+            src="{% static 'assets/img/not-found.svg' %}"
+            alt="" class="w-60  m-auto mb-4 mt-5"
+        />
+        <p class="text-sm text-center mb-3">
+            {% if no_record_add_button.message %}
+                {{no_record_add_button.message}}
+            {% else %}
+                {% trans "Nothing to show yet. Please add your" %} {{model_verbose_name}}.
+            {% endif %}
+        </p>
+        {% if no_record_add_button.url %}
+            <button
+                hx-get="{{ no_record_add_button.url }}"
+                hx-target="{{ no_record_add_button.target|default:'#modalBox' }}"
+                hx-swap="{{ no_record_add_button.swap|default:'innerHTML' }}"
+                onclick="{{ no_record_add_button.after_request|default:'openModal()' }}"
+                class="{{ no_record_add_button.class|default:'text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white] m-auto flex' }}"
+                {% if no_record_add_button.attrs %}{{ no_record_add_button.attrs|safe }}{% endif %}>
+                {{ no_record_add_button.title|default:" Add New" }}
+            </button>
+        {% endif %}
+    {% endif %}
+</div>
+<script>
+    $(function() {
+        var viewId = '{{ view_id|safe }}';
+        var $kanbanContainer = $('#' + viewId );
+        if ($kanbanContainer.length) {
+            $kanbanContainer.css('willChange', 'transform');
+        }
+    });
+    $(document).ready(function () {
+        $("select").on("select2:select", function (e) {
+            $(this).closest("select")[0].dispatchEvent(new Event("change"));
+        });
+    });
+</script>

@@ -1,0 +1,4695 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: demoprojecttest\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-13 16:17+0530\n"
+"PO-Revision-Date: 2025-07-03 03:58\n"
+"Last-Translator: \n"
+"Language-Team: Arabic\n"
+"Language: ar_SA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Crowdin-Project: demoprojecttest\n"
+"X-Crowdin-Project-ID: 805398\n"
+"X-Crowdin-Language: ar\n"
+"X-Crowdin-File: django.po\n"
+"X-Crowdin-File-ID: 2\n"
+
+msgid "The page you are looking for does not exist or may have been moved."
+msgstr ""
+
+msgid "Add column to list"
+msgstr "إضافة عمود إلى القائمة"
+
+msgid "Customer Role"
+msgstr "دور العميل"
+
+msgid "Department"
+msgstr "القسم"
+
+msgid "Start Date"
+msgstr "تاريخ البدء"
+
+msgid "Effective date for these conversion rates"
+msgstr "تاريخ سريان أسعار التحويل هذه"
+
+msgid ""
+"Changing the default will update the current default business hour. Enable "
+"to set this as default; disable to allow another. Proceed?"
+msgstr ""
+"سيؤدي تغيير الإعداد الافتراضي إلى تحديث ساعة العمل الافتراضية الحالية. فعّل "
+"هذا الإعداد لتعيينه افتراضيًا؛ أو عطّله للسماح بساعة أخرى. هل تريد المتابعة؟"
+
+msgid "You can select a maximum of 5 days for 24×5 business hours."
+msgstr "يمكنك تحديد الحد الأقصى 5 أيام لساعات العمل 24×5."
+
+msgid "Password"
+msgstr "كلمة المرور"
+
+#, fuzzy
+#| msgid "Invalid username or password."
+msgid "Enter a secure password"
+msgstr "اسم المستخدم أو كلمة المرور غير صالحة."
+
+#, fuzzy
+#| msgid "Forgot Password?"
+msgid "Confirm Password"
+msgstr "هل نسيت كلمة السر؟"
+
+msgid "Enter the same password again for verification"
+msgstr ""
+
+msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+msgstr ""
+
+msgid "Leave blank to keep current password"
+msgstr ""
+
+#, fuzzy
+#| msgid "This field is required."
+msgid "Username is required."
+msgstr "هذا الحقل مطلوب."
+
+#, fuzzy
+#| msgid "%(model_name)s with this %(field_label)s already exists."
+msgid "A user with this username already exists."
+msgstr "يوجد بالفعل %(model_name)s مع %(field_label)s هذا."
+
+msgid "The two password fields must match."
+msgstr ""
+
+msgid "Password is required for new users."
+msgstr ""
+
+msgid "Password must be at least 8 characters long."
+msgstr ""
+
+msgid "Role"
+msgstr "دور"
+
+msgid "Select the role to assign to users."
+msgstr "حدد الدور الذي تريد تعيينه للمستخدمين."
+
+msgid "Users"
+msgstr "Users"
+
+msgid "Select one or more users to assign to the role."
+msgstr "حدد مستخدمًا واحدًا أو أكثر لتعيين الدور إليه."
+
+msgid "The following user(s) are already assigned to this role"
+msgstr "تم تعيين المستخدمين التاليين لهذا الدور بالفعل"
+
+msgid "Groups"
+msgstr "المجموعات"
+
+msgid "Permissions"
+msgstr "الأذونات"
+
+msgid "Super Users"
+msgstr "المستخدمون الفائقون"
+
+#, fuzzy
+#| msgid "“%(path)s” does not exist"
+msgid "Role does not exist"
+msgstr "\"%(path)s\" غير موجود"
+
+#, fuzzy
+#| msgid "“%(path)s” does not exist"
+msgid "User does not exist"
+msgstr "\"%(path)s\" غير موجود"
+
+msgid "User Does not Exist"
+msgstr ""
+
+msgid "Please select at least one user."
+msgstr "الرجاء تحديد مستخدم واحد على الأقل."
+
+msgid "Please select at least one permission."
+msgstr "الرجاء تحديد إذن واحد على الأقل."
+
+#, python-brace-format
+msgid ""
+"Successfully assigned {permissions_count} permission(s) to {users_count} "
+"user(s)."
+msgstr "تم تعيين {permissions_count} إذنًا بنجاح إلى {users_count} مستخدم."
+
+#, python-brace-format
+msgid "Error assigning permissions: {error}"
+msgstr "خطأ في تعيين الأذونات: {error}"
+
+msgid "Role Does not Exist"
+msgstr ""
+
+msgid "First Name"
+msgstr "الاسم الأول"
+
+msgid "Super User Status"
+msgstr "حالة المستخدم الفائق"
+
+msgid "Import Data"
+msgstr "استيراد البيانات"
+
+msgid "Import History"
+msgstr "تاريخ الاستيراد"
+
+msgid "Regional & Formatting"
+msgstr "الإقليمية والتنسيق"
+
+msgid "Login History"
+msgstr "سجل تسجيل الدخول"
+
+msgid "Holiday"
+msgstr "عطلة"
+
+msgid "English"
+msgstr "الإنكليزية"
+
+msgid "French"
+msgstr "الفرنسية"
+
+msgid "German"
+msgstr "الألمانية"
+
+msgid "Spanish"
+msgstr "الإسبانية"
+
+msgid "Italian"
+msgstr "الإيطالية"
+
+msgid "Portuguese"
+msgstr "البرتغالية"
+
+msgid "No Grouping"
+msgstr "لا يوجد تجميع"
+
+msgid "Company Name"
+msgstr "اسم الشركة"
+
+msgid "Email Address"
+msgstr "عنوان البريد الإلكتروني"
+
+msgid "Website"
+msgstr "الموقع"
+
+msgid "Company Icon"
+msgstr "أيقونة الشركة"
+
+msgid "Contact Number"
+msgstr "رقم الاتصال"
+
+msgid "Fax Number"
+msgstr "رقم الفاكس"
+
+msgid "Annual Revenue"
+msgstr "الإيرادات السنوية"
+
+msgid "Number of Employees"
+msgstr "عدد الموظفين"
+
+msgid "Head quarter"
+msgstr "المقر"
+
+msgid "City"
+msgstr "المدينة"
+
+msgid "State/Province"
+msgstr "الولاية/المقاطعة"
+
+msgid "Country"
+msgstr "البلد"
+
+msgid "ZIP/Postal Code"
+msgstr "الرمز البريدي"
+
+msgid "Language"
+msgstr "اللغة"
+
+msgid "Time Zone"
+msgstr "المنطقة الزمنية"
+
+msgid "Currency"
+msgstr "العملة"
+
+msgid "Time Format"
+msgstr "تنسيق الوقت"
+
+msgid "Date Format"
+msgstr "تنسيق التاريخ"
+
+msgid "Activate Multiple Currencies"
+msgstr "تفعيل العملات المتعددة"
+
+msgid "Created At"
+msgstr "تم إنشاؤها في"
+
+msgid "Updated At"
+msgstr "تم التحديث في"
+
+msgid "Branch"
+msgstr "فرع"
+
+msgid "Branches"
+msgstr "الفروع"
+
+msgid "Department Name"
+msgstr "اسم القسم"
+
+msgid "Description"
+msgstr "الوصف"
+
+msgid "Departments"
+msgstr "الأقسام"
+
+msgid "Roles"
+msgstr "الأدوار"
+
+msgid "conversion rate from default currency"
+msgstr "معدل التحويل من العملة الافتراضية"
+
+msgid "Conversion Rate"
+msgstr "معدل التحويل"
+
+msgid "Number grouping format"
+msgstr "تنسيق تجميع الأعداد"
+
+msgid "Default Currency"
+msgstr "العملة الافتراضية"
+
+msgid "Mark this currency as the default for the system"
+msgstr "قم بتمييز هذه العملة كعملة افتراضية للنظام"
+
+msgid "Multiple Currency"
+msgstr "عملات متعددة"
+
+msgid "Multiple Currencies"
+msgstr "عملات متعددة"
+
+msgid "Profile Image"
+msgstr "صورة الملف الشخصي"
+
+msgid "Company"
+msgstr "الشركة"
+
+msgid "Preferred Currency"
+msgstr "العملة المفضلة"
+
+msgid "Date Time Format"
+msgstr "تنسيق التاريخ والوقت"
+
+msgid "Number Grouping"
+msgstr "تجميع الأرقام"
+
+msgid "User"
+msgstr "المستخدم"
+
+msgid "Column User"
+msgstr "مستخدم العمود"
+
+msgid "Standard Fiscal Year"
+msgstr "السنة المالية القياسية"
+
+msgid "Custom Fiscal Year"
+msgstr "السنة المالية المخصصة"
+
+msgid "Fiscal Year Type"
+msgstr "نوع السنة المالية"
+
+msgid "Year Based"
+msgstr "على أساس السنة"
+
+msgid "Quarter Based"
+msgstr "على أساس الربع"
+
+msgid "Format"
+msgstr "شكل"
+
+msgid ""
+"4-4-5 In each quarter, Period 1 has 4 weeks, Period 2 has 4 weeks, Period 3 "
+"has 5 weeks"
+msgstr ""
+"4-4-5 في كل ربع سنة، الفترة 1 لها 4 أسابيع، الفترة 2 لها 4 أسابيع، الفترة 3 "
+"لها 5 أسابيع"
+
+msgid ""
+"4-5-4 In each quarter, Period 1 has 4 weeks, Period 2 has 5 weeks, Period 3 "
+"has 4 weeks"
+msgstr ""
+"4-4-5 في كل ربع سنة، الفترة 1 لها 4 أسابيع، الفترة 2 لها 4 أسابيع، الفترة 3 "
+"لها 5 أسابيع"
+
+msgid ""
+"5-4-4 In each quarter, Period 1 has 5 weeks, Period 2 has 4 weeks, Period 3 "
+"has 4 weeks"
+msgstr ""
+"5-4-4 في كل ربع سنة، الفترة 1 لها 5 أسابيع، الفترة 2 لها 4 أسابيع، الفترة 3 "
+"لها 4 أسابيع"
+
+msgid "Quarter Based Format"
+msgstr "تنسيق على أساس ربع سنوي"
+
+msgid ""
+"3-3-3-4 Quarter 1 has 3 Periods, Quarter 2 has 3 Periods, Quarter 3 has 3 "
+"Periods, Quarter 4 has 4 Periods"
+msgstr ""
+"٣-٣-٣-٤ الربع الأول فيه ٣ فترات، الربع الثاني فيه ٣ فترات، الربع الثالث فيه "
+"٣ فترات، الربع الرابع فيه ٤ فترات"
+
+msgid ""
+"3-3-4-3 Quarter 1 has 3 Periods, Quarter 2 has 3 Periods, Quarter 3 has 4 "
+"Periods, Quarter 4 has 3 Periods"
+msgstr ""
+"٣-٣-٤-٣ الربع الأول فيه ٣ فترات، الربع الثاني فيه ٣ فترات، الربع الثالث فيه "
+"٤ فترات، الربع الرابع فيه ٣ فترات"
+
+msgid ""
+"3-4-3-3 Quarter 1 has 3 Periods, Quarter 2 has 4 Periods, Quarter 3 has 3 "
+"Periods, Quarter 4 has 3 Periods"
+msgstr ""
+"٣-٤-٣-٣ الربع الأول فيه ٣ فترات، الربع الثاني فيه ٤ فترات، الربع الثالث فيه "
+"٣ فترات، الربع الرابع فيه ٣ فترات"
+
+msgid ""
+"4-3-3-3 Quarter 1 has 4 Periods, Quarter 2 has 3 Periods, Quarter 3 has 3 "
+"Periods, Quarter 4 has 3 Periods"
+msgstr ""
+"4-3-3-3 الربع الأول فيه 4 فترات، الربع الثاني فيه 3 فترات، الربع الثالث فيه "
+"3 فترات، الربع الرابع فيه 3 فترات"
+
+msgid "Year Based Format"
+msgstr "التنسيق على أساس السنة"
+
+msgid "January"
+msgstr "يناير"
+
+msgid "February"
+msgstr "فبراير"
+
+msgid "March"
+msgstr "الزحف"
+
+msgid "April"
+msgstr "إبريل"
+
+msgid "May"
+msgstr "مايو"
+
+msgid "June"
+msgstr "يونيو"
+
+msgid "July"
+msgstr "يوليو"
+
+msgid "August"
+msgstr "أغسطس"
+
+msgid "September"
+msgstr "أيلول/سبتمبر"
+
+msgid "October"
+msgstr "اكتوبر"
+
+msgid "November"
+msgstr "تشرين"
+
+msgid "December"
+msgstr "ديسمبر"
+
+msgid "Start Date Month"
+msgstr "تاريخ البدء شهر"
+
+msgid "Start Date Day"
+msgstr "تاريخ البدء اليوم"
+
+msgid "Sunday"
+msgstr "الأحد"
+
+msgid "Monday"
+msgstr "الاثنين"
+
+msgid "Tuesday"
+msgstr "الثلاثاء"
+
+msgid "Wednesday"
+msgstr "الأربعاء"
+
+msgid "Thursday"
+msgstr "الخميس"
+
+msgid "Friday"
+msgstr "الجمعة"
+
+msgid "Saturday"
+msgstr "السبت"
+
+msgid "Week Start Day"
+msgstr "يوم بداية الأسبوع"
+
+msgid "Starting Year"
+msgstr "سنة البدء"
+
+msgid "Ending Year"
+msgstr "نهاية السنة"
+
+msgid "Display Fiscal Year Based On"
+msgstr "عرض السنة المالية بناءً على"
+
+msgid "Year"
+msgstr "سنة"
+
+msgid "Quarter"
+msgstr "ربع"
+
+msgid "Period"
+msgstr "فترة"
+
+msgid "Number Weeks By"
+msgstr "عدد الأسابيع حسب"
+
+msgid "Number by Year"
+msgstr "العدد حسب السنة"
+
+msgid "Number by Quarter"
+msgstr "العدد بالربع"
+
+msgid "Period Display Option"
+msgstr "خيار عرض الفترة"
+
+msgid "Fiscal Year"
+msgstr "السنة المالية"
+
+msgid "Fiscal Years"
+msgstr "السنوات المالية"
+
+msgid "Fiscal Year Configuration"
+msgstr "تكوين السنة المالية"
+
+msgid "End Date"
+msgstr "تاريخ الانتهاء"
+
+msgid "Fiscal Year Name"
+msgstr "اسم السنة المالية"
+
+msgid "Is Current"
+msgstr "الحالي"
+
+msgid "Fiscal Year Instance"
+msgstr "مثيل السنة المالية"
+
+msgid "Fiscal Year Instances"
+msgstr "مثال السنة المالية"
+
+msgid "Quarter Name"
+msgstr "اسم الربع"
+
+msgid "Quarter Number"
+msgstr "رقم الربع"
+
+msgid "Quarters"
+msgstr "أرباع"
+
+msgid "Period Name"
+msgstr "اسم الفترة"
+
+msgid "Period Number"
+msgstr "رقم الفترة"
+
+msgid "Periods"
+msgstr "فترات"
+
+msgid "Weekly"
+msgstr "أسبوعي"
+
+msgid "Monthly"
+msgstr "شهريا"
+
+msgid "Yearly"
+msgstr "سنوي"
+
+msgid "On Day"
+msgstr "في يوم"
+
+msgid "On the"
+msgstr "على"
+
+msgid "On every"
+msgstr "على كل"
+
+msgid "Holiday Name"
+msgstr "اسم العطلة"
+
+msgid "All Users"
+msgstr "جميع المستخدمين"
+
+msgid "Specific Users"
+msgstr "مستخدمين محددين"
+
+msgid "Recurring"
+msgstr "يتكرر"
+
+msgid "Holiday Frequency"
+msgstr "تردد العطلة"
+
+msgid "Recurs Every (weeks)"
+msgstr "يتكرر كل (أسابيع)"
+
+msgid "Monthly Repeat Type"
+msgstr "نوع التكرار الشهري"
+
+msgid "Day of Month"
+msgstr "يوم من الشهر"
+
+msgid "Monthly Interval"
+msgstr "الفاصل الشهري"
+
+msgid "Day of Week"
+msgstr "يوم الأسبوع"
+
+msgid "Week of Month"
+msgstr "أسبوع الشهر"
+
+msgid "Yearly Repeat Type"
+msgstr "نوع التكرار السنوي"
+
+msgid "Month"
+msgstr "شهر"
+
+msgid "Holidays"
+msgstr "العطل"
+
+msgid "Start date cannot be after end date"
+msgstr "لا يمكن أن يكون تاريخ البدء بعد تاريخ الانتهاء"
+
+msgid "Frequency is required for recurring holidays"
+msgstr "التردد مطلوب للعطلات المتكررة"
+
+msgid "Weekly days must be specified for weekly recurrence"
+msgstr "يجب تحديد أيام الأسبوع للتكرار الأسبوعي"
+
+msgid "Recurs every weeks must be at least 1"
+msgstr "يتكرر كل أسبوع ويجب أن يكون على الأقل 1"
+
+msgid "Day of month is required for monthly recurrence"
+msgstr "يجب تحديد يوم الشهر للتكرار الشهري"
+
+msgid "Both day of week and week of month are required for monthly recurrence"
+msgstr "مطلوب كل من يوم الأسبوع وأسبوع الشهر للتكرار الشهري"
+
+msgid "Please select a valid monthly repeat type"
+msgstr "الرجاء تحديد نوع التكرار الشهري الصحيح"
+
+msgid "Month is required for yearly recurrence"
+msgstr "الشهر مطلوب للتكرار السنوي"
+
+msgid "Day of month is required for yearly recurrence"
+msgstr "يجب تحديد يوم الشهر للتكرار السنوي"
+
+msgid "Both week of month and day of week are required for yearly recurrence"
+msgstr "مطلوب كل من أسبوع الشهر ويوم الأسبوع للتكرار السنوي"
+
+msgid "Please select a valid yearly repeat type"
+msgstr "الرجاء تحديد نوع التكرار السنوي الصحيح"
+
+msgid "1st"
+msgstr "الأول"
+
+msgid "2nd"
+msgstr "الثاني"
+
+msgid "3rd"
+msgstr "الثالث"
+
+msgid "4th"
+msgstr "الرابع"
+
+msgid "5th"
+msgstr "الخامس"
+
+msgid "One-time holiday"
+msgstr "عطلة لمرة واحدة"
+
+msgid "Weekly on {}"
+msgstr "أسبوعيًا في {}"
+
+msgid "Every {} weeks on {}"
+msgstr "كل {} أسابيع في {}"
+
+msgid "Monthly on day {}"
+msgstr "شهريًا في اليوم {}"
+
+msgid "Every {} months on day {}"
+msgstr "كل {} شهرًا في اليوم {}"
+
+msgid "Monthly on {} {} of month"
+msgstr "شهريًا في {} {} من الشهر"
+
+msgid "Every {} months on {} {} of month"
+msgstr "شهريًا في {} {} من الشهر"
+
+msgid "Yearly on {} {}"
+msgstr "سنويًا في {} {}"
+
+msgid "Yearly on {} {} of {}"
+msgstr "سنويًا في {} {} من {}"
+
+msgid "Custom recurrence"
+msgstr "التكرار المخصص"
+
+msgid "Conversion rate from default currency"
+msgstr "سعر التحويل من العملة الافتراضية"
+
+msgid "The date from which this conversion rate is effective"
+msgstr "التاريخ الذي يبدأ فيه سريان معدل التحويل هذا"
+
+msgid "Dated Conversion Rate"
+msgstr "معدل التحويل المؤرخ"
+
+msgid "Dated Conversion Rates"
+msgstr "أسعار التحويل المؤرخة"
+
+msgid "Deleted At"
+msgstr "تم الحذف في"
+
+msgid "Retention Period (Days)"
+msgstr "فترة الاحتفاظ (أيام)"
+
+msgid "Team Role Name"
+msgstr "اسم دور الفريق"
+
+msgid "Team Role"
+msgstr "دور الفريق"
+
+msgid "Team Roles"
+msgstr "أدوار الفريق"
+
+msgid "Customer Role Name"
+msgstr "اسم دور العميل"
+
+msgid "Customer Roles"
+msgstr "أدوار العملاء"
+
+msgid "Partner Role Name"
+msgstr "اسم دور الشريك"
+
+msgid "Partner Role"
+msgstr "دور الشريك"
+
+msgid "Partner Roles"
+msgstr "أدوار الشركاء"
+
+msgid "Scoring Rule"
+msgstr "قاعدة التسجيل"
+
+msgid "Scoring Rules"
+msgstr "قواعد التسجيل"
+
+msgid "Scoring Criterion"
+msgstr "معيار التسجيل"
+
+msgid "Scoring Criteria"
+msgstr "معايير التسجيل"
+
+msgid "Scoring Condition"
+msgstr "شرط التهديف"
+
+msgid "Scoring Conditions"
+msgstr "شروط التسجيل"
+
+msgid "Title"
+msgstr "العنوان"
+
+#, fuzzy
+#| msgid "Related Object ID"
+msgid "Related Object Type"
+msgstr "معرف الكائن ذي الصلة"
+
+msgid "Related Object ID"
+msgstr "معرف الكائن ذي الصلة"
+
+msgid "File"
+msgstr "ملف"
+
+msgid "Notes"
+msgstr "ملحوظات"
+
+#, fuzzy
+#| msgid "Mail Attachment"
+msgid "Horilla Attachment"
+msgstr "مرفق البريد"
+
+#, fuzzy
+#| msgid "Mail Attachments"
+msgid "Horilla Attachments"
+msgstr "مرفقات البريد"
+
+msgid "Currency Code"
+msgstr "رمز العملة"
+
+msgid "Add Currency"
+msgstr "إضافة عملة"
+
+msgid "Edit Currency Information"
+msgstr "تعديل معلومات العملة"
+
+msgid "partner role"
+msgstr "دور الشريك"
+
+msgid "Record Name"
+msgstr "اسم السجل"
+
+msgid "Type"
+msgstr "نوع"
+
+msgid "Deleted By"
+msgstr "تم الحذف بواسطة"
+
+msgid "The requested data does not exist."
+msgstr ""
+
+msgid "Recycle bin policy updated successfully!"
+msgstr "تم تحديث سياسة سلة المهملات بنجاح!"
+
+msgid "Your preferences have been updated successfully."
+msgstr "لقد تم تحديث تفضيلاتك بنجاح."
+
+msgid "There was an error updating your preferences."
+msgstr "حدث خطأ أثناء تحديث تفضيلاتك."
+
+msgid "The requested user does not exist."
+msgstr ""
+
+msgid "Create New Rule Criteria"
+msgstr "إنشاء معايير القاعدة الجديدة"
+
+msgid "Save"
+msgstr "حفظ"
+
+msgid "Save and add another"
+msgstr "حفظ وإضافة آخر"
+
+msgid "Save and continue editing"
+msgstr "حفظ ومواصلة التحرير"
+
+msgid "Company Information"
+msgstr "معلومات الشركة"
+
+msgid "Address"
+msgstr "عنوان"
+
+msgid "Localization"
+msgstr "التعريب"
+
+msgid "Manage Custom Stages"
+msgstr "إدارة المراحل المخصصة"
+
+msgid "Add Stage"
+msgstr "إضافة مرحلة"
+
+msgid " Changes"
+msgstr "التغييرات"
+
+msgid "Cancel"
+msgstr "يلغي"
+
+msgid "Permission Denied"
+msgstr "تم رفض الإذن"
+
+msgid "You do not have permission to view this page."
+msgstr "ليس لديك الصلاحية لعرض هذه الصفحة."
+
+msgid "Page Not Found"
+msgstr ""
+
+#, fuzzy
+#| msgid "Move to Dashboard"
+msgid "Go to Dashboard"
+msgstr "انتقل إلى لوحة المعلومات"
+
+msgid "Method Not Allowed"
+msgstr ""
+
+msgid "The request method is not allowed for this resource."
+msgstr ""
+
+msgid ""
+"You are allowed to access the settings, but some details are hidden due to "
+"limited permissions."
+msgstr ""
+"يُسمح لك بالوصول إلى الإعدادات، ولكن بعض التفاصيل مخفية بسبب الأذونات "
+"المحدودة."
+
+msgid "Edit"
+msgstr "تحرير"
+
+#, fuzzy
+#| msgid "Are you sure you want to delete the"
+msgid "Are you sure you want to delete this holiday?"
+msgstr "هل أنت متأكد أنك تريد حذف"
+
+msgid "Delete"
+msgstr "حذف"
+
+msgid "Download"
+msgstr "تحميل"
+
+msgid "Upload Files"
+msgstr "تحميل الملفات"
+
+msgid "Map Fields"
+msgstr "حقول الخريطة"
+
+msgid "Action"
+msgstr "فعل"
+
+msgid "Import"
+msgstr "يستورد"
+
+msgid "Select Module"
+msgstr "اختر الوحدة"
+
+msgid "Choose Module"
+msgstr "اختر الوحدة النمطية"
+
+msgid "Import Name"
+msgstr "اسم الاستيراد"
+
+msgid "Upload File"
+msgstr "تحميل الملف"
+
+msgid "File already uploaded"
+msgstr "تم تحميل الملف بالفعل"
+
+msgid "CSV, XLS, XLSX ( Max 10MB )"
+msgstr "CSV، XLS، XLSX (الحد الأقصى 10 ميجابايت)"
+
+msgid "Next"
+msgstr "التالي"
+
+#, fuzzy
+#| msgid "Import Name"
+msgid "Import Failed"
+msgstr "اسم الاستيراد"
+
+#, fuzzy
+#| msgid "There was an error updating your preferences."
+msgid "There was an error during the import process:"
+msgstr "حدث خطأ أثناء تحديث تفضيلاتك."
+
+msgid "Go Back"
+msgstr ""
+
+#, fuzzy
+#| msgid "Start Date"
+msgid "Start Over"
+msgstr "تاريخ البدء"
+
+msgid "Model Field"
+msgstr "المجال النموذجي"
+
+msgid "File Header"
+msgstr "رأس الملف"
+
+msgid "Default Values"
+msgstr "القيم الافتراضية"
+
+msgid "Sample Data"
+msgstr "بيانات العينة"
+
+msgid "Status"
+msgstr "الحالة"
+
+msgid "Select Header"
+msgstr "حدد الرأس"
+
+msgid "Select Default Value"
+msgstr "حدد القيمة الافتراضية"
+
+msgid "Auto Mapped"
+msgstr "تم تعيينه تلقائيًا"
+
+msgid "Not Mapped"
+msgstr "لم يتم تعيينها"
+
+msgid "No model fields available"
+msgstr "لا توجد حقول نموذجية متاحة"
+
+msgid "Previous"
+msgstr "سابق"
+
+msgid "Import Option:"
+msgstr "خيار الاستيراد:"
+
+msgid "Create new record"
+msgstr "إنشاء سجل جديد"
+
+msgid "Update existing"
+msgstr "تحديث الموجود"
+
+msgid "Create new and update existing"
+msgstr "إنشاء جديد وتحديث الموجود"
+
+msgid "Record match by"
+msgstr "سجل المباراة بواسطة"
+
+msgid "Module"
+msgstr "الوحدة النمطية"
+
+msgid "Import Action"
+msgstr "إجراء الاستيراد"
+
+msgid "Create New"
+msgstr "إنشاء جديد"
+
+msgid "Update Existing"
+msgstr "تحديث الموجود"
+
+msgid "Create New and Update Existing"
+msgstr "إنشاء جديد وتحديث الموجود"
+
+msgid "Mapped"
+msgstr "تم تعيينه"
+
+msgid "Fields"
+msgstr "الحقول"
+
+msgid "Unmapped"
+msgstr "غير معين"
+
+msgid "Import Completed Successfully!"
+msgstr "تمت عملية الاستيراد بنجاح!"
+
+msgid "Your data has been imported successfully."
+msgstr "لقد تم استيراد بياناتك بنجاح."
+
+msgid "Records Created"
+msgstr "تم إنشاء السجلات"
+
+msgid "Records Updated"
+msgstr "تم تحديث السجلات"
+
+msgid "Errors"
+msgstr "أخطاء"
+
+msgid "Total Rows Processed:"
+msgstr "إجمالي الصفوف المعالجة:"
+
+msgid "Success Rate:"
+msgstr "معدل النجاح:"
+
+msgid "Errors encountered:"
+msgstr "الأخطاء التي واجهتها:"
+
+msgid "Download Full Error Report"
+msgstr "تنزيل تقرير الأخطاء الكامل"
+
+msgid "... and"
+msgstr "...و"
+
+msgid "more errors."
+msgstr "المزيد من الأخطاء."
+
+msgid "Download the full report above to see all errors."
+msgstr "قم بتنزيل التقرير الكامل أعلاه لرؤية كافة الأخطاء."
+
+msgid "Import More Data"
+msgstr "استيراد المزيد من البيانات"
+
+msgid "Import Wizard"
+msgstr "معالج الاستيراد"
+
+msgid "Map Values for"
+msgstr ""
+
+#, fuzzy
+#| msgid "File Header"
+msgid "File Value"
+msgstr "رأس الملف"
+
+msgid "Replace With"
+msgstr ""
+
+msgid "Initialize Database"
+msgstr ""
+
+#, fuzzy
+#| msgid "Company Information"
+msgid "Company  Information"
+msgstr "معلومات الشركة"
+
+#, fuzzy
+#| msgid "Email Authentication Password"
+msgid "Database Authentication"
+msgstr "كلمة مرور مصادقة البريد الإلكتروني"
+
+msgid "Authenticate with your password intialize the Horilla  Database"
+msgstr ""
+
+msgid "Authenticate"
+msgstr ""
+
+#, fuzzy
+#| msgid "Team Role Name"
+msgid "Role Name"
+msgstr "اسم دور الفريق"
+
+#, fuzzy
+#| msgid "Description"
+msgid "Role Description"
+msgstr "الوصف"
+
+#, fuzzy
+#| msgid "Partner Role"
+msgid "Parent Role"
+msgstr "دور الشريك"
+
+#, fuzzy
+#| msgid "Select Target"
+msgid "Select Parent Role"
+msgstr "اختر الهدف"
+
+msgid "Update"
+msgstr "تحديث"
+
+msgid "Sign In"
+msgstr "تسجيل الدخول"
+
+msgid "Next Step"
+msgstr "الخطوة التالية"
+
+#, fuzzy
+#| msgid "Sign In"
+msgid "Sign Up"
+msgstr "تسجيل الدخول"
+
+#, fuzzy
+#| msgid "Please sign in to access your dashboard"
+msgid "Please sign up to access the Horilla CRM"
+msgstr "يرجى تسجيل الدخول للوصول إلى لوحة التحكم الخاصة بك"
+
+msgid "Assign Users"
+msgstr "معالج الاستيراد"
+
+msgid "Select users"
+msgstr "تحديد المستخدمين"
+
+msgid "Select All"
+msgstr "تحديد الكل"
+
+msgid "User Groups"
+msgstr "مجموعات المستخدمين"
+
+msgid "Add Groups"
+msgstr "إضافة مجموعات"
+
+msgid "Groups and Permissions"
+msgstr "المجموعات والأذونات"
+
+msgid "Members"
+msgstr "أعضاء"
+
+msgid "User Permissions"
+msgstr "أذونات المستخدم"
+
+msgid "Search users..."
+msgstr "البحث عن المستخدمين..."
+
+msgid "Assign"
+msgstr "تعيين"
+
+msgid "Add Member"
+msgstr "إضافة عضو"
+
+msgid "No users available."
+msgstr "لا يوجد مستخدمين متاحين."
+
+msgid "Regional Formatting"
+msgstr "التنسيق الإقليمي"
+
+msgid "Language and Time Zone"
+msgstr "اللغة والمنطقة الزمنية"
+
+msgid "Number Format"
+msgstr "تنسيق الأرقام"
+
+msgid "Role Hierarchy"
+msgstr "التسلسل الهرمي للأدوار"
+
+msgid "Add Role"
+msgstr "إضافة دور"
+
+#, fuzzy
+#| msgid "No search results found"
+msgid "No roles found"
+msgstr "لم يتم العثور على نتائج بحث"
+
+msgid "Criteria"
+msgstr "معايير"
+
+msgid "Points"
+msgstr "نقاط"
+
+msgid "Nothing to show yet. Please add your Criteria"
+msgstr "لا يوجد شيء لعرضه بعد. يُرجى إضافة معاييرك."
+
+msgid "Business Hours"
+msgstr "ساعات العمل"
+
+msgid "Add Business Hour"
+msgstr "إضافة ساعة عمل"
+
+#, fuzzy
+#| msgid "Address"
+msgid "Add"
+msgstr "عنوان"
+
+msgid "Current Default Currency"
+msgstr "العملة الافتراضية الحالية"
+
+msgid "Please create or activate your company."
+msgstr ""
+
+msgid "Conversion Rates"
+msgstr "أسعار التحويل"
+
+msgid "Active Currencies"
+msgstr "العملات النشطة"
+
+msgid "Preview in Calendar"
+msgstr "المعاينة في التقويم"
+
+msgid "Week"
+msgstr "أسبوع"
+
+msgid " Preview Calendar"
+msgstr "معاينة التقويم"
+
+#, fuzzy
+#| msgid "Manage Fiscal Year"
+msgid " Manage Fiscal Year"
+msgstr "إدارة السنة المالية"
+
+msgid "No active company"
+msgstr ""
+
+msgid "Configuration Preview"
+msgstr "معاينة التكوين"
+
+msgid "Period Display:"
+msgstr "عرض الفترة:"
+
+#, fuzzy
+#| msgid " Preview Calendar"
+msgid "Preview Calendar"
+msgstr "معاينة التقويم"
+
+msgid "Add Holidays"
+msgstr "أضف الإجازات"
+
+msgid "Dated Exchange  Rates"
+msgstr "أسعار الصرف المؤرخة"
+
+msgid "Select a Date Range"
+msgstr "حدد نطاقًا زمنيًا"
+
+msgid "New Exchange Rates"
+msgstr "أسعار الصرف الجديدة"
+
+msgid "Currency Management"
+msgstr "إدارة العملة"
+
+msgid "Change Default Currency"
+msgstr "تغيير العملة الافتراضية"
+
+msgid "Edit Conversion Rates"
+msgstr "تحرير أسعار التحويل"
+
+msgid "Dated Exchange Rates"
+msgstr "أسعار الصرف المؤرخة"
+
+msgid "Enable Multiple Currency"
+msgstr "تمكين العملات المتعددة"
+
+msgid "My Settings"
+msgstr "إعداداتي"
+
+msgid "Default Expire Days"
+msgstr "أيام انتهاء الصلاحية الافتراضية"
+
+msgid "Settings"
+msgstr "إعدادات"
+
+msgid "General"
+msgstr "عام"
+
+msgid "Mail"
+msgstr "بريد"
+
+#, fuzzy
+#| msgid "E-Mail Server"
+msgid "Mail Server"
+msgstr "خادم البريد الإلكتروني"
+
+msgid "Azure Outlook"
+msgstr "توقعات أزور"
+
+msgid "Mail Template"
+msgstr "قالب البريد"
+
+msgid "Base"
+msgstr "قاعدة"
+
+msgid "Data Mangement"
+msgstr "إدارة البيانات"
+
+msgid "Recycle Bin"
+msgstr "سلة المحذوفات"
+
+msgid "Personal Information"
+msgstr "معلومات شخصية"
+
+msgid "Last Name"
+msgstr "اسم العائلة"
+
+msgid "Work Info"
+msgstr "معلومات العمل"
+
+msgid "View Login History"
+msgstr "عرض سجل تسجيل الدخول"
+
+msgid "Select"
+msgstr "يختار"
+
+msgid "My Holidays"
+msgstr "عطلاتي"
+
+msgid "Holiday Type"
+msgstr "نوع العطلة"
+
+msgid "Details"
+msgstr "التفاصيل"
+
+msgid "Holiday Start Date"
+msgstr "تاريخ بدء العطلة"
+
+msgid "Holiday End Date"
+msgstr "تاريخ انتهاء العطلة"
+
+msgid "My Login History"
+msgstr "سجل تسجيل الدخول الخاص بي"
+
+msgid "Browser"
+msgstr "المتصفح"
+
+msgid "Login Time"
+msgstr "وقت تسجيل الدخول"
+
+msgid "Is Active"
+msgstr "نشط"
+
+msgid "IP"
+msgstr "الملكية الفكرية"
+
+msgid "Kanban Settings"
+msgstr "Kanban Settings"
+
+msgid "Invalid credentials. Please check and try again."
+msgstr "بيانات الاعتماد غير صالحة. يُرجى التحقق والمحاولة مرة أخرى."
+
+msgid "This user is archived or blocked. Please contact support."
+msgstr "هذا المستخدم مؤرشف أو محظور. يُرجى التواصل مع الدعم."
+
+msgid "Login successful."
+msgstr "تم تسجيل الدخول بنجاح."
+
+msgid "Business Hours "
+msgstr "ساعات العمل"
+
+msgid "Holidays "
+msgstr "العطل"
+
+msgid "Currencies"
+msgstr "العملات"
+
+msgid "Recycle Bin Policy"
+msgstr "سياسة سلة المحذوفات"
+
+msgid "Hour Type"
+msgstr "نوع الساعة"
+
+msgid "Is Default"
+msgstr "هو الافتراضي"
+
+msgid "Week Starts On"
+msgstr "يبدأ الأسبوع في"
+
+msgid "Business Days"
+msgstr "أيام العمل"
+
+msgid "Accounts"
+msgstr "الحسابات"
+
+msgid "Select Account"
+msgstr "حدد الحساب"
+
+msgid "Select the account to assign as a child account."
+msgstr "حدد الحساب الذي سيتم تعيينه كحساب فرعي."
+
+msgid "Please select an account."
+msgstr "الرجاء تحديد حساب."
+
+msgid "This account already has a parent account assigned."
+msgstr "هذا الحساب لديه حساب أصلي تم تعيينه."
+
+msgid "An account cannot be its own parent."
+msgstr "الحساب لا يمكن أن يكون والده الخاص به."
+
+msgid "Please select a valid account."
+msgstr "الرجاء تحديد حساب صالح."
+
+msgid "People"
+msgstr "الأشخاص"
+
+msgid "Web"
+msgstr "ويب"
+
+msgid "Phone Inquiry"
+msgstr "استفسار عن الهاتف"
+
+msgid "Partner Referral"
+msgstr "إحالة الشريك"
+
+msgid "Purchased List"
+msgstr "القائمة المشتراة"
+
+msgid "Other"
+msgstr "اخرى"
+
+msgid "Prospect"
+msgstr "الاحتمالات"
+
+msgid "Customer - Direct"
+msgstr "العميل - مباشر"
+
+msgid "Customer - Channel"
+msgstr "العميل - القناة"
+
+msgid "Channel Partner / Reseller"
+msgstr "شريك القناة / الموزع"
+
+msgid "Installation Partner"
+msgstr "شريك التثبيت"
+
+msgid "Technology Partner"
+msgstr "شريك التكنولوجيا"
+
+msgid "Finance"
+msgstr "المالية"
+
+msgid "Healthcare"
+msgstr "الرعاية الصحية"
+
+msgid "Manufacturing"
+msgstr "التصنيع"
+
+msgid "Agriculture"
+msgstr "الزراعة"
+
+msgid "Construction"
+msgstr "البناء"
+
+msgid "Banking"
+msgstr "الأعمال المصرفية"
+
+msgid "Education"
+msgstr "التعليم"
+
+msgid "Insurance"
+msgstr "التأمين"
+
+msgid "Public"
+msgstr "عامة"
+
+msgid "Private"
+msgstr "خاص"
+
+msgid "Subsidiary"
+msgstr "فرعي"
+
+msgid "Account Name"
+msgstr "اسم الحساب"
+
+msgid "Account Number"
+msgstr "رقم الحساب"
+
+msgid "Account Owner"
+msgstr "مالك الحساب"
+
+msgid "Account Type"
+msgstr "نوع الحساب"
+
+msgid "Account Site"
+msgstr "موقع الحساب"
+
+msgid "Account Source"
+msgstr "مصدر الحساب"
+
+msgid "Billing City"
+msgstr "مدينة الفاتورة"
+
+msgid "Billing State"
+msgstr "حالة الفوترة"
+
+msgid "Billing District"
+msgstr "مقاطعة الفاتورة"
+
+msgid "Billing Zip"
+msgstr "الرمز البريدي للفواتير"
+
+msgid "Shipping City"
+msgstr "مدينة الشحن"
+
+msgid "Shipping State"
+msgstr "حالة الشحن"
+
+msgid "Shipping District"
+msgstr "منطقة الشحن"
+
+msgid "Shipping Zip"
+msgstr "البريد الإلكتروني للشحن"
+
+msgid "Is Customer Portal"
+msgstr "هو بوابة العملاء"
+
+msgid "Customer Priority"
+msgstr "أولوية العميل"
+
+msgid "Parent Account"
+msgstr "الحساب الأصل"
+
+msgid "Is Partner"
+msgstr "هو شريك"
+
+msgid "Industry"
+msgstr "الصناعة"
+
+msgid "Phone"
+msgstr "الهاتف"
+
+msgid "Fax"
+msgstr "فاكس"
+
+msgid "Operating Hours"
+msgstr "ساعات العمل"
+
+msgid "Ownership"
+msgstr "الملكية"
+
+msgid "Rating"
+msgstr "التقييم"
+
+#, fuzzy
+#| msgid "Account Source"
+msgid "Account Score"
+msgstr "مصدر الحساب"
+
+msgid "Account"
+msgstr "حساب"
+
+msgid "Partner Account"
+msgstr "حساب الشريك"
+
+msgid "Partner Account Role"
+msgstr "دور حساب الشريك"
+
+msgid "Partner Account Roles"
+msgstr "أدوار حساب الشريك"
+
+msgid "Change Owner"
+msgstr "تغيير المالك"
+
+msgid "Child Accounts"
+msgstr "حسابات الأطفال"
+
+msgid "Related Contacts"
+msgstr "جهات الاتصال ذات الصلة"
+
+msgid "Partner"
+msgstr "شريك"
+
+msgid "Add Contact Relationships"
+msgstr "إضافة علاقات جهات الاتصال"
+
+msgid "Add Child Account"
+msgstr "إضافة حساب فرعي"
+
+msgid "You must be logged in to perform this action."
+msgstr "يجب عليك تسجيل الدخول لتنفيذ هذا الإجراء."
+
+msgid "No parent account specified in the request."
+msgstr "لا يوجد حساب رئيسي محدد في الطلب."
+
+msgid "This account already has a parent account."
+msgstr "هذا الحساب لديه بالفعل حساب أصلي."
+
+msgid "Child account assigned successfully!"
+msgstr "تم تعيين حساب الطفل بنجاح!"
+
+msgid "Invalid parent account ID format."
+msgstr "تنسيق معرف الحساب الأصل غير صالح."
+
+msgid "An unexpected error occurred while assigning the child account."
+msgstr "حدث خطأ غير متوقع أثناء تعيين حساب الطفل."
+
+msgid "Account Partner"
+msgstr "شريك الحساب"
+
+msgid "This partner role is already assigned to this account."
+msgstr "تم تعيين دور الشريك هذا بالفعل لهذا الحساب."
+
+msgid "Activities"
+msgstr "أنشطة"
+
+msgid "Subject"
+msgstr "موضوع"
+
+msgid "Activity Type"
+msgstr "نوع النشاط"
+
+msgid "Source"
+msgstr "مصدر"
+
+msgid "Related Content Type"
+msgstr "نوع المحتوى ذي الصلة"
+
+msgid "Location"
+msgstr "موقع"
+
+msgid "All Day"
+msgstr "طوال اليوم"
+
+msgid "Assigned To"
+msgstr "تم تعيينه ل"
+
+msgid "Participants"
+msgstr "المشاركون"
+
+msgid "Meeting Host"
+msgstr "مضيف الاجتماع"
+
+msgid "Activity Owner"
+msgstr "مالك النشاط"
+
+msgid "Priority"
+msgstr "أولوية"
+
+msgid "Due Date"
+msgstr "تاريخ الاستحقاق"
+
+msgid "Recipient Email"
+msgstr "البريد الإلكتروني للمستلم"
+
+msgid "Call Duration"
+msgstr "مدة المكالمة"
+
+msgid "Call Duration (Seconds)"
+msgstr "مدة المكالمة (بالثواني)"
+
+msgid "Call Type"
+msgstr "نوع المكالمة"
+
+msgid "Call Purpose"
+msgstr "غرض المكالمة"
+
+msgid "Activity"
+msgstr "النشاط"
+
+msgid "Related To"
+msgstr "مرتبط بـ"
+
+msgid "Schedule"
+msgstr "جدول"
+
+msgid "Campaigns"
+msgstr "الحملات"
+
+msgid "Select Campaign"
+msgstr "حدد الحملة"
+
+msgid "Select campaign"
+msgstr "حدد الحملة"
+
+msgid "Please select campaign."
+msgstr "الرجاء تحديد الحملة."
+
+msgid "This campaign already has a parent campaign assigned."
+msgstr "هذه الحملة لديها بالفعل حملة رئيسية تم تعيينها."
+
+msgid "An campaign cannot be its own parent."
+msgstr "لا يمكن للحملة أن تكون والدها الخاص."
+
+msgid "Please select a valid campaign."
+msgstr "الرجاء تحديد حملة صالحة."
+
+msgid "Campaign"
+msgstr "الحملة"
+
+msgid "Lead"
+msgstr "القائد"
+
+msgid "Member Status"
+msgstr "حالة العضو"
+
+msgid "Contact"
+msgstr "الاتصال"
+
+msgid "Campaign Member"
+msgstr "عضو الحملة الإعلانية"
+
+msgid "Campaign Members"
+msgstr "أعضاء الحملة الإعلانية"
+
+msgid "Campaign Name"
+msgstr "اسم الحملة الإعلانية"
+
+msgid "Campaign Owner"
+msgstr "مالك الحملة"
+
+msgid "Campaign Currency"
+msgstr "عملة الحملة"
+
+msgid "Expected Revenue"
+msgstr "الإيرادات المتوقعة"
+
+msgid "Budget Cost"
+msgstr "تكاليف الميزانية"
+
+msgid "Actual Cost"
+msgstr "التكلفة الفعلية"
+
+msgid "Expected Response (%)"
+msgstr "الاستجابة المتوقعة (%)"
+
+msgid "Number Sent in Campaign"
+msgstr "الرقم المرسل في الحملة الإعلانية"
+
+msgid "Parent Campaign"
+msgstr "حملة الوالدين"
+
+msgid "Add Child Campaign"
+msgstr "إضافة حملة فرعية"
+
+msgid "No parent campaign specified in the request."
+msgstr "لا توجد حملة رئيسية محددة في الطلب."
+
+msgid "A campaign cannot be its own parent."
+msgstr "لا يمكن للحملة أن تكون والدها الخاص."
+
+msgid "This campaign already has a parent campaign."
+msgstr "هذه الحملة لديها بالفعل حملة رئيسية تم تعيينها."
+
+msgid "Child campaign assigned successfully!"
+msgstr "تم تعيين حملة فرعية بنجاح!"
+
+msgid "Invalid parent campaign ID format."
+msgstr "تنسيق معرف الحملة الرئيسية غير صالح."
+
+msgid "Add to Campaign"
+msgstr "إضافة إلى الحملة"
+
+msgid "Add Campaign Members"
+msgstr "إضافة أعضاء الحملة"
+
+msgid "Contacts"
+msgstr "جهات"
+
+msgid "Select Contact"
+msgstr "حدد جهة الاتصال"
+
+msgid "Select the contact to assign as a child contact."
+msgstr "حدد جهة الاتصال التي سيتم تعيينها كجهة اتصال فرعية."
+
+msgid "Please select contact."
+msgstr "الرجاء تحديد جهة اتصال."
+
+msgid "This contact already has a parent contact assigned."
+msgstr "جهة الاتصال هذه لديها بالفعل جهة اتصال رئيسية تم تعيينها."
+
+msgid "An contact cannot be its own parent."
+msgstr "الاتصال من غير الممكن أن يكون والده الشخصي."
+
+msgid "Please select a valid contact."
+msgstr "الرجاء تحديد جهة اتصال صالحة."
+
+msgid "Contact Owner"
+msgstr "اتصل بالمالك"
+
+msgid "Job Title"
+msgstr "عنوان الوظيفة"
+
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+msgid "Secondary Phone"
+msgstr "الهاتف الثانوي"
+
+msgid "State"
+msgstr "الولاية"
+
+msgid "Zip"
+msgstr "مضغوطة"
+
+msgid "Parent Contact"
+msgstr "جهة الاتصال الرئيسية"
+
+msgid "Contact Source"
+msgstr "مصدر الاتصال"
+
+msgid "Birth Date"
+msgstr "تاريخ الميلاد"
+
+msgid "Assistant"
+msgstr "مساعد"
+
+msgid "Assistant Phone"
+msgstr "الهاتف المساعد"
+
+msgid "Languages"
+msgstr "اللغات"
+
+msgid "Contact Currency"
+msgstr "اتصل بالعملة"
+
+msgid "Is Primary"
+msgstr "هو أساسي"
+
+#, fuzzy
+#| msgid "Contact Source"
+msgid "Contact Score"
+msgstr "مصدر الاتصال"
+
+msgid "Contact Account Relationship"
+msgstr "علاقة حساب الاتصال"
+
+msgid "Contact Account Relationships"
+msgstr "علاقات حساب الاتصال"
+
+msgid "Contact Information"
+msgstr "معلومات الاتصال"
+
+msgid "Address Information"
+msgstr "معلومات العنوان"
+
+msgid "Additional Information"
+msgstr "معلومات إضافية"
+
+msgid "Child Contacts"
+msgstr "جهات اتصال الأطفال"
+
+msgid "Add Account Contact Relationships"
+msgstr "إضافة علاقات جهات الاتصال الحساب"
+
+msgid "Add Child Contact"
+msgstr "إضافة جهة اتصال فرعية"
+
+msgid "No parent contact specified in the request."
+msgstr "لم يتم تحديد جهة اتصال رئيسية في الطلب."
+
+#, fuzzy
+#| msgid "An contact cannot be its own parent."
+msgid "A contact cannot be its own parent."
+msgstr "الاتصال من غير الممكن أن يكون والده الشخصي."
+
+#, fuzzy
+#| msgid "This contact already has a parent account."
+msgid "This contact already has a parent contact."
+msgstr "جهة الاتصال هذه لديها حساب رئيسي مسبقا."
+
+msgid "Child contact assigned successfully!"
+msgstr "تم تعيين جهة اتصال فرعية بنجاح!"
+
+msgid "Invalid parent contact ID format."
+msgstr "تنسيق معرف جهة الاتصال الرئيسية غير صالح."
+
+#, fuzzy
+#| msgid "An unexpected error occurred while assigning the child account."
+msgid "An unexpected error occurred while assigning the child contact."
+msgstr "حدث خطأ غير متوقع أثناء تعيين حساب الطفل."
+
+msgid "Dashboards"
+msgstr "لوحات المعلومات"
+
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "KPI Icon"
+msgstr "أيقونة مؤشرات الأداء الرئيسية"
+
+msgid "Preview"
+msgstr "معاينة"
+
+msgid "Select component type to see preview"
+msgstr "حدد نوع المكون لرؤية المعاينة"
+
+msgid "Choose File"
+msgstr "اختر ملف"
+
+msgid "No file chosen"
+msgstr "لم يتم اختيار أي ملف"
+
+msgid "Conditions"
+msgstr "شروط"
+
+msgid "Add components"
+msgstr "إضافة مكونات"
+
+msgid "Reorder"
+msgstr "إعادة الطلب"
+
+msgid "Loading KPI..."
+msgstr "جاري تحميل مؤشر الأداء الرئيسي..."
+
+msgid "Charts & Data"
+msgstr "الرسوم البيانية والبيانات"
+
+msgid "Export as PNG"
+msgstr "تصدير بصيغة PNG"
+
+msgid "Export as PDF"
+msgstr "تصدير بصيغة PDF"
+
+msgid "Add to Another Dashboard"
+msgstr "إضافة إلى لوحة معلومات أخرى"
+
+msgid " Loading chart..."
+msgstr "جارٍ تحميل الرسم البياني..."
+
+msgid "No Components Added"
+msgstr "لم تتم إضافة أي مكونات"
+
+#, fuzzy
+#| msgid ""
+#| " This dashboard doesn't have any components yet. Add charts, tables, "
+#| "KPIs, or targets to visualize your data."
+msgid ""
+"This dashboard doesn't have any components yet. Add charts, tables, KPIs, or "
+"targets to visualize your data."
+msgstr ""
+"لا تحتوي لوحة المعلومات هذه على أي مكونات بعد. أضف مخططات بيانية أو جداول أو "
+"مؤشرات أداء رئيسية أو أهدافًا لعرض بياناتك."
+
+msgid "Reorder Components"
+msgstr "إعادة ترتيب المكونات"
+
+msgid "Reorder KPIs"
+msgstr "إعادة ترتيب مؤشرات الأداء الرئيسية"
+
+msgid "Chart"
+msgstr "جدول"
+
+msgid "Table Data"
+msgstr "بيانات الجدول"
+
+msgid "No components to reorder"
+msgstr "لا توجد مكونات لإعادة ترتيبها"
+
+msgid "Save Component Order"
+msgstr "حفظ ترتيب المكونات"
+
+msgid "KPI"
+msgstr "مؤشرات الأداء الرئيسية"
+
+msgid "No KPI components to reorder"
+msgstr "لا توجد مكونات مؤشر الأداء الرئيسي لإعادة ترتيبها"
+
+msgid "Save KPI Order"
+msgstr "حفظ طلب مؤشر الأداء الرئيسي"
+
+msgid "All Dashboards"
+msgstr "جميع لوحات المعلومات"
+
+msgid "Folders"
+msgstr "المجلدات"
+
+msgid "All Folders"
+msgstr "كافة المجلدات"
+
+msgid "Favourites"
+msgstr "المفضلة"
+
+msgid "Welcome"
+msgstr "مرحباً"
+
+msgid "View All Dashboards"
+msgstr "عرض جميع لوحات المعلومات"
+
+msgid ""
+"Get started by creating your first dashboard or explore the CRM overview "
+"below."
+msgstr ""
+"ابدأ بإنشاء لوحة المعلومات الأولى الخاصة بك أو استكشف نظرة عامة على نظام "
+"إدارة علاقات العملاء أدناه."
+
+msgid ""
+"You currently don't have access to dashboards. Please contact your "
+"administrator to request permissions or explore available features."
+msgstr ""
+"لا يمكنك حاليًا الوصول إلى لوحات المعلومات. يُرجى التواصل مع مسؤول النظام لطلب "
+"الأذونات أو استكشاف الميزات المتاحة."
+
+msgid "Records"
+msgstr "السجلات"
+
+msgid "Chart Added successfully!"
+msgstr "تمت إضافة الرسم البياني بنجاح!"
+
+msgid "Move to Dashboard"
+msgstr "انتقل إلى لوحة المعلومات"
+
+msgid "Original component not found."
+msgstr "لم يتم العثور على المكون الأصلي."
+
+msgid "Chart successfully added to another dashboard!"
+msgstr "تمت إضافة الرسم البياني إلى لوحة معلومات أخرى بنجاح!"
+
+msgid "Forecast"
+msgstr "تنبؤ بالمناخ"
+
+msgid "Update Target"
+msgstr "تحديث الهدف"
+
+msgid "Deal Revenue Amount"
+msgstr "مبلغ إيرادات الصفقة"
+
+msgid "Deal Revenue Expected Amount"
+msgstr "المبلغ المتوقع لإيرادات الصفقة"
+
+msgid "Deal Quantity"
+msgstr "كمية الصفقة"
+
+msgid "Forecast Type Name"
+msgstr "اسم نوع التوقعات"
+
+msgid "Forecast Type"
+msgstr "نوع التوقعات"
+
+msgid "Include Pipeline"
+msgstr "تشمل خط الأنابيب"
+
+msgid "Include Best Case"
+msgstr "تضمين أفضل حالة"
+
+msgid "Include Commit"
+msgstr "تضمين الالتزام"
+
+msgid "Include Closed"
+msgstr "تضمين مغلق"
+
+msgid "Forecast Types"
+msgstr "أنواع التوقعات"
+
+msgid "Field Name"
+msgstr "اسم الحقل"
+
+msgid "Operator"
+msgstr "المشغل"
+
+msgid "Value"
+msgstr "قيمة"
+
+msgid "Logical Operator"
+msgstr "عامل منطقي"
+
+msgid "Order"
+msgstr "طلب"
+
+msgid "Forecast Condition"
+msgstr "حالة التنبؤ"
+
+msgid "Forecast Conditions"
+msgstr "شروط التنبؤ"
+
+msgid "Draft"
+msgstr "مسودة"
+
+msgid "Submitted"
+msgstr "مُقَدَّم"
+
+msgid "Approved"
+msgstr "موافقة"
+
+msgid "Rejected"
+msgstr "مرفوض"
+
+msgid "Forecast Name"
+msgstr "اسم التوقعات"
+
+msgid "Forecast Owner"
+msgstr "مالك التوقعات"
+
+msgid "Target Amount"
+msgstr "المبلغ المستهدف"
+
+msgid "Pipeline Amount"
+msgstr "مبلغ خط الأنابيب"
+
+msgid "Best Case Amount"
+msgstr "أفضل مبلغ للحالة"
+
+msgid "Commit Amount"
+msgstr "مبلغ الالتزام"
+
+msgid "Closed Amount"
+msgstr "المبلغ المغلق"
+
+msgid "Actual Amount"
+msgstr "المبلغ الفعلي"
+
+msgid "Target Quantity"
+msgstr "الكمية المستهدفة"
+
+msgid "Pipeline Quantity"
+msgstr "كمية خط الأنابيب"
+
+msgid "Best Case Quantity"
+msgstr "أفضل كمية للحالة"
+
+msgid "Commit Quantity"
+msgstr "كمية الالتزام"
+
+msgid "Closed Quantity"
+msgstr "الكمية المغلقة"
+
+msgid "Actual Quantity"
+msgstr "الكمية الفعلية"
+
+msgid "Submitted At"
+msgstr "تم تقديمه في"
+
+msgid "Approved At"
+msgstr "تمت الموافقة عليه في"
+
+msgid "Approved By"
+msgstr "تمت الموافقة عليه بواسطة"
+
+msgid "Forecasts"
+msgstr "التوقعات"
+
+msgid "Assigned User"
+msgstr "المستخدم المعين"
+
+msgid "Forecast Period"
+msgstr "فترة التنبؤ"
+
+msgid "Target"
+msgstr "هدف"
+
+msgid "Target amount (revenue or quantity)"
+msgstr "المبلغ المستهدف (الإيرادات أو الكمية)"
+
+msgid "Currency code (e.g., USD, EUR, INR)"
+msgstr "رمز العملة (على سبيل المثال، USD، EUR، INR)"
+
+msgid "Current Achievement"
+msgstr "الإنجاز الحالي"
+
+msgid "Current achieved amount (auto-calculated)"
+msgstr "المبلغ المحقق الحالي (محسوب تلقائيًا)"
+
+msgid "Forecast Target"
+msgstr "الهدف المتوقع"
+
+msgid "Forecast Targets"
+msgstr "الأهداف المتوقعة"
+
+msgid "User Revenue Target"
+msgstr "هدف إيرادات المستخدم"
+
+msgid "Individual revenue target for this user"
+msgstr "هدف الإيرادات الفردية لهذا المستخدم"
+
+msgid "User Quantity Target"
+msgstr "هدف كمية المستخدم"
+
+msgid "Individual quantity target for this user"
+msgstr "الكمية الفردية المستهدفة لهذا المستخدم"
+
+msgid "Current Revenue Achieved"
+msgstr "الإيرادات الحالية المحققة"
+
+msgid "Current achieved revenue for this user"
+msgstr "الإيرادات الحالية المحققة لهذا المستخدم"
+
+msgid "Current Quantity Achieved"
+msgstr "الكمية الحالية المحققة"
+
+msgid "Current achieved quantity for this user"
+msgstr "الكمية المحققة الحالية لهذا المستخدم"
+
+msgid "Forecast Target User"
+msgstr "توقع المستخدم المستهدف"
+
+msgid "Forecast Target Users"
+msgstr "توقعات المستخدمين المستهدفين"
+
+msgid "deals"
+msgstr "الصفقات"
+
+msgid "Total:"
+msgstr "المجموع:"
+
+msgid "opportunities"
+msgstr "الفرص"
+
+msgid "Total Quantity:"
+msgstr "الكمية الإجمالية:"
+
+msgid "Total Amount:"
+msgstr "المبلغ الإجمالي:"
+
+#, fuzzy
+#| msgid "Select users"
+msgid "Select User"
+msgstr "تحديد المستخدمين"
+
+#, fuzzy
+#| msgid "Selected"
+msgid "Select Period"
+msgstr "مختارة"
+
+#, fuzzy
+#| msgid "Forecast Type"
+msgid "Select Forecast Type"
+msgstr "نوع التوقعات"
+
+msgid "No Forecast Type set. Set it from settings."
+msgstr "لم يتم تحديد نوع التوقعات. اضبطه من الإعدادات."
+
+msgid "Go To Forecast Type"
+msgstr "انتقل إلى نوع التوقعات"
+
+msgid "Achievement"
+msgstr "إنجاز"
+
+msgid "Gap"
+msgstr "فجوة"
+
+msgid "Closed"
+msgstr "مغلق"
+
+msgid "Commit Forecast"
+msgstr "توقعات الالتزام"
+
+msgid "Best Case"
+msgstr "أفضل حالة"
+
+msgid "Open Pipeline"
+msgstr "فتح خط الأنابيب"
+
+msgid "Total"
+msgstr "المجموع"
+
+msgid "Loading more users for"
+msgstr ""
+
+msgid "No forecast data available for this period"
+msgstr "لا تتوفر بيانات التنبؤ لهذه الفترة"
+
+msgid "Forecast Type:"
+msgstr "نوع التوقعات:"
+
+msgid "My Forecast"
+msgstr "توقعاتي"
+
+msgid "Select Fiscal Year"
+msgstr "حدد السنة المالية"
+
+msgid "- Current"
+msgstr "- حاضِر"
+
+msgid "- Previous"
+msgstr "- سابق"
+
+msgid "- Next"
+msgstr "- التالي"
+
+msgid "Leads"
+msgstr "العملاء المحتملين"
+
+msgid "Sales"
+msgstr "مبيعات"
+
+msgid "Status Name"
+msgstr "اسم الحالة"
+
+msgid "Status Order"
+msgstr "ترتيب الحالة"
+
+msgid "Status Color"
+msgstr "لون الحالة"
+
+msgid "Is Final Stage"
+msgstr "هي المرحلة النهائية"
+
+msgid "Probability"
+msgstr "الاحتمال"
+
+msgid "Lead Stage"
+msgstr "المرحلة الرئيسية"
+
+msgid "Lead Stages"
+msgstr "المراحل الرئيسية"
+
+msgid "Order must be a non-negative integer."
+msgstr "يجب أن يكون الطلب عددًا صحيحًا غير سلبي."
+
+msgid "Referral"
+msgstr "الإحالة"
+
+msgid "Event"
+msgstr "الحدث"
+
+msgid "Social Media"
+msgstr "وسائل التواصل الاجتماعي"
+
+msgid "Lead Owner"
+msgstr "المالك الرئيسي"
+
+msgid "Lead Currency"
+msgstr "العملة الرائدة"
+
+msgid "Lead Source"
+msgstr "مصدر العميل المحتمل"
+
+msgid "Lead Status"
+msgstr "حالة العملاء المحتملين"
+
+msgid "Lead Company"
+msgstr "الشركة الرائدة"
+
+msgid "Total Employees"
+msgstr "مجموع الموظفين"
+
+msgid "Requirements"
+msgstr "المتطلبات"
+
+#, fuzzy
+#| msgid "Lead Source"
+msgid "Lead Score"
+msgstr "مصدر العميل المحتمل"
+
+msgid "Annual Revenue 3x"
+msgstr "الإيرادات السنوية 3x"
+
+msgid "Export"
+msgstr "يصدّر"
+
+msgid "Move"
+msgstr ""
+
+#, fuzzy
+#| msgid "Favourites"
+msgid "Favourite"
+msgstr "المفضلة"
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Lead Conversion"
+msgstr "تحويل العملاء المحتملين"
+
+msgid "Select Existing"
+msgstr "تحديد الموجود"
+
+msgid "Opportunity"
+msgstr "فرصة"
+
+msgid "Owner"
+msgstr "المالك"
+
+msgid "Convert"
+msgstr "يتحول"
+
+msgid "Opportunity Name"
+msgstr "اسم الفرصة"
+
+msgid "Select Opportunity"
+msgstr "اختر الفرصة"
+
+msgid "Please select an account first"
+msgstr "الرجاء تحديد الحساب أولاً"
+
+msgid "Select an account to see available opportunities"
+msgstr "اختر حسابًا لمشاهدة الفرص المتاحة"
+
+msgid "Your lead has been converted"
+msgstr "لقد تم تحويل عميلك المحتمل"
+
+msgid "Go to Leads"
+msgstr "انتقل إلى العملاء المحتملين"
+
+msgid "Get started by using default stages or adding your custom stages."
+msgstr ""
+
+#, fuzzy
+#| msgid "Select Header"
+msgid "Select Lead Stages for"
+msgstr "حدد الرأس"
+
+#, fuzzy
+#| msgid "Default Values"
+msgid "Default Stages"
+msgstr "القيم الافتراضية"
+
+#, fuzzy
+#| msgid "Stage"
+msgid "Stages"
+msgstr "المرحلة"
+
+#, fuzzy
+#| msgid "Manage Custom Stages"
+msgid "Custom Stages"
+msgstr "إدارة المراحل المخصصة"
+
+msgid "Close"
+msgstr "يغلق"
+
+msgid "Opportunities"
+msgstr "الفرص"
+
+msgid "Threshold updated successfully"
+msgstr "تم تحديث العتبة بنجاح"
+
+msgid "Big Deal Alert"
+msgstr "تنبيه الصفقة الكبيرة"
+
+msgid "At least one valid condition row must be provided."
+msgstr "يجب توفير صف شرط صالح واحد على الأقل."
+
+msgid "Opportunity Team"
+msgstr "فريق الفرصة"
+
+msgid "Open"
+msgstr "يفتح"
+
+msgid "Closed Won"
+msgstr "أغلقت وفازت"
+
+msgid "Closed Lost"
+msgstr "مغلقة مفقودة"
+
+msgid "Stage Name"
+msgstr "اسم المرحلة"
+
+msgid "Stage Type"
+msgstr "نوع المرحلة"
+
+msgid "Type of stage - Open, Closed Won, or Closed Lost"
+msgstr "نوع المرحلة - مفتوحة، أو مغلقة (فازت)، أو مغلقة (خسرت)"
+
+msgid "Opportunity Stage"
+msgstr "مرحلة الفرصة"
+
+msgid "Opportunity Stages"
+msgstr "مراحل الفرصة"
+
+msgid "Amount"
+msgstr "المبلغ"
+
+msgid "Quantity"
+msgstr "الكمية"
+
+msgid "Close Date"
+msgstr "تاريخ الإغلاق"
+
+msgid "Stage"
+msgstr "المرحلة"
+
+msgid "Opportunity Score"
+msgstr "نتيجة الفرصة"
+
+msgid "Primary Campaign Source"
+msgstr "مصدر الحملة الرئيسية"
+
+msgid "Forecast Category"
+msgstr "تنبؤات الفئة"
+
+msgid "Delivery Installation Status"
+msgstr "حالة تثبيت التوصيل"
+
+msgid "Main Competitors"
+msgstr "المنافسون الرئيسيون"
+
+msgid "Order Number"
+msgstr "رقم الطلب"
+
+msgid "Tracking Number"
+msgstr "رقم التتبع"
+
+msgid "Opportunity Currency"
+msgstr "فرصة العملة"
+
+msgid "Account Manager"
+msgstr "مدير الحساب"
+
+msgid "Channel Manager"
+msgstr "إدارة القنوات"
+
+msgid "Executive Sponsor"
+msgstr "الراعي التنفيذي"
+
+msgid "Lead Qualifier"
+msgstr "مؤهلات العملاء المحتملين"
+
+msgid "Pre-Sales Consultant"
+msgstr "مستشار ما قبل المبيعات"
+
+msgid "Sales Manager"
+msgstr "مدير المبيعات"
+
+msgid "Sales Rep"
+msgstr "مبيعات Rep"
+
+msgid "Opportunity Owner"
+msgstr "مالك الفرصة"
+
+msgid "Read Only"
+msgstr "قراءة فقط"
+
+msgid "Read/Write"
+msgstr "القراءة/الكتابة"
+
+msgid "Team Name"
+msgstr "اسم الفريق"
+
+msgid "Opportunity Teams"
+msgstr "فرق الفرص"
+
+msgid "Opportunity Access"
+msgstr "الوصول إلى الفرصة"
+
+msgid "Member Role"
+msgstr "دور العضو"
+
+msgid "Team Members"
+msgstr "أعضاء الفريق"
+
+msgid "Opportunity team member"
+msgstr "عضو فريق الفرص"
+
+msgid "Opportunity team members"
+msgstr "أعضاء فريق الفرص"
+
+msgid "Team Member"
+msgstr "عضو فريق"
+
+msgid "Access Level"
+msgstr "مستوى الوصول"
+
+msgid "Default Opportunity Member"
+msgstr "عضو الفرصة الافتراضية"
+
+msgid "Default Opportunity Members"
+msgstr "أعضاء الفرصة الافتراضية"
+
+msgid "Alert Name"
+msgstr "اسم التنبيه"
+
+msgid "Trigger Amount"
+msgstr "مبلغ التحفيز"
+
+msgid "Trigger Probability"
+msgstr "احتمالية الزناد"
+
+msgid "Trigger alert when opportunity probability reaches this percentage"
+msgstr "قم بتشغيل التنبيه عندما يصل احتمال الفرصة إلى هذه النسبة المئوية"
+
+msgid "Sender Name"
+msgstr "اسم المرسل"
+
+msgid "Sender Email"
+msgstr "البريد الإلكتروني للمرسل"
+
+msgid "Notify Emails"
+msgstr "إشعارات البريد الإلكتروني"
+
+msgid "Comma-separated emails to notify"
+msgstr "رسائل البريد الإلكتروني مفصولة بفواصل للإخطار"
+
+msgid "Notify CC Emails"
+msgstr "إخطار رسائل البريد الإلكتروني CC"
+
+msgid "Notify BCC Emails"
+msgstr "إخطار رسائل البريد الإلكتروني BCC"
+
+msgid "Notify Opportunity Owner"
+msgstr "إخطار مالك الفرصة"
+
+msgid "Active"
+msgstr "نشيط"
+
+msgid "Big Deal Alerts"
+msgstr "تنبيهات الصفقات الكبيرة"
+
+msgid "Create Opportunity Team"
+msgstr "إنشاء فريق الفرصة"
+
+msgid "Add Members"
+msgstr "إضافة أعضاء"
+
+msgid "Update Team Member"
+msgstr "تحديث عضو الفريق"
+
+msgid " Nothing to show yet. Please add your Deal Alerts."
+msgstr "لا يوجد عرض حتى الآن. يُرجى إضافة تنبيهات الصفقات."
+
+#, fuzzy
+#| msgid "Select Opportunity"
+msgid "Select Opportunity Stages for"
+msgstr "اختر الفرصة"
+
+msgid "Opportunity Information"
+msgstr "معلومات الفرصة"
+
+msgid "Contact Roles"
+msgstr "أدوار الاتصال"
+
+msgid "Add Contact Role"
+msgstr "إضافة دور جهة الاتصال"
+
+msgid "Reports"
+msgstr "التقارير"
+
+msgid "Analytics"
+msgstr "تحليلات"
+
+#, fuzzy
+#| msgid "Reports"
+msgid " All Reports"
+msgstr "التقارير"
+
+#, fuzzy
+#| msgid "Reports"
+msgid "All Reports"
+msgstr "التقارير"
+
+msgid "You are already selected this field"
+msgstr "لقد قمت بالفعل باختيار هذا المجال"
+
+msgid "No matching columns found"
+msgstr "لم يتم العثور على أعمدة مطابقة"
+
+#, fuzzy
+#| msgid "No %(verbose_name)s found matching the query"
+msgid "No fields found matching your search"
+msgstr "لم يتم العثور على %(verbose_name)s مطابقة للاستعلام"
+
+msgid "R"
+msgstr ""
+
+#, fuzzy
+#| msgid "Cc"
+msgid "C"
+msgstr "Cc"
+
+#, fuzzy
+#| msgid "AM"
+msgid "A"
+msgstr "صباحا"
+
+msgid "Is"
+msgstr ""
+
+#, fuzzy
+#| msgid "Contacts"
+msgid "Contains"
+msgstr "جهات"
+
+#, fuzzy
+#| msgid "Created At"
+msgid "Greater than"
+msgstr "تم إنشاؤها في"
+
+msgid "Less than"
+msgstr ""
+
+msgid "Greater or equal"
+msgstr ""
+
+msgid "Less or equal"
+msgstr ""
+
+msgid "Summary Report"
+msgstr "تقرير موجز"
+
+msgid "Total Count"
+msgstr "العدد الإجمالي"
+
+#, fuzzy
+#| msgid "Column User"
+msgid "Columns"
+msgstr "مستخدم العمود"
+
+#, fuzzy
+#| msgid "No Grouping"
+msgid "Grouping"
+msgstr "لا يوجد تجميع"
+
+#, fuzzy
+#| msgid "Clear Filters"
+msgid "Filter"
+msgstr "مسح المرشحات"
+
+#, fuzzy
+#| msgid "Applied Filters"
+msgid "Apply Filters"
+msgstr "المرشحات المطبقة"
+
+msgid "Report:"
+msgstr "تقرير:"
+
+msgid "You have unsaved changes. Click"
+msgstr "لديك تغييرات غير محفوظة. انقر"
+
+msgid "to keep your changes or"
+msgstr "للحفاظ على تغييراتك أو"
+
+msgid "Discard"
+msgstr "ينبذ"
+
+msgid "to revert."
+msgstr "للعودة."
+
+msgid "Detail table"
+msgstr "جدول التفاصيل"
+
+msgid "Pivot table"
+msgstr "جدول محوري"
+
+msgid "Report Chart"
+msgstr "تقرير الرسم البياني"
+
+msgid "Change Chart"
+msgstr "مخطط التغيير"
+
+msgid "Change Field"
+msgstr "تغيير الحقل"
+
+msgid "Record Count:"
+msgstr "عدد السجلات:"
+
+msgid "Calendar"
+msgstr "تقويم"
+
+msgid "Calendar Type"
+msgstr "نوع التقويم"
+
+msgid "Color"
+msgstr "لون"
+
+msgid "Is Selected"
+msgstr "تم التحديد"
+
+msgid "User Calendar Preference"
+msgstr "تفضيلات تقويم المستخدم"
+
+msgid "User Calendar Preferences"
+msgstr "تفضيلات تقويم المستخدم"
+
+msgid "From"
+msgstr "من"
+
+msgid "To"
+msgstr "ل"
+
+msgid "Reason"
+msgstr "سبب"
+
+msgid "User Unavailability"
+msgstr "عدم توفر المستخدم"
+
+msgid "User Unavailabilities"
+msgstr "عدم توفر المستخدم"
+
+#, fuzzy
+#| msgid "Mark as Unavailable"
+msgid "Mark Unavailable"
+msgstr "وضع علامة على أنها غير متاحة"
+
+msgid "Today"
+msgstr "اليوم"
+
+msgid "Day"
+msgstr "يوم"
+
+msgid "Assigned to"
+msgstr "مُعَيَّنَةٌ إِلَى"
+
+msgid "Mark as Complete"
+msgstr "وضع علامة كمكتمل"
+
+msgid "Info"
+msgstr "معلومات"
+
+msgid "Mark as Unavailable"
+msgstr "وضع علامة على أنها غير متاحة"
+
+msgid "My Calendars"
+msgstr "تقويماتي"
+
+msgid "Display This Only"
+msgstr "عرض هذا فقط"
+
+msgid "Tasks"
+msgstr "مهام"
+
+msgid "Events"
+msgstr "الأحداث"
+
+msgid "Meetings"
+msgstr "الاجتماعات"
+
+msgid "Unavailability"
+msgstr "عدم التوفر"
+
+msgid "Preferences saved successfully"
+msgstr "تم حفظ التفضيلات بنجاح"
+
+msgid "Marked as completed successfully."
+msgstr "تم وضع علامة على اكتمال العملية بنجاح."
+
+msgid "Mark Unavailability"
+msgstr "علامة عدم التوفر"
+
+msgid "Call"
+msgstr "يتصل"
+
+msgid "Pending Tasks"
+msgstr "المهام المعلقة"
+
+msgid "Completed Tasks"
+msgstr "المهام المكتملة"
+
+msgid "Pending Meetings"
+msgstr "الاجتماعات المعلقة"
+
+msgid "Completed Meetings"
+msgstr "الاجتماعات المكتملة"
+
+msgid "Pending Calls"
+msgstr "المكالمات المعلقة"
+
+msgid "Completed Calls"
+msgstr "المكالمات المكتملة"
+
+msgid "Mails"
+msgstr "بريد"
+
+msgid "Drafts"
+msgstr "المسودات"
+
+msgid "Scheduled"
+msgstr "مجدول"
+
+msgid "Pending Events"
+msgstr "الأحداث المعلقة"
+
+msgid "Completed Events"
+msgstr "الأحداث المكتملة"
+
+msgid "Select Fields to Display"
+msgstr "حدد الحقول المراد عرضها"
+
+msgid "Available Fields"
+msgstr "الحقول المتاحة"
+
+msgid "Visible Fields"
+msgstr "الحقول المرئية"
+
+msgid "Add more filter"
+msgstr "إضافة المزيد من التصفية"
+
+msgid "Applied Filters"
+msgstr "المرشحات المطبقة"
+
+msgid "Clear All"
+msgstr "مسح الكل"
+
+msgid "Save to List"
+msgstr "حفظ إلى القائمة"
+
+msgid "Clear"
+msgstr "مسح"
+
+#, fuzzy
+#| msgid "Mail Attachment"
+msgid "Add Notes and Attachment"
+msgstr "مرفق البريد"
+
+msgid "Click to upload"
+msgstr ""
+
+msgid "Any file (Max 10MB)"
+msgstr ""
+
+#, fuzzy
+#| msgid "Is Selected"
+msgid "File selected"
+msgstr "تم التحديد"
+
+msgid "We searched for"
+msgstr "بحثنا عن"
+
+msgid "No search results found"
+msgstr "لم يتم العثور على نتائج بحث"
+
+msgid "Clear Filters"
+msgstr "مسح المرشحات"
+
+msgid "New"
+msgstr "جديد"
+
+msgid "created"
+msgstr "مخلوق"
+
+msgid "status"
+msgstr "حالة"
+
+msgid "Added call task to this"
+msgstr "تمت إضافة مهمة الاتصال إلى هذه"
+
+msgid "Send email to this"
+msgstr "إرسال بريد إلكتروني إلى هذا"
+
+msgid "Activity logged for this"
+msgstr "تم تسجيل النشاط لهذا"
+
+msgid "Event scheduled for this"
+msgstr "الحدث المقرر لهذا"
+
+msgid "Meeting scheduled with this"
+msgstr "الاجتماع المقرر مع هذا"
+
+msgid "Action performed by"
+msgstr "الإجراء الذي يقوم به"
+
+msgid " No history available for this object."
+msgstr "لا يوجد تاريخ متاح لهذا الكائن."
+
+msgid "Nothing to show yet. Please add your"
+msgstr "لا يوجد شيء لعرضه بعد. يُرجى إضافة"
+
+msgid "Select Columns to Export (Optional)"
+msgstr "تحديد الأعمدة للتصدير (اختياري)"
+
+msgid "Export Format"
+msgstr "تنسيق التصدير"
+
+msgid "Excel"
+msgstr "اكسل"
+
+msgid "CSV"
+msgstr "CSV"
+
+msgid "PDF"
+msgstr "قوات الدفاع الشعبي"
+
+msgid "Available Columns"
+msgstr "الأعمدة المتاحة"
+
+msgid "Select which columns to export"
+msgstr "حدد الأعمدة التي تريد تصديرها"
+
+msgid "Add Additional Columns"
+msgstr "إضافة أعمدة إضافية"
+
+msgid "Select more fields you want to export"
+msgstr "حدد المزيد من الحقول التي تريد تصديرها"
+
+msgid "Unselect"
+msgstr "Unselect"
+
+msgid "Export Selected"
+msgstr "Export Selected"
+
+msgid "Bulk Update"
+msgstr "تحديث جماعي"
+
+msgid "Bulk Delete"
+msgstr "حذف بالجملة"
+
+msgid "Selected"
+msgstr "مختارة"
+
+msgid "Delete List"
+msgstr "حذف القائمة"
+
+msgid "Clear Session"
+msgstr "جلسة واضحة"
+
+msgid "Actions"
+msgstr "اجراء"
+
+msgid " Nothing to show yet. Please add your"
+msgstr "لا يوجد شيء لعرضه بعد. يُرجى إضافة"
+
+#, fuzzy
+#| msgid "Mail Attachments"
+msgid "Notes and  Attachments"
+msgstr "مرفقات البريد"
+
+#, fuzzy
+#| msgid "Open Pipeline"
+msgid "Open file in new tab"
+msgstr "فتح خط الأنابيب"
+
+#, fuzzy
+#| msgid "Created"
+msgid "Created By"
+msgstr "أنشئ"
+
+#, fuzzy
+#| msgid "File"
+msgid "File Size"
+msgstr "ملف"
+
+msgid "Bulk Reassign Dependencies"
+msgstr "إعادة تعيين التبعيات بشكل مجمع"
+
+msgid "Reassign all dependent"
+msgstr "إعادة تعيين جميع المعالين"
+
+msgid "to a new target before deleting"
+msgstr "إلى هدف جديد قبل الحذف"
+
+msgid "New Target"
+msgstr "هدف جديد"
+
+msgid "No other targets available"
+msgstr "لا توجد أهداف أخرى متاحة"
+
+msgid "Confirm"
+msgstr "يتأكد"
+
+msgid "Confirm Deletion"
+msgstr "تأكيد الحذف"
+
+msgid "Deleting this"
+msgstr "حذف هذا"
+
+msgid "will also remove all its related"
+msgstr "سوف يقوم أيضًا بإزالة كل ما يتعلق به"
+
+msgid "Are you sure you want to proceed ?"
+msgstr "هل أنت متأكد أنك تريد المتابعة؟"
+
+msgid "with Dependencies"
+msgstr "مع التبعيات"
+
+msgid "Confirm Delete"
+msgstr "تأكيد الحذف"
+
+msgid "The"
+msgstr "ال"
+
+msgid "has dependencies and cannot be deleted directly."
+msgstr "لديه تبعيات ولا يمكن حذفه مباشرة."
+
+msgid "Reassign All"
+msgstr "إعادة تعيين الكل"
+
+msgid "Reassign Individually"
+msgstr "إعادة التعيين بشكل فردي"
+
+msgid "Delete All"
+msgstr "حذف الكل"
+
+msgid "Are you sure you want to delete the"
+msgstr "هل أنت متأكد أنك تريد حذف"
+
+msgid "Select Delete Mode"
+msgstr "حدد وضع الحذف"
+
+msgid "Choose the deletion mode for"
+msgstr "اختر وضع الحذف"
+
+msgid "Hard Delete"
+msgstr "حذف ثابت"
+
+msgid "Soft Delete"
+msgstr "الحذف الناعم"
+
+msgid "Individual Reassign or Delete Dependencies"
+msgstr "إعادة تعيين التبعيات أو حذفها بشكل فردي"
+
+msgid "Choose actions for each dependent"
+msgstr "اختر الإجراءات لكل تابع"
+
+msgid "before deleting"
+msgstr "قبل الحذف"
+
+msgid "Select Target"
+msgstr "اختر الهدف"
+
+msgid "Set to Null"
+msgstr "اضبط على قيمة خالية"
+
+msgid "Set Null"
+msgstr "اضبط على قيمة خالية"
+
+msgid "No dependent records found."
+msgstr "لم يتم العثور على سجلات تابعة."
+
+#, fuzzy
+#| msgid "Horilla  Configuration"
+msgid "Hard Delete Confirmation"
+msgstr "تكوين هوريلا"
+
+#, fuzzy
+#| msgid "Deleted {repr:s}"
+msgid "Deletable Records"
+msgstr "تم الحذف {repr:s}"
+
+msgid "Protected Records"
+msgstr ""
+
+#, fuzzy
+#| msgid "Confirm Delete"
+msgid " Confirm Delete"
+msgstr "تأكيد الحذف"
+
+#, fuzzy
+#| msgid "Bulk Update"
+msgid "Bulk Update Selected"
+msgstr "تحديث جماعي"
+
+#, fuzzy
+#| msgid "No fields available for this model"
+msgid "No fields available for bulk update."
+msgstr "لا توجد حقول متاحة لهذا النموذج"
+
+msgid "Choose the deletion mode for the selected records"
+msgstr "اختر وضع الحذف للسجلات المحددة"
+
+msgid "Select Field"
+msgstr "حدد الحقل"
+
+msgid "No value needed"
+msgstr "لا حاجة للقيمة"
+
+msgid "and"
+msgstr "و"
+
+msgid "Select an option"
+msgstr "اختر خيارًا"
+
+msgid "Apply"
+msgstr ""
+
+#, fuzzy
+#| msgid "Soft Delete"
+msgid "Soft Delete Confirmation"
+msgstr "الحذف الناعم"
+
+#, fuzzy
+#| msgid "Records Created"
+msgid "No Records to Delete"
+msgstr "تم إنشاء السجلات"
+
+msgid "No related lists found for this"
+msgstr "لم يتم العثور على قوائم ذات صلة بهذا"
+
+msgid "New List View"
+msgstr "عرض القائمة الجديدة"
+
+msgid "No filter parameters available."
+msgstr "لا توجد معلمات تصفية متاحة."
+
+msgid "List View Name"
+msgstr "اسم عرض القائمة"
+
+#, fuzzy
+#| msgid "Add Role"
+msgid "Add More"
+msgstr "إضافة دور"
+
+msgid "Related Lists"
+msgstr "قوائم ذات صلة"
+
+#, fuzzy
+#| msgid "Mail Attachments"
+msgid "Notes & Attachments"
+msgstr "مرفقات البريد"
+
+msgid "History"
+msgstr "التاريخ"
+
+msgid "Send Email"
+msgstr "إرسال بريد إلكتروني"
+
+msgid ""
+"Selected record is not associated with any company. Activate a company to "
+"proceed with deletion."
+msgstr ""
+
+msgid "To Email"
+msgstr "إلى البريد الإلكتروني"
+
+msgid "Enter email address to send test email"
+msgstr "أدخل عنوان البريد الإلكتروني لإرسال بريد إلكتروني اختباري"
+
+msgid "Enter the email address where you want to send the test email."
+msgstr ""
+"أدخل عنوان البريد الإلكتروني الذي تريد إرسال البريد الإلكتروني الاختباري "
+"إليه."
+
+msgid "Please enter a valid email address."
+msgstr "يرجى إدخال عنوان بريد إلكتروني صالح."
+
+msgid "Update Mail Template"
+msgstr "تحديث قالب البريد"
+
+msgid "Update Template"
+msgstr "تحديث القالب"
+
+msgid "Create Mail Template"
+msgstr "إنشاء قالب البريد"
+
+msgid "Save Template"
+msgstr "حفظ القالب"
+
+msgid "Mail template \"{}\" updated successfully."
+msgstr "تم تحديث قالب البريد \"{}\" بنجاح."
+
+msgid "Mail template \"{}\" created successfully."
+msgstr "تم إنشاء قالب البريد \"{}\" بنجاح."
+
+msgid "Please correct the errors below."
+msgstr "الرجاء تصحيح الأخطاء أدناه."
+
+msgid "Token not refreshed, Login required"
+msgstr "لم يتم تحديث الرمز، مطلوب تسجيل الدخول"
+
+msgid "Token refreshed successfully"
+msgstr "لم يتم تحديث الرمز، مطلوب تسجيل الدخول"
+
+msgid "E-Mail"
+msgstr "بريد إلكتروني"
+
+msgid "Outlook"
+msgstr "التوقعات"
+
+msgid "Email Host"
+msgstr "مضيف البريد الإلكتروني"
+
+msgid "Email Port"
+msgstr "منفذ البريد الإلكتروني"
+
+msgid "Default From Mail"
+msgstr "الافتراضي من البريد"
+
+msgid "Email Host Username"
+msgstr "اسم مستخدم مضيف البريد الإلكتروني"
+
+msgid "Display Name"
+msgstr "اسم العرض"
+
+msgid "Email Authentication Password"
+msgstr "كلمة مرور مصادقة البريد الإلكتروني"
+
+msgid "Use TLS"
+msgstr "استخدم طبقة النقل الآمنة"
+
+msgid "Use SSL"
+msgstr "استخدم طبقة المقابس الآمنة"
+
+msgid "Fail Silently"
+msgstr "فشل بصمت"
+
+msgid "Primary Mail Server"
+msgstr "خادم البريد الأساسي"
+
+msgid "By enabling this the display name will take from who triggered the mail"
+msgstr "من خلال تمكين هذا، سيتم أخذ اسم العرض من الشخص الذي قام بتشغيل البريد"
+
+msgid "Email Send Timeout (seconds)"
+msgstr "مهلة إرسال البريد الإلكتروني (بالثواني)"
+
+msgid "Client ID"
+msgstr "Client ID"
+
+msgid "Client Secret"
+msgstr "سر العميل"
+
+msgid "Tenant ID"
+msgstr "معرف المستأجر"
+
+msgid ""
+"Use TLS and Use SSL are mutually exclusive,so only set one of those settings "
+"to True."
+msgstr ""
+"يعد استخدام TLS و استخدام SSL متبادلين، لذا قم بتعيين أحد هذه الإعدادات على "
+"True فقط."
+
+msgid "This field is required"
+msgstr "هذا الحقل مطلوب."
+
+msgid "Horilla  Configuration"
+msgstr "تكوين هوريلا"
+
+msgid "Horilla Mail Configurations"
+msgstr "تكوينات بريد Horilla"
+
+msgid "Cc"
+msgstr "Cc"
+
+msgid "Bcc"
+msgstr "نسخة مخفية الوجهة"
+
+msgid "Body"
+msgstr "جسم"
+
+msgid "Horilla Mail"
+msgstr "بريد هوريلا"
+
+msgid "Horilla Mails"
+msgstr "بريد هوريلا"
+
+msgid "Mail Attachment"
+msgstr "مرفق البريد"
+
+msgid "Mail Attachments"
+msgstr "مرفقات البريد"
+
+msgid "Horilla Mail Template"
+msgstr "قالب بريد الهوريلا"
+
+msgid "Horilla Mail Templates"
+msgstr "قوالب بريد هوريلا"
+
+msgid "Save Changes?"
+msgstr "حفظ التغييرات؟"
+
+msgid "Do you want to save your changes as a draft or discard them?"
+msgstr "هل تريد حفظ التغييرات كمسودة أو تجاهلها؟"
+
+msgid "Save as Draft"
+msgstr "حفظ كمسودة"
+
+#, fuzzy
+#| msgid "No related lists found for this"
+msgid "No emails found for"
+msgstr "لم يتم العثور على قوائم ذات صلة بهذا"
+
+msgid "Start typing to search emails..."
+msgstr ""
+
+msgid "Insert Fields"
+msgstr "إدراج الحقول"
+
+msgid "Select fields to insert into your email template."
+msgstr "حدد الحقول التي تريد إدراجها في قالب البريد الإلكتروني الخاص بك."
+
+msgid "Instance"
+msgstr "التأمين"
+
+msgid "Request"
+msgstr "طلب"
+
+msgid "Direct Fields"
+msgstr "الحقول المباشرة"
+
+msgid "User Fields"
+msgstr "حقول المستخدم"
+
+msgid "Company Fields"
+msgstr "حقول الشركة"
+
+msgid "Request Fields"
+msgstr "حقول الطلب"
+
+msgid "Related Fields"
+msgstr "قوائم ذات صلة"
+
+msgid "Reverse Related Fields"
+msgstr "عكس الحقول ذات الصلة"
+
+msgid "No fields available for this model"
+msgstr "لا توجد حقول متاحة لهذا النموذج"
+
+msgid "Insert Selected Fields"
+msgstr "إدراج الحقول المحددة"
+
+msgid "Test Email Configuration"
+msgstr "اختبار تكوين البريد الإلكتروني"
+
+msgid "Send Test Email"
+msgstr "إرسال البريد الإلكتروني للاختبار"
+
+msgid "Send Mail"
+msgstr "إرسال البريد"
+
+msgid "No mail server configured"
+msgstr ""
+
+#, fuzzy
+#| msgid "Related To"
+msgid "Related to"
+msgstr "مرتبط بـ"
+
+#, fuzzy
+#| msgid "Messages"
+msgid "Message"
+msgstr "الرسائل"
+
+msgid "Mail Preview"
+msgstr "معاينة البريد"
+
+msgid "Email Snapshot"
+msgstr "لقطة البريد الإلكتروني"
+
+#, fuzzy
+#| msgid "From"
+msgid "From:"
+msgstr "من"
+
+msgid "No sender configured"
+msgstr ""
+
+msgid "No message content"
+msgstr ""
+
+msgid "This is how your email will look when sent"
+msgstr "هكذا سيبدو بريدك الإلكتروني عند إرساله"
+
+msgid "Select content type (optional)"
+msgstr "حدد نوع المحتوى (اختياري)"
+
+msgid "Save as mail template"
+msgstr "حفظ كقالب بريد"
+
+msgid "Select Mail Template"
+msgstr "تحديد قالب البريد"
+
+msgid "Select Template"
+msgstr "اختر القالب"
+
+msgid " Email Template Preview"
+msgstr "معاينة قالب البريد الإلكتروني"
+
+msgid "No content to preview"
+msgstr "لا يوجد محتوى للمعاينة"
+
+msgid "Mail sent successfully"
+msgstr "تم إرسال البريد بنجاح"
+
+msgid "Something went wrong :"
+msgstr "حدث خطأ ما:"
+
+msgid "Missing required fields: "
+msgstr "الحقول المطلوبة مفقودة:"
+
+msgid ""
+"Message body contains potentially dangerous content (XSS detected). Please "
+"remove any scripts or malicious code."
+msgstr ""
+
+msgid "Failed to send mail: "
+msgstr "فشل في إرسال البريد:"
+
+msgid "Error sending mail: "
+msgstr "خطأ في إرسال البريد:"
+
+msgid "No content to save as draft"
+msgstr "لا يوجد محتوى لحفظه كمسودة"
+
+msgid "Draft saved successfully"
+msgstr "تم حفظ المسودة بنجاح"
+
+msgid "Error saving draft: "
+msgstr "خطأ في حفظ المسودة:"
+
+msgid "Draft discarded"
+msgstr "تم تجاهل المسودة"
+
+msgid "Error discarding draft: "
+msgstr "حدث خطأ أثناء تجاهل المسودة: "
+
+msgid "No notifications"
+msgstr "لا الإخطارات"
+
+msgid "Notifications"
+msgstr "إشعارات"
+
+msgid "No unread notifications"
+msgstr "لا توجد إشعارات غير مقروءة"
+
+msgid "View all Notification"
+msgstr "عرض الكل الإخطار"
+
+msgid "All Notifications"
+msgstr "جميع الإخطارات"
+
+msgid "Horilla CRM"
+msgstr ""
+
+msgid "Recently Viewed"
+msgstr "تم عرضها مؤخرًا"
+
+msgid "No recent items"
+msgstr "لا توجد عناصر حديثة"
+
+msgid "No companies available"
+msgstr "لا توجد شركات متاحة"
+
+msgid "Logout"
+msgstr "تسجيل الخروج"
+
+msgid "Welcome to Horilla CRM"
+msgstr "مرحبًا بك في Horilla CRM"
+
+msgid "Please sign in to access your dashboard"
+msgstr "يرجى تسجيل الدخول للوصول إلى لوحة التحكم الخاصة بك"
+
+msgid "Username"
+msgstr "اسم المستخدم"
+
+msgid "Forgot Password?"
+msgstr "هل نسيت كلمة السر؟"
+
+msgid "Load Demo Data"
+msgstr ""
+
+msgid "Send reset link"
+msgstr "إرسال رابط إعادة التعيين"
+
+msgid " Reset link will be sent to your registered email"
+msgstr "سيتم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني المسجل"
+
+msgid "Back to login"
+msgstr "العودة لتسجيل الدخول"
+
+#~ msgid ""
+#~ "Successfully assigned {len(users)} user(s) to the role "
+#~ "'{form.cleaned_data['role']}'."
+#~ msgstr ""
+#~ "تم تعيين {len(users)} مستخدم(ين) بنجاح إلى الدور "
+#~ "'{form.cleaned_data['role']}'."
+
+#~ msgid "Are you sure you want to delete this leave request?"
+#~ msgstr "هل أنت متأكد أنك تريد حذف طلب الإجازة هذا؟"
+
+#~ msgid "Sender"
+#~ msgstr "مرسل"
+
+#~ msgid "Email Subject"
+#~ msgstr "موضوع البريد الإلكتروني"
+
+#~ msgid "Email Body"
+#~ msgstr "نص البريد الإلكتروني"
+
+#~ msgid "BCC"
+#~ msgstr "نسخة مخفية الوجهة"
+
+#~ msgid "Sent At"
+#~ msgstr "أرسلت في"
+
+#~ msgid "Scheduled At"
+#~ msgstr "مجدول في"
+
+#~ msgid "Is Sent"
+#~ msgstr "تم إرساله"
+
+#~ msgid "Updated"
+#~ msgstr "تم التحديث"
+
+#~ msgid "Achieved"
+#~ msgstr "تم تحقيقه"
+
+#~ msgid "Missed"
+#~ msgstr "مٌفتَقد"
+
+#~ msgid "Revenue Target Snapshot"
+#~ msgstr "لمحة عامة عن هدف الإيرادات"
+
+#~ msgid "Quantity Target Snapshot"
+#~ msgstr "لقطة الكمية المستهدفة"
+
+#~ msgid "Current Revenue Snapshot"
+#~ msgstr "لمحة عامة عن الإيرادات الحالية"
+
+#~ msgid "Current Quantity Snapshot"
+#~ msgstr "لقطة الكمية الحالية"
+
+#~ msgid "Changed By"
+#~ msgstr "تم التغيير بواسطة"
+
+#~ msgid "Forecast Target History"
+#~ msgstr "تاريخ هدف التوقعات"
+
+#~ msgid "Forecast Target Histories"
+#~ msgstr "تاريخ الأهداف المتوقعة"
+
+#~ msgid "Change Reason"
+#~ msgstr "سبب التغيير"
+
+#~ msgid "Forecast History"
+#~ msgstr "تاريخ التوقعات"
+
+#~ msgid "New Activity"
+#~ msgstr "نشاط جديد"
+
+#~ msgid " Send email to this"
+#~ msgstr "إرسال بريد إلكتروني إلى هذا"
+
+#~ msgid "Lead Stage Updated Successfully"
+#~ msgstr "تم تحديث مرحلة الرصاص بنجاح"
+
+#~ msgid "Changes"
+#~ msgstr "التغييرات"
+
+#~ msgid "Audit log"
+#~ msgstr "سجل المراجعة"
+
+#~ msgid "Resource Type"
+#~ msgstr "نوع المورد"
+
+#~ msgid "Correlation ID"
+#~ msgstr "معرف الارتباط"
+
+#~ msgid "Click to filter by records with this correlation id"
+#~ msgstr "انقر للتصفية حسب السجلات مع معرف الارتباط هذا"
+
+#~ msgid "Resource"
+#~ msgstr "المورد"
+
+#~ msgid "create"
+#~ msgstr "إنشاء"
+
+#~ msgid "update"
+#~ msgstr "تحديث"
+
+#~ msgid "delete"
+#~ msgstr "حذف"
+
+#~ msgid "access"
+#~ msgstr "الوصول"
+
+#~ msgid "content type"
+#~ msgstr "نوع المحتوى"
+
+#~ msgid "object pk"
+#~ msgstr "نوع الكائن"
+
+#~ msgid "object id"
+#~ msgstr "معرف الكائن"
+
+#~ msgid "object representation"
+#~ msgstr "تمثيل الكائن"
+
+#~ msgid "action"
+#~ msgstr "اجراء"
+
+#~ msgid "change message"
+#~ msgstr "تغيير الرسالة"
+
+#~ msgid "actor"
+#~ msgstr "الفاعل"
+
+#~ msgid "remote address"
+#~ msgstr "عنوان بعيد"
+
+#~ msgid "remote port"
+#~ msgstr "منفذ بعيد"
+
+#~ msgid "timestamp"
+#~ msgstr "الطابع الزمني"
+
+#~ msgid "additional data"
+#~ msgstr "بيانات إضافية"
+
+#~ msgid "actor email"
+#~ msgstr "البريد الإلكتروني للممثل"
+
+#~ msgid "log entry"
+#~ msgstr "إدخال السجل"
+
+#~ msgid "log entries"
+#~ msgstr "إدخالات السجل"
+
+#~ msgid "Created {repr:s}"
+#~ msgstr "أنشئ {repr:s}"
+
+#~ msgid "Updated {repr:s}"
+#~ msgstr "تم التحديث {repr:s}"
+
+#~ msgid "Logged {repr:s}"
+#~ msgstr "تم تسجيل {repr:s}"
+
+#~ msgid "Invalid cursor"
+#~ msgstr "Invalid cursor"
+
+#~ msgid "Site Maps"
+#~ msgstr "خرائط الموقع"
+
+#~ msgid "Static Files"
+#~ msgstr "الملفات الثابتة"
+
+#~ msgid "Syndication"
+#~ msgstr "نقابة"
+
+#~ msgid "…"
+#~ msgstr "…"
+
+#~ msgid "That page number is not an integer"
+#~ msgstr "رقم هذه الصفحة ليس عددا صحيحا"
+
+#~ msgid "That page number is less than 1"
+#~ msgstr "رقم الصفحة أقل من 1"
+
+#~ msgid "That page contains no results"
+#~ msgstr "هذه الصفحة لا تحتوي على أي نتائج"
+
+#~ msgid "Enter a valid value."
+#~ msgstr "أدخل قيمة صالحة."
+
+#~ msgid "Enter a valid domain name."
+#~ msgstr "أدخل اسم نطاق صالح."
+
+#~ msgid "Enter a valid URL."
+#~ msgstr "أدخل عنوان URL صالح."
+
+#~ msgid "Enter a valid integer."
+#~ msgstr "أدخل عددًا صحيحًا."
+
+#~ msgid "Enter a valid email address."
+#~ msgstr "أدخل عنوان بريد إلكتروني صحيح."
+
+#~ msgid ""
+#~ "Enter a valid “slug” consisting of letters, numbers, underscores or "
+#~ "hyphens."
+#~ msgstr "أدخل \"رقيق\" صالح يتكون من أحرف أو أرقام أو أسطور سفلية أو وصلات."
+
+#~ msgid ""
+#~ "Enter a valid “slug” consisting of Unicode letters, numbers, underscores, "
+#~ "or hyphens."
+#~ msgstr ""
+#~ "أدخل \"رقيق\" صالح يتكون من أحرف Unicode أو أرقام أو أسطور سفلية أو وصلات."
+
+#, python-format
+#~ msgid "Enter a valid %(protocol)s address."
+#~ msgstr "أدخل عنوان %(protocol)s صالح."
+
+#~ msgid "IPv4"
+#~ msgstr "IPv4"
+
+#~ msgid "IPv6"
+#~ msgstr "IPv6"
+
+#~ msgid "IPv4 or IPv6"
+#~ msgstr "IPv4 أو IPv6"
+
+#~ msgid "Enter only digits separated by commas."
+#~ msgstr "أدخل الأرقام فقط مفصولة بفواصل."
+
+#, python-format
+#~ msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+#~ msgstr "تأكد من أن هذه القيمة هي %(limit_value)s (هي %(show_value)s)."
+
+#, python-format
+#~ msgid "Ensure this value is less than or equal to %(limit_value)s."
+#~ msgstr "تأكد من أن هذه القيمة أقل من أو تساوي %(limit_value)s."
+
+#, python-format
+#~ msgid "Ensure this value is greater than or equal to %(limit_value)s."
+#~ msgstr "تأكد من أن هذه القيمة أكبر من أو تساوي %(limit_value)s."
+
+#, python-format
+#~ msgid "Ensure this value is a multiple of step size %(limit_value)s."
+#~ msgstr "تأكد من أن هذه القيمة متعددة من حجم الخطوة %(limit_value)s."
+
+#, python-format
+#~ msgid ""
+#~ "Ensure this value is a multiple of step size %(limit_value)s, starting "
+#~ "from %(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and "
+#~ "so on."
+#~ msgstr ""
+#~ "تأكد من أن هذه القيمة متعددة من حجم الخطوة %(limit_value)s، بدءا من "
+#~ "%(offset)s، على سبيل المثال %(offset)s، %(valid_value1)s، "
+#~ "%(valid_value2)s، وما إلى ذلك."
+
+#, python-format
+#~ msgid ""
+#~ "Ensure this value has at least %(limit_value)d character (it has "
+#~ "%(show_value)d)."
+#~ msgid_plural ""
+#~ "Ensure this value has at least %(limit_value)d characters (it has "
+#~ "%(show_value)d)."
+#~ msgstr[0] ""
+#~ "تأكد من أن هذه القيمة تحتوي على الأقل على أحرف %(limit_value)d (تحتوي على "
+#~ "%(show_value)d)."
+#~ msgstr[1] ""
+#~ "تأكد من أن هذه القيمة تحتوي على الأقل على أحرف %(limit_value)d (يحتوي على "
+#~ "%(show_value)d)."
+#~ msgstr[2] ""
+#~ "تأكد من أن هذه القيمة تحتوي على الأقل على أحرف %(limit_value)d (تحتوي على "
+#~ "%(show_value)d)."
+#~ msgstr[3] ""
+#~ "تأكد من أن هذه القيمة تحتوي على الأقل على أحرف %(limit_value)d (تحتوي على "
+#~ "%(show_value)d)."
+#~ msgstr[4] ""
+#~ "تأكد من أن هذه القيمة تحتوي على الأقل على أحرف %(limit_value)d (تحتوي على "
+#~ "%(show_value)d)."
+#~ msgstr[5] ""
+#~ "تأكد من أن هذه القيمة تحتوي على الأقل على أحرف %(limit_value)d (تحتوي على "
+#~ "%(show_value)d)."
+
+#, python-format
+#~ msgid ""
+#~ "Ensure this value has at most %(limit_value)d character (it has "
+#~ "%(show_value)d)."
+#~ msgid_plural ""
+#~ "Ensure this value has at most %(limit_value)d characters (it has "
+#~ "%(show_value)d)."
+#~ msgstr[0] ""
+#~ "تأكد من أن هذه القيمة تحتوي على أحرف %(limit_value)d على الأكثر (تحتوي "
+#~ "على %(show_value)d)."
+#~ msgstr[1] ""
+#~ "تأكد من أن هذه القيمة تحتوي على حرف %(limit_value)d كحد أقصى (يحتوي على "
+#~ "%(show_value)d)."
+#~ msgstr[2] ""
+#~ "تأكد من أن هذه القيمة تحتوي على أحرف %(limit_value)d على الأكثر (تحتوي "
+#~ "على %(show_value)d)."
+#~ msgstr[3] ""
+#~ "تأكد من أن هذه القيمة تحتوي على أحرف %(limit_value)d على الأكثر (تحتوي "
+#~ "على %(show_value)d)."
+#~ msgstr[4] ""
+#~ "تأكد من أن هذه القيمة تحتوي على أحرف %(limit_value)d على الأكثر (تحتوي "
+#~ "على %(show_value)d)."
+#~ msgstr[5] ""
+#~ "تأكد من أن هذه القيمة تحتوي على أحرف %(limit_value)d على الأكثر (تحتوي "
+#~ "على %(show_value)d)."
+
+#~ msgid "Enter a number."
+#~ msgstr "أدخل رقما."
+
+#, python-format
+#~ msgid "Ensure that there are no more than %(max)s digit in total."
+#~ msgid_plural "Ensure that there are no more than %(max)s digits in total."
+#~ msgstr[0] "تأكد من أنه لا يوجد أكثر من أرقام %(max)s في المجموع."
+#~ msgstr[1] "تأكد من أنه لا يوجد أكثر من الرقم %(max)s في المجموع."
+#~ msgstr[2] "تأكد من أنه لا يوجد أكثر من أرقام %(max)s في المجموع."
+#~ msgstr[3] "تأكد من أنه لا يوجد أكثر من أرقام %(max)s في المجموع."
+#~ msgstr[4] "تأكد من أنه لا يوجد أكثر من أرقام %(max)s في المجموع."
+#~ msgstr[5] "تأكد من أنه لا يوجد أكثر من أرقام %(max)s في المجموع."
+
+#, python-format
+#~ msgid "Ensure that there are no more than %(max)s decimal place."
+#~ msgid_plural "Ensure that there are no more than %(max)s decimal places."
+#~ msgstr[0] "تأكد من أنه لا يوجد أكثر من الأماكن العشرية %(max)s."
+#~ msgstr[1] "تأكد من أنه لا يوجد أكثر من العشرية %(max)s."
+#~ msgstr[2] "تأكد من أنه لا يوجد أكثر من الأماكن العشرية %(max)s."
+#~ msgstr[3] "تأكد من أنه لا يوجد أكثر من الأماكن العشرية %(max)s."
+#~ msgstr[4] "تأكد من أنه لا يوجد أكثر من الأماكن العشرية %(max)s."
+#~ msgstr[5] "تأكد من أنه لا يوجد أكثر من الأماكن العشرية %(max)s."
+
+#, python-format
+#~ msgid ""
+#~ "Ensure that there are no more than %(max)s digit before the decimal point."
+#~ msgid_plural ""
+#~ "Ensure that there are no more than %(max)s digits before the decimal "
+#~ "point."
+#~ msgstr[0] "تأكد من أنه لا يوجد أكثر من أرقام %(max)s قبل النقطة العشرية."
+#~ msgstr[1] "تأكد من أنه لا يوجد أكثر من رقم %(max)s قبل النقطة العشرية."
+#~ msgstr[2] "تأكد من أنه لا يوجد أكثر من أرقام %(max)s قبل النقطة العشرية."
+#~ msgstr[3] "تأكد من أنه لا يوجد أكثر من أرقام %(max)s قبل النقطة العشرية."
+#~ msgstr[4] "تأكد من أنه لا يوجد أكثر من أرقام %(max)s قبل النقطة العشرية."
+#~ msgstr[5] "تأكد من أنه لا يوجد أكثر من أرقام %(max)s قبل النقطة العشرية."
+
+#, python-format
+#~ msgid ""
+#~ "File extension “%(extension)s” is not allowed. Allowed extensions are: "
+#~ "%(allowed_extensions)s."
+#~ msgstr ""
+#~ "امتداد الملف \"%(extension)s\" غير مسموح به. الإضافات المسموح بها هي: "
+#~ "%(allowed_extensions)s."
+
+#~ msgid "Null characters are not allowed."
+#~ msgstr "الأحرف الفارغة غير مسموح بها."
+
+#, python-format
+#~ msgid "%(model_name)s with this %(field_labels)s already exists."
+#~ msgstr "يوجد بالفعل %(model_name)s مع %(field_labels)s هذا."
+
+#, python-format
+#~ msgid "Constraint “%(name)s” is violated."
+#~ msgstr "وانتُهكت القيود ”%(name)s“."
+
+#, python-format
+#~ msgid "Value %(value)r is not a valid choice."
+#~ msgstr "القيمة %(value)r ليست خيارا صحيحا."
+
+#~ msgid "This field cannot be null."
+#~ msgstr "لا يمكن أن يكون هذا الحقل فارغاً."
+
+#~ msgid "This field cannot be blank."
+#~ msgstr "لا يمكن أن يكون هذا الحقل فارغاً."
+
+#, python-format
+#~ msgid ""
+#~ "%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+#~ msgstr ""
+#~ "يجب أن يكون %(field_label)s فريداً من نوعه لـ %(date_field_label)s "
+#~ "%(lookup_type)s."
+
+#, python-format
+#~ msgid "Field of type: %(field_type)s"
+#~ msgstr "حقل النوع: %(field_type)s"
+
+#, python-format
+#~ msgid "“%(value)s” value must be either True or False."
+#~ msgstr "يجب أن تكون القيمة \"%(value)s\" إما صحيحة أو زائفة."
+
+#, python-format
+#~ msgid "“%(value)s” value must be either True, False, or None."
+#~ msgstr "يجب أن تكون القيمة \"%(value)s\" إما صحيحة أو زائفة أو لا شيء."
+
+#~ msgid "Boolean (Either True or False)"
+#~ msgstr "منطقية (إما صحيحة أو زائفة)"
+
+#, python-format
+#~ msgid "String (up to %(max_length)s)"
+#~ msgstr "سلسلة (حتى %(max_length)s)"
+
+#~ msgid "String (unlimited)"
+#~ msgstr "سلسلة (غير محدودة)"
+
+#~ msgid "Comma-separated integers"
+#~ msgstr "عدد صحيح مفصول بفاصلة"
+
+#, python-format
+#~ msgid ""
+#~ "“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+#~ "format."
+#~ msgstr ""
+#~ "قيمة \"%(value)s\" لها صيغة تاريخ غير صالحة. يجب أن تكون بصيغة YYY-MM-DD."
+
+#, python-format
+#~ msgid ""
+#~ "“%(value)s” value has the correct format (YYYY-MM-DD) but it is an "
+#~ "invalid date."
+#~ msgstr ""
+#~ "القيمة \"%(value)s\" هي الصيغة الصحيحة (YYYY-MM-DD) ولكنها تاريخ غير صالح."
+
+#~ msgid "Date (without time)"
+#~ msgstr "التاريخ (بدون وقت)"
+
+#, python-format
+#~ msgid ""
+#~ "“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
+#~ "HH:MM[:ss[.uuuuuu]][TZ] format."
+#~ msgstr ""
+#~ "قيمة%(value)sغير صالحة. يجب أن تكون بصيغة YYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+#~ "[TZ]."
+
+#, python-format
+#~ msgid ""
+#~ "“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+#~ "[TZ]) but it is an invalid date/time."
+#~ msgstr ""
+#~ "القيمة \"%(value)s\" هي الصيغة الصحيحة (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+#~ "[TZ]ولكنها تاريخ / وقت غير صالح."
+
+#~ msgid "Date (with time)"
+#~ msgstr "التاريخ (مع الوقت)"
+
+#, python-format
+#~ msgid "“%(value)s” value must be a decimal number."
+#~ msgstr "يجب أن تكون قيمة \"%(value)s\" رقماً عشرياً."
+
+#~ msgid "Decimal number"
+#~ msgstr "الرقم العشري"
+
+#, python-format
+#~ msgid ""
+#~ "“%(value)s” value has an invalid format. It must be in [DD] "
+#~ "[[HH:]MM:]ss[.uuuuuu] format."
+#~ msgstr ""
+#~ "قيمة \"%(value)s\" لها صيغة غير صالحة. يجب أن تكون في صيغة [DD] "
+#~ "[[HH:]MM:]ss[.uuuuuu]."
+
+#~ msgid "Duration"
+#~ msgstr "المدة"
+
+#~ msgid "Email address"
+#~ msgstr "عنوان البريد الإلكتروني"
+
+#~ msgid "File path"
+#~ msgstr "مسار الملف"
+
+#, python-format
+#~ msgid "“%(value)s” value must be a float."
+#~ msgstr "يجب أن تكون قيمة \"%(value)s\" عومة."
+
+#~ msgid "Floating point number"
+#~ msgstr "رقم النقطة العائمة"
+
+#, python-format
+#~ msgid "“%(value)s” value must be an integer."
+#~ msgstr "يجب أن تكون قيمة \"%(value)s\" عدداً صحيحاً."
+
+#~ msgid "Integer"
+#~ msgstr "عدد صحيح"
+
+#~ msgid "Big (8 byte) integer"
+#~ msgstr "عدد صحيح كبير (8 بايت)"
+
+#~ msgid "Small integer"
+#~ msgstr "عدد صحيح صغير"
+
+#~ msgid "IPv4 address"
+#~ msgstr "عنوان IPv4"
+
+#~ msgid "IP address"
+#~ msgstr "عنوان IP"
+
+#, python-format
+#~ msgid "“%(value)s” value must be either None, True or False."
+#~ msgstr "يجب أن تكون قيمة \"%(value)s\" إما غير صحيحة أو صحيحة أو زائفة."
+
+#~ msgid "Boolean (Either True, False or None)"
+#~ msgstr "منطقي (إما صحيح، خطأ أو لا)"
+
+#~ msgid "Positive big integer"
+#~ msgstr "عدد صحيح كبير إيجابي"
+
+#~ msgid "Positive integer"
+#~ msgstr "عدد صحيح إيجابي"
+
+#~ msgid "Positive small integer"
+#~ msgstr "عدد صحيح صغير إيجابي"
+
+#, python-format
+#~ msgid "Slug (up to %(max_length)s)"
+#~ msgstr "Slug (حتى %(max_length)s)"
+
+#~ msgid "Text"
+#~ msgstr "نص"
+
+#, python-format
+#~ msgid ""
+#~ "“%(value)s” value has an invalid format. It must be in "
+#~ "HH:MM[:ss[.uuuuuu]] format."
+#~ msgstr ""
+#~ "قيمة \"%(value)s\" لها صيغة غير صالحة. يجب أن تكون بتنسيق "
+#~ "HH:MM[:ss[.uuuuuu]]."
+
+#, python-format
+#~ msgid ""
+#~ "“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is "
+#~ "an invalid time."
+#~ msgstr ""
+#~ "القيمة \"%(value)s\" هي الصيغة الصحيحة (HH:MM[:ss[.uuuuuu]]) ولكنها وقت "
+#~ "غير صالح."
+
+#~ msgid "Time"
+#~ msgstr "الوقت"
+
+#~ msgid "URL"
+#~ msgstr "الرابط"
+
+#~ msgid "Raw binary data"
+#~ msgstr "البيانات الثنائية الخام"
+
+#, python-format
+#~ msgid "“%(value)s” is not a valid UUID."
+#~ msgstr "”%(value)s“ ليس مستعملا صالحا للاستعمال."
+
+#~ msgid "Universally unique identifier"
+#~ msgstr "معرف فريد عالميا"
+
+#~ msgid "Image"
+#~ msgstr "صورة"
+
+#~ msgid "A JSON object"
+#~ msgstr "كائن JSON"
+
+#~ msgid "Value must be valid JSON."
+#~ msgstr "يجب أن تكون القيمة JSON صالحة."
+
+#, python-format
+#~ msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
+#~ msgstr "نموذج %(model)s مع %(field)s %(value)r ليس خياراً صحيحاً."
+
+#~ msgid "Foreign Key (type determined by related field)"
+#~ msgstr "مفتاح أجنبي (نوع محدد من الحقل ذي الصلة)"
+
+#~ msgid "One-to-one relationship"
+#~ msgstr "علاقة واحدة لواحدة"
+
+#, python-format
+#~ msgid "%(from)s-%(to)s relationship"
+#~ msgstr "%(from)s- علاقة%(to)s"
+
+#, python-format
+#~ msgid "%(from)s-%(to)s relationships"
+#~ msgstr "%(from)s- علاقات%(to)s"
+
+#~ msgid "Many-to-many relationship"
+#~ msgstr "العديد من العلاقات"
+
+#~ msgid ":?.!"
+#~ msgstr ":?.!"
+
+#~ msgid "Enter a whole number."
+#~ msgstr "أدخل رقماً صحيحاً."
+
+#~ msgid "Enter a valid date."
+#~ msgstr "أدخل تاريخ صالح."
+
+#~ msgid "Enter a valid time."
+#~ msgstr "أدخل وقتاً صالحاً."
+
+#~ msgid "Enter a valid date/time."
+#~ msgstr "أدخل تاريخ/وقت صالح."
+
+#~ msgid "Enter a valid duration."
+#~ msgstr "أدخل مدة صالحة."
+
+#, python-brace-format
+#~ msgid "The number of days must be between {min_days} and {max_days}."
+#~ msgstr "يجب أن يكون عدد الأيام بين {min_days} و {max_days}."
+
+#~ msgid "No file was submitted. Check the encoding type on the form."
+#~ msgstr "لم يتم تقديم أي ملف. تحقق من نوع الترميز في النموذج."
+
+#~ msgid "No file was submitted."
+#~ msgstr "لم يتم تقديم أي ملف."
+
+#~ msgid "The submitted file is empty."
+#~ msgstr "الملف المقدم فارغ."
+
+#, python-format
+#~ msgid ""
+#~ "Ensure this filename has at most %(max)d character (it has %(length)d)."
+#~ msgid_plural ""
+#~ "Ensure this filename has at most %(max)d characters (it has %(length)d)."
+#~ msgstr[0] ""
+#~ "تأكد من أن اسم الملف هذا يحتوي على أحرف %(max)d على الأكثر (يحتوي على "
+#~ "%(length)d)."
+#~ msgstr[1] ""
+#~ "تأكد من أن اسم الملف هذا يحتوي على حرف %(max)d على الأكثر (يحتوي على "
+#~ "%(length)d)."
+#~ msgstr[2] ""
+#~ "تأكد من أن اسم الملف هذا يحتوي على أحرف %(max)d على الأكثر (يحتوي على "
+#~ "%(length)d)."
+#~ msgstr[3] ""
+#~ "تأكد من أن اسم الملف هذا يحتوي على أحرف %(max)d على الأكثر (يحتوي على "
+#~ "%(length)d)."
+#~ msgstr[4] ""
+#~ "تأكد من أن اسم الملف هذا يحتوي على أحرف %(max)d على الأكثر (يحتوي على "
+#~ "%(length)d)."
+#~ msgstr[5] ""
+#~ "تأكد من أن اسم الملف هذا يحتوي على أحرف %(max)d على الأكثر (يحتوي على "
+#~ "%(length)d)."
+
+#~ msgid "Please either submit a file or check the clear checkbox, not both."
+#~ msgstr "يرجى إما إرسال ملف أو التحقق من خانة الاختيار الواضحة وليس كليهما."
+
+#~ msgid ""
+#~ "Upload a valid image. The file you uploaded was either not an image or a "
+#~ "corrupted image."
+#~ msgstr "تحميل صورة صالحة. الملف الذي قمت بتحميله لم يكن صورة أو صورة تالفة."
+
+#, python-format
+#~ msgid ""
+#~ "Select a valid choice. %(value)s is not one of the available choices."
+#~ msgstr "حدد خيارًا صحيحًا. %(value)s ليس أحد الخيارات المتاحة."
+
+#~ msgid "Enter a list of values."
+#~ msgstr "أدخل قائمة من القيم."
+
+#~ msgid "Enter a complete value."
+#~ msgstr "أدخل قيمة كاملة."
+
+#~ msgid "Enter a valid UUID."
+#~ msgstr "أدخل UUID صالح."
+
+#~ msgid "Enter a valid JSON."
+#~ msgstr "أدخل JSON صالح."
+
+#~ msgid ":"
+#~ msgstr ":"
+
+#, python-format
+#~ msgid "(Hidden field %(name)s) %(error)s"
+#~ msgstr "(الحقل المخفي %(name)s) %(error)s"
+
+#, python-format
+#~ msgid ""
+#~ "ManagementForm data is missing or has been tampered with. Missing fields: "
+#~ "%(field_names)s. You may need to file a bug report if the issue persists."
+#~ msgstr ""
+#~ "بيانات نموذج الإدارة مفقودة أو تم العبث بها. الحقول مفقودة: "
+#~ "%(field_names)s. قد تحتاج إلى تقديم تقرير عن الأخطاء إذا استمرت المشكلة."
+
+#, python-format
+#~ msgid "Please submit at most %(num)d form."
+#~ msgid_plural "Please submit at most %(num)d forms."
+#~ msgstr[0] "يرجى إرسال معظم نماذج %(num)d."
+#~ msgstr[1] "يرجى إرسال نموذج %(num)d كحد أقصى."
+#~ msgstr[2] "يرجى إرسال معظم نماذج %(num)d."
+#~ msgstr[3] "يرجى إرسال معظم نماذج %(num)d."
+#~ msgstr[4] "يرجى إرسال معظم نماذج %(num)d."
+#~ msgstr[5] "يرجى إرسال معظم نماذج %(num)d."
+
+#, python-format
+#~ msgid "Please submit at least %(num)d form."
+#~ msgid_plural "Please submit at least %(num)d forms."
+#~ msgstr[0] "الرجاء إرسال نماذج %(num)d على الأقل."
+#~ msgstr[1] "الرجاء إرسال نموذج %(num)d على الأقل."
+#~ msgstr[2] "الرجاء إرسال نماذج %(num)d على الأقل."
+#~ msgstr[3] "الرجاء إرسال نماذج %(num)d على الأقل."
+#~ msgstr[4] "الرجاء إرسال نماذج %(num)d على الأقل."
+#~ msgstr[5] "الرجاء إرسال نماذج %(num)d على الأقل."
+
+#, python-format
+#~ msgid "Please correct the duplicate data for %(field)s."
+#~ msgstr "الرجاء تصحيح البيانات المكررة لـ %(field)s."
+
+#, python-format
+#~ msgid ""
+#~ "Please correct the duplicate data for %(field)s, which must be unique."
+#~ msgstr "الرجاء تصحيح البيانات المكررة لـ %(field)s، التي يجب أن تكون فريدة."
+
+#, python-format
+#~ msgid ""
+#~ "Please correct the duplicate data for %(field_name)s which must be unique "
+#~ "for the %(lookup)s in %(date_field)s."
+#~ msgstr ""
+#~ "الرجاء تصحيح البيانات المكررة لـ %(field_name)s التي يجب أن تكون فريدة من "
+#~ "نوعها لـ %(lookup)s في %(date_field)s."
+
+#~ msgid "Please correct the duplicate values below."
+#~ msgstr "الرجاء تصحيح القيم المكررة أدناه."
+
+#~ msgid "The inline value did not match the parent instance."
+#~ msgstr "القيمة المضمنة لا تتطابق مع المظهر الأصلي."
+
+#~ msgid ""
+#~ "Select a valid choice. That choice is not one of the available choices."
+#~ msgstr "حدد خياراً صحيحاً. هذا الخيار ليس أحد الخيارات المتاحة."
+
+#, python-format
+#~ msgid "“%(pk)s” is not a valid value."
+#~ msgstr "\"%(pk)s\" ليست قيمة صالحة."
+
+#, python-format
+#~ msgid ""
+#~ "%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; "
+#~ "it may be ambiguous or it may not exist."
+#~ msgstr ""
+#~ "%(datetime)s لا يمكن تفسيره في المنطقة الزمنية %(current_timezone)s؛ قد "
+#~ "يكون غامضاً أو قد لا يكون موجوداً."
+
+#~ msgid "Currently"
+#~ msgstr "حاليا"
+
+#~ msgid "Change"
+#~ msgstr "تغيير"
+
+#~ msgid "Unknown"
+#~ msgstr "غير معروف"
+
+#~ msgid "Yes"
+#~ msgstr "نعم"
+
+#~ msgid "No"
+#~ msgstr "لا"
+
+#~ msgid "yes,no,maybe"
+#~ msgstr "نعم، لا، ربما،"
+
+#, python-format
+#~ msgid "%(size)d byte"
+#~ msgid_plural "%(size)d bytes"
+#~ msgstr[0] "%(size)d بايت"
+#~ msgstr[1] "%(size)d بايت"
+#~ msgstr[2] "%(size)d بايت"
+#~ msgstr[3] "%(size)d بايت"
+#~ msgstr[4] "%(size)d بايت"
+#~ msgstr[5] "%(size)d بايت"
+
+#, python-format
+#~ msgid "%s KB"
+#~ msgstr "%s كيلوبايت"
+
+#, python-format
+#~ msgid "%s MB"
+#~ msgstr "%s ميغابايت"
+
+#, python-format
+#~ msgid "%s GB"
+#~ msgstr "%s جيجابايت"
+
+#, python-format
+#~ msgid "%s TB"
+#~ msgstr "%s تيرابايت"
+
+#, python-format
+#~ msgid "%s PB"
+#~ msgstr "%s PB"
+
+#~ msgid "p.m."
+#~ msgstr "مساء"
+
+#~ msgid "a.m."
+#~ msgstr "صباحا"
+
+#~ msgid "PM"
+#~ msgstr "رسالة"
+
+#~ msgid "midnight"
+#~ msgstr "منتصف الليل"
+
+#~ msgid "noon"
+#~ msgstr "الظهيرة"
+
+#~ msgid "Mon"
+#~ msgstr "Mon"
+
+#~ msgid "Tue"
+#~ msgstr "توت"
+
+#~ msgid "Wed"
+#~ msgstr "اربعاء"
+
+#~ msgid "Thu"
+#~ msgstr "Thu"
+
+#~ msgid "Fri"
+#~ msgstr "الجمعة"
+
+#~ msgid "Sat"
+#~ msgstr "جلس"
+
+#~ msgid "Sun"
+#~ msgstr "الشمس"
+
+#~ msgid "jan"
+#~ msgstr "جان"
+
+#~ msgid "feb"
+#~ msgstr "ضرب"
+
+#~ msgid "mar"
+#~ msgstr "ماري"
+
+#~ msgid "apr"
+#~ msgstr "العصر"
+
+#~ msgid "may"
+#~ msgstr "يجوز"
+
+#~ msgid "jun"
+#~ msgstr "يوان"
+
+#~ msgid "jul"
+#~ msgstr "جول"
+
+#~ msgid "aug"
+#~ msgstr "مشاهدة"
+
+#~ msgid "sep"
+#~ msgstr "مجلد"
+
+#~ msgid "oct"
+#~ msgstr "حرف"
+
+#~ msgid "nov"
+#~ msgstr "ثواني"
+
+#~ msgid "dec"
+#~ msgstr "ديك"
+
+#~ msgctxt "abbrev. month"
+#~ msgid "Jan."
+#~ msgstr "جان."
+
+#~ msgctxt "abbrev. month"
+#~ msgid "Feb."
+#~ msgstr "فبراير"
+
+#~ msgctxt "abbrev. month"
+#~ msgid "March"
+#~ msgstr "الزحف"
+
+#~ msgctxt "abbrev. month"
+#~ msgid "April"
+#~ msgstr "إبريل"
+
+#~ msgctxt "abbrev. month"
+#~ msgid "May"
+#~ msgstr "مايو"
+
+#~ msgctxt "abbrev. month"
+#~ msgid "June"
+#~ msgstr "يونيو"
+
+#~ msgctxt "abbrev. month"
+#~ msgid "July"
+#~ msgstr "يوليو"
+
+#~ msgctxt "abbrev. month"
+#~ msgid "Aug."
+#~ msgstr "آب/أغسطس."
+
+#~ msgctxt "abbrev. month"
+#~ msgid "Sept."
+#~ msgstr "سبتمبر."
+
+#~ msgctxt "abbrev. month"
+#~ msgid "Oct."
+#~ msgstr "أكتوبر."
+
+#~ msgctxt "abbrev. month"
+#~ msgid "Nov."
+#~ msgstr "نوفمبر."
+
+#~ msgctxt "abbrev. month"
+#~ msgid "Dec."
+#~ msgstr "كانون الأول/ديسمبر"
+
+#~ msgctxt "alt. month"
+#~ msgid "January"
+#~ msgstr "يناير"
+
+#~ msgctxt "alt. month"
+#~ msgid "February"
+#~ msgstr "فبراير"
+
+#~ msgctxt "alt. month"
+#~ msgid "March"
+#~ msgstr "الزحف"
+
+#~ msgctxt "alt. month"
+#~ msgid "April"
+#~ msgstr "إبريل"
+
+#~ msgctxt "alt. month"
+#~ msgid "May"
+#~ msgstr "مايو"
+
+#~ msgctxt "alt. month"
+#~ msgid "June"
+#~ msgstr "يونيو"
+
+#~ msgctxt "alt. month"
+#~ msgid "July"
+#~ msgstr "يوليو"
+
+#~ msgctxt "alt. month"
+#~ msgid "August"
+#~ msgstr "أغسطس"
+
+#~ msgctxt "alt. month"
+#~ msgid "September"
+#~ msgstr "أيلول/سبتمبر"
+
+#~ msgctxt "alt. month"
+#~ msgid "October"
+#~ msgstr "اكتوبر"
+
+#~ msgctxt "alt. month"
+#~ msgid "November"
+#~ msgstr "تشرين"
+
+#~ msgctxt "alt. month"
+#~ msgid "December"
+#~ msgstr "ديسمبر"
+
+#~ msgid "This is not a valid IPv6 address."
+#~ msgstr "هذا ليس عنوان IPv6 صالح."
+
+#, python-format
+#~ msgctxt "String to return when truncating text"
+#~ msgid "%(truncated_text)s…"
+#~ msgstr "%(truncated_text)s…"
+
+#~ msgid "or"
+#~ msgstr "أو"
+
+#~ msgid ", "
+#~ msgstr ", "
+
+#, python-format
+#~ msgid "%(num)d year"
+#~ msgid_plural "%(num)d years"
+#~ msgstr[0] "%(num)d سنوات"
+#~ msgstr[1] "%(num)d سنة"
+#~ msgstr[2] "%(num)d سنوات"
+#~ msgstr[3] "%(num)d سنوات"
+#~ msgstr[4] "%(num)d سنوات"
+#~ msgstr[5] "%(num)d سنوات"
+
+#, python-format
+#~ msgid "%(num)d month"
+#~ msgid_plural "%(num)d months"
+#~ msgstr[0] "%(num)d أشهر"
+#~ msgstr[1] "%(num)d شهر"
+#~ msgstr[2] "%(num)d أشهر"
+#~ msgstr[3] "%(num)d أشهر"
+#~ msgstr[4] "%(num)d أشهر"
+#~ msgstr[5] "%(num)d أشهر"
+
+#, python-format
+#~ msgid "%(num)d week"
+#~ msgid_plural "%(num)d weeks"
+#~ msgstr[0] "%(num)d أسابيع"
+#~ msgstr[1] "%(num)d أسبوع"
+#~ msgstr[2] "%(num)d أسابيع"
+#~ msgstr[3] "%(num)d أسابيع"
+#~ msgstr[4] "%(num)d أسابيع"
+#~ msgstr[5] "%(num)d أسابيع"
+
+#, python-format
+#~ msgid "%(num)d day"
+#~ msgid_plural "%(num)d days"
+#~ msgstr[0] "%(num)d أيام"
+#~ msgstr[1] "%(num)d يوم"
+#~ msgstr[2] "%(num)d أيام"
+#~ msgstr[3] "%(num)d أيام"
+#~ msgstr[4] "%(num)d أيام"
+#~ msgstr[5] "%(num)d أيام"
+
+#, python-format
+#~ msgid "%(num)d hour"
+#~ msgid_plural "%(num)d hours"
+#~ msgstr[0] "%(num)d ساعات"
+#~ msgstr[1] "%(num)d ساعة"
+#~ msgstr[2] "%(num)d ساعات"
+#~ msgstr[3] "%(num)d ساعات"
+#~ msgstr[4] "%(num)d ساعات"
+#~ msgstr[5] "%(num)d ساعات"
+
+#, python-format
+#~ msgid "%(num)d minute"
+#~ msgid_plural "%(num)d minutes"
+#~ msgstr[0] "%(num)d دقيقة"
+#~ msgstr[1] "%(num)d دقيقة"
+#~ msgstr[2] "%(num)d دقيقة"
+#~ msgstr[3] "%(num)d دقيقة"
+#~ msgstr[4] "%(num)d دقيقة"
+#~ msgstr[5] "%(num)d دقيقة"
+
+#~ msgid "Forbidden"
+#~ msgstr "ممنوع"
+
+#~ msgid "CSRF verification failed. Request aborted."
+#~ msgstr "فشل التحقق من CSRF. تم إحباط الطلب."
+
+#~ msgid ""
+#~ "You are seeing this message because this HTTPS site requires a “Referer "
+#~ "header” to be sent by your web browser, but none was sent. This header is "
+#~ "required for security reasons, to ensure that your browser is not being "
+#~ "hijacked by third parties."
+#~ msgstr ""
+#~ "أنت ترى هذه الرسالة لأن موقع HTTPS هذا يتطلب \"رأس الحكم\" لإرساله من قبل "
+#~ "متصفح الويب الخاص بك، ولكن لم يتم إرسال أي منها. هذا الترويسة مطلوب "
+#~ "لأسباب أمنية، لضمان عدم اختطاف متصفحك من قبل أطراف ثالثة."
+
+#~ msgid ""
+#~ "If you have configured your browser to disable “Referer” headers, please "
+#~ "re-enable them, at least for this site, or for HTTPS connections, or for "
+#~ "“same-origin” requests."
+#~ msgstr ""
+#~ "إذا كنت قد قمت بتكوين المتصفح الخاص بك لتعطيل رؤوس \"الحكم\"، الرجاء "
+#~ "إعادة تفعيلهم، على الأقل لهذا الموقع، أو لوصلات HTTP، أو لطلبات \"ذات "
+#~ "المنشأ\"."
+
+#~ msgid ""
+#~ "If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag "
+#~ "or including the “Referrer-Policy: no-referrer” header, please remove "
+#~ "them. The CSRF protection requires the “Referer” header to do strict "
+#~ "referer checking. If you’re concerned about privacy, use alternatives "
+#~ "like <a rel=\"noreferrer\" …> for links to third-party sites."
+#~ msgstr ""
+#~ "إذا كنت تستخدم علامة <meta name=\"referrer\" content=\"no-referrer\"> أو "
+#~ "تضمينها رأس \"الإحالة - سياسة: عدم الإحالة\"، الرجاء إزالتهم. وتقتضي "
+#~ "الحماية التي يوفرها هذا النظام من رأس \"الحكم\" أن يقوم بفحص دقيق للحكم. "
+#~ "إذا كنت مهتما بالخصوصية، استخدم بدائل مثل <a rel=\"noreferrer\" …> "
+#~ "للروابط إلى مواقع أطراف ثالثة."
+
+#~ msgid ""
+#~ "You are seeing this message because this site requires a CSRF cookie when "
+#~ "submitting forms. This cookie is required for security reasons, to ensure "
+#~ "that your browser is not being hijacked by third parties."
+#~ msgstr ""
+#~ "أنت ترى هذه الرسالة لأن هذا الموقع يتطلب ملفات تعريف الارتباط CSRF عند "
+#~ "إرسال الاستمارات. هذه الكعكة مطلوبة لأسباب أمنية، لضمان عدم اختطاف متصفحك "
+#~ "من قبل أطراف ثالثة."
+
+#~ msgid ""
+#~ "If you have configured your browser to disable cookies, please re-enable "
+#~ "them, at least for this site, or for “same-origin” requests."
+#~ msgstr ""
+#~ "إذا كنت قد قمت بتكوين المتصفح الخاص بك لتعطيل ملفات تعريف الارتباط، يرجى "
+#~ "إعادة تمكينها، على الأقل لهذا الموقع، أو لطلبات \"نفس المنشأ\"."
+
+#~ msgid "More information is available with DEBUG=True."
+#~ msgstr "للحصول على مزيد من المعلومات من DEBUG=True."
+
+#~ msgid "No year specified"
+#~ msgstr "لم يتم تحديد سنة"
+
+#~ msgid "Date out of range"
+#~ msgstr "تاريخ خارج النطاق"
+
+#~ msgid "No month specified"
+#~ msgstr "لم يتم تحديد شهر"
+
+#~ msgid "No day specified"
+#~ msgstr "لم يتم تحديد يوم"
+
+#~ msgid "No week specified"
+#~ msgstr "لم يتم تحديد أسبوع"
+
+#, python-format
+#~ msgid "No %(verbose_name_plural)s available"
+#~ msgstr "لا يوجد %(verbose_name_plural)s متوفر"
+
+#, python-format
+#~ msgid ""
+#~ "Future %(verbose_name_plural)s not available because "
+#~ "%(class_name)s.allow_future is False."
+#~ msgstr ""
+#~ "المستقبل %(verbose_name_plural)s غير متاح لأن %(class_name)s.allow_future "
+#~ "هو False."
+
+#, python-format
+#~ msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+#~ msgstr "سلسلة تاريخ غير صحيحة \"%(datestr)s\" صيغة \"%(format)s\""
+
+#~ msgid "Page is not “last”, nor can it be converted to an int."
+#~ msgstr "الصفحة ليست \"الأخيرة\"، ولا يمكن تحويلها إلى صنف."
+
+#, python-format
+#~ msgid "Invalid page (%(page_number)s): %(message)s"
+#~ msgstr "صفحة غير صالحة (%(page_number)s): %(message)s"
+
+#, python-format
+#~ msgid "Empty list and “%(class_name)s.allow_empty” is False."
+#~ msgstr "القائمة الفارغة و \"%(class_name)s.allow_empty\" هي زائفة."
+
+#~ msgid "Directory indexes are not allowed here."
+#~ msgstr "فهرسات الدليل غير مسموح بها هنا."
+
+#, python-format
+#~ msgid "Index of %(directory)s"
+#~ msgstr "فهرس %(directory)s"
+
+#~ msgid "The install worked successfully! Congratulations!"
+#~ msgstr "عمل التثبيت بنجاح! تهانينا!"
+
+#, fuzzy, python-format
+#~| msgid ""
+#~| "You are seeing this page because <a href=\"https://"
+#~| "docs.djangoproject.com/en/%(version)s/ref/settings/#debug\" "
+#~| "target=\"_blank\" rel=\"noopener\">DEBUG=True</a> is in your settings "
+#~| "file and you have not configured any URLs."
+#~ msgid ""
+#~ "View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+#~ "target=\"_blank\" rel=\"noopener\">release notes</a> for Django "
+#~ "%(version)s"
+#~ msgstr ""
+#~ "أنت ترى هذه الصفحة لأن <a href=\"https://docs.djangoproject.com/en/"
+#~ "%(version)s/ref/settings/#debug\" target=\"_blank\" "
+#~ "rel=\"noopener\">DEBUG=True</a> موجود في ملف الإعدادات الخاص بك ولم تقم "
+#~ "بتكوين أي عناوين URLs."
+
+#, python-format
+#~ msgid ""
+#~ "You are seeing this page because <a href=\"https://docs.djangoproject.com/"
+#~ "en/%(version)s/ref/settings/#debug\" target=\"_blank\" "
+#~ "rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+#~ "configured any URLs."
+#~ msgstr ""
+#~ "أنت ترى هذه الصفحة لأن <a href=\"https://docs.djangoproject.com/en/"
+#~ "%(version)s/ref/settings/#debug\" target=\"_blank\" "
+#~ "rel=\"noopener\">DEBUG=True</a> موجود في ملف الإعدادات الخاص بك ولم تقم "
+#~ "بتكوين أي عناوين URLs."
+
+#~ msgid "Django Documentation"
+#~ msgstr "وثائق دجانغو"
+
+#~ msgid "Topics, references, &amp; how-to’s"
+#~ msgstr "الموضوعات، المراجع، &amp; كيف يمكن"
+
+#~ msgid "Tutorial: A Polling App"
+#~ msgstr "البرنامج التعليمي: تطبيق التصويت"
+
+#~ msgid "Get started with Django"
+#~ msgstr "البدء مع جانغو"
+
+#~ msgid "Django Community"
+#~ msgstr "مجتمع دجانغو"
+
+#~ msgid "Connect, get help, or contribute"
+#~ msgstr "الاتصال أو الحصول على المساعدة أو المساهمة"
+
+#~ msgid "{currency!r} is not a valid currency"
+#~ msgstr "{العملة!r} ليست عملة صالحة"
+
+#~ msgid "show this help message and exit"
+#~ msgstr "إظهار رسالة المساعدة هذه والخروج"
+
+#~ msgid "Germany"
+#~ msgstr "ألمانيا"
+
+#~ msgid "Select the campaign to assign as a child campaign."
+#~ msgstr "حدد الحملة التي سيتم تعيينها كحملة أطفال."
+
+#~ msgid "CRM User"
+#~ msgstr "مستخدم CRM"
+
+#~ msgid "Meeting"
+#~ msgstr "الاجتماع"
+
+#~ msgid "Task"
+#~ msgstr "مهمة"
+
+#~ msgid "Contact Role"
+#~ msgstr "دور جهة الاتصال"
+
+#~ msgid "Access Denied: Your account is blocked."
+#~ msgstr "تم رفض الوصول: تم حظر حسابك."
+
+#~ msgid "Service"
+#~ msgstr "الخدمة"
+
+#~ msgid "Chatter"
+#~ msgstr "الدردشة"
+
+#~ msgid "Indusrty"
+#~ msgstr "Indusrty"

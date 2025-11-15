@@ -1,0 +1,48 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+<div class="bg-white rounded-lg shadow p-6 min-w-[500px]">
+    <div class="flex justify-between items-center mb-2">
+        <h3 class="text-md font-semibold mb-2">{% trans 'Bulk Reassign Dependencies' %}</h3>
+        <button onclick="closeDeleteModal()" class="text-gray-500 hover:text-red-500 text-xl">
+            <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+        </button>
+    </div>
+    <p class="text-sm text-gray-600 mb-4">
+        {% trans 'Reassign all dependent' %} {{ model_verbose_name }} {% trans 'to a new target before deleting' %} "{{ object }}".
+    </p>
+    <form hx-post="{{ search_url }}" hx-push-url="false" hx-on::after-request="closeDeleteModal();">
+        {% csrf_token %}
+        <label for="new_target_id" class="text-sm text-color-600">{% trans 'New Target' %}</label>
+        <div class="flex w-full mb-3">
+            <select id="new_target_id" name="new_target_id" class="js-example-basic-single headselect"
+                style="width: 100%">
+                {% for target in available_targets %}
+                <option value="{{ target.id }}">{{ target }}</option>
+                {% endfor %}
+                {% if not available_targets %}
+                <option value="" disabled>{% trans 'No other targets available' %}</option>
+                {% endif %}
+            </select>
+        </div>
+        <input type="hidden" name="action" value="bulk_reassign">
+        <input type="hidden" name="record_id" value="{{ record_id }}">
+        <input type="hidden" name="view_id" value="{{ view_id|safe }}">
+        <input type="hidden" name="delete_mode" value="{{ delete_mode }}">
+        <div class="flex justify-end gap-2">
+            <button onclick="closeDeleteModal()"
+                class="text-sm px-6 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                {% trans 'Cancel' %}
+            </button>
+            <button type="submit" class="text-sm px-6 py-2 bg-[#21b442] text-white rounded-md hover:bg-[#198230]"
+                hx-indicator="#reassign-spinner" {% if not available_targets %}disabled{% endif %}>
+                <span class="flex items-center gap-2">
+                    <span id="reassign-spinner" class="htmx-indicator">
+                        <img src="{% static '/assets/icons/spinner.svg' %}" alt="Loading..." width="25" />
+                    </span>
+                    {% trans 'Confirm' %}
+                </span>
+            </button>
+        </div>
+    </form>
+</div>

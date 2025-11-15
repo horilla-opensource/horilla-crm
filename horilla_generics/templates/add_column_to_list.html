@@ -1,0 +1,125 @@
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+
+<div class="bg-white w-full max-w-md rounded-lg shadow-lg p-0 transition-all duration-300  md:min-w-[650px] opacity-100 scale-100">
+  <div class="relative p-4 w-full max-w-2xl max-h-full">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow-sm">
+      <form id="fieldSelectorForm" method="post" hx-post="{% url 'horilla_generics:column_selector' %}" hx-target="#fieldSelectorForm" hx-swap="outerHTML">
+        {% csrf_token %}
+        <div class="p-5 pt-3">
+          <!-- Display form errors -->
+          {% if form.errors %}
+            <div class="text-red-500 text-sm mb-4">
+              <ul>
+                {% for field, errors in form.errors.items %}
+                  {% for error in errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+          {% if error %}
+            <div class="text-red-500 text-sm mb-4">{{ error }}</div>
+          {% endif %}
+          <div class="flex justify-between items-center">
+            <h2 class="text-md font-semibold">{% trans 'Select Fields to Display'%}</h2>
+            <button
+              type="button"
+              onclick="closeModal()"
+              class="text-gray-500 hover:text-red-500 text-xl"
+            >
+              <img src="{% static 'assets/icons/close.svg' %}" alt="icon" />
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-[300px] md:h-auto overflow-hidden overflow-y-auto">
+            <!-- Available Fields -->
+            <div class="mt-4">
+              <h2 class="text-sm font-semibold text-center pb-3">{% trans 'Available Fields' %}</h2>
+              <ul class="border-[1px] border-[solid] border-[#e5e5e5] rounded-[10px] h-[300px] overflow-hidden overflow-y-auto p-4" id="availableFields">
+                {% for verbose_name, field_name in available_fields %}
+                  <li>
+                    <a
+                      hx-post="{% url 'horilla_generics:move_field' %}?field={{ field_name }}&action=add&app_label={{ app_label }}&model_name={{ model_name }}&url_name={{ url_name }}&exclude={{exclude_fields}}"
+                      hx-target="#fieldSelectorForm"
+                      hx-select="#fieldSelectorForm"
+                      hx-swap="outerHTML"
+                      class="hover:border-[#e54f38] transition duration-300 hover:text-[#e54f38] relative after:[content:''] after:absolute after:bg-[url({% static 'assets/icons/right-arrow.svg' %})] after:right-[8px] after:top-[0] after:bottom-[0] after:m-auto after:bg-no-repeat after:bg-contain after:bg-center after:w-[10px] after:h-[10px] px-[10px] py-[8px] w-full flex text-[#333] border-[1px] border-[solid] border-[#dddddd] rounded-[5px] text-[.8rem] mb-1 text-left"
+                    >
+                      {% trans verbose_name %}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+            <!-- Visible Fields -->
+            <div class="mt-4">
+              <h2 class="text-sm font-semibold text-center pb-3">{% trans 'Visible Fields' %}</h2>
+              <ul class="flex gap-2 flex-col border-[1px] border-[solid] border-[#e5e5e5] rounded-[10px] h-[300px] overflow-hidden overflow-y-auto p-4" id="visibleFields">
+                {% for verbose_name, field_name in visible_fields %}
+                  <li>
+                    <div class="flex justify-between items-center relative">
+                      <a
+                        hx-post="{% url 'horilla_generics:move_field' %}?field={{ field_name }}&action=remove&app_label={{ app_label }}&model_name={{ model_name }}&url_name={{ url_name }}&exclude={{exclude_fields}}"
+                        hx-target="#fieldSelectorForm"
+                        hx-select="#fieldSelectorForm"
+                        hx-swap="outerHTML"
+                        class="ps-8 pr-16 bg-primary-300 hover:border-[#e54f38] transition duration-300 hover:text-[#e54f38] after:[content:''] after:absolute after:bg-[url({% static 'assets/icons/right-arrow.svg' %})] after:left-[8px] after:-rotate-180 after:top-[0] after:bottom-[0] after:m-auto after:bg-no-repeat after:bg-contain after:bg-center after:w-[10px] after:h-[10px] px-[10px] py-[8px] w-full flex text-[#333] border-[1px] border-[solid] border-[#dddddd] rounded-[5px] text-[.8rem]"
+                      >
+                      {% trans verbose_name %}
+                      </a>
+                      <div class="flex absolute right-0 h-full">
+                        <button
+                          type="button"
+                          hx-on:click="event.stopPropagation()"
+                          hx-post="{% url 'horilla_generics:move_field' %}?field={{ field_name }}&action=move_up&app_label={{ app_label }}&model_name={{ model_name }}&url_name={{ url_name }}&exclude={{exclude_fields}}"
+                          hx-target="#fieldSelectorForm"
+                          hx-select="#fieldSelectorForm"
+                          hx-vals='{"exclude": "{{ exclude_fields }}"}'
+                          hx-swap="outerHTML"
+                          class="border-[1px] border-r-[0px] border-[solid] w-8 text-[#e54f38] text-xs transition duration-300"
+                        >
+                          <i class="fa-solid fa-angle-up"></i>
+                        </button>
+                        <button
+                          type="button"
+                          hx-on:click="event.stopPropagation()"
+                          hx-post="{% url 'horilla_generics:move_field' %}?field={{ field_name }}&action=move_down&app_label={{ app_label }}&model_name={{ model_name }}&url_name={{ url_name }}&exclude={{exclude_fields}}"
+                          hx-target="#fieldSelectorForm"
+                          hx-select="#fieldSelectorForm"
+                          hx-swap="outerHTML"
+                          class="border-[1px] border-[solid] w-8 text-[#e54f38] text-xs transition duration-300 rounded-r-[5px]"
+                        >
+                          <i class="fa-solid fa-angle-down"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <input type="hidden" name="app_label" value="{{ app_label }}">
+        <input type="hidden" name="model_name" value="{{ app_label }}.{{ model_name }}">
+        <input type="hidden" name="url_name" value="{{url_name}}">
+        <select name="visible_fields" multiple class="hidden">
+          {% for verbose_name, field_name in visible_fields %}
+            <option value="{{ field_name }}" selected>{{ verbose_name }}</option>
+          {% endfor %}
+        </select>
+        <div class="flex justify-end p-5">
+          <button
+            type="submit"
+            class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+          >
+            {% trans "Save" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

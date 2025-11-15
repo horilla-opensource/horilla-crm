@@ -1,0 +1,59 @@
+[
+    {
+        "model": "forecast.forecasttype",
+        "pk": 1,
+        "fields": {
+            "name": "Revenue Amount Forecast",
+            "description": "Forecast based on total deal revenue amount",
+            "forecast_type": "deal_revenue_amount",
+            "include_pipeline": true,
+            "include_best_case": true,
+            "include_commit": true,
+            "include_closed": true,
+            "is_active": true,
+            "created_at": "2025-05-07T18:30:00Z",
+            "updated_at": "2025-05-07T18:30:00Z",
+            "created_by": 1,
+            "updated_by": 1,
+            "company": 1
+        }
+    },
+    {
+        "model": "forecast.forecasttype",
+        "pk": 2,
+        "fields": {
+            "name": "Expected Revenue Forecast",
+            "description": "Forecast based on expected deal revenue amount",
+            "forecast_type": "deal_revenue_expected_amount",
+            "include_pipeline": true,
+            "include_best_case": true,
+            "include_commit": true,
+            "include_closed": true,
+            "is_active": true,
+            "created_at": "2025-05-07T18:30:00Z",
+            "updated_at": "2025-05-07T18:30:00Z",
+            "created_by": 1,
+            "updated_by": 1,
+            "company": 1
+        }
+    },
+    {
+        "model": "forecast.forecasttype",
+        "pk": 3,
+        "fields": {
+            "name": "Quantity Forecast",
+            "description": "Forecast based on total deal quantity",
+            "forecast_type": "deal_quantity",
+            "include_pipeline": true,
+            "include_best_case": true,
+            "include_commit": true,
+            "include_closed": true,
+            "is_active": true,
+            "created_at": "2025-05-07T18:30:00Z",
+            "updated_at": "2025-05-07T18:30:00Z",
+            "created_by": 1,
+            "updated_by": 1,
+            "company": 1
+        }
+    }
+]

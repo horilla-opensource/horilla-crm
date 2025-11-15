@@ -1,0 +1,70 @@
+{% load static %}
+{% load i18n %}
+<div class="bg-white rounded-lg shadow-lg max-w-2xl mx-auto max-h-[90vh] overflow-hidden">
+    <form method="post"
+          hx-post="{{ form_url }}?target_field={{ target_field }}"
+          hx-target="#dynamicCreateModalBox"
+          hx-swap="innerHTML"
+          >
+        {% csrf_token %}
+
+        <div class="p-5">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-md font-semibold">{{ form_title }}</h2>
+                <button type="button"
+                        class="text-gray-500 hover:text-red-500 text-xl"
+                        onclick="closeDynamicModal()"
+                >
+                    <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+                </button>
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="bg-primary-100 text-primary-600 px-4 py-2 rounded-lg text-sm mb-4">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="overflow-y-auto pe-2">
+                <div class="grid grid-cols-2 gap-4 mb-3">
+                    {% for field in form %}
+                        <div class="{% if field.field.widget.input_type == 'checkbox' %}col-span-2 text-sm flex items-center gap-2 relative{% elif field.name in full_width_fields %}col-span-2 flex flex-col{% else %}flex flex-col{% endif %}">
+                            {% if field.field.widget.input_type == 'checkbox' %}
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <span class="me-3 text-xs text-color-600">
+                                        {{ field.label }}
+                                        {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                    </span>
+                                    {{ field }}
+                                    <div class="relative w-10 h-5 bg-gray-200 rounded-full peer peer-checked:bg-primary-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+                                </label>
+                            {% else %}
+                                <label for="{{ field.id_for_label }}" class="text-xs text-color-600 mb-1">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                </label>
+                                {{ field }}
+                            {% endif %}
+
+                            {% if field.errors %}
+                                <div class="text-red-500 text-xs mt-1">
+                                    {% for error in field.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end p-5 pt-0">
+            <button type="submit" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                {% trans "Save" %}
+            </button>
+        </div>
+    </form>
+</div>

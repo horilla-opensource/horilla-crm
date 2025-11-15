@@ -1,0 +1,194 @@
+{% load static i18n horilla_tags%}
+{% block settings %}
+<div class="col-span-10" id="{{view_id|safe }}">
+    <div id="messages-container" style="display: none;">
+        {% for message in messages %}
+            <div class="message" data-level="{{ message.tags }}" data-message="{{ message }}"></div>
+        {% endfor %}
+    </div>
+    <button id="reloadButton"  hidden hx-get="{{ request.path }}?{{request.GET.urlencode}}" hx-target="#{{ view_id|safe }}" hx-trigger="click" hx-swap="outerHTML" hx-select="#{{ view_id|safe }}">click</button>
+    {% has_perm "opportunities.view_bigdealalert" as can_view_big_deal_alert %}
+    {% if can_view_big_deal_alert %}
+        {% if alerts %}
+            {% for alert in alerts %}
+                <div class="border border-primary-300 rounded-md">
+                    <a type="button"
+                        class="cursor-pointer flex justify-between items-center w-full px-4 py-3 text-left text-gray-800 font-medium transition"
+                        onclick="toggleAccordion(this)">
+                        <div class="flex gap-3 w-full font-medium text-sm">
+                            {{ alert.alert_name }}
+                        </div>
+                        <div class="flex items-center gap-2 md:gap-4">
+                            <div class="text-sm flex flex-col md:flex-row">
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input
+                                    type="checkbox"
+                                    value=""
+                                    class="sr-only peer"
+                                    hx-post="{% url 'opportunities:update_alert_status' alert.id %}"
+                                    hx-trigger="change"
+                                    hx-select-oob="#messages-container"
+                                    hx-swap="none"
+                                    name="active"
+                                    value="True"
+                                    hx-vals='{"active": {% if alert.active %}"False"{% else %}"True"{% endif %}}'
+                                    {% if alert.active %}checked{% endif %}/>
+                                    <div
+                                        class="relative w-11 h-5 bg-gray-200 rounded-full peer peer-checked:bg-primary-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-6">
+                                    </div>
+                                </label>
+                            </div>
+                            <button class="w-5 sm:w-auto" hx-get="{% url 'opportunities:big_deal_update_form' alert.id %}" hx-target="#modalBox" hx-swap="innerHTML" onclick="openModal()">
+                                <img
+                                    src="{% static '/assets/icons/a1.svg'%} "
+                                    alt=""
+                                    width="25"
+                                    height="25"
+                                />
+                            </button>
+                            <button class="w-5 sm:w-auto" hx-post="{% url 'opportunities:big_deal_delete' alert.id %}" hx-target="#deleteModeBox" hx-swap="innerHTML" hx-trigger="click" hx-vals='{"check_dependencies":"true"}' onclick="event.stopPropagation();openDeleteModeModal();">
+                                <img
+                                    src="{% static '/assets/icons/a4.svg' %}"
+                                    alt=""
+                                    width="25"
+                                    height="25"
+                                />
+                            </button>
+                            <svg
+                                class="ms-3 w-6 transform transition-transform"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 9l-7 7-7-7"
+                                />
+                            </svg>
+                        </div>
+                    </a>
+                    <div class="accordion-content text-sm text-dark-500">
+                        <div class="px-4 border-t border-primary-300 pt-3">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                                <div class="text-sm flex flex-col md:flex-row">
+                                    <span class="text-dark-200 font-semibold w-40">{{ alert|verbose_name:"trigger_amount"}}</span>
+                                    <span class="flex-1 text-dark-200">
+                                    <span class="pe-2">:</span>
+                                    {{alert.trigger_amount}}
+                                    </span>
+                                </div>
+                                <div class="text-sm flex flex-col md:flex-row">
+                                    <span class="text-dark-200 font-semibold w-40">{{ alert|verbose_name:"trigger_probability"}}</span>
+                                    <span class="flex-1 text-dark-200">
+                                    <span class="pe-2">:</span>
+                                    {{alert.probality_return}}
+                                    </span>
+                                </div>
+                                <div class="text-sm flex flex-col md:flex-row">
+                                    <span class="text-dark-200 font-semibold w-40">{{ alert|verbose_name:"sender_name"}}</span>
+                                    <span class="flex-1 text-dark-200">
+                                    <span class="pe-2">:</span>
+                                    {{alert.sender_name}}
+                                    </span>
+                                </div>
+                                <div cclass="text-sm flex flex-col md:flex-row">
+                                    <span class="text-dark-200 font-semibold w-40">{{ alert|verbose_name:"sender_email"}}</span>
+                                    <span class="flex-1 text-dark-200">
+                                    <span class="pe-2">:</span>
+                                    {{alert.sender_email}}
+                                    </span>
+                                </div>
+                                <div class="text-sm flex flex-col md:flex-row">
+                                    <span class="text-dark-200 font-semibold w-40"> {{ alert|verbose_name:"notify_emails"}} </span>
+                                    <span class="flex-1 text-dark-200">
+                                    <span class="pe-2">:</span>
+                                    {% for email in alert.notify_email_list%}
+                                        {{ email }}<br>
+                                        &nbsp&nbsp&nbsp
+                                    {% endfor %}
+                                    </span>
+                                </div>
+                                <div class="text-sm flex flex-col md:flex-row">
+                                    <span class="text-dark-200 font-semibold w-40"> {{ alert|verbose_name:"notify_cc_emails"}} </span>
+                                    <span class="flex-1 text-dark-200">
+                                    <span class="pe-2">:</span>
+                                    {% for email in alert.notify_cc_emails_list%}
+                                        {{ email }}<br>
+                                        &nbsp&nbsp&nbsp
+                                    {% endfor %}
+                                    </span>
+                                </div>
+                                <div class="text-sm flex flex-col md:flex-row">
+                                    <span class="text-dark-200 font-semibold w-40"> {{ alert|verbose_name:"notify_bcc_emails"}} </span>
+                                    <span class="flex-1 text-dark-200">
+                                    <span class="pe-2">:</span>
+                                    {% for email in alert.notify_bcc_emails_list%}
+                                        {{ email }}<br>
+                                        &nbsp&nbsp&nbsp
+                                    {% endfor %}
+                                    </span>
+                                </div>
+                                <div class="text-sm flex flex-col md:flex-row">
+                                    <span class="text-dark-200 font-semibold w-40"> {{ alert|verbose_name:"notify_opportunity_owner"}} </span>
+                                    <span class="flex-1 text-dark-200">
+                                    <span class="pe-2">:</span>
+                                    {{alert.active_return}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
+        {% else %}
+            <div class="flex justify-between items-center {% if table_width %} h-20 {% endif %}">
+            </div>
+            <img
+                src="{% static 'assets/img/not-found.svg' %}"
+                alt="" class="w-60  m-auto mb-4 mt-5"/>
+            <p class="text-sm text-center mb-3">
+                {% if no_record_msg %}
+                    {{no_record_msg}}
+                {% else %}
+                {% trans " Nothing to show yet. Please add your Deal Alerts." %}
+                {% endif %}
+            </p>
+        {% endif %}
+    {% else %}
+        {% include "error/403.html" %}
+    {% endif %}
+    </div>
+</div>
+<script>
+    function toggleAccordion(button) {
+    const content = button.nextElementSibling;
+    const svg = button.querySelector("svg");
+
+    content.classList.toggle("open");
+    svg.classList.toggle("rotate-90");
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+    document
+        .querySelectorAll(".accordion-content button")
+        .forEach((checkbox) => {
+        checkbox.addEventListener("click", (e) => e.stopPropagation());
+        });
+    });
+    document
+    .querySelectorAll(".accordion-content button, button")
+    .forEach((cb) => {
+        cb.addEventListener("click", (e) => e.stopPropagation());
+    });
+
+    function toggleAccordion(button) {
+    const content = button.nextElementSibling;
+    const svg = button.querySelector("svg");
+
+    content.classList.toggle("open");
+    svg.classList.toggle("rotate-90");
+    }
+
+</script>
+{% endblock %}

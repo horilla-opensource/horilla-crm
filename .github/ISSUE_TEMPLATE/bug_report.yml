@@ -1,0 +1,55 @@
+name: "Bug report - CRM"
+about: "Create an issue to report a bug or unexpected behavior in Horilla CRM."
+title: "[BUG] "
+labels: ["bug"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill in the sections below to help us triage it faster.
+  - type: input
+    id: system
+    attributes:
+      label: Platform / OS
+      description: e.g. macOS, Windows, Linux, Docker image
+      placeholder: e.g. Ubuntu 22.04, Docker image horilla-crm:latest
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+      placeholder: e.g. When I try to save a contact, the form crashes and the page reloads.
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide a minimal set of steps to reproduce the behavior.
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. Observe ...
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What you expected to happen.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / error messages
+      description: Paste any relevant logs, stack traces or console output.
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical

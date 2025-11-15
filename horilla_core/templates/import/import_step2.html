@@ -1,0 +1,189 @@
+{% load horilla_tags %}
+{% load i18n %}
+{% load static %}
+<div id="step2">
+    {% if single_import %}
+    <div class="flex justify-between items-center mb-2">
+        <h2 class="text-md font-semibold">Import {{selected_module }}</h2>
+        <button type="button" onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-xl cursor-pointer">
+            <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+        </button>
+    </div>
+    {% endif %}
+    <ul class="progress mb-8 overflow-hidden overflow-x-auto">
+        <li class="active">
+            <div class="sec">
+                <span class="bg-primary-600 h-8 w-8 flex items-center justify-center rounded-full text-[white]">1</span>
+                <p class="text-sm mt-2 text-[#737791] font-medium text-center lg:text-left">{% trans "Upload Files" %}</p>
+            </div>
+        </li>
+        <li class="active">
+            <div class="sec flex [flex-flow:column] items-center">
+                <span class="bg-primary-600 h-8 w-8 flex items-center justify-center rounded-full text-[white]">2</span>
+                <p class="text-sm mt-2 text-[#737791] font-medium text-center lg:text-inherit">{% trans "Map Fields" %}</p>
+            </div>
+        </li>
+        <li class="">
+            <div class="sec flex [flex-flow:column] items-center">
+                <span class="bg-white border border-dark-50 h-8 w-8 flex items-center justify-center rounded-full text-[gray]">3</span>
+                <p class="text-sm mt-2 text-[#737791] font-medium text-center lg:text-inherit">{% trans "Action" %}</p>
+            </div>
+        </li>
+        <li>
+            <div class="sec flex [flex-flow:column] items-end">
+                <span class="bg-white border border-dark-50 h-8 w-8 flex items-center justify-center rounded-full text-[gray] absolute top-[0] right-[0]">4</span>
+                <p class="text-sm mt-2 text-[#737791] font-medium text-center lg:text-inherit">{% trans "Import" %}</p>
+            </div>
+        </li>
+    </ul>
+
+    <form hx-post="{% url 'horilla_core:import_step2' %}" hx-target="#import-container" hx-swap="innerHTML">
+        {% csrf_token %}
+        <input type="hidden" name="app_label" value="{{ app_label }}">
+        <input type="hidden" name="module" value="{{ module }}">
+        <div class="overflow-y-auto overflow-x-auto h-[380px] mb-4 overflow-hidden custom-scroll">
+            <table class="w-full mb-8">
+                <thead class="sticky top-0 bg-primary-300 text-primary-600 z-50">
+                    <tr>
+                        <th class="text-sm font-bold text-left p-3 bg-primary-300 z-50 rounded-tl-md">{% trans "Model Field" %}</th>
+                        <th class="text-sm font-bold text-left p-3 bg-primary-300 z-50">{% trans "File Header" %}</th>
+                        <th class="text-sm font-bold text-left p-3 bg-primary-300 z-50">{% trans "Default Values" %}</th>
+                        <th class="text-sm font-bold text-left p-3 bg-primary-300 z-50">{% trans "Sample Data" %}</th>
+                        <th class="text-sm font-bold text-left p-3 bg-primary-300 z-50">{% trans "Status" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for field in model_fields %}
+                    <tr>
+                        <td class="text-sm border border-[#efefef] text-left p-3">
+                            {{ field.verbose_name }}
+                            {% if field.required %}<span class="text-red-500">*</span>{% endif %}
+                        </td>
+                        <td class="text-sm border border-[#efefef] text-left p-3">
+                            <select name="file_header_{{ field.name }}"
+                                    class="js-example-basic-single headselect w-full"
+                                    {% if field.is_choice_field or field.is_foreign_key %}
+                                        hx-get="{% url 'horilla_core:get_unique_values' %}?field_name={{ field.name }}&app_label={{ app_label }}&module={{ module }}"
+                                        hx-target="#value-mapping-{{ field.name }}"
+                                        hx-swap="outerHTML"
+                                        hx-trigger="change"
+                                    {% endif %}
+                                    hx-post="{% url 'horilla_core:update_field_status' %}?field_name={{ field.name }}"
+                                    hx-target="#status-{{ field.name }}"
+                                    hx-trigger="change"
+                                    hx-swap="innerHTML">
+                                <option value="">{% trans "Select Header" %}</option>
+                                {% for header in headers %}
+                                    <option value="{{ header }}"
+                                            {% if auto_mappings and auto_mappings|lookup:field.name == header %}selected{% endif %}>
+                                        {{ header }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if validation_errors and validation_errors|lookup:field.name %}
+                                <div class="text-red-500 text-xs mt-1">
+                                    {% for error in validation_errors|lookup:field.name %}
+                                        {{ error }}<br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td class="text-sm border border-[#efefef] text-left p-3">
+                            {% if field.is_choice_field %}
+                                <select name="replace_{{ field.name }}" class="js-example-basic-single headselect w-full">
+                                    <option value="">{% trans "Select Default Value" %}</option>
+                                    {% for choice in field.choices %}
+                                        <option value="{{ choice.value }}"
+                                                {% if replace_values and replace_values|lookup:field.name == choice.value %}selected{% endif %}>
+                                            {{ choice.label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            {% elif field.is_foreign_key %}
+                                <select name="replace_{{ field.name }}" class="js-example-basic-single headselect w-full">
+                                    <option value="">{% trans "Select Default Value" %}</option>
+                                    {% for fk_choice in field.foreign_key_choices %}
+                                        <option value="{{ fk_choice.id }}"
+                                                {% if replace_values and replace_values|lookup:field.name == fk_choice.id|stringformat:"s" %}selected{% endif %}>
+                                            {{ fk_choice.display }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <input type="text" name="replace_{{ field.name }}" placeholder="Default value"
+                                    value="{% if replace_values %}{{ replace_values|lookup:field.name|default:'' }}{% endif %}"
+                                    class="text-color-600 px-2 py-1 border border-dark-50 rounded-md text-xs w-full">
+                            {% endif %}
+                        </td>
+                        <td class="text-sm border border-[#efefef] text-left p-3">
+                            {% if sample_data %}
+                                {% for sample in sample_data|slice:":1" %}
+                                    {% for key, value in sample.items %}
+                                        {% if key|lower == field.name|lower %}
+                                            {{ value }}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% else %}
+                                No sample data
+                            {% endif %}
+                        </td>
+                        <td class="text-sm border border-[#efefef] text-left p-3 whitespace-nowrap" id="status-{{ field.name }}">
+                            {% if auto_mappings and auto_mappings|lookup:field.name %}
+                                <span class="bg-green-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{% trans "Auto Mapped" %}</span>
+                            {% else %}
+                                <span class="bg-red-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{% trans "Not Mapped" %}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if field.is_choice_field or field.is_foreign_key %}
+                    <tr>
+                        <td colspan="5" class="text-sm border border-[#efefef] p-3">
+                            <div id="value-mapping-{{ field.name }}"
+                                 {% if auto_mappings and auto_mappings|lookup:field.name %}
+                                    hx-get="{% url 'horilla_core:get_unique_values' %}?field_name={{ field.name }}&app_label={{ app_label }}&module={{ module }}&file_header_{{ field.name }}={{ auto_mappings|lookup:field.name }}"
+                                    hx-trigger="change,load"
+                                    hx-target="#value-mapping-{{ field.name }}"
+                                    hx-swap="outerHTML"
+                                 {% endif %}>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-sm border border-[#efefef] text-center p-3">{% trans "No model fields available" %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex gap-2 justify-between">
+            <button type="button" hx-get="{% url 'horilla_core:import_data' %}" hx-target="#import-container" hx-swap="innerHTML"
+                class="backBtn btn-with-icon flex gap-3 text-sm px-5 py-2 rounded-md text-[#E54F38] bg-[#ffefed] hover:bg-[#e54f38] hover:text-[white] transition duration-300 cursor-pointer">
+                {% trans "Previous" %}
+            </button>
+            <button type="submit"
+                class="nextBtn text-sm px-5 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                {% trans "Next" %}
+            </button>
+        </div>
+    </form>
+
+    {% if auto_choice_mappings %}
+        {% for field_name, mappings in auto_choice_mappings.items %}
+            {% for slug_value, choice_value in mappings.items %}
+                <input type="hidden" name="choice_mapping_{{ field_name }}_{{ slug_value }}" value="{{ choice_value }}">
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+
+    {% if auto_fk_mappings %}
+        {% for field_name, mappings in auto_fk_mappings.items %}
+            {% for slug_value, fk_id in mappings.items %}
+                <input type="hidden" name="fk_mapping_{{ field_name }}_{{ slug_value }}" value="{{ fk_id }}">
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+</div>

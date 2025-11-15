@@ -1,0 +1,13 @@
+# Logrotate configuration for Horilla-CRM
+/var/log/horilla-crm/*.log {
+    daily
+    missingok
+    rotate 52
+    compress
+    delaycompress
+    notifempty
+    create 644 horilla-crm horilla-crm
+    postrotate
+        systemctl reload horilla-crm > /dev/null 2>&1 || true
+    endscript
+}

@@ -1,0 +1,125 @@
+{% load horilla_tags %}
+{% load static %}
+{% load i18n %}
+<div class="border border-[#efefef] rounded-md px-3 py-2 h-[250px] overflow-hidden overflow-y-auto">
+    <h6 class="text-sm font-semibold text-gray-900 mb-4">{% trans 'Manage Custom Stages'%}</h6>
+    <form id="custom-stages-form"
+      hx-post="{% url 'leads:save_custom_stages' company.id %}?initialization={{initialization}}"
+      hx-target="#{{hx_target}}"
+      hx-swap="{{hx_swap}}"
+      hx-push-url="{{hx_push_url}}"
+      {% if hx_select %}
+        hx-select="{{hx_select}}"
+      {% endif %} >
+      <div id="stages-container">
+          {% with stages=company_stages|lookup:company.id %}
+          {% for stage in stages.stages|default:default_stages %}
+        <div class="stage-item bg-[#efefef96] rounded-md px-3 py-2 flex gap-2 justify-between items-center mb-2 w-full">
+          <div class="flex gap-2 items-center w-full">
+            <div class="cursor-move drag-handle">
+              <img src="{% static 'assets/icons/drag.svg' %}" alt="Drag" width="16" />
+            </div>
+            <div class="w-[60%]">
+              <input type="text" name="stage_name_custom[]" value="{{ stage.name }}" class="w-full border border-[#efefef] rounded-md px-2 py-1">
+            </div>
+            <div class="w-20">
+              <input type="number" name="stage_order_custom[]" value="{{ stage.order }}"  class="w-full border border-[#efefef] rounded-md px-2 py-1 ">
+            </div>
+            <div class="w-20">
+              <input type="number" name="stage_probability_custom[]" value="{{ stage.probability }}" class="w-full border border-[#efefef] rounded-md px-2 py-1 ">
+            </div>
+            <div class="flex items-center w-50">
+              <span class="w-full">
+                <input type="checkbox" id="ch1" name="stage_is_final_custom[]" value="{{ forloop.counter0 }}" {% if stage.is_final %}checked{% endif %}
+                  class="w-4 h-4 border border-[#cfcfcf] rounded-sm accent-[#e54f38] mr-2" />
+                <label for="ch1" class="cursor-pointer text-sm">Final</label>
+              </span>
+            </div>
+            <div>
+              <button type="button"
+              hx-post="{% url 'leads:remove_stage' company.id %}"
+              hx-target="#custom-stage-collapse"
+              hx-swap="innerHTML"
+              hx-include="closest form"
+              hx-vals='{"remove_index": {{ forloop.counter0 }}}'>
+                <img src="{% static '/assets/icons/close.svg' %}" alt="" width="10">
+              </button>
+            </div>
+          </div>
+
+        </div>
+        {% endfor %}
+        {% endwith %}
+      </div>
+      <button type="button"
+          hx-get="{% url 'leads:add_stage' company.id %}"
+          hx-target="#stages-container"
+          hx-swap="beforeend"
+          class="text-primary-600 hover:text-primary-800 text-xs font-semibold px-2 py-1 bg-primary-300 rounded border border-primary-200 transition-colors">
+        {% trans 'Add Stage' %}
+      </button>
+
+      <div class="flex justify-end gap-2 pt-3">
+        <button type="submit"
+          class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+          {% trans ' Changes' %}
+        </button>
+        <button type="button"
+          class="text-sm border-[1px] border-[solid] hover:border-[#9b210f] hover:bg-secondary-600 rounded-[5px] px-4 py-2 text-[#e54f38] flex gap-3 btn-with-icon border-[#e54f38] [transition:.3s] hover:text-[white]"
+          onclick="document.getElementById('custom-stage-collapse').innerHTML=''">
+          {% trans 'Cancel' %}
+        </button>
+    </form>
+</div>
+<script>
+  (function($) {
+      $(document).ready(function() {
+          var $container = $('#stages-container');
+          if ($container.length === 0) {
+              return;
+          }
+
+          if (typeof Sortable === 'undefined' || typeof htmx === 'undefined') {
+              return;
+          }
+
+          function initializeSortable(container) {
+              try {
+                  new Sortable(container, {
+                      animation: 150,
+                      handle: '.cursor-move',
+                      draggable: '.stage-item',
+                      forceFallback: true,
+                      onEnd: function(evt) {
+                          var $stages = $container.find('.stage-item');
+                          $stages.each(function(index) {
+                              var $orderInput = $(this).find('input[name="stage_order_custom[]"]');
+                              if ($orderInput.length) {
+                                  $orderInput.val(index + 1);
+                              }
+                          });
+                      },
+                      onMove: function(evt) {
+                          return true;
+                      },
+                      onDragOver: function(evt) {
+                          evt.preventDefault();
+                      }
+                  });
+              } catch (error) {}
+          }
+
+          initializeSortable($container[0]);
+
+          $(document).on('htmx:afterSwap', function(event) {
+              if ($(event.target).is('#stages-container') || $(event.target).closest('#stages-container').length) {
+                  initializeSortable($container[0]);
+              }
+          });
+
+          $container.on('dragover', '.stage-item', function(evt) {
+              evt.preventDefault();
+          });
+      });
+  })(jQuery);
+</script>

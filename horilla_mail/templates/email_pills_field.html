@@ -1,0 +1,137 @@
+<div id="email-input-{{ field_type }}" class="relative">
+    <div class="flex flex-wrap items-center gap-1 p-2 border border-dark-50 rounded-md mt-1 focus-within:border-primary-600 min-h-[40px] bg-white">
+      {% for email in email_list %}
+        {% if email.strip %}
+          <div class="flex items-center bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full border border-blue-200">
+            <span>{{ email.strip }}</span>
+            <button type="button"
+                    class="ml-1 text-blue-600 hover:text-blue-800 hover:bg-blue-200 rounded-full w-4 h-4 flex items-center justify-center text-xs"
+                    hx-post="{% url 'horilla_mail:remove_email' %}"
+                    hx-vals='{"email_to_remove": "{{ email.strip }}", "field_type": "{{ field_type }}"}'
+                    hx-include="[name='{{ field_type }}_email_list']"
+                    hx-target="#email-input-{{ field_type }}"
+                    hx-swap="outerHTML">
+              ×
+            </button>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <!-- Input Field -->
+      <input type="text"
+             name="{{ field_type }}_email_input"
+             id="{{ field_type }}_email_input"
+             value="{{ current_search }}"
+             placeholder="{% if not email_list %}Enter recipient{% endif %}"
+             class="flex-1 min-w-[200px] outline-none border-none text-sm placeholder:text-dark-100 bg-transparent"
+             hx-get="{% url 'horilla_mail:email_suggestions' %}?field={{ field_type }}"
+             hx-trigger="keyup changed delay:300ms, focus"
+             hx-include="this, [name='{{ field_type }}_email_list']"
+             hx-target="#email-suggestions-{{ field_type }}"
+             hx-swap="innerHTML"
+             autocomplete="off"
+             onkeydown="handleEmailInput(event, '{{ field_type }}')"
+             onblur="handleEmailBlur(event, '{{ field_type }}')" />
+    </div>
+
+    <input type="hidden" name="{{ field_type }}_email" value="{{ email_string }}" />
+    <input type="hidden" name="{{ field_type }}_email_list" value="{{ email_list|join:',' }}" />
+</div>
+
+<script>
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email.trim());
+    }
+
+    function addEmailPill(email, fieldType) {
+        if (!email || !isValidEmail(email)) {
+            return false;
+        }
+
+        // Use HTMX to add the email
+        htmx.ajax('POST', '{% url "horilla_mail:add_email" %}', {
+            values: {
+                email: email.trim(),
+                field_type: fieldType,
+                [fieldType + '_email_list']: document.querySelector(`[name="${fieldType}_email_list"]`).value
+            },
+            target: `#email-input-${fieldType}`,
+            swap: 'outerHTML'
+        });
+
+        return true;
+    }
+
+    function handleEmailInput(event, fieldType) {
+        const input = event.target;
+        const email = input.value.trim();
+
+        // Handle Enter, Tab, comma, or semicolon
+        if (event.key === 'Enter' || event.key === 'Tab' || event.key === ',' || event.key === ';') {
+            event.preventDefault();
+
+            if (email && isValidEmail(email)) {
+                addEmailPill(email, fieldType);
+                // Clear suggestions
+                document.getElementById(`email-suggestions-${fieldType}`).innerHTML = '';
+            }
+        }
+
+        // Handle Backspace when input is empty (remove last pill)
+        if (event.key === 'Backspace' && !email) {
+            const emailListInput = document.querySelector(`[name="${fieldType}_email_list"]`);
+            const currentEmails = emailListInput.value.split(',').filter(e => e.trim());
+
+            if (currentEmails.length > 0) {
+                // Remove the last email
+                const emailToRemove = currentEmails[currentEmails.length - 1].trim();
+
+                htmx.ajax('POST', '{% url "horilla_mail:remove_email" %}', {
+                    values: {
+                        email_to_remove: emailToRemove,
+                        field_type: fieldType,
+                        [fieldType + '_email_list']: emailListInput.value
+                    },
+                    target: `#email-input-${fieldType}`,
+                    swap: 'outerHTML'
+                });
+            }
+        }
+    }
+
+    function handleEmailBlur(event, fieldType) {
+        const email = event.target.value.trim();
+
+        // Add email as pill when user clicks away or tabs out
+        if (email && isValidEmail(email)) {
+            setTimeout(() => {
+                addEmailPill(email, fieldType);
+                // Clear suggestions
+                document.getElementById(`email-suggestions-${fieldType}`).innerHTML = '';
+            }, 100); // Small delay to allow for suggestion clicks
+        }
+    }
+
+    document.addEventListener('paste', function(event) {
+        const target = event.target;
+        if (target.name && target.name.endsWith('_email_input')) {
+            const fieldType = target.name.replace('_email_input', '');
+
+            setTimeout(() => {
+                const pastedText = target.value;
+                const emails = pastedText.split(/[,;\s]+/).filter(email => email.trim() && isValidEmail(email.trim()));
+
+                if (emails.length > 1) {
+                    // Clear the input
+                    target.value = '';
+
+                    // Add each valid email as a pill
+                    emails.forEach(email => {
+                        addEmailPill(email.trim(), fieldType);
+                    });
+                }
+            }, 10);
+        }
+    });
+</script>

@@ -1,0 +1,311 @@
+{% load static %} {% load i18n %} {% load horilla_tags %}
+
+<div id="{{ view_id|safe }}-container" class="relative bg-white rounded-lg shadow-sm">
+    <form  id="{{ view_id|safe }}"
+        {% for key, value in hx_attrs.items %}
+                {{ key }}="{{ value }}"
+            {% endfor %}
+           enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- Render all hidden fields -->
+        {% for field in form %}
+            {% if field.is_hidden %}
+                {{ field }}
+            {% endif %}
+        {% endfor %}
+        <div class=" {% if header %}p-5{% endif %}">
+            {% if header %}
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-md font-semibold">{{ form_title|escape }}</h2>
+                <button type="button" onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-xl cursor-pointer">
+                    <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+                </button>
+            </div>
+            {% endif %}
+            {% if form.non_field_errors %}
+                <div class="bg-red-50 text-red-500 px-4 py-3 rounded-lg text-sm mb-4">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="{% if modal_height %}h-[500px]{% elif  modal_height_class %}{{ modal_height_class }}{% endif %} overflow-hidden overflow-y-auto pe-2 custom-scroll">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                    {% for field in form %}
+                        {% if not field.is_hidden and field.name not in condition_fields %}
+                            <div id="{{ field.name }}_container" class="{% if field.name in full_width_fields %}col-span-2{% else %}{% if field.field.widget.input_type == 'checkbox' %}text-sm flex items-center gap-2 relative{% else %}flex flex-col{% endif %}{% endif %}">
+                                {% if field.field.widget.input_type == 'checkbox' %}
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <span class="me-3 text-xs text-color-600">
+                                            {{ field.label }}
+                                            {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                        </span>
+                                        {{ field }}
+                                        <div class="relative w-10 h-5 bg-gray-200 rounded-full peer peer-checked:bg-primary-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+                                    </label>
+                                {% elif field.field.widget.input_type == 'file' %}
+                                    <label class="inline-flex items-center cursor-pointer">
+                                      <span class="me-3 text-xs text-color-600">
+                                        {{ field.label }}
+                                        {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                      </span>
+                                    </label>
+                                    <div class="w-full">
+                                      <label
+                                        for="{{ field.id_for_label }}"
+                                        class="flex items-center gap-3 text-color-600 p-2 placeholder:text-xs font-normal w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm transition duration-300 focus:border-primary-600 cursor-pointer">
+                                        <span
+                                          class="inline-flex items-center px-3 py-1 bg-primary-600 text-white text-xs font-medium rounded-md hover:bg-primary-700 transition">
+                                          {% trans 'Choose File'%}
+                                        </span>
+                                        <span
+                                          id="{{ field.id_for_label }}-name"
+                                          class="text-sm text-gray-500"
+                                          data-cleared="{{ field.field.widget.attrs.data_cleared|default:'false' }}"
+                                          data-uploaded="{{ field.field.widget.attrs.data_uploaded_filename|default:'' }}"
+                                          data-existing="{{ field.value|default:'' }}">
+                                          {% trans 'No file chosen'%}
+                                        </span>
+                                      </label>
+
+                                      <div style="display: none">{{ field }}</div>
+                                      <input type="hidden" name="id_{{ field.name }}_clear" id="{{ field.id_for_label }}_clear_input" value="{{ field.field.widget.attrs.data_cleared|default:'false' }}">
+                                      <div class="flex justify-end">
+                                        <button
+                                          type="button"
+                                          id="{{ field.id_for_label }}-clear"
+                                          class="mt-2 text-xs text-primary-600 hover:text-parimary-700 font-medium transition-colors"
+                                          style="{% if field.field.widget.attrs.data_uploaded_filename or field.field.widget.attrs.data_existing_filename %}display:block;{% else %}display:none;{% endif %}"
+                                        >
+                                          {% trans 'Clear' %}
+                                        </button>
+                                      </div>
+                                    </div>
+
+                                    <script>
+                                        function initFileInput(input) {
+                                            const fileName = document.getElementById(input.id + '-name');
+                                            const clearBtn = document.getElementById(input.id + '-clear');
+                                            const clearInput = document.getElementById(input.id + '_clear_input');
+
+                                            if (!fileName || !clearBtn || !clearInput) return;
+                                            if (input.dataset.fileInit === "true") return;
+                                            input.dataset.fileInit = "true";
+
+                                            const wasCleared = fileName.getAttribute('data-cleared') === 'true';
+                                            const uploadedFilename = fileName.getAttribute('data-uploaded') || '';
+                                            const existingFilename = fileName.getAttribute('data-existing') || '';
+
+                                            let currentFilename = '';
+                                            let hasFile = false;
+
+                                            if (wasCleared) {
+                                                clearInput.value = 'true';
+                                            } else if (uploadedFilename) {
+                                                currentFilename = uploadedFilename;
+                                                clearInput.value = 'false';
+                                                hasFile = true;
+                                            } else if (existingFilename) {
+                                                currentFilename = existingFilename.split('/').pop();
+                                                clearInput.value = 'false';
+                                                hasFile = true;
+                                            }
+
+                                            if (hasFile && currentFilename) {
+                                                fileName.textContent = currentFilename;
+                                                clearBtn.style.removeProperty('display');
+                                            } else {
+                                                fileName.textContent = 'No file chosen';
+                                                clearBtn.style.display = 'none';
+                                            }
+
+                                            input.addEventListener('change', function() {
+                                                if (input.files.length > 0) {
+                                                    fileName.textContent = input.files[0].name;
+                                                    clearBtn.style.removeProperty('display');
+                                                    clearInput.value = 'false';
+                                                } else {
+                                                    fileName.textContent = 'No file chosen';
+                                                    clearBtn.style.display = 'none';
+                                                    clearInput.value = 'true';
+                                                }
+                                            });
+
+                                            clearBtn.addEventListener('click', function() {
+                                                input.value = '';
+                                                fileName.textContent = 'No file chosen';
+                                                clearBtn.style.display = 'none';
+                                                clearInput.value = 'true';
+                                            });
+                                        }
+
+                                        function initAllFileInputs(root=document) {
+                                            root.querySelectorAll('input[type="file"]').forEach(initFileInput);
+                                        }
+
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            initAllFileInputs();
+                                        });
+
+                                        document.body.addEventListener('htmx:afterSwap', function(evt) {
+                                            if (evt.target.querySelectorAll) {
+                                                initAllFileInputs(evt.target);
+                                            }
+                                        });
+                                    </script>
+
+                                {% else %}
+                                    <div class="flex justify-between items-center {% if 'select' in field.field.widget.attrs.class|lower or field.field.widget.input_type == 'select' %}mb-2{% else %}mb-1{% endif %}">
+                                        <div class="flex justify-between mb-1 w-full">
+                                            <label for="{{ field.id_for_label }}" class="text-xs text-color-600">{{ field.label }}
+                                                {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                            </label>
+                                            {% if field.help_text %}
+                                                <span class="group relative ml-1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="cursor-pointer text-[#a19e9e]" width="15" height="15" viewBox="0 0 20 20">
+                                                        <path fill="currentColor" d="M2.93 17.07A10 10 0 1 1 17.07 2.93A10 10 0 0 1 2.93 17.07m12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32M9 11V9h2v6H9zm0-6h2v2H9z"/>
+                                                    </svg>
+                                                    <div class="min-w-[200px] z-40 absolute h-max p-[10px] left-auto right-[1.5rem] top-0 bg-[#000000] text-[.7rem] rounded-[5px] text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                                        <p>{{ field.help_text }}</p>
+                                                    </div>
+                                                </span>
+                                            {% endif %}
+                                          </div>
+                                        {% if field.name in dynamic_create_fields and field.name in related_models_info %}
+                                            <button type="button"
+                                                    class="text-primary-600 hover:text-primary-800 text-xs font-semibold px-2 py-1 bg-primary-300 rounded border border-primary-200 transition-colors"
+                                                    hx-get="{% url 'horilla_generics:dynamic_create' related_models_info|get_item_form:field.name|get_item_form:'app_label' related_models_info|get_item_form:field.name|get_item_form:'model_name' %}?target_field={{ field.name }}&fields={{ dynamic_create_field_mapping|get_item_form:field.name|get_item_form:'fields'|join:',' }}&full_width_fields={{ dynamic_create_field_mapping|get_item_form:field.name|get_item_form:'full_width_fields'|join:',' }}"
+                                                    hx-target="#dynamicCreateModalBox"
+                                                    hx-on:click="openDynamicModal();"
+                                                    hx-swap="innerHTML"
+                                                    hx-post="">
+                                                + {% trans "Add" %}
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                    {{ field }}
+                                {% endif %}
+
+                                {% if field.errors %}
+                                    <div class="bg-red-50 text-red-500 px-3 py-2 rounded text-xs mt-1">
+                                        {% for error in field.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- Condition Fields Section -->
+                {% if condition_fields %}
+                    <label class="text-xs font-semibold text-color-600 pb-2">{% if condition_fields_tiltle %} {{condition_fields_tiltle}}  {% else %} {% trans 'Conditions' %} {% endif %}</label>
+                    <div id="condition-fields-container">
+                        <!-- First condition row (always present) -->
+                        <div class="flex items-center gap-2 mb-2 condition-row" data-row-id="0" id="condition-row-0">
+                            <div class="grid grid-cols-{{ condition_fields|length }} gap-2 flex-1">
+                                {% for field_name in condition_fields %}
+                                    <div>
+                                        <div id="id_{{ field_name }}_0_container">
+                                            {% if submitted_condition_data.0 and field_name in submitted_condition_data.0 %}
+                                                {% render_field_with_name form field_name "0" submitted_condition_data.0|get_item_form:field_name %}
+                                            {% else %}
+                                                {% render_field_with_name form field_name "0" %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Additional condition rows from submitted data or existing conditions -->
+                        {% if submitted_condition_data %}
+                            {% for row_id, row_data in submitted_condition_data.items %}
+                                {% if row_id != "0" %}
+                                    <div class="flex items-center gap-2 mb-2 condition-row" data-row-id="{{ row_id }}" id="condition-row-{{ row_id }}">
+                                        <div class="grid grid-cols-{{ condition_fields|length }} gap-2 flex-1">
+                                            {% for field_name in condition_fields %}
+                                                <div>
+                                                    <div id="id_{{ field_name }}_{{ row_id }}_container">
+                                                        {% render_field_with_name form field_name row_id row_data|get_item_form:field_name %}
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <button type="button"
+                                                class="remove-condition-row flex items-center justify-center w-6 h-6"
+                                                hx-delete="/generics/remove-condition-row/{{ row_id }}/"
+                                                hx-target="#condition-row-{{ row_id }}"
+                                                hx-swap="outerHTML">
+                                            <img src="{% static 'assets/icons/close-red.svg' %}" alt="Remove" class="w-3 h-3"/>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% elif existing_conditions %}
+                            {% for condition in existing_conditions %}
+                                {% if not forloop.first %}
+                                    <div class="flex items-center gap-2 mb-2 condition-row" data-row-id="{{ forloop.counter }}" id="condition-row-{{ forloop.counter }}">
+                                        <div class="grid grid-cols-{{ condition_fields|length }} gap-2 flex-1">
+                                            {% for field_name in condition_fields %}
+                                                <div>
+                                                    <div id="id_{{ field_name }}_{{ forloop.parentloop.counter }}_container">
+                                                        {% if field_name == 'field' %}
+                                                        <select name="{{ field_name }}_{{ forloop.parentloop.counter }}" class="js-example-basic-single headselect" id="id_{{ field_name }}_{{ forloop.parentloop.counter }}"
+                                                            {% if field_name == 'field' %}
+                                                                    hx-get="{% url 'horilla_generics:get_field_value_widget' %}"
+                                                                    hx-target="#id_value_{{ forloop.parentloop.counter }}_container"
+                                                                    hx-swap="innerHTML"
+                                                                    hx-include="[name='{{ field_name }}_{{ forloop.parentloop.counter }}'],#id_value_{{ forloop.parentloop.counter }}"
+                                                                    hx-vals='{"model_name": "{{ form.model_name }}", "row_id": "{{ forloop.parentloop.counter }}"}'
+                                                                    hx-trigger="change,load"
+                                                                {% endif %}>
+                                                            {% for choice in condition_field_choices|get_item_form:field_name %}
+                                                                <option value="{{ choice.0 }}" {% if choice.0 == condition|getter:field_name %}selected{% endif %}>{{ choice.1 }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        {% else %}
+                                                            {% render_field_with_name form field_name forloop.parentloop.counter condition|getter:field_name %}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <button type="button"
+                                                class="remove-condition-row flex items-center justify-center w-6 h-6"
+                                                hx-delete="/generics/remove-condition-row/{{ forloop.counter }}/"
+                                                hx-target="#condition-row-{{ forloop.counter }}"
+                                                hx-swap="outerHTML">
+                                            <img src="{% static 'assets/icons/close-red.svg' %}" alt="Remove" class="w-3 h-3"/>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    {% if add_condition_url %}
+                    <button type="button"
+                            class="text-primary-600 hover:text-primary-800 text-xs font-semibold px-2 py-1 bg-primary-300 rounded border border-primary-200 transition-colors"
+                            hx-get="{{ add_condition_url }}&row_id=next"
+                            hx-target="#condition-fields-container"
+                            hx-swap="beforeend">
+                        + {% trans "Add More" %}
+                    </button>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        {% if view.get_button_html %}
+            {{ view.get_button_html|safe }}
+        {% else %}
+            <div class="flex justify-end p-5 pt-0">
+                <button type="submit" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
+                    {% trans "Save" %}
+                </button>
+            </div>
+        {% endif %}
+
+    </form>
+</div>

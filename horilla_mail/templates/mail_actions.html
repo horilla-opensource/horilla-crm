@@ -1,0 +1,57 @@
+{% load static %} {% load i18n %} {% load horilla_tags %}
+<div class="flex rounded-md overflow-hidden">
+    {% has_perm "horilla_mail.view_horillamailconfiguration" as can_view_horillamailconfiguration %}
+    {% has_perm "horilla_mail.change_horillamailconfiguration" as can_change_horillamailconfiguration %}
+    {% has_perm "horilla_mail.delete_horillamailconfiguration" as can_delete_horillamailconfiguration %}
+
+    {% if can_view_horillamailconfiguration or request.user.is_superuser %}
+            {% if instance.type == 'outlook' %}
+                <button class="w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] hover:bg-[#e0e0e0] transition duration-300 items-center"
+                    title="Refresh Token"
+                    onclick="window.location.href='{% url 'horilla_mail:outlook_refresh_token' instance.id %}'">
+                    <img src="{% static 'assets/icons/refresh_black.svg' %}" alt="" width="17" />
+                </button>
+                <!-- Login -->
+                <button class="w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] hover:bg-[#e0e0e0] transition duration-300 items-center"
+                    title="Login"
+                    onclick="window.location.href='{% url 'horilla_mail:outlook_mail_server_login' instance.id %}'">
+                    <img src="{% static 'assets/icons/login.svg' %}" alt="" width="17" />
+                </button>
+            {% endif %}
+            {% if  instance.mail_channel == 'outgoing' %}
+                <button class="w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] hover:bg-[#e0e0e0] transition duration-300 items-center"
+                        title="Send Test Mail"
+                        hx-get="{% url 'horilla_mail:send_test_email_view'  %}?instance_id={{instance.id}}&{{ request.GET.urlencode}}"
+                        hx-target ="#modalBox"
+                        hx-on:click="openModal()"
+                        hx-swap="innerHTML">
+                        <img src="{% static 'assets/icons/outgoing.svg' %}" alt="" width="17" />
+                </button>
+            {% endif %}
+    {% endif %}
+    {% if can_change_horillamailconfiguration or request.user.is_superuser %}
+      <button class="w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] hover:bg-[#e0e0e0] transition duration-300 items-center"
+          title="Edit"
+          {% if instance.type == 'mail' %}
+          hx-get="{% url "horilla_mail:mail_server_update_view" instance.id  %}?{{ request.GET.urlencode}}"
+          {% else %}
+          hx-get="{% url "horilla_mail:outlook_mail_server_update_view" instance.id  %}?{{ request.GET.urlencode}}"
+          {% endif %}
+          hx-target ="#modalBox"
+          hx-on:click="openModal()"
+          hx-swap="innerHTML">
+          <img src="{% static 'assets/icons/edit.svg' %}" alt="" width="17" />
+      </button>
+    {% endif %}
+    {% if can_delete_horillamailconfiguration or request.user.is_superuser %}
+        <button class="w-10 h-7 bg-[#f0f0f0] flex-1 flex justify-center border-r border-r-[white] hover:bg-[#e0e0e0] transition duration-300 items-center"
+            title="Delete"
+            hx-get="{% url "horilla_mail:mail_server_delete_view" instance.id  %}?{{ request.GET.urlencode}}"
+            hx-target="#deleteModeBox"
+            hx-vals='{"check_dependencies": "true"}'
+            hx-on:click="openDeleteModeModal()"
+            hx-swap="innerHTML">
+            <img src="{% static 'assets/icons/a4.svg' %}" alt="" width="17" />
+        </button>
+    {% endif %}
+</div>

@@ -1,0 +1,30 @@
+{% extends "login.html" %}
+{% load static %}
+{% load i18n %}
+{% block login %}
+<div id="initialize-company" class="bg-white p-[20px] rounded-md shadow sec1 w-[900px]">
+    <div class="flex justify-between items-center p-5">
+      <h2 class="text-lg font-semibold">{% trans "Initialize Database" %}</h2>
+    </div>
+
+    <div class="p-5 py-0">
+      <ul class="progress">
+        {% for step in progress_steps %}
+          <li {% if step.active %}class="active"{% endif %}>
+            <div class="sec {% if forloop.counter0 > 0 %}flex flex-col {% if forloop.last %}items-end{% else %}items-center{% endif %}{% endif %}">
+              <span
+                class="bg-[#e54f38] h-[30px] w-[30px] flex items-center justify-center rounded-[50px] text-[white]"
+                >{{ step.step }}</span
+              >
+              <p class="text-[.8rem] mb-0">{% trans step.title %}</p>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="p-5">
+      <h2 class="text-lg font-semibold pb-5">{% trans "Company  Information" %}</h2>
+      <div hx-get="{% url "horilla_core:initialize_company_form"  %}" hx-trigger="load">
+    </div>
+</div>
+{% endblock login %}
