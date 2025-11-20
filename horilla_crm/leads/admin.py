@@ -3,12 +3,13 @@
 from auditlog.models import LogEntry
 from django.contrib import admin
 
-from .models import EmailToLeadConfig, Lead, LeadStatus
+from .models import EmailToLeadConfig, Lead, LeadCaptureForm, LeadStatus
 
 admin.site.register(Lead)
 admin.site.register(LeadStatus)
 admin.site.unregister(LogEntry)
 admin.site.register(EmailToLeadConfig)
+admin.site.register(LeadCaptureForm)
 
 
 @admin.register(LogEntry)

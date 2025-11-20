@@ -1,0 +1,308 @@
+{% extends "settings/settings.html" %}
+{% load static i18n %}
+
+{% block settings %}
+
+<div id="lead-form-builder">
+    <div class="mb-2">
+        <div class="flex justify-between items-center mb-2">
+            <h3 class="text-md font-semibold">{% trans "Lead Capture Form" %}</h3>
+        </div>
+    </div>
+
+    <form 
+        id="formBuilderForm" 
+        hx-post="{% url 'leads:save_form' %}"
+        hx-target="#formBuilderForm"
+        hx-swap="outerHTML"
+        class="overflow-hidden overflow-y-auto h-[calc(_100vh_-_230px_)] grid grid-cols-12 gap-5 pt-1 pr-1 custom-scroll"
+    >
+        {% csrf_token %}
+
+        <div class="col-span-6">
+            <h3 class="text-sm font-semibold border-b border-[solid] border-[#e7e7e7] pb-2 mb-3">
+                {% trans "Form Builder" %}
+            </h3>
+    
+            <!-- Form Name -->
+            <label for="form_name" class="text-xs text-color-600">{% trans "Form Name" %}</label>
+            <input
+                type="text"
+                id="form_name"
+                name="form_name"
+                value="{{ form_data.form_name|default:'Contact Us' }}"
+                required
+                placeholder="Enter form name"
+                hx-post="{% url 'leads:update_heading' %}"
+                hx-trigger="keyup changed delay:300ms"
+                hx-include="[name='color'], [name='language'], #form_name"
+                hx-target="#formHeading"
+                hx-swap="outerHTML"
+                class="mb-3 text-color-600 p-2 placeholder:text-xs pr-[40px] w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600 {% if errors.form_name %}border-red-500{% endif %}"
+            />
+            {% if errors.form_name %}
+                <div class="bg-red-50 text-red-500 px-3 py-2 rounded text-xs mt-1">
+                    {{ errors.form_name.0 }}
+                </div>
+            {% endif %}
+    
+            <!-- Field Selection -->
+            <div class="grid grid-cols-12 gap-2">
+                <div class="col-span-6">
+                    <h3 class="text-sm font-semibold mb-1">{% trans "Fields" %}</h3>
+                    <div id="availableFields" class="h-44 mb-3 overflow-hidden overflow-y-auto bg-[#00000008] rounded-md p-2">
+                        {% for field in lead_fields %}
+                        <button
+                            type="button"
+                            data-field="{{ field.name }}"
+                            data-verbose="{{ field.verbose_name }}"
+                            hx-post="{% url 'leads:add_field' %}"
+                            hx-target="#selectedFields"
+                            hx-swap="beforeend"
+                            hx-vals='{"field_name": "{{ field.name }}", "field_verbose": "{{ field.verbose_name }}"}'
+                            hx-include="[name='color'], [name='form_name'], [name='language']"
+                            class="available-field mb-1 bg-dark-50 rounded-md px-1.5 py-2 text-xs font-medium w-full text-left relative before:content-['+'] before:right-2 before:absolute before:text-lg before:top-0 before:bottom-0 before:m-auto hover:bg-gray-300 transition"
+                        >
+                            {{ field.verbose_name }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+    
+                <div class="col-span-6">
+                    <h3 class="text-sm font-semibold mb-1">{% trans "Selected Fields" %}</h3>
+                    <div id="selectedFields" class="h-44 overflow-hidden overflow-y-auto bg-[#00000008] rounded-md p-2">
+                        {% if form_data.selected_fields %}
+                            <!-- Render previously selected fields -->
+                            {% for field_name in form_data.selected_fields %}
+                                {% for field in lead_fields %}
+                                    {% if field.name == field_name %}
+                                    <div class="selected-field mb-1 bg-primary-100 rounded-md px-1.5 py-2 text-xs font-medium flex justify-between items-center">
+                                        <span>{{ field.verbose_name }}</span>
+                                        <input type="hidden" name="selected_fields[]" value="{{ field.name }}">
+                                        <button type="button" class="text-red-500 hover:text-red-700" onclick="this.closest('.selected-field').remove(); document.body.dispatchEvent(new Event('updatePreview'));">×</button>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-xs text-gray-400 text-center mt-16">{% trans "Click fields to add" %}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% if form.non_field_errors %}
+            <div class="bg-red-50 text-red-600 p-2 rounded text-xs mb-3">
+                {% for err in form.non_field_errors %}
+                    <p>{{ err }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+            <!-- Return URL Enable Toggle -->
+            <div class="text-sm flex gap-2 relative mb-3 mt-3 items-center">
+                <span class="text-xs text-color-600">{% trans "Enable Return URL" %}</span>
+                <label class="inline-flex items-center cursor-pointer">
+                    <input 
+                        type="checkbox" 
+                        id="return_url_enable" 
+                        name="return_url_enable" 
+                        class="sr-only peer"
+                        {% if form_data.return_url_enable %}checked{% endif %}
+                        hx-post="{% url 'leads:toggle_return_url' %}"
+                        hx-trigger="change"
+                        hx-target="#conditional-fields"
+                        hx-swap="innerHTML"
+                    />
+                    <div class="relative w-11 h-5 bg-gray-200 rounded-full peer peer-checked:bg-primary-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-6"></div>
+                </label>
+            </div>
+           
+
+            <!-- Conditional Fields Container -->
+            <div id="conditional-fields">
+                {% if form_data.return_url_enable %}
+                    <!-- Return URL -->
+                    <label for="return_url" class="text-xs text-color-600 flex gap-1">
+                        {% trans "Return URL" %}<span class="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="url"
+                        id="return_url"
+                        name="return_url"
+                        placeholder="https://example.com/thank-you"
+                        value="{{ form_data.return_url }}"
+                        required
+                        class="mb-3 text-color-600 p-2 placeholder:text-xs pr-[40px] w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600 {% if errors.return_url %}border-red-500{% endif %}"
+                    />
+                    {% if errors.return_url %}
+                        <div class="bg-red-50 text-red-500 px-3 py-2 rounded text-xs mt-1">
+                            {{ errors.return_url.0 }}
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <!-- Success Message (Default) -->
+                    <label for="success_message" class="text-xs text-color-600 flex gap-1">
+                        {% trans "Success Message" %}<span class="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="success_message"
+                        name="success_message"
+                        placeholder="Enter success message"
+                        value="{{ form_data.success_message|default:'Thank you for contacting us!' }}"
+                        required
+                        class="mb-3 text-color-600 p-2 placeholder:text-xs pr-[40px] w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600 {% if errors.success_message %}border-red-500{% endif %}"
+                    />
+                    {% if errors.success_message %}
+                        <div class="text-xs text-red-500 -mt-2 mb-2">{{ errors.success_message.0 }}</div>
+                    {% endif %}
+
+                    <!-- Success Description (Default) -->
+                    <label for="success_description" class="text-xs text-color-600 flex gap-1">
+                        {% trans "Success Description" %}<span class="text-red-500">*</span>
+                    </label>
+                    <textarea
+                        id="success_description"
+                        name="success_description"
+                        placeholder="Enter success description"
+                        rows="3"
+                        required
+                        class="mb-3 text-color-600 p-2 placeholder:text-xs pr-[40px] w-full border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600 {% if errors.success_description %}border-red-500{% endif %}"
+                    >{{ form_data.success_description|default:'We have received your information and will get back to you soon.' }}</textarea>
+                    {% if errors.success_description %}
+                        <div class="text-xs text-red-500 -mt-2 mb-2">{{ errors.success_description.0 }}</div>
+                    {% endif %}
+                {% endif %}
+            </div>
+    
+            <!-- Language -->
+            <div class="flex flex-col gap-2 mb-3">
+                <label for="language" class="text-xs text-color-600">{% trans "Language" %}</label>
+                <select 
+                    name="language" 
+                    id="language" 
+                    class="js-example-basic-single headselect w-full"
+                    hx-post="{% url 'leads:update_preview' %}"
+                    hx-trigger="change"
+                    hx-include="[name='selected_fields[]'], [name='color'], [name='form_name']"
+                    hx-target="#formPreview"
+                    hx-swap="innerHTML"
+                >
+                    <option value="en" {% if form_data.language == 'en' %}selected{% endif %}>English</option>
+                    <option value="ar" {% if form_data.language == 'ar' %}selected{% endif %}>Arabic</option>
+                    <option value="de" {% if form_data.language == 'de' %}selected{% endif %}>German</option>
+                    <option value="fr" {% if form_data.language == 'fr' %}selected{% endif %}>French</option>
+                </select>
+            </div>
+
+            <!-- Lead Owner -->
+            <div class="flex flex-col gap-2 mb-3">
+                <label class="text-xs text-color-600 flex gap-1" for="lead_owner">
+                    {% trans "Lead Owner" %}
+                    <span class="text-red-500">*</span>
+                </label>
+                <select 
+                    name="lead_owner" 
+                    id="lead_owner"
+                    required
+                    class="js-example-basic-single headselect w-full"
+                >
+                    <option value="">{% trans "Select Lead Owner" %}</option>
+
+                    {% for user in lead_owners %}
+                    <option value="{{ user.id }}"
+                            {% if form_data.lead_owner == user.id %} selected {% endif %}>
+                        {{ user.get_full_name|default:user.username }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                {% if errors.lead_owner %}
+                    <div class="bg-red-50 text-red-500 px-3 py-2 rounded text-xs mt-1">
+                        {{ errors.lead_owner.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+    
+            <!-- Color Picker -->
+            <div class="mt-3">
+                <label for="colorInput" class="text-xs text-color-600">Color</label>
+                <div class="relative">
+                    <input
+                        type="text"
+                        id="colorInput"
+                        name="header_color"
+                        readonly
+                        value="{{ form_data.color|default:'#ffffff' }}"
+                        placeholder="#ffffff"
+                        class="w-full pl-10 border-gray-300 focus:outline-none focus:border-primary-600 transition duration-300 mb-3 text-color-600 p-2 placeholder:text-xs pr-[40px] border border-dark-50 rounded-md mt-1 focus-visible:outline-0 placeholder:text-dark-100 text-sm [transition:.3s] focus:border-primary-600"
+                    />
+                    <input
+                        type="color"
+                        id="colorPicker"
+                        name="color"
+                        value="{{ form_data.color|default:'#ffffff' }}"
+                        hx-post="{% url 'leads:update_preview' %}"
+                        hx-trigger="change"
+                        hx-include="[name='selected_fields[]'], [name='language'], [name='form_name']"
+                        hx-target="#formPreview"
+                        hx-swap="innerHTML"
+                        class="absolute top-2.5 left-2 w-6 h-6 p-0 bg-transparent cursor-pointer"
+                        style="appearance: none; background-color: transparent; width: 97%; border-radius: 3px !important;"
+                        onchange="document.getElementById('colorInput').value = this.value"
+                    />
+                </div>
+            </div>
+    
+            <!-- Submit Button -->
+            <button
+                type="submit"
+                class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white] border"
+            >
+                {% trans "Generate" %}
+            </button>
+        </div>
+    
+        <!-- RIGHT COLUMN: Preview -->
+        <div class="col-span-6">
+            <div id="formPreview" class="p-5 border border-dark-50 rounded-md sticky top-0">
+                    <h3 id="formHeading" class="text-md font-semibold px-3 py-3 rounded-md bg-primary-200 text-primary-600 mb-4 items-center text-center">
+                       {{ form_data.form_name|default:"Contact Us" }}
+                    </h3>
+                    <p class="text-sm text-gray-400 text-center py-10">{% trans "Select fields to preview form" %}</p>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        // Handle field addition and removal tracking
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+            
+            // Update color input display
+            const colorPicker = document.getElementById('colorPicker');
+            const colorInput = document.getElementById('colorInput');
+            if (colorPicker && colorInput) {
+                colorInput.value = colorPicker.value;
+            }
+    
+            // Remove placeholder when first field is added
+            const selectedContainer = document.getElementById('selectedFields');
+            const placeholder = selectedContainer.querySelector('p.text-gray-400');
+            const hasSelectedFields = selectedContainer.querySelectorAll('.selected-field').length > 0;
+    
+            if (hasSelectedFields && placeholder) {
+                placeholder.remove();
+            } else if (!hasSelectedFields && !placeholder) {
+                selectedContainer.innerHTML = '<p class="text-xs text-gray-400 text-center mt-16">Click fields to add</p>';
+            }
+        });
+        
+        document.body.addEventListener('updatePreview', function() {
+            htmx.trigger('#colorPicker', 'change');
+        });
+  
+    </script>
+</div>
+{% endblock %}
+

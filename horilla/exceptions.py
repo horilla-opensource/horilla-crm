@@ -14,7 +14,7 @@ class HorillaHttp404(Exception):
             "The page you are looking for does not exist or may have been moved."
         ),
         context=None,
-        template="error/404.html",
+        template=None,
     ):
         """
         Initialize the HorillaHttp404 exception.
@@ -26,7 +26,7 @@ class HorillaHttp404(Exception):
         """
         self.message = message
         self.context = context or {}
-        self.template = template
+        self.template = template or "error/404.html"
         super().__init__(message)
 
     def as_response(self, request):

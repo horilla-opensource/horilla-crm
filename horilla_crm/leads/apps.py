@@ -11,14 +11,12 @@ class LeadsConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "horilla_crm.leads"
     verbose_name = _("Leads")
-    demo_data_files = [
-        (4, "load_data/lead_stage.json"),
-        (5, "load_data/leads.json"),
-    ]
 
-    demo_data_config = {
-        "key": "leads_count",
-        "display_name": _("Leads"),
+    demo_data = {
+        "files": [
+            (4, "load_data/lead_stage.json"),
+            (5, "load_data/leads.json"),
+        ],
         "order": 2,
     }
 

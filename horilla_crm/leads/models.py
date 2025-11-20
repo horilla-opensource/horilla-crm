@@ -253,7 +253,7 @@ class Lead(HorillaCoreModel):
         related_name="lead",
         verbose_name=_("Lead Status"),
     )
-    lead_company = models.CharField(max_length=100, verbose_name=_("Lead Company"))
+    lead_company = models.CharField(max_length=100, verbose_name=_("Company"))
     no_of_employees = models.IntegerField(
         null=True, blank=True, verbose_name=_("Total Employees")
     )
@@ -314,6 +314,7 @@ class Lead(HorillaCoreModel):
     LEAD_PROPERTY_LABELS = {"annual_revenue_calc": _("Annual Revenue 3x")}
 
     DYNAMIC_METHODS = ["get_edit_url"]
+    # Get field details
 
     def get_detail_url(self):
         """
@@ -444,3 +445,54 @@ class EmailToLeadConfig(HorillaCoreModel):
 
     def __str__(self):
         return f"{self.mail}"
+
+
+class LeadCaptureForm(HorillaCoreModel):
+    """Model to store lead capture form configurations"""
+
+    LANGUAGE_CHOICES = [
+        ("en", _("English")),
+        ("ar", _("Arabic")),
+        ("de", _("German")),
+        ("fr", _("French")),
+    ]
+
+    form_name = models.CharField(max_length=255, verbose_name=_("Form Name"))
+    selected_fields = models.TextField(verbose_name=_("Selected Fields"))
+    return_url_enable = models.BooleanField(
+        default=False, verbose_name=_("Enable Return URL")
+    )
+    return_url = models.URLField(blank=True, null=True, verbose_name=_("Return URL"))
+    success_message = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Success Message")
+    )
+    success_description = models.TextField(
+        blank=True, null=True, verbose_name=_("Success Description")
+    )
+    enable_recaptcha = models.BooleanField(
+        default=False, verbose_name=_("Enable Recaptcha")
+    )
+    language = models.CharField(
+        max_length=10,
+        choices=LANGUAGE_CHOICES,
+        default="en",
+        verbose_name=_("Language"),
+    )
+    header_color = models.CharField(max_length=7, verbose_name=_("Header Color"))
+    generated_html = models.TextField(
+        blank=True, null=True, verbose_name="Generated HTML"
+    )
+    lead_owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        verbose_name=_("Lead Owner"),
+        related_name="lead_capture_forms",
+    )
+
+    class Meta:
+        verbose_name = _("Lead Capture Form")
+        verbose_name_plural = _("Lead Capture Forms")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.form_name

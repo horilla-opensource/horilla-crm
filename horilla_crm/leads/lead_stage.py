@@ -122,16 +122,7 @@ class LeadStageListView(LoginRequiredMixin, HorillaListView):
                 "attrs": 'id="lead-stage-create"',
             }
 
-    @cached_property
-    def columns(self):
-        """Define columns for the list view"""
-        instance = self.model()
-        return [
-            (instance._meta.get_field("order").verbose_name, "order"),
-            (instance._meta.get_field("name").verbose_name, "name"),
-            (instance._meta.get_field("is_final").verbose_name, "is_final_col"),
-            (instance._meta.get_field("probability").verbose_name, "probability"),
-        ]
+    columns = ["order", "name", (_("Is Final Stage"), "is_final_col"), "probability"]
 
     @cached_property
     def actions(self):

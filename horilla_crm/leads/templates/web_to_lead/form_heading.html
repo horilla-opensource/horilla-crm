@@ -1,0 +1,12 @@
+{% load i18n %}
+
+{% if color == '#ffffff' or color == '#fff' %}
+    <h3 id="formHeading" class="text-md font-semibold px-3 py-3 rounded-md bg-primary-200 text-primary-600 mb-4 items-center text-center">
+        {{ form_name|default:_("Contact Us") }}
+    </h3>
+{% else %}
+    <h3 id="formHeading" class="text-lg font-semibold px-3 py-3 rounded-md mb-4 items-center text-center"
+        style="background-color: {{ color }}20; color: {{ color }};">
+        {{ form_name|default:_("Contact Us") }}
+    </h3>
+{% endif %}

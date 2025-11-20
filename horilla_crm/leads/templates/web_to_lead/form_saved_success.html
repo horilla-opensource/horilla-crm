@@ -1,0 +1,97 @@
+{% load i18n %}
+<div class="bg-white rounded-lg">
+    <!-- Success Message -->
+    <div class="flex items-center gap-3 p-2 mb-2 bg-yellow-50 border border-[#f3edb0] rounded-lg">
+            <p class="text-xs text-yellow-800">{% trans "Your lead capture form is ready to use." %}</p>
+    </div>
+    <div>
+        <div class="flex justify-between items-center mb-1">
+            <label class="text-xs font-semibold text-gray-700">{% trans "IFRAME EMBED CODE" %}</label>
+            <button 
+                onclick="copyEmbedCode()"
+                class="px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-xs font-medium"
+            >
+                {% trans "Copy Embed" %}
+            </button>
+        </div>
+        <div class="relative">
+            <pre id="embedCode" class="bg-gray-900 text-green-400 p-4 rounded-lg text-xs font-mono overflow-x-auto"><code>&lt;iframe src="{{ form_url }}" width="100%" height="600" frameborder="0" style="border: none;"&gt;&lt;/iframe&gt;</code></pre>
+        </div>
+        <p class="text-xs text-gray-600 mt-2">
+            {% trans "Copy and paste this embed code into your website's HTML where you want the form to appear." %}
+        </p>
+    </div>
+    <div class="mb-6">
+        <div class="flex justify-between items-center mb-2">
+            <label class="text-xs font-semibold text-gray-700">{% trans "GENERATED HTML CODE" %}</label>
+            <div class="flex gap-2">
+                <button
+                    onclick="copyHtmlCode()"
+                    class="px-3 py-1.5 bg-primary-600 text-white rounded-md  transition text-xs font-medium"
+                >
+                    {% trans "Copy Code" %}
+                </button>
+                <a
+                href="{{ form_url }}"
+                target="_blank"
+                class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition text-sm font-medium whitespace-nowrap"
+                        >
+                {% trans "Preview" %}
+                        </a>
+            </div>
+        </div>
+        <div class="relative">
+            <textarea 
+                id="htmlCode" 
+                readonly
+                class="w-full bg-gray-50 border border-dark-50 p-4 rounded-lg text-xs font-mono h-96 resize-none"
+                onclick="this.select()"
+            >{{ html_code }}</textarea>
+        </div>
+    </div>
+   
+    
+</div>
+
+<script>
+
+    
+    // Copy HTML Code
+    function copyHtmlCode() {
+        const code = document.getElementById('htmlCode').textContent;
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showCopyFeedback(event.target, 'Code Copied!');
+    }
+    
+    // Copy Embed Code
+    function copyEmbedCode() {
+        const code = document.getElementById('embedCode').textContent;
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showCopyFeedback(event.target, 'Embed Copied!');
+    }
+    
+    // Show copy feedback
+    function showCopyFeedback(button, message) {
+        const originalText = button.textContent;
+        const originalClasses = button.className;
+        
+        button.textContent = message;
+        button.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'bg-purple-600', 'hover:bg-purple-700');
+        button.classList.add('bg-green-600', 'hover:bg-green-700');
+        
+        setTimeout(() => {
+            button.textContent = originalText;
+            button.className = originalClasses;
+        }, 2000);
+    }
+</script>

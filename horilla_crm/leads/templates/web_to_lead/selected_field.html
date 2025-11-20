@@ -1,0 +1,22 @@
+<div class="selected-field-wrapper" data-field="{{ field_name }}">
+    <button
+        type="button"
+        data-field="{{ field_name }}"
+        hx-post="{% url 'leads:remove_field' %}"
+        hx-vals='{"field_name": "{{ field_name }}"}'
+        hx-target="closest .selected-field-wrapper"
+        hx-swap="outerHTML"
+        hx-trigger="click"
+        class="selected-field mb-1 bg-red-100 rounded-md px-2 py-2 text-xs font-medium w-full text-left hover:bg-red-200 transition relative"
+    >
+        {{ field_verbose }}
+        <span class="absolute right-2 top-1/2 -translate-y-1/2 text-red-600 font-bold">×</span>
+    </button>
+
+    <input type="hidden" name="selected_fields[]" value="{{ field_name }}" />
+</div>
+
+<script>
+    document.querySelector('[data-field="{{ field_name }}"].available-field').style.display = 'none';
+    htmx.trigger('#colorPicker', 'change');
+</script>

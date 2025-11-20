@@ -1,0 +1,92 @@
+{% load i18n %}
+
+{% if color == '#ffffff' or color == '#fff' %}
+    <h3 id="formHeading"
+        class="text-md font-semibold px-3 py-3 rounded-md bg-primary-200 text-primary-600 mb-4 items-center text-center">
+        {{ form_name|default:_("Contact Us") }}
+    </h3>
+{% else %}
+    <h3 id="formHeading"
+        class="text-lg font-semibold px-3 py-3 rounded-md mb-4 items-center text-center"
+        style="background-color: {{ color }}20; color: {{ color }};">
+        {{ form_name|default:_("Contact Us") }}
+    </h3>
+{% endif %}
+
+{% if fields %}
+    {% for field in fields %}
+
+        <label for="preview_{{ field.name }}" class="text-xs text-gray-700 block mb-1">
+            {{ field.verbose_name }}
+            {% if field.required %}<span class="text-red-500">*</span>{% endif %}
+        </label>
+
+        {% if field.field_type == 'CharField' or field.field_type == 'EmailField' %}
+            <input
+                type="{% if field.field_type == 'EmailField' %}email{% else %}text{% endif %}"
+                placeholder="{% blocktrans with vname=field.verbose_name|lower %}Enter {{ vname }}{% endblocktrans %}"
+                class="mb-3 text-gray-600 p-2 w-full border border-dark-50 rounded-md text-sm focus:outline-none"
+                disabled
+            />
+
+        {% elif field.field_type == 'TextField' %}
+            <textarea
+                placeholder="{% blocktrans with vname=field.verbose_name|lower %}Enter {{ vname }}{% endblocktrans %}"
+                rows="3"
+                class="mb-3 text-gray-600 p-2 w-full border border-dark-50 rounded-md text-sm focus:outline-none"
+                disabled
+            ></textarea>
+
+        {% elif field.field_type == 'IntegerField' or field.field_type == 'DecimalField' %}
+            <input
+                type="number"
+                placeholder="{% blocktrans with vname=field.verbose_name|lower %}Enter {{ vname }}{% endblocktrans %}"
+                {% if field.field_type == 'DecimalField' %}step="0.01"{% endif %}
+                class="mb-3 text-gray-600 p-2 w-full border border-dark-50 rounded-md text-sm focus:outline-none"
+                disabled
+            />
+
+        {% elif field.choices %}
+            <select
+                class="mb-3 text-gray-600 p-2 w-full border border-dark-50 rounded-md text-sm focus:outline-none"
+                disabled
+            >
+                <option value="">
+                    {% blocktrans with vname=field.verbose_name|lower %}Select {{ vname }}{% endblocktrans %}
+                </option>
+
+                {% for choice_value, choice_label in field.choices %}
+                    <option value="{{ choice_value }}">{{ choice_label }}</option>
+                {% endfor %}
+            </select>
+
+        {% else %}
+            <input
+                type="text"
+                placeholder="{% blocktrans with vname=field.verbose_name|lower %}Enter {{ vname }}{% endblocktrans %}"
+                class="mb-3 text-gray-600 p-2 w-full border border-dark-50 rounded-md text-sm focus:outline-none"
+                disabled
+            />
+        {% endif %}
+
+    {% endfor %}
+    {% if color == '#ffffff' or color == '#fff' %}
+        <button type="button"
+            class="w-full text-sm font-medium px-4 py-3 rounded-md text-gray-700 bg-primary-600 text-white"
+            disabled>
+            {% trans "Submit" %}
+        </button>
+    {% else %}
+        <button type="button"
+            class="w-full text-sm font-medium px-4 py-3 rounded-md text-white"
+            style="background-color: {{ color }};"
+            disabled>
+            {% trans "Submit" %}
+        </button>
+    {% endif %}
+
+{% else %}
+    <p class="text-sm text-gray-400 text-center py-10">
+        {% trans "Select fields to preview form" %}
+    </p>
+{% endif %}

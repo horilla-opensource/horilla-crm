@@ -48,13 +48,22 @@ class LeadsSettings:
             "perm": "leads.view_leadstatus",
         },
         {
-            "label": "Mail to Lead",
+            "label": _("Mail to Lead"),
             "url": reverse_lazy("leads:mail_to_lead_view"),
             "hx-target": "#settings-content",
             "hx-push-url": "true",
             "hx-select": "#mail-to-lead-view",
             "hx-select-oob": "#settings-sidebar",
             "perm": "leads.view_emailtoleadconfig",
+        },
+        {
+            "label": _("Web to Lead"),
+            "url": reverse_lazy("leads:form_builder"),
+            "hx-target": "#settings-content",
+            "hx-push-url": "true",
+            "hx-select": "#lead-form-builder",
+            "hx-select-oob": "#settings-sidebar",
+            "perm": "leads.add_leadcaptureform",
         },
     ]
 

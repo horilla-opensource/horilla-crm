@@ -1,8 +1,9 @@
 """URL configurations for the leads app."""
 
 from django.urls import path
+from django.views.generic import TemplateView
 
-from horilla_crm.leads import mail_to_lead
+from horilla_crm.leads import mail_to_lead, web_to_lead
 
 from . import lead_stage, views
 
@@ -174,5 +175,40 @@ urlpatterns = [
         "mail-to-lead-delete-view/<int:pk>/",
         mail_to_lead.EmailToLeadConfigDeleteView.as_view(),
         name="mail_to_lead_delete_view",
+    ),
+    path(
+        "form-builder/", web_to_lead.LeadFormBuilderView.as_view(), name="form_builder"
+    ),
+    # HTMX endpoints
+    path(
+        "form-builder/add-field/", web_to_lead.AddFieldView.as_view(), name="add_field"
+    ),
+    path(
+        "form-builder/remove-field/",
+        web_to_lead.RemoveFieldView.as_view(),
+        name="remove_field",
+    ),
+    path(
+        "form-builder/preview/",
+        web_to_lead.UpdateFormPreviewView.as_view(),
+        name="update_preview",
+    ),
+    path(
+        "form-builder/save/", web_to_lead.SaveLeadFormView.as_view(), name="save_form"
+    ),
+    path(
+        "update-heading/",
+        web_to_lead.UpdateFormHeadingView.as_view(),
+        name="update_heading",
+    ),
+    path(
+        "toggle-return-url/",
+        web_to_lead.ToggleReturnUrlView.as_view(),
+        name="toggle_return_url",
+    ),
+    path(
+        "capture/<int:form_id>/",
+        web_to_lead.PublicLeadFormView.as_view(),
+        name="public_lead_form",
     ),
 ]

@@ -1,0 +1,139 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ form_obj.language|default:'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ form_obj.form_name|default:'Contact Form' }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; } 
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            padding: 30px;
+        }
+        .form-container {
+            background: white;
+            max-width: 500px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 7px rgba(0,0,0,0.1);
+        }
+        .form-label {
+            font-size: 13px;
+            margin-bottom: 5px;
+            display: block;
+            color: #444;
+        }
+        .form-input {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #dedede;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #444;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .htmx-indicator {
+            display: none;
+        }
+        .htmx-request .htmx-indicator {
+            display: inline;
+        }
+        .htmx-request.htmx-indicator {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container" id="form-container">
+    {% if form_obj.header_color == '#ffffff' or not form_obj.header_color %}
+        <h2 style="background-color: rgb(254 246 245); color: rgb(229 79 56); font-size: 1rem; 
+                   font-weight: 600; padding: 0.75rem; border-radius: 0.375rem; 
+                   margin-bottom: 1rem; text-align: center;">
+            {{ form_obj.form_name|default:_('Contact Us') }}
+        </h2>
+    {% else %}
+        <h2 style="background: {{ form_obj.header_color }}20; color: {{ form_obj.header_color }};
+                   font-size: 1rem; font-weight: 600; padding: 0.75rem; border-radius: 0.375rem; 
+                   margin-bottom: 1rem; text-align: center;">
+            {{ form_obj.form_name|default:_('Contact Us') }}
+        </h2>
+    {% endif %}
+    
+    <form hx-post="{% url 'leads:public_lead_form' form_id=view.kwargs.form_id %}"
+          hx-target="#form-container"
+          hx-indicator="#submit-indicator"
+          hx-swap="innerHTML">
+        {% csrf_token %}
+        {% for field in selected_fields_parsed %}
+            <label class="form-label">
+                {{ field.verbose_name }} {% if field.required %}<span style="color:red">*</span>{% endif %}
+            </label>
+            {% if field.field_type in 'CharField,EmailField' %}
+                <input type="{% if field.field_type == 'EmailField' %}email{% else %}text{% endif %}"
+                       name="{{ field.name }}" class="form-input"
+                       placeholder="{% trans 'Enter' %} {{ field.verbose_name|lower }}"
+                       {% if field.required %}required{% endif %}>
+            {% elif field.field_type == 'TextField' %}
+                <textarea name="{{ field.name }}" rows="3" class="form-input"
+                          placeholder="{% trans 'Enter' %} {{ field.verbose_name|lower }}"
+                          {% if field.required %}required{% endif %}></textarea>
+            {% elif field.field_type in 'IntegerField,DecimalField' %}
+                <input type="number" name="{{ field.name }}" class="form-input"
+                       {% if field.field_type == 'DecimalField' %}step="0.01"{% endif %}
+                       placeholder="{% trans 'Enter' %} {{ field.verbose_name|lower }}"
+                       {% if field.required %}required{% endif %}>
+            {% elif field.choices %}
+                <select name="{{ field.name }}" class="form-input" {% if field.required %}required{% endif %}>
+                    <option value="">{% trans 'Select' %} {{ field.verbose_name|lower }}</option>
+                    {% for value, label in field.choices %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+
+            {% else %}
+                <input type="text" name="{{ field.name }}" class="form-input"
+                       placeholder="{% trans 'Enter' %} {{ field.verbose_name|lower }}"
+                       {% if field.required %}required{% endif %}>
+            {% endif %}
+
+        {% endfor %}
+        {% if form_obj.header_color == '#ffffff' or not form_obj.header_color %}
+            <button type="submit" class="submit-btn"
+                    style="background-color: hsl(8, 77%, 56%); color: white;">
+                <span class="htmx-indicator">{% trans "Submitting..." %}</span>
+                <span class="htmx-request" style="display:none;">{% trans "Submitting..." %}</span>
+                <span class="button-text">{% trans "Submit" %}</span>
+            </button>
+        {% else %}
+            <button type="submit" class="submit-btn" style="background: {{ form_obj.header_color }}; color:white;">
+                <span class="flex item-center gap-2">
+                    {% trans "Save" %}
+                    <span id="submit-indicator" class="htmx-indicator">
+                        <img src="{% static '/assets/icons/spinner.svg' %}" alt="loading..." width="25" />
+                    </span>
+                </span>
+            </button>
+        {% endif %}
+    </form>
+
+</div>
+</body>
+</html>
