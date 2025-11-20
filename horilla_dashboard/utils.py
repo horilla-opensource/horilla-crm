@@ -725,6 +725,7 @@ class DefaultDashboardGenerator:
         """
         Build table context with pagination for infinite scroll
         """
+
         try:
             request = getattr(_thread_local, "request", None)
             qs = self.get_queryset(model_info["model"])
@@ -816,6 +817,7 @@ class DefaultDashboardGenerator:
                 "current_direction": sort_direction if request else "",
                 "main_url": "",
                 "view_type": "dashboard",
+                "no_record_section": True,
                 "no_record_msg": no_record_msg,
                 "no_record_add_button": {},
                 "page_obj": page_obj,

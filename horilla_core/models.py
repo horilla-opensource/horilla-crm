@@ -2503,9 +2503,9 @@ class RecycleBin(models.Model):
     Model to store soft-deleted records with their serialized data.
     """
 
-    model_name = models.CharField(max_length=255)  # Name of the original model
-    record_id = models.CharField(max_length=255)  # ID of the original record
-    data = models.TextField()  # Serialized data (JSON)
+    model_name = models.CharField(max_length=255)
+    record_id = models.CharField(max_length=255)
+    data = models.TextField()
     deleted_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Deleted At"))
     deleted_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -2520,7 +2520,7 @@ class RecycleBin(models.Model):
         null=True,
         blank=True,
         verbose_name=_("Company"),
-    )  # Company associated with the deleted record
+    )
     objects = CompanyFilteredManager()
 
     class Meta:
@@ -2533,15 +2533,10 @@ class RecycleBin(models.Model):
     def get_model_display_name(self):
         """
         Returns just the model name in a human-readable format
-        Example: "opportunities.bigdealalert" → "BigDealAlert"
         """
-        # Split on dots and take the last part (the model name)
         model_part = self.model_name.split(".")[-1]
 
-        # Convert snake_case to PascalCase (if needed)
         return "".join(word.title() for word in model_part.split("_"))
-
-    import json
 
     def record_name(self):
         """
@@ -2551,30 +2546,8 @@ class RecycleBin(models.Model):
 
         data = json.loads(self.data)
 
-        # Preferred keys in priority order
-        preferred_keys = [
-            "name",
-            "alert_name",
-            "title",
-            "subject",
-            "campaign_name",
-            "first_name",
-            "team_role_name",
-            "customer_role_name",
-            "department_name",
-            "role_name",
-            "partner_role_name",
-        ]
-
-        for key in preferred_keys:
-            if key in data and data[key]:
-                return str(data[key])
-
-        for key, value in data.items():
-            if isinstance(value, str) and value.strip():
-                return value.strip()
-
-        return f"{self.get_model_display_name()} #{self.record_id}"
+        if "__str__" in data and data["__str__"]:
+            return data["__str__"]
 
     def get_edit_url(self):
         """
@@ -2600,26 +2573,24 @@ class RecycleBin(models.Model):
         """
 
         data = {}
+        try:
+            data["__str__"] = str(obj)
+        except:
+            data["__str__"] = None
+
         for field in obj._meta.fields:
-            if field.name in ["id"]:  # Exclude fields as needed
+            if field.name in ["id"]:
                 continue
             value = getattr(obj, field.name, None)
 
             if value is not None:
                 if isinstance(value, (datetime, date)):
-                    value = (
-                        value.isoformat()
-                    )  # Convert datetime/date to ISO format string
+                    value = value.isoformat()
                 elif field.is_relation:
-                    # Handle ForeignKey or other relations
                     value = value.pk if value else None
-                    # value = str(value) if value else None
                 elif isinstance(value, (bytes, bytearray)):
-                    value = value.decode(
-                        "utf-8", errors="ignore"
-                    )  # Convert bytes to string
+                    value = value.decode("utf-8", errors="ignore")
                 elif not isinstance(value, (str, int, float, bool, type(None))):
-                    # Fallback: convert to string for other non-serializable types
                     value = str(value)
                 data[field.name] = value
             else:
