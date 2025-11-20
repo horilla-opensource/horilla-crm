@@ -109,16 +109,7 @@ class MailTemplateListView(LoginRequiredMixin, HorillaListView):
                 "attrs": {"id": "mail-template-create"},
             }
 
-    @cached_property
-    def columns(self):
-        instance = self.model()
-        return [
-            (instance._meta.get_field("title").verbose_name, "title"),
-            (
-                instance._meta.get_field("content_type").verbose_name,
-                "get_related_model",
-            ),
-        ]
+    columns = ["title", (_("Related Model"), "get_related_model")]
 
     @cached_property
     def actions(self):

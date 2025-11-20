@@ -109,13 +109,7 @@ class MailServerListView(LoginRequiredMixin, HorillaListView):
     list_column_visibility = False
     action_method = "custom_actions"
 
-    @cached_property
-    def columns(self):
-        instance = self.model()
-        return [
-            (instance._meta.get_field("username").verbose_name, "username"),
-            (instance._meta.get_field("type").verbose_name, "get_type_display"),
-        ]
+    columns = ["username", "type"]
 
     def get_queryset(self):
         queryset = super().get_queryset()

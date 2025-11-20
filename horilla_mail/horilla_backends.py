@@ -437,7 +437,7 @@ class HorillaDefaultMailBackend(EmailBackend):
     @property
     def dynamic_password(self):
         if self.configuration and self.configuration.type == "outlook":
-            return None  # Not used for Outlook OAuth
+            return None
         return (
             self.configuration.get_decrypted_password()
             if self.configuration
