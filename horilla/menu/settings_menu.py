@@ -14,7 +14,17 @@ def get_settings_menu(request=None) -> List[Dict]:
     """Return all registered settings pages as dicts (optionally filter by request)."""
     pages = []
 
-    for cls in sorted(settings_registry, key=lambda c: getattr(c, "order", 0)):
+    for cls in sorted(
+        settings_registry,
+        key=lambda c: (
+            (
+                0
+                if hasattr(c, "order") and getattr(c, "order") >= 0
+                else 1 if not hasattr(c, "order") else 2
+            ),
+            getattr(c, "order", 0),
+        ),
+    ):
         obj = cls()
 
         condition = getattr(obj, "condition", True)
@@ -32,7 +42,13 @@ def get_settings_menu(request=None) -> List[Dict]:
 
         perm_list = []
         items = getattr(obj, "items", [])
-        items = sorted(items, key=lambda i: i.get("order", 0))
+        items = sorted(
+            items,
+            key=lambda i: (
+                0 if "order" in i and i["order"] >= 0 else 1 if "order" not in i else 2,
+                i.get("order", 0),
+            ),
+        )
 
         for item in items:
             if callable(item):

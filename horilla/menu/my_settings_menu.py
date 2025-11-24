@@ -36,4 +36,14 @@ def get_my_settings_menu(request=None) -> list[dict]:
         }
         items.append(data)
 
-    return sorted(items, key=lambda x: x["order"])
+    return sorted(
+        items,
+        key=lambda x: (
+            (
+                0
+                if x["order"] is not None and x["order"] >= 0
+                else 1 if x["order"] is None else 2
+            ),
+            x["order"] if x["order"] is not None else 0,
+        ),
+    )

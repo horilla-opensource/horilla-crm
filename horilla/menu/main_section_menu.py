@@ -33,5 +33,14 @@ def get_main_section_menu(request=None) -> List[Dict]:
         }
         pages.append(item)
 
-    pages.sort(key=lambda x: (x["position"] is None, x["position"]))
+    pages.sort(
+        key=lambda x: (
+            (
+                0
+                if x["position"] is not None and x["position"] >= 0
+                else 1 if x["position"] is None else 2
+            ),
+            x["position"] if x["position"] is not None else 0,
+        )
+    )
     return pages
