@@ -10,10 +10,17 @@
         <script src=" {% static 'assets/js/flowbite/flowbite.min.js' %}"></script>
     </head>
     <body class="bg-secondary-50 font-[Inter,_sans-serif]">
+        {% if modal %}
+            <div class="absolute top-4 right-4 z-50">
+                <button type="button" onclick="closeModal();"
+                    class="ttext-gray-500 hover:text-red-500 text-xl">
+                    <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
+                </button>
+            </div>
+        {% endif%}
         <div class="p-4">
             <div class="bg-white rounded-xl [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_5%)] {% if not request.META.HTTP_HX_REQUEST %}h-[95vh]{% endif %} p-5 flex items-center justify-center">
                 <div class="error-container flex flex-col items-center text-center">
-
                     {% block content %}
 
                     {% endblock %}
