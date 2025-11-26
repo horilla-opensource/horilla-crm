@@ -11,7 +11,6 @@ from horilla_core.models import (
 from horilla_generics.filters import HorillaFilterSet
 
 
-# Define your core filters here
 class UserFilter(HorillaFilterSet):
     class Meta:
         model = HorillaUser

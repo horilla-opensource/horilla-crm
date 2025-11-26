@@ -155,12 +155,21 @@ class HorillaFilterSet(django_filters.FilterSet):
         return queryset
 
     def filter_search(self, queryset, name, value):
-        """Handle search across specified fields"""
+        """Handle search across specified fields with smart full name matching"""
         search_fields = getattr(self.Meta, "search_fields", [])
         if not value or not search_fields:
             return queryset
 
         queries = Q()
+
+        # Regular field search
         for field in search_fields:
             queries |= Q(**{f"{field}__icontains": value})
+
+        if " " in value.strip():
+            parts = value.strip().split(None, 1)  # Split on first space
+            if len(parts) == 2:
+                first, last = parts
+                queries |= Q(first_name__icontains=first, last_name__icontains=last)
+
         return queryset.filter(queries)
