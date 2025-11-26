@@ -1,11 +1,13 @@
-
-{% load static i18n %}
+{% load static i18n horilla_tags %}
 
 <div class="flex flex-wrap justify-between items-center h-14">
     <h3 class="text-md font-semibold">{% trans 'Holidays' %}</h3>
-    <button id="toggleFiscalBtn" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
-        hx-get="{% url 'horilla_core:holiday_create_form' %}" hx-target="#modalBox" hx-swap="innerHTML" onclick="openModal()">
-        {% trans 'Add Holidays' %}
-    </button>
+    {% has_perm "horilla_core.add_holiday" as can_add_holiday %}
+        {% if can_add_holiday%}
+        <button id="toggleFiscalBtn" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+            hx-get="{% url 'horilla_core:holiday_create_form' %}" hx-target="#modalBox" hx-swap="innerHTML" onclick="openModal()">
+            {% trans 'Add Holidays' %}
+        </button>
+    {% endif %}
 </div>
 <div id="mainSession"  hx-get="{% url 'horilla_core:holiday_list_view' %}" hx-trigger="load"></div>
