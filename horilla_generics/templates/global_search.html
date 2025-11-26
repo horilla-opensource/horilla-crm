@@ -61,7 +61,7 @@
                       <div class="flex justify-between w-full">
                         <div class="flex gap-2 items-center">
                           <i class="{{ model_config.model_name.icons.icon }} {{ model_config.model_name.icons.text_color }}"></i>
-                          {{ model_name }}
+                          {{ model_config|get_item:model_name|get_item:'verbose_name'|default:model_name }}
                         </div>
                         <span class="bg-white text-primary-600 p-2 h-6 font-semibold rounded-full flex items-center justify-center">
                           {{ results.count }}

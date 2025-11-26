@@ -82,6 +82,9 @@ class GlobalSearchView(LoginRequiredMixin, View):
         for model in all_models:
             app_label = model._meta.app_label
             model_name = model._meta.model_name.capitalize()
+            model_verbose_name = (
+                model._meta.verbose_name_plural or model._meta.verbose_name
+            )
 
             if model_name.lower() not in include_models_lower:
                 continue
@@ -137,6 +140,7 @@ class GlobalSearchView(LoginRequiredMixin, View):
                 "max_results": self.default_max_results,
                 "model": model,
                 "columns": display_columns,
+                "verbose_name": model_verbose_name,
             }
 
         return model_config
@@ -313,6 +317,7 @@ class GlobalSearchView(LoginRequiredMixin, View):
         list_view.kwargs = {}
         list_view.paginate_by = 100
         list_view.object_list = results
+        list_view.table_height = False
         list_view.table_height_as_class = "h-[650px]"
         list_view.bulk_select_option = False
         list_view.clear_session_button_enabled = False
