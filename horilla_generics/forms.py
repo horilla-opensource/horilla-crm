@@ -12,7 +12,7 @@ from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import Country, CountryField
-from django_summernote.widgets import SummernoteWidget
+from django_summernote.widgets import SummernoteInplaceWidget
 
 from horilla_core.models import HorillaAttachment, KanbanGroupBy, ListColumnVisibility
 from horilla_utils.middlewares import _thread_local
@@ -1258,7 +1258,7 @@ class HorillaAttachmentForm(forms.ModelForm):
                     "id": "attachmentUpload",
                 }
             ),
-            "description": SummernoteWidget(
+            "description": SummernoteInplaceWidget(
                 attrs={
                     "summernote": {
                         "width": "100%",
