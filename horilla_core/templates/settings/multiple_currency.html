@@ -1,5 +1,6 @@
 {% load static %}{% load i18n %}{% load horilla_tags %}
 <div id="currency-view-container" class="ps-3" >
+
   {% if not has_company %}
     <div class="flex justify-between items-center h-20">
     </div>
@@ -11,7 +12,17 @@
         {% trans "Please create or activate your company." %}
     </p>
   {% else %}
-    {% if cmp.activate_multiple_currencies and request.GET.dated_exchange == 'true' %}
+  {% has_perm "horilla_core.add_multiplecurrency" as add_currency %}
+  {% has_perm "horilla_core.view_multiplecurrency" as view_currency %}
+  {% has_perm "horilla_core.change_multiplecurrency" as change_currency %}
+  {% has_perm "horilla_core.change_company" as change_company %}
+  {% has_perm "horilla_core.view_datedconversionrate" as view_datedconversion %}
+  {% has_perm "horilla_core.add_datedconversionrate" as add_datedconversion %}
+
+
+
+
+    {% if cmp.activate_multiple_currencies and request.GET.dated_exchange == 'true' and view_datedconversion  %}
       <div class="flex flex-wrap justify-between items-center h-14">
         <div class="flex gap-2 items-center">
           <button class="text-sm items-center mb-2 mt-2 text-primary-600"
@@ -37,13 +48,15 @@
               </option>
             {% endfor %}
           </select>
-          <button id="exchange-rates-btn" class="w-full text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
-            hx-get="{% url 'horilla_core:dated_conversion_rate_view' %}"
-            hx-target="#modalBox"
-            hx-swap="innerHTML"
-            hx-on:click="openModal();">
-            {% trans 'New Exchange Rates' %}
-          </button>
+          {% if   add_datedconversion or request.user.is_superuser %}
+            <button id="exchange-rates-btn" class="w-full text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+              hx-get="{% url 'horilla_core:dated_conversion_rate_view' %}"
+              hx-target="#modalBox"
+              hx-swap="innerHTML"
+              hx-on:click="openModal();">
+              {% trans 'New Exchange Rates' %}
+            </button>
+          {% endif %}
         </div>
       </div>
       <p class="text-sm mb-3">
@@ -60,44 +73,55 @@
         <h3 class="text-md font-semibold">{% trans  'Currency Management' %}</h3>
         {% if cmp.activate_multiple_currencies %}
           <div class="flex gap-2 justify-items-center">
-            <button id="add-currency-btn" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
-              hx-get="{% url 'horilla_core:add_currency' %}" hx-target="#modalBox" hx-swap="innerHTML" onclick="openModal()">
-              {% trans 'Add Currency' %}
-            </button>
-            <div class="relative dropdown-wrapper">
-              <button id="dropdownLeftEndButton" type="button" class="border border-[#e9e9e9] text-sm px-4 py-2 rounded-md  transition duration-300" >
-                <img src="/static/assets/icons/dots.svg" alt="" width="4">
+
+            {% if add_currency or request.user.is_superuser  %}
+              <button id="add-currency-btn" class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+                hx-get="{% url 'horilla_core:add_currency' %}" hx-target="#modalBox" hx-swap="innerHTML" onclick="openModal()">
+                {% trans 'Add Currency' %}
               </button>
-              <div class="dropdown-content absolute z-10 bg-white rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_8%)] min-w-[200px] py-2 right-0">
-                <ul class="text-sm">
-                  <li>
-                    <a class="px-4 py-1.5 hover:text-primary-600 cursor-pointer transition duration-300 text-sm gap-4 items-center flex w-full"
-                      hx-get="{% url 'horilla_core:change_default_currency_view' %}"
-                      hx-target="#modalBox"
-                      hx-swap="innerHTML"
-                      hx-on:click="openModal();"> {% trans 'Change Default Currency' %}
-                    </a>
-                  </li>
-                  <li>
-                    <a class="px-4 py-1.5 hover:text-primary-600 cursor-pointer transition duration-300 text-sm gap-4 items-center flex w-full"
-                      hx-get="{% url 'horilla_core:conversion_rate_view' %}"
-                      hx-target="#modalBox"
-                      hx-swap="innerHTML"
-                      hx-on:click="openModal();"> {% trans 'Edit Conversion Rates' %}
-                    </a>
-                  </li>
-                  <li>
-                    <a class="px-4 py-1.5 hover:text-primary-600 cursor-pointer transition duration-300 text-sm gap-4 items-center flex w-full"
-                      hx-get="{% url 'horilla_core:multiple_currency' %}?dated_exchange=true"
-                      hx-target="#tab-currency-view-content"
-                      hx-swap="innerHTML"
-                      hx-push-url="?dated_exchange=true"
-                      > {% trans 'Dated Exchange Rates' %}
-                    </a>
-                  </li>
-                </ul>
+            {% endif %}
+            {% if change_currency   or  view_datedconversion or request.user.is_superuser %}
+              <div class="relative dropdown-wrapper">
+                <button id="dropdownLeftEndButton" type="button" class="border border-[#e9e9e9] text-sm px-4 py-2 rounded-md  transition duration-300" >
+                  <img src="/static/assets/icons/dots.svg" alt="" width="4">
+                </button>
+                <div class="dropdown-content absolute z-10 bg-white rounded-lg [box-shadow:0px_0px_20px_0px_rgb(0_0_0_/_8%)] min-w-[200px] py-2 right-0">
+                  <ul class="text-sm">
+                    {% if change_currency and change_company  or request.user.is_superuser  %}
+                      <li>
+                        <a class="px-4 py-1.5 hover:text-primary-600 cursor-pointer transition duration-300 text-sm gap-4 items-center flex w-full"
+                          hx-get="{% url 'horilla_core:change_default_currency_view' %}"
+                          hx-target="#modalBox"
+                          hx-swap="innerHTML"
+                          hx-on:click="openModal();"> {% trans 'Change Default Currency' %}
+                        </a>
+                      </li>
+                    {% endif %}
+                    {% if change_currency  or request.user.is_superuser  %}
+                      <li>
+                        <a class="px-4 py-1.5 hover:text-primary-600 cursor-pointer transition duration-300 text-sm gap-4 items-center flex w-full"
+                          hx-get="{% url 'horilla_core:conversion_rate_view' %}"
+                          hx-target="#modalBox"
+                          hx-swap="innerHTML"
+                          hx-on:click="openModal();"> {% trans 'Edit Conversion Rates' %}
+                        </a>
+                      </li>
+                    {% endif %}
+                    {% if view_datedconversion  or request.user.is_superuser  %}
+                      <li>
+                        <a class="px-4 py-1.5 hover:text-primary-600 cursor-pointer transition duration-300 text-sm gap-4 items-center flex w-full"
+                          hx-get="{% url 'horilla_core:multiple_currency' %}?dated_exchange=true"
+                          hx-target="#tab-currency-view-content"
+                          hx-swap="innerHTML"
+                          hx-push-url="?dated_exchange=true"
+                          > {% trans 'Dated Exchange Rates' %}
+                        </a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </div>
               </div>
-            </div>
+            {% endif %}
           </div>
         {% endif %}
       </div>
@@ -107,22 +131,24 @@
           {{ obj.get_currency_display }} - ({{ obj.currency }})
         </span>
       </p>
-      <div class="text-sm font-semibold flex gap-2 relative mb-3">
-        {% trans 'Enable Multiple Currency' %}
-        <label class="inline-flex items-center cursor-pointer">
-          <input type="checkbox"
-                value=""
-                class="sr-only peer"
-                {% if cmp.activate_multiple_currencies %}checked {% endif %}
-                hx-post="{% url 'horilla_core:multiple_currency' %}"
-                hx-trigger="change"
-                hx-target="#currency-view-container"
-                hx-swap="outerHTML" />
-          <div
-            class="relative w-11 h-5 bg-gray-200 rounded-full peer peer-checked:bg-primary-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-6">
-          </div>
-        </label>
-      </div>
+      {% if  change_company  or request.user.is_superuser  %}
+        <div class="text-sm font-semibold flex gap-2 relative mb-3">
+          {% trans 'Enable Multiple Currency' %}
+          <label class="inline-flex items-center cursor-pointer">
+            <input type="checkbox"
+                  value=""
+                  class="sr-only peer"
+                  {% if cmp.activate_multiple_currencies %}checked {% endif %}
+                  hx-post="{% url 'horilla_core:multiple_currency' %}"
+                  hx-trigger="change"
+                  hx-target="#currency-view-container"
+                  hx-swap="outerHTML" />
+            <div
+              class="relative w-11 h-5 bg-gray-200 rounded-full peer peer-checked:bg-primary-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-6">
+            </div>
+          </label>
+        </div>
+      {% endif %}
       {% if cmp.activate_multiple_currencies %}
         <div id="currency-list"  hx-get="{% url 'horilla_core:currency_list_view' %}?{{request.GET.urlencode}}" hx-trigger="load"></div>
       {% endif %}

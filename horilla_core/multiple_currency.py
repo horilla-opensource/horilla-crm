@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic.edit import FormView
 
-from horilla_core.decorators import htmx_required
+from horilla_core.decorators import htmx_required, permission_required_or_denied
 from horilla_core.forms import ConversionRateForm, CurrencyForm, DatedConversionRateForm
 from horilla_generics.views import (
     HorillaListView,
@@ -36,6 +36,7 @@ class CurrencyListView(LoginRequiredMixin, HorillaListView):
     table_width = False
     bulk_select_option = False
     clear_session_button_enabled = False
+    table_height = False
     table_height_as_class = "h-[400px]"
     search_url = reverse_lazy("horilla_core:currency_list_view")
     main_url = reverse_lazy("horilla_core:currency_list_view")
@@ -63,34 +64,58 @@ class CurrencyListView(LoginRequiredMixin, HorillaListView):
             (instance._meta.get_field("decimal_places").verbose_name, "decimal_places"),
         ]
 
-    actions = [
-        {
-            "action": "Edit",
-            "src": "assets/icons/edit.svg",
-            "img_class": "w-4 h-4 flex gap-4",
-            "attrs": """
+    @cached_property
+    def actions(self):
+        """
+        Return list of actions for the detail view
+        """
+        actions = []
+        show_actions = self.request.user.is_superuser or self.request.user.has_perm(
+            "horilla_core.change_multiplecurrency"
+        )
+
+        if show_actions:
+            actions.extend(
+                [
+                    {
+                        "action": "Edit",
+                        "src": "assets/icons/edit.svg",
+                        "img_class": "w-4 h-4 flex gap-4",
+                        "attrs": """
                 hx-get="{get_edit_url}"
                 hx-target="#modalBox"
                 hx-swap="innerHTML"
                 onclick="openModal()"
             """,
-        },
-        {
-            "action": "Delete",
-            "src": "assets/icons/a4.svg",
-            "img_class": "w-4 h-4",
-            "attrs": """
+                    },
+                ]
+            )
+            if self.request.user.has_perm("horilla_core.delete_multiplecurrency"):
+                actions.append(
+                    {
+                        "action": "Delete",
+                        "src": "assets/icons/a4.svg",
+                        "img_class": "w-4 h-4",
+                        "attrs": """
                 hx-post="{get_delete_url}"
                 hx-target="#modalBox"
                 hx-swap="innerHTML"
                 hx-trigger="click"
                 onclick="openModal()"
             """,
-        },
-    ]
+                    }
+                )
+        return actions
 
 
 @method_decorator(htmx_required, name="dispatch")
+@method_decorator(
+    permission_required_or_denied(
+        ["horilla_core.change_multiplecurrency", "horilla_core.change_company"],
+        modal=True,
+    ),
+    name="dispatch",
+)
 class ChangeDefaultCurrencyView(LoginRequiredMixin, View):
     """
     View to change the default currency for a company and update conversion rates.
@@ -202,6 +227,13 @@ class ChangeDefaultCurrencyView(LoginRequiredMixin, View):
 
 
 @method_decorator(htmx_required, name="dispatch")
+@method_decorator(
+    permission_required_or_denied(
+        ["horilla_core.change_multiplecurrency", "horilla_core.change_company"],
+        modal=True,
+    ),
+    name="dispatch",
+)
 class ChangeDefaultCurrencyFormView(LoginRequiredMixin, FormView):
     """
     HTMX endpoint to change the default currency and update conversion rates.
@@ -348,7 +380,6 @@ class AddCurrencyView(LoginRequiredMixin, HorillaSingleFormView):
     form_title = _("Add Currency")
     modal_height = False
     fields = ["currency", "conversion_rate", "decimal_places", "format", "company"]
-    # full_width_fields =["currency"]
     hidden_fields = ["company"]
 
     def dispatch(self, request, *args, **kwargs):
@@ -378,6 +409,10 @@ class AddCurrencyView(LoginRequiredMixin, HorillaSingleFormView):
 
 
 @method_decorator(htmx_required, name="dispatch")
+@method_decorator(
+    permission_required_or_denied("horilla_core.change_multiplecurrency", modal=True),
+    name="dispatch",
+)
 class ConversionRateFormView(LoginRequiredMixin, FormView):
     template_name = "settings/conversion_rates.html"
     form_class = ConversionRateForm
@@ -437,65 +472,10 @@ class ConversionRateFormView(LoginRequiredMixin, FormView):
 
 
 @method_decorator(htmx_required, name="dispatch")
-class ConversionRateFormView(LoginRequiredMixin, FormView):
-    template_name = "settings/conversion_rates.html"
-    form_class = ConversionRateForm
-    success_url = reverse_lazy("settings:currency_list")
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        company = getattr(self.request, "active_company", None)
-        kwargs["company"] = company if company else self.request.user.company
-        return kwargs
-
-    def form_valid(self, form):
-        company = getattr(self.request, "active_company", None)
-        new_default = form.cleaned_data.get("new_default_currency")
-
-        if new_default:
-            MultipleCurrency.objects.filter(company=company).update(is_default=False)
-            new_default_instance = MultipleCurrency.objects.get(
-                pk=new_default.pk, company=company
-            )
-            new_default_instance.is_default = True
-            new_default_instance.save()
-
-        current_default = MultipleCurrency.objects.filter(
-            company=company, is_default=True
-        ).first()
-        for currency in MultipleCurrency.objects.filter(company=company).exclude(
-            pk=current_default.pk
-        ):
-            field_name = f"conversion_rate_{currency.currency}"
-            if field_name in form.cleaned_data:
-                currency.conversion_rate = form.cleaned_data[field_name]
-                currency.save()
-
-        if company and current_default:
-            company.currency = current_default.currency
-            company.save()
-
-        return HttpResponse(
-            "<script>htmx.trigger('#tab-currency-view','click');closeModal();</script>"
-        )
-
-    def form_invalid(self, form):
-        return super().form_invalid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        company = getattr(self.request, "active_company", None)
-        if company:
-            context["current_default"] = MultipleCurrency.objects.filter(
-                company=company, is_default=True
-            ).first()
-            context["other_currencies"] = MultipleCurrency.objects.filter(
-                company=company
-            ).exclude(is_default=True)
-        return context
-
-
-@method_decorator(htmx_required, name="dispatch")
+@method_decorator(
+    permission_required_or_denied("horilla_core.add_datedconversionrate", modal=True),
+    name="dispatch",
+)
 class DatedConversionRateFormView(LoginRequiredMixin, FormView):
     template_name = "settings/dated_conversion_rates.html"
     form_class = DatedConversionRateForm

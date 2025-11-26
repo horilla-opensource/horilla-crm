@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 
 
 def permission_required_or_denied(
-    perms, template_name="error/403.html", require_all=False
+    perms, template_name="error/403.html", require_all=False, modal=False
 ):
     """
     Custom decorator for both FBVs and CBVs.
@@ -36,7 +36,9 @@ def permission_required_or_denied(
 
             if has_permission:
                 return view_func(*args, **kwargs)
-            return render(request, template_name, {"permissions": perms})
+            return render(
+                request, template_name, {"permissions": perms, "modal": modal}
+            )
 
         return _wrapped_view
 
