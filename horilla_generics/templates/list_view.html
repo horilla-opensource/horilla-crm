@@ -138,20 +138,24 @@
                         {% endif %}
 
                         {% if bulk_update_option %}
-                            <button
-                                class="text-xs px-4 py-2 bg-[#d5095726] rounded-md hover:bg-[#d50957] transition duration-300 text-[#d50957] border border-[#d5095742] hover:text-[white]"
-                                hx-post="{{ search_url }}"
-                                hx-target="#modalBox"
-                                hx-swap="innerHTML"
-                                hx-push-url="false"
-                                hx-trigger="click"
-                                hx-vals='js:{"bulk_update_form": "true", "selected_ids": JSON.stringify(selectedRecordIds("{{ view_id|safe }}"))}'
-                                hx-on::after-request="openModal()"
-                                id="bulk-update-btn-{{ view_id|safe }}"
-                                style="display: none;">
-                                <i class="fa-solid fa-pen pe-1"></i>
-                                {% trans 'Bulk Update' %}
-                            </button>
+                            {% has_perm app_label|add:".change_"|add:model_name|lower as has_change_perm %}
+                            {% has_perm app_label|add:".change_own_"|add:model_name|lower as has_change_own_perm %}
+                            {% if has_change_perm or has_change_own_perm%}
+                                <button
+                                    class="text-xs px-4 py-2 bg-[#d5095726] rounded-md hover:bg-[#d50957] transition duration-300 text-[#d50957] border border-[#d5095742] hover:text-[white]"
+                                    hx-post="{{ search_url }}"
+                                    hx-target="#modalBox"
+                                    hx-swap="innerHTML"
+                                    hx-push-url="false"
+                                    hx-trigger="click"
+                                    hx-vals='js:{"bulk_update_form": "true", "selected_ids": JSON.stringify(selectedRecordIds("{{ view_id|safe }}"))}'
+                                    hx-on::after-request="openModal()"
+                                    id="bulk-update-btn-{{ view_id|safe }}"
+                                    style="display: none;">
+                                    <i class="fa-solid fa-pen pe-1"></i>
+                                    {% trans 'Bulk Update' %}
+                                </button>
+                            {% endif %}
                         {% endif %}
 
                         {% if bulk_delete_enabled %}
