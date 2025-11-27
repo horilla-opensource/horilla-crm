@@ -4,7 +4,7 @@
 {% load horilla_tags%}
 
 {% block settings %}
-{% has_perm "horilla_mail.view_horillaemailconfiguration" as can_view_mail_server %}
+{% has_perm "horilla_mail.view_horillamailconfiguration" as can_view_mail_server %}
 {% if can_view_mail_server %}
 <div id="mail-server-view">
     <div id="navBar" hx-get="{{ nav_url}}?{{request.GET.urlencode}}" hx-trigger="load">
