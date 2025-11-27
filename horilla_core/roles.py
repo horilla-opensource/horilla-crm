@@ -25,9 +25,6 @@ from horilla_utils.middlewares import _thread_local
 
 
 @method_decorator(htmx_required, name="dispatch")
-@method_decorator(
-    permission_required_or_denied("horilla_core.add_role"), name="dispatch"
-)
 class AddRole(LoginRequiredMixin, HorillaSingleFormView):
 
     model = Role
@@ -76,9 +73,6 @@ class AddRole(LoginRequiredMixin, HorillaSingleFormView):
 
 
 @method_decorator(htmx_required, name="dispatch")
-@method_decorator(
-    permission_required_or_denied("horilla_core.craete_horillauser"), name="dispatch"
-)
 class AddUserToRole(LoginRequiredMixin, HorillaSingleFormView):
 
     model = HorillaUser
@@ -136,14 +130,15 @@ class RoleUsersListView(LoginRequiredMixin, HorillaListView):
         if "section" in self.request.GET:
             query_params["section"] = self.request.GET.get("section")
         query_string = urlencode(query_params)
-        htmx_attrs = {
-            "hx-get": f"{{get_detail_view_url}}?{query_string}",
-            "hx-target": "#role-container",
-            "hx-swap": "outerHTML",
-            "hx-push-url": "true",
-            "hx-select": "#users-view",
-            "hx-on:click": "closeContentModal()",
-        }
+        if self.request.user.has_perm("horilla_core.view_horillauser"):
+            htmx_attrs = {
+                "hx-get": f"{{get_detail_view_url}}?{query_string}",
+                "hx-target": "#role-container",
+                "hx-swap": "outerHTML",
+                "hx-push-url": "true",
+                "hx-select": "#users-view",
+                "hx-on:click": "closeContentModal()",
+            }
         return [
             {
                 "get_avatar_with_name": {
@@ -255,6 +250,9 @@ class DeleteUserFromRole(LoginRequiredMixin, View):
 
 
 @method_decorator(htmx_required, name="dispatch")
+@method_decorator(
+    permission_required_or_denied("horilla_core:delete_role"), name="dispatch"
+)
 class RoleDeleteView(LoginRequiredMixin, HorillaSingleDeleteView):
 
     model = Role

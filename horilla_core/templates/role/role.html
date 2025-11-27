@@ -15,14 +15,17 @@
       <div class="flex justify-between items-center mb-2">
         <h3 class="text-md font-semibold">{% trans "Role Hierarchy" %}</h3>
         <div class="flex gap-2">
-          <button
-            class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
-            hx-get="{% url 'horilla_core:create_roles_view' %}"
-              hx-target="#modalBox"
-              hx-swap="innerHTML"
-              onclick="openModal()">
-              {% trans "Add Role" %}
-          </button>
+          {% has_perm "horilla_core.add_role" as can_add_role %}
+          {% if can_add_role %}
+            <button
+              class="text-sm px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]"
+              hx-get="{% url 'horilla_core:create_roles_view' %}"
+                hx-target="#modalBox"
+                hx-swap="innerHTML"
+                onclick="openModal()">
+                {% trans "Add Role" %}
+            </button>
+          {% endif %}
         </div>
       </div>
     </div>
