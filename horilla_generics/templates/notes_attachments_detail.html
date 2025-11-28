@@ -86,8 +86,10 @@
         </div>
 
         <!-- Action Buttons -->
+        {% if request.user.is_superuser or perms.horilla_core.change_horillaattachment or perms.horilla_core.change_own_horillaattachment and obj.created_by == request.user or perms.horilla_core.delete_horillaattachment %}
         <div class="flex gap-2 justify-end p-5">
-            <button hx-get={% url "horilla_generics:notes_attachment_edit" obj.pk  %}
+            {% if request.user.is_superuser or perms.horilla_core.change_horillaattachment or perms.horilla_core.change_own_horillaattachment and obj.created_by == request.user %}
+            <button hx-get="{% url 'horilla_generics:notes_attachment_edit' obj.pk %}"
                 hx-target="#modalBox" hx-on:click="openModal();"
                 class="w-[100px] justify-center flex items-center gap-2 text-sm px-3 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -96,18 +98,23 @@
                 </svg>
                 {% trans "Edit" %}
             </button>
+            {% endif %}
+
+            {% if request.user.is_superuser or perms.horilla_core.delete_horillaattachment %}
             <button
-                    hx-get="{% url 'horilla_generics:notes_attachment_delete' obj.pk  %}"
+                    hx-get="{% url 'horilla_generics:notes_attachment_delete' obj.pk %}"
                     hx-target="#deleteModeBox"
                     hx-swap="innerHTML"
                     hx-on:click="openDeleteModeModal()"
                     hx-vals='{"check_dependencies" : "true"}'
-                    title="Delete Role"
+                    title="Delete Attachment"
                     class="w-[100px] justify-center flex items-center gap-2 text-sm px-3 py-2 bg-primary-600 rounded-md hover:bg-primary-800 transition duration-300 text-[white]">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
                     </svg>
                 {% trans "Delete" %}
             </button>
+            {% endif %}
         </div>
+        {% endif %}
 </div>
