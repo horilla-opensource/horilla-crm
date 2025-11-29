@@ -13,7 +13,7 @@
     <body class="bg-secondary-50 font-[Inter,_sans-serif]">
         {% if modal %}
             <div class="absolute top-4 right-4 z-50">
-                <button type="button" onclick="closeModal();"
+                <button type="button" onclick="closeModal();closeDeleteModeModal();"
                     class="ttext-gray-500 hover:text-red-500 text-xl cursor-pointer">
                     <img src="{% static 'assets/icons/close.svg' %}" alt="Close" />
                 </button>
