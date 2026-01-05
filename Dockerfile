@@ -29,7 +29,8 @@ COPY . .
 
 # Set permissions
 RUN mkdir -p staticfiles media \
-    && chown -R appuser:appuser /app
+    && mkdir -p /static /media \
+    && chown -R appuser:appuser /app /static /media
 
 # Copy entrypoint
 COPY docker/entrypoint.sh /entrypoint.sh

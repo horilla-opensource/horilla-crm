@@ -5,14 +5,16 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
-      - staticfiles:/app/staticfiles
-      - media:/app/media
+      - staticfiles:/static
+      - media:/media
     environment:
       - DEBUG=1
       - SECRET_KEY=dev-secret-key
       - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
       - CSRF_TRUSTED_ORIGINS=http://localhost:8000
       - DATABASE_URL=postgres://horilla_user:horilla_pass@db:5432/horilla_db
+      - STATIC_ROOT=/static
+      - MEDIA_ROOT=/media
     depends_on:
       - db
 

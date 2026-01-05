@@ -18,9 +18,3 @@ python manage.py collectstatic --noinput
 
 echo "Starting server..."
 exec "$@"
-
-# Collect static files
-python manage.py collectstatic --noinput
-
-echo "Starting server..."
-exec "$@"
