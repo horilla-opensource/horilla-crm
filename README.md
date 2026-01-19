@@ -148,6 +148,9 @@ make clean    # Clean up
 - **Nginx**: Reverse proxy for production (port 80)
 
 ### Environment Variables
+Set `DB_INIT_PASSWORD` in your `.env` to control the database initialization
+password used by the data loader. If omitted, a secure password is generated
+and stored in `.init_password` inside the container.
 ```bash
 # PostgreSQL Database
 POSTGRES_DB=horilla_db
@@ -162,6 +165,11 @@ CSRF_TRUSTED_ORIGINS=http://localhost:8000
 
 # Database URL
 DATABASE_URL=postgres://horilla_user:horilla_pass@db:5432/horilla_db
+
+# Database initialization (optional)
+# Used for the initial data load password. If omitted, a secure
+# password is generated and stored in .init_password in the container.
+DB_INIT_PASSWORD=change-me
 ```
 
 ## 🏗️ Architecture
