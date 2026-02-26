@@ -24,6 +24,9 @@ def get_sub_section_menu(request=None) -> Dict[str, List[Dict]]:
 
     for cls in sub_section_menu:
         obj = cls()
+        if hasattr(obj, "is_enabled") and callable(obj.is_enabled):
+            if not obj.is_enabled(request):
+                continue
         section_name = getattr(obj, "section", None)
         perm = getattr(obj, "perm", [])
 

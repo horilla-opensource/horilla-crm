@@ -18,6 +18,9 @@ def get_floating_menu(request=None) -> List[Dict]:
     pages = []
     for cls in floating_registry:
         obj = cls()
+        if hasattr(obj, "is_enabled") and callable(obj.is_enabled):
+            if not obj.is_enabled(request):
+                continue
         items = getattr(obj, "items", {}) or {}
 
         perm_list = []
@@ -37,12 +40,10 @@ def get_floating_menu(request=None) -> List[Dict]:
             "items": items,
         }
 
-        if (
-            request
-            and request.user.is_authenticated
-            and perm_list
-            and request.user.has_perms(perm_list)
-        ):
+        if not request or not request.user.is_authenticated:
+            continue
+
+        if not perm_list or request.user.has_perms(perm_list):
             pages.append(data)
 
     return pages

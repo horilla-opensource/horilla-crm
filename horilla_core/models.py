@@ -926,6 +926,11 @@ class HorillaUser(AbstractUser):
         null=True,
         verbose_name=_("Profile Image"),
     )
+    enable_ai = models.BooleanField(
+        default=False,
+        verbose_name=_("Enable CRM AI"),
+        help_text=_("Toggle the AI assistant feature across the system"),
+    )
     contact_number = models.CharField(
         max_length=15, blank=True, null=True, verbose_name=_("Contact Number")
     )

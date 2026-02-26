@@ -10,5 +10,6 @@ INSTALLED_APPS.extend(
         "horilla_crm.campaigns",
         "horilla_crm.opportunities",
         "horilla_crm.forecast",
+        "horilla_ai",
     ]
 )

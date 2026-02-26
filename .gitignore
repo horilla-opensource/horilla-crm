@@ -156,3 +156,4 @@ whoosh_index/
 
 .init_password
 .encryption_key
+find_nulls.py

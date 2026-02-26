@@ -725,6 +725,7 @@ class UserFormClass(HorillaMultiStepForm):
             "time_format",
             "date_time_format",
             "currency",
+            "enable_ai",
         ],
     }
 
@@ -812,6 +813,7 @@ class UserFormSingle(HorillaModelForm):
             "time_format",
             "date_time_format",
             "currency",
+            "enable_ai",
         ]
 
     def __init__(self, *args, **kwargs):

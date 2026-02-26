@@ -1,0 +1,355 @@
+﻿{% extends "index.html" %}
+{% load static i18n horilla_tags %}
+
+{% block extra_css %}
+<style>
+    .chat-bubble-ai { color: #1f2937 !important; }
+    .dark .chat-bubble-ai { color: #f3f4f6 !important; }
+    
+    .chat-text-input { color: #000000 !important; }
+    .dark .chat-text-input { color: #ffffff !important; }
+    
+    .chat-header-title { color: #111827 !important; }
+    .dark .chat-header-title { color: #ffffff !important; }
+
+    /* Markdown Styling */
+    .ai-response-content {
+        font-family: inherit;
+    }
+    .ai-response-content p { margin-bottom: 0.75rem; }
+    .ai-response-content p:last-child { margin-bottom: 0; }
+    .ai-response-content ul, .ai-response-content ol { margin-bottom: 0.75rem; padding-left: 1.5rem; }
+    .ai-response-content ul { list-style-type: disc; }
+    .ai-response-content ol { list-style-type: decimal; }
+    .ai-response-content li { margin-bottom: 0.25rem; }
+    .ai-response-content code { 
+        background-color: rgba(0,0,0,0.05); 
+        padding: 0.2rem 0.4rem; 
+        border-radius: 4px; 
+        font-size: 0.9em;
+    }
+    .dark .ai-response-content code { background-color: rgba(255,255,255,0.1); }
+    .ai-response-content pre {
+        background-color: #1a1a1a;
+        color: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin-bottom: 0.75rem;
+    }
+    .ai-response-content h1, .ai-response-content h2, .ai-response-content h3 {
+        font-weight: bold;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    .ai-response-content strong { font-weight: 800; }
+
+    /* Theme-aware Model Selector */
+    #modelSelector {
+        color: #000000 !important;
+        border-color: #000000 !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        background-image: none !important;
+        background: white !important;
+    }
+    .dark #modelSelector {
+        background: #1f2937 !important;
+    }
+    #modelSelector::-ms-expand {
+        display: none !important;
+    }
+    .dark #modelSelector {
+        color: #f3f4f6 !important;
+        border-color: #374151 !important;
+        background: #111827 !important;
+    }
+    #modelSelector option { color: #000000; background-color: #ffffff; }
+    .dark #modelSelector option { color: #ffffff; background-color: #111827; }
+
+    .chevron-icon { color: #000000 !important; }
+    .dark .chevron-icon { color: #ffffff !important; }
+
+    #chatMessages::-webkit-scrollbar { width: 6px; }
+    #chatMessages::-webkit-scrollbar-track { background: transparent; }
+    #chatMessages::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 20px; }
+    .dark #chatMessages::-webkit-scrollbar-thumb { background: #4b5563; }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="flex modelcontent">
+    {% include "components/sub_sidebar.html" %}
+    <div id="mainContent" class="custom-scroll flex-[1_0] leftspace transition-all duration-300 ease-in-out pt-0 overflow-hidden bg-[#f9fafb] dark:bg-black">
+        <!-- Header -->
+        <div id="navBar" class="w-full">
+            <div class="bg-white dark:bg-gray-900 border-b-2 border-gray-200 dark:border-gray-800 flex justify-between items-center mb-0 w-full h-[75px] px-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-11 h-11 rounded-xl bg-gray-900 dark:bg-primary-600 flex items-center justify-center overflow-hidden p-1.5">
+                        <img src="{% static 'assets/img/logo.svg' %}" class="w-full h-full brightness-0 invert object-contain" alt="Horilla AI">
+                    </div>
+                    <div class="flex flex-col">
+                        <h3 class="text-xl font-black chat-header-title tracking-tight">{{ nav_title }}</h3>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative flex items-center h-10">
+                        <select id="modelSelector" onchange="checkModelSelection(this)" class="appearance-none pl-4 pr-10 py-2 text-sm font-bold border-2 bg-white dark:bg-gray-800 rounded-xl focus:ring-0 outline-none cursor-pointer shadow-sm h-full">
+                            {% for model in available_models %}
+                                <option value="{{ model.id }}" 
+                                        data-premium="{{ model.is_premium|yesno:'true,false' }}"
+                                        class="{% if model.is_premium %}text-gray-400 dark:text-gray-500{% else %}text-black dark:text-white{% endif %} bg-white dark:bg-gray-900 py-2">
+                                    {% if model.is_premium %}🔒 {% endif %}{{ model.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="absolute right-3 inset-y-0 flex items-center pointer-events-none">
+                            <i class="fas fa-chevron-down text-xs chevron-icon"></i>
+                        </div>
+                    </div>
+                    <button onclick="clearChat()" title="{% trans 'Clear Chat' %}" class="group w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-gray-800 border-2 border-red-500 dark:border-red-600 hover:bg-red-500 dark:hover:bg-red-600 transition-all cursor-pointer shadow-md">
+                        <i class="fas fa-trash-alt text-red-500 dark:text-red-600 group-hover:text-black transition-colors text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col h-[calc(100vh-165px)]" id="chatContainer">
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-8 space-y-8 scroll-smooth bg-[#f8fafc] dark:bg-black">
+                <!-- Welcome Message -->
+                <div class="flex justify-start animate-fade-in group">
+                    <div class="max-w-[80%] flex gap-5">
+                        <div class="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center flex-shrink-0 p-1.5 overflow-hidden">
+                            <img src="{% static 'assets/img/logo.svg' %}" class="w-full h-full brightness-0 invert object-contain" alt="AI">
+                        </div>
+                        <div class="p-5 bg-white dark:bg-gray-900 rounded-2xl rounded-tl-none border-2 border-gray-200 dark:border-gray-800 shadow-sm group-hover:shadow-md transition-shadow">
+                            <p class="chat-bubble-ai leading-relaxed text-sm font-bold">
+                                {% trans 'Welcome to your AI workspace. I am ready to help you manage your CRM data more efficiently. How can I assist you today?' %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat History -->
+                {% for chat in chat_history %}
+                    <!-- User Message -->
+                    <div class="flex justify-end animate-fade-in mb-6">
+                        <div class="max-w-[80%] flex flex-row-reverse gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 flex items-center justify-center flex-shrink-0 text-gray-600 dark:text-gray-300">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="p-4 rounded-xl text-sm bg-primary-600 text-white rounded-2xl rounded-tr-none shadow-md font-semibold">
+                                <p class="leading-relaxed whitespace-pre-wrap">{{ chat.message }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Message -->
+                    <div class="flex justify-start animate-fade-in mb-6">
+                        <div class="max-w-[80%] flex gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center flex-shrink-0 p-1.5 overflow-hidden shadow-md">
+                                <img src="{% static 'assets/img/logo.svg' %}" class="w-full h-full brightness-0 invert object-contain">
+                            </div>
+                            <div class="p-4 rounded-xl text-sm bg-white dark:bg-gray-900 chat-bubble-ai rounded-2xl rounded-tl-none border border-gray-200 dark:border-gray-800 shadow-sm font-semibold">
+                                <div class="ai-response-content parsed-history-content" data-raw="{{ chat.response|escapejs }}">
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="p-6 bg-white dark:bg-gray-900 border-t-2 border-gray-100 dark:border-gray-800">
+                <div class="max-w-4xl mx-auto relative">
+                    <div class="relative flex items-center bg-white dark:bg-black rounded-xl border-2 border-gray-900 dark:border-gray-700 focus-within:ring-2 focus-within:ring-primary-500/30 transition-all p-1 shadow-[0_4px_20px_rgba(0,0,0,0.05)]">
+                        <textarea id="chatInput" 
+                            rows="1" 
+                            placeholder="{% trans 'Ask anything...' %}"
+                            class="flex-1 pl-4 pr-12 py-3 bg-transparent border-none focus:ring-0 resize-none text-[15px] chat-text-input font-bold placeholder:text-gray-400 dark:placeholder:text-gray-600 outline-none"></textarea>
+                        <button onclick="sendMessage()" class="absolute right-3 p-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 shadow-lg shadow-primary-500/20 active:scale-95 transition-all">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                <p class="mt-3 text-center text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                    {% trans 'Secured by Horilla Intelligence' %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    const logoUrl = "{% static 'assets/icons/logo.png' %}";
+
+    function appendMessage(role, text) {
+        const container = document.getElementById('chatMessages');
+        const div = document.createElement('div');
+        div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in mb-6`;
+        
+        const contentClass = role === 'user' 
+            ? 'bg-primary-600 text-white rounded-2xl rounded-tr-none shadow-md font-semibold' 
+            : 'bg-white dark:bg-gray-900 chat-bubble-ai rounded-2xl rounded-tl-none border border-gray-200 dark:border-gray-800 shadow-sm font-semibold';
+            
+        const iconDiv = role === 'user'
+            ? `<div class="w-10 h-10 rounded-xl bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 flex items-center justify-center flex-shrink-0 text-gray-600 dark:text-gray-300">
+                <i class="fas fa-user"></i>
+               </div>`
+            : `<div class="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center flex-shrink-0 p-1.5 overflow-hidden shadow-md">
+                <img src="${logoUrl}" class="w-full h-full brightness-0 invert object-contain">
+               </div>`;
+
+        let displayContent = text;
+        if (role === 'ai') {
+            displayContent = `<div class="ai-response-content">${marked.parse(text)}</div>`;
+        } else {
+            displayContent = `<p class="leading-relaxed whitespace-pre-wrap">${text}</p>`;
+        }
+
+        div.innerHTML = `
+            <div class="max-w-[80%] flex ${role === 'user' ? 'flex-row-reverse' : ''} gap-4">
+                ${iconDiv}
+                <div class="p-4 rounded-xl text-sm ${contentClass}">
+                    ${displayContent}
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function checkModelSelection(select) {
+        const option = select.options[select.selectedIndex];
+        const isPremium = option.getAttribute('data-premium') === 'true';
+        
+        if (isPremium) {
+            Swal.fire({
+                title: '{% trans "Premium Model" %}',
+                text: '{% trans "This model requires a Horilla Pro subscription. Upgrade to gain access to advanced reasoning and faster responses." %}',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#e54f38',
+                cancelButtonColor: '#1f2937',
+                confirmButtonText: '{% trans "View Pricing" %}',
+                cancelButtonText: '{% trans "Maybe Later" %}',
+                background: document.documentElement.classList.contains('dark') ? '#111827' : '#fff',
+                color: document.documentElement.classList.contains('dark') ? '#fff' : '#111827'
+            }).then((result) => {
+                select.value = 'gemini-3-flash-preview';
+                if (result.isConfirmed) {
+                    appendMessage('ai', '{% trans "Our subscription plans are launching soon! Stay tuned for full access to premium models." %}');
+                }
+            });
+        }
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        const model = document.getElementById('modelSelector').value;
+        if (!message) return;
+        
+        input.value = '';
+        input.style.height = 'auto';
+        appendMessage('user', message);
+        
+        const typingDiv = document.createElement('div');
+        typingDiv.id = 'typingIndicator';
+        typingDiv.className = 'flex justify-start animate-fade-in mb-6';
+        typingDiv.innerHTML = `
+             <div class="max-w-[80%] flex gap-4">
+                <div class="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center p-1.5 overflow-hidden shadow-md">
+                    <img src="${logoUrl}" class="w-full h-full brightness-0 invert object-contain">
+                </div>
+                <div class="p-4 bg-white dark:bg-gray-900 rounded-2xl rounded-tl-none border border-gray-200 dark:border-gray-800 shadow-sm">
+                    <div class="flex gap-2 py-1">
+                        <div class="w-2 h-2 bg-primary-400 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-primary-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                        <div class="w-2 h-2 bg-primary-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.getElementById('chatMessages').appendChild(typingDiv);
+        document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+
+        try {
+            const response = await fetch('{% url "horilla_ai:chat_api" %}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+                body: JSON.stringify({ message, model })
+            });
+            const data = await response.json();
+            document.getElementById('typingIndicator').remove();
+            if (data.status === 'success') appendMessage('ai', data.response);
+            else appendMessage('ai', 'Error: ' + data.message);
+        } catch (error) {
+            if (document.getElementById('typingIndicator')) document.getElementById('typingIndicator').remove();
+            appendMessage('ai', 'Connection error. Please try again.');
+        }
+    }
+
+    async function clearChat() {
+        Swal.fire({
+            title: '{% trans "Clear conversation?" %}',
+            text: '{% trans "All messaging history will be removed from the database." %}',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e54f38',
+            cancelButtonColor: '#1f2937',
+            confirmButtonText: '{% trans "Yes, clear it!" %}',
+            cancelButtonText: '{% trans "Cancel" %}',
+            background: document.documentElement.classList.contains('dark') ? '#111827' : '#fff',
+            color: document.documentElement.classList.contains('dark') ? '#fff' : '#111827'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch('{% url "horilla_ai:clear_chat_api" %}', {
+                        method: 'POST',
+                        headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+                    });
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        document.getElementById('chatMessages').innerHTML = '';
+                        appendMessage('ai', '{% trans "Chat history cleared. How can I help you today?" %}');
+                        Swal.fire({
+                            title: '{% trans "Cleared!" %}',
+                            text: '{% trans "Conversation has been reset." %}',
+                            icon: 'success',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire('Error', 'Could not clear history', 'error');
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.parsed-history-content').forEach(el => {
+            const raw = el.getAttribute('data-raw');
+            el.innerHTML = marked.parse(JSON.parse(`"${raw}"`));
+        });
+        const container = document.getElementById('chatMessages');
+        container.scrollTop = container.scrollHeight;
+    });
+
+    document.getElementById('chatInput').addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    document.getElementById('chatInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+</script>
+{% endblock %}

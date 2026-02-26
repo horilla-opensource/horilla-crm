@@ -24,6 +24,9 @@ def get_main_section_menu(request=None) -> List[Dict]:
     pages = []
     for cls in main_section_menu:
         obj = cls()
+        if hasattr(obj, "is_enabled") and callable(obj.is_enabled):
+            if not obj.is_enabled(request):
+                continue
         item = {
             "section": getattr(obj, "section", None),
             "name": getattr(obj, "name", None),
