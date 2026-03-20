@@ -58,7 +58,7 @@ pyasn1_modules==0.4.2
 pycountry==24.6.1
 pycparser==2.23
 PyJWT==2.10.1
-pyOpenSSL==25.3.0
+pyOpenSSL==26.0.0
 python-crontab==3.3.0
 python-dateutil==2.9.0.post0
 pytz==2026.1.post1
