@@ -800,9 +800,19 @@ class HorillaListView(HorillaListViewMixin, ListView):
                 if not val or ftype not in ("date", "datetime", "time"):
                     return None
                 if ftype == "datetime":
-                    return parse_datetime(val)
+                    from horilla.utils.jalali import parse_user_datetime
+
+                    parsed = parse_datetime(val)
+                    if parsed is None:
+                        parsed = parse_user_datetime(val, user=self.request.user)
+                    return parsed
                 if ftype == "date":
-                    return parse_date(val)
+                    from horilla.utils.jalali import parse_user_date
+
+                    parsed = parse_date(val)
+                    if parsed is None:
+                        parsed = parse_user_date(val, user=self.request.user)
+                    return parsed
                 if ftype == "time":
                     return parse_time(val)
                 return None

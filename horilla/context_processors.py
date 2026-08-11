@@ -19,6 +19,7 @@ from horilla.menu.my_settings_menu import get_my_settings_menu
 from horilla.menu.settings_menu import get_settings_menu
 from horilla.menu.sub_section_menu import get_sub_section_menu
 from horilla.utils.branding import load_branding
+from horilla.utils.jalali import uses_jalali_calendar
 
 
 def company_list(request):
@@ -125,3 +126,10 @@ def branding(request):
     TITLE, LOGIN_WELCOME_LINE, LOGO_PATH, etc.
     """
     return load_branding()
+
+
+def jalali_calendar(request):
+    """Expose whether the current user should see the Shamsi calendar."""
+    if not getattr(request, "user", None) or not request.user.is_authenticated:
+        return {"USE_JALALI_CALENDAR": False}
+    return {"USE_JALALI_CALENDAR": uses_jalali_calendar(user=request.user)}

@@ -81,7 +81,11 @@
                             </button>
                         </div>
                         <p class="text-xs text-[#777777] mt-1">
-                            {{ notification.created_at|timesince }} ago by {{ notification.sender|default:"System" }}
+                            {% if notification.sender %}
+                                {% blocktrans with time=notification.created_at|timesince sender=notification.sender %}{{ time }} ago by {{ sender }}{% endblocktrans %}
+                            {% else %}
+                                {% blocktrans with time=notification.created_at|timesince %}{{ time }} ago by {% endblocktrans %}{% trans "System" %}
+                            {% endif %}
                         </p>
                     </li>
                 {% empty %}
@@ -148,7 +152,11 @@
                     <div class="flex-1">
                         <h5 class="text-sm font-semibold mb-2">{{ notification.message|safe }}</h5>
                         <p class="text-xs text-[#777777] mt-1">
-                            {{ notification.created_at|timesince }} ago by {{ notification.sender|default:"System" }}
+                            {% if notification.sender %}
+                                {% blocktrans with time=notification.created_at|timesince sender=notification.sender %}{{ time }} ago by {{ sender }}{% endblocktrans %}
+                            {% else %}
+                                {% blocktrans with time=notification.created_at|timesince %}{{ time }} ago by {% endblocktrans %}{% trans "System" %}
+                            {% endif %}
                         </p>
                     </div>
                 </div>

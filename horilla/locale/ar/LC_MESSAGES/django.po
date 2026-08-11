@@ -1355,7 +1355,7 @@ msgid "Export"
 msgstr "يصدّر"
 
 msgid "Scheduled Exports"
-msgstr "الصادرات المجدولة"
+msgstr "الاکسپورت المجدولة"
 
 msgid "Quick Tips"
 msgstr "نصائح سريعة"
@@ -2247,7 +2247,7 @@ msgid "Schedule Details"
 msgstr "تفاصيل الجدول الزمني"
 
 msgid "Scheduled Export Details"
-msgstr "الصادرات المجدولة"
+msgstr "الاکسپورت المجدولة"
 
 msgid "User with this email or username does not exist."
 msgstr "يوجد بالفعل مستخدم بهذا الاسم."

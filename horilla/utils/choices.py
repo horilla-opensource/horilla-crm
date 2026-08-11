@@ -34,6 +34,27 @@ CURRENCY_FORMAT_CHOICES = [
     ("indian_format", "12,34,567"),
 ]
 
+CALENDAR_SYSTEM_CHOICES = [
+    ("jalali", _("Shamsi (Jalali)")),
+    ("gregorian", _("Gregorian")),
+]
+
+JALALI_DATE_FORMAT_CHOICES = [
+    ("%Y/%m/%d", "۱۴۰۴/۰۵/۲۱ (YYYY/MM/DD)"),
+    ("%Y-%m-%d", "۱۴۰۴-۰۵-۲۱ (YYYY-MM-DD)"),
+    ("%d/%m/%Y", "۲۱/۰۵/۱۴۰۴ (DD/MM/YYYY)"),
+    ("%d %B %Y", "۲۱ مرداد ۱۴۰۴"),
+    ("%d %b %Y", "۲۱ مرد ۱۴۰۴"),
+]
+
+JALALI_DATETIME_FORMAT_CHOICES = [
+    ("%Y/%m/%d %H:%M:%S", "۱۴۰۴/۰۵/۲۱ 13:45:00"),
+    ("%Y/%m/%d %H:%M", "۱۴۰۴/۰۵/۲۱ 13:45"),
+    ("%Y-%m-%d %H:%M:%S", "۱۴۰۴-۰۵-۲۱ 13:45:00"),
+    ("%Y-%m-%dT%H:%M", "۱۴۰۴-۰۵-۲۱T13:45"),
+    ("%d %B %Y %H:%M", "۲۱ مرداد ۱۴۰۴ 13:45"),
+]
+
 DATE_FORMAT_CHOICES = [
     ("%Y-%m-%d", "YYYY-MM-DD (2006-10-25)"),
     ("%m/%d/%Y", "MM/DD/YYYY (10/25/2006)"),

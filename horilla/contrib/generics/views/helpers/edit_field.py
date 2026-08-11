@@ -22,6 +22,12 @@ from horilla.shortcuts import get_object_or_404, render
 # First party imports (Horilla)
 from horilla.utils import timezone
 from horilla.utils.decorators import htmx_required, method_decorator
+from horilla.utils.jalali import (
+    format_gregorian_as_jalali,
+    parse_user_date,
+    parse_user_datetime,
+    uses_jalali_calendar,
+)
 from horilla.utils.translation import gettext_lazy as _
 from horilla.web import HttpResponse, ScriptResponse
 
@@ -171,7 +177,19 @@ class EditFieldView(LoginRequiredMixin, View):
                 field_info["value"] = dt_value.strftime("%Y-%m-%dT%H:%M")
 
                 # Display value with user's format
-                if user and hasattr(user, "date_time_format") and user.date_time_format:
+                if uses_jalali_calendar(user=user):
+                    fmt = "%Y-%m-%d %H:%M"
+                    if user and hasattr(user, "date_time_format") and user.date_time_format:
+                        fmt = user.date_time_format
+                    try:
+                        field_info["display_value"] = format_gregorian_as_jalali(
+                            dt_value, fmt, user=user
+                        )
+                    except Exception:
+                        field_info["display_value"] = format_gregorian_as_jalali(
+                            dt_value, "%Y-%m-%d %H:%M", user=user
+                        )
+                elif user and hasattr(user, "date_time_format") and user.date_time_format:
                     try:
                         field_info["display_value"] = dt_value.strftime(
                             user.date_time_format
@@ -190,7 +208,19 @@ class EditFieldView(LoginRequiredMixin, View):
                 field_info["value"] = date_value.strftime("%Y-%m-%d")
 
                 # Display value with user's format
-                if user and hasattr(user, "date_format") and user.date_format:
+                if uses_jalali_calendar(user=user):
+                    fmt = "%Y-%m-%d"
+                    if user and hasattr(user, "date_format") and user.date_format:
+                        fmt = user.date_format
+                    try:
+                        field_info["display_value"] = format_gregorian_as_jalali(
+                            date_value, fmt, user=user
+                        )
+                    except Exception:
+                        field_info["display_value"] = format_gregorian_as_jalali(
+                            date_value, "%Y-%m-%d", user=user
+                        )
+                elif user and hasattr(user, "date_format") and user.date_format:
                     try:
                         field_info["display_value"] = date_value.strftime(
                             user.date_format
@@ -410,8 +440,24 @@ class UpdateFieldView(LoginRequiredMixin, View):
                     elif isinstance(field, models.DateTimeField):
                         if value:
                             try:
-                                # Parse the datetime from the input (in user's timezone)
                                 parsed_value = datetime.fromisoformat(value)
+                            except ValueError:
+                                parsed_value = parse_user_datetime(
+                                    value, user=request.user
+                                )
+                                if parsed_value is None:
+                                    return self._render_edit_error(
+                                        request,
+                                        pk,
+                                        field,
+                                        app_label,
+                                        model_name,
+                                        obj,
+                                        _("Invalid datetime format: %(value)s")
+                                        % {"value": value},
+                                        submitted_value=value,
+                                    )
+                            try:
 
                                 # Get user's timezone
                                 user = request.user
@@ -458,6 +504,23 @@ class UpdateFieldView(LoginRequiredMixin, View):
                         if value:
                             try:
                                 parsed_value = datetime.fromisoformat(value).date()
+                            except ValueError:
+                                parsed_value = parse_user_date(
+                                    value, user=request.user
+                                )
+                                if parsed_value is None:
+                                    return self._render_edit_error(
+                                        request,
+                                        pk,
+                                        field,
+                                        app_label,
+                                        model_name,
+                                        obj,
+                                        _("Invalid date format: %(value)s")
+                                        % {"value": value},
+                                        submitted_value=value,
+                                    )
+                            try:
                                 setattr(obj, field_name, parsed_value)
                             except ValueError:
                                 return self._render_edit_error(

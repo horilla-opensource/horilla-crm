@@ -19,7 +19,7 @@
                 name="search"
                 type="text"
                 placeholder="{% trans 'Search' %}"
-                class="text-color-600 px-2 py-1.5 pr-[40px] w-full border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm transition duration-300 focus:border-primary-600"
+                class="text-color-600 horilla-search-input--toolbar py-1.5 w-full border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm transition duration-300 focus:border-primary-600"
                 hx-get="{{ list_url }}"
                 hx-trigger="keyup changed delay:300ms, search"
                 hx-target="#userPickerList"
@@ -27,7 +27,7 @@
                 hx-include="#up-filter-rows [name='field'],[name='operator'],[name='value'],[name='start_value'],[name='end_value']"
                 hx-push-url="false"
             >
-            <button type="button" class="absolute right-3 top-0 bottom-0 m-auto cursor-pointer">
+            <button type="button" class="horilla-search-btn-end">
                 <img src="{% static 'assets/icons/search.svg' %}" alt="{% trans 'Search' %}" width="16">
             </button>
         </div>

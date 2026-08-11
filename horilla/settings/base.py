@@ -168,6 +168,7 @@ CONTEXT_PROCESSORS = [
     "horilla.context_processors.menu_context_processor",
     "horilla.context_processors.currency_context",
     "horilla.context_processors.branding",
+    "horilla.context_processors.jalali_calendar",
 ]
 
 BUILTINS = [

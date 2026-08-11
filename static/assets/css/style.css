@@ -30,7 +30,7 @@
   height: 3px;
   width: 100%;
   background-color: var(--progress-track-bg, #ffe5e1);
-  left: 0;
+  inset-inline-start: 0;
   top: 15px;
   bottom: 0;
 }
@@ -50,7 +50,7 @@
   display: flex;
   justify-content: flex-end;
   width: 30%;
-  text-align: right;
+  text-align: end;
 }
 
 .progress li:nth-child(1) {
@@ -58,7 +58,7 @@
 }
 
 .progress li:nth-child(1) p {
-  text-align: left;
+  text-align: start;
 }
 
 .peer:focus~.peer-focus\:ring-4 {
@@ -315,7 +315,7 @@
 
 .select2-container--default .select2-selection--single .select2-selection__rendered {
   color: unset !important;
-  padding-left: 13px !important;
+  padding-inline-start: 13px !important;
 }
 
 .select2-container--default .select2-selection--single {
@@ -381,7 +381,7 @@
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
   color: white !important;
-  border-right: 1px solid #ffffff7d !important;
+  border-inline-end: 1px solid #ffffff7d !important;
   font-size: 0.8rem !important;
   height: 100%;
 }
@@ -446,7 +446,7 @@
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__rendered {
-  padding-left: 13px !important;
+  padding-inline-start: 13px !important;
   display: flex !important;
   flex-wrap: wrap !important;
   align-items: center !important;
@@ -469,7 +469,7 @@
 .select2-container--default .select2-selection--multiple .select2-selection__rendered:not(:empty) + .select2-search--inline {
   position: absolute !important;
   top: 50% !important;
-  right: 5px;
+  inset-inline-end: 5px;
   transform: translateY(-50%) !important;
   width: 6px !important;
   min-width: 6px !important;
@@ -515,7 +515,7 @@
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
   color: white !important;
-  border-right: 1px solid #ffffff7d !important;
+  border-inline-end: 1px solid #ffffff7d !important;
   font-size: 0.8rem !important;
   padding: 0 5px !important;
   position: static !important;
@@ -661,18 +661,16 @@ input[type="checkbox"] {
   scrollbar-color: #c4c1c1 #dfdfdf;
 }
 
-.probar li:first-child div {
-  clip-path: polygon(100% 50%, 90% 0%, 0% 0%, 0% 50%, 0% 100%, 90% 100%);
-  -webkit-clip-path: polygon(100% 50%,
-      90% 0%,
-      0% 0%,
-      0% 50%,
-      0% 100%,
-      90% 100%);
+.probar li div {
+  clip-path: polygon(100% 50%, 90% 0%, 0% 0%, 10% 50%, 0% 100%, 90% 100%);
+  -webkit-clip-path: polygon(100% 50%, 90% 0%, 0% 0%, 10% 50%, 0% 100%, 90% 100%);
 }
 
 .probar li:first-child div {
-  border-radius: 3px 0 0 3px;
+  clip-path: polygon(100% 50%, 90% 0%, 0% 0%, 0% 50%, 0% 100%, 90% 100%);
+  -webkit-clip-path: polygon(100% 50%, 90% 0%, 0% 0%, 0% 50%, 0% 100%, 90% 100%);
+  border-start-start-radius: 3px;
+  border-end-start-radius: 3px;
 }
 
 /* CUSTOM DROPDOWN */
@@ -1819,11 +1817,13 @@ input[type="radio"] {
 }
 
 .tablebtn button:first-child {
-  border-radius: 5px 0 0 5px;
+  border-start-start-radius: 5px;
+  border-end-start-radius: 5px;
 }
 
 .tablebtn button:last-child {
-  border-radius: 0 5px 5px 0;
+  border-start-end-radius: 5px;
+  border-end-end-radius: 5px;
 }
 
 .tablebtn button:only-child {
@@ -2105,4 +2105,62 @@ input::placeholder {
 
 .progress li.active .sec::before {
   background-color: #E54F38;
+}
+
+/* Search fields with start/end icons (RTL-safe) */
+.horilla-search-input {
+  padding-inline-start: 2.25rem;
+  padding-inline-end: 2rem;
+}
+
+.horilla-search-input--toolbar {
+  padding-inline-start: 0.5rem;
+  padding-inline-end: 2.5rem;
+}
+
+.horilla-search-icon-start {
+  position: absolute;
+  inset-inline-start: 10px;
+  top: 9px;
+}
+
+.horilla-search-icon-end {
+  position: absolute;
+  inset-inline-end: 10px;
+  top: 9px;
+}
+
+.horilla-search-btn-end {
+  position: absolute;
+  inset-inline-end: 0.75rem;
+  top: 0;
+  bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+  cursor: pointer;
+}
+
+.form-readonly-lock {
+  position: absolute;
+  inset-inline-end: 0.75rem;
+  padding-bottom: 0.75rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.file-input-clear-btn {
+  position: absolute;
+  top: 0.5rem;
+  inset-inline-end: 0.5rem;
+  z-index: 10;
+}
+
+.filter-count-badge {
+  inset-inline-end: -0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .filter-count-badge {
+    inset-inline-end: -0.25rem;
+  }
 }

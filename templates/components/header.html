@@ -66,7 +66,7 @@
                                         class="px-4 py-1.5 block hover:text-primary-600 transition duration-300"
                                     >
                                         {{ item.content_object|default:"(No name)" }}
-                                        <p class="text-xs text-gray-400">{{ item.viewed_at|timesince }} ago</p>
+                                        <p class="text-xs text-gray-400">{% blocktrans with time=item.viewed_at|timesince %}{{ time }} ago{% endblocktrans %}</p>
                                     </a>
                                 </li>
                             {% empty %}

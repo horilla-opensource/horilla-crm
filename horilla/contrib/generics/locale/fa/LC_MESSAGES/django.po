@@ -1033,3 +1033,6 @@ msgstr "لطفاً یک گزینه معتبر برای فیلد عملگر ان�
 
 msgid "Please select a valid choice for the field."
 msgstr "لطفاً یک گزینه معتبر برای فیلد انتخاب کنید."
+
+msgid "Duplicate"
+msgstr "تکراری"

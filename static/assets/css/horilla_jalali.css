@@ -1,0 +1,242 @@
+/*
+ * Horilla — Jalali date/time picker (unified dark theme).
+ */
+
+:root {
+  --horilla-picker-bg: #3b3b3b;
+  --horilla-picker-surface: #4a4a4a;
+  --horilla-picker-border: #555;
+  --horilla-picker-text: #e5e5e5;
+  --horilla-picker-muted: #aaa;
+  --horilla-picker-accent: #e54f38;
+  --horilla-picker-accent-hover: #c9432f;
+  --horilla-picker-radius: 0.375rem;
+}
+
+jdp-container,
+.jdp-container {
+  z-index: 10050 !important;
+  background: var(--horilla-picker-bg) !important;
+  color: var(--horilla-picker-text);
+  border-radius: var(--horilla-picker-radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+}
+
+.jdp-overlay,
+jdp-overlay {
+  z-index: 10049 !important;
+}
+
+[dir="rtl"] jdp-container,
+[dir="rtl"] .jdp-container {
+  direction: rtl;
+}
+
+/* Jalali date modal — readable on dark background */
+jdp-container .jdp-months,
+jdp-container .jdp-years {
+  color: var(--horilla-picker-text);
+  fill: var(--horilla-picker-text);
+}
+
+jdp-container .jdp-month,
+jdp-container .jdp-month input,
+jdp-container .jdp-month select,
+jdp-container .jdp-year,
+jdp-container .jdp-year input,
+jdp-container .jdp-year select {
+  background: var(--horilla-picker-bg) !important;
+  color: var(--horilla-picker-text);
+}
+
+jdp-container .jdp-day,
+jdp-container .jdp-day-name {
+  color: var(--horilla-picker-text);
+}
+
+jdp-container .jdp-day-name {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+jdp-container .jdp-icon-minus,
+jdp-container .jdp-icon-plus {
+  border-color: var(--horilla-picker-border);
+}
+
+jdp-container .jdp-day-name.today,
+jdp-container .jdp-day.today {
+  border-color: var(--horilla-picker-accent);
+}
+
+jdp-container .jdp-day:not(.disabled-day):hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+jdp-container .jdp-day-name.selected,
+jdp-container .jdp-day.selected {
+  background-color: var(--horilla-picker-accent) !important;
+  color: #fff !important;
+}
+
+jdp-container .jdp-btn-close,
+jdp-container .jdp-btn-empty,
+jdp-container .jdp-btn-today {
+  background: var(--horilla-picker-accent) !important;
+  border-radius: var(--horilla-picker-radius);
+  color: #fff;
+  transition: background-color 0.2s;
+}
+
+jdp-container .jdp-btn-close:hover,
+jdp-container .jdp-btn-empty:hover,
+jdp-container .jdp-btn-today:hover {
+  background: var(--horilla-picker-accent-hover) !important;
+}
+
+/* Datetime compound field — mirrors native datetime-local single border */
+.horilla-jalali-datetime__date {
+  flex: 1 1 auto;
+}
+
+.horilla-jalali-datetime__separator {
+  width: 1px;
+  align-self: stretch;
+  background-color: rgb(229 231 235);
+  flex-shrink: 0;
+}
+
+.dark .horilla-jalali-datetime__separator {
+  background-color: rgb(55 65 81);
+}
+
+.horilla-jalali-datetime__time {
+  display: flex;
+  align-items: center;
+  flex: 0 1 5.5rem;
+  min-width: 4.75rem;
+}
+
+.horilla-jalali-datetime__time-input {
+  width: 100%;
+  text-align: center;
+}
+
+[dir="rtl"] .horilla-jalali-datetime__time-input {
+  text-align: center;
+}
+
+.horilla-jalali-inner-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Time picker popover — same theme as date modal */
+.horilla-time-picker {
+  position: fixed;
+  z-index: 10051;
+  display: none;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  background: var(--horilla-picker-bg);
+  border: 1px solid var(--horilla-picker-border);
+  border-radius: var(--horilla-picker-radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+}
+
+.horilla-time-picker.is-open {
+  display: flex;
+}
+
+.horilla-time-picker__columns {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.horilla-time-picker__column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  flex: 1 1 0;
+}
+
+.horilla-time-picker__label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--horilla-picker-muted);
+}
+
+.horilla-time-picker__colon {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--horilla-picker-text);
+  padding-bottom: 0.35rem;
+  line-height: 1;
+}
+
+.horilla-time-picker__select {
+  width: 100%;
+  min-width: 4rem;
+  padding: 0.5rem 0.375rem;
+  font-size: 0.875rem;
+  text-align: center;
+  color: var(--horilla-picker-text);
+  background: var(--horilla-picker-surface);
+  border: 1px solid var(--horilla-picker-border);
+  border-radius: var(--horilla-picker-radius);
+  cursor: pointer;
+  appearance: none;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.horilla-time-picker__select:hover {
+  border-color: var(--horilla-picker-accent);
+}
+
+.horilla-time-picker__select:focus {
+  outline: none;
+  border-color: var(--horilla-picker-accent);
+  box-shadow: 0 0 0 2px rgba(229, 79, 56, 0.2);
+}
+
+.horilla-time-picker__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--horilla-picker-border);
+}
+
+.horilla-time-picker__btn {
+  border: none;
+  border-radius: var(--horilla-picker-radius);
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.horilla-time-picker__btn--ghost {
+  background: transparent;
+  color: var(--horilla-picker-muted);
+}
+
+.horilla-time-picker__btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--horilla-picker-text);
+}
+
+.horilla-time-picker__btn--primary {
+  background: var(--horilla-picker-accent);
+  color: #fff;
+  margin-inline-start: auto;
+}
+
+.horilla-time-picker__btn--primary:hover {
+  background: var(--horilla-picker-accent-hover);
+}

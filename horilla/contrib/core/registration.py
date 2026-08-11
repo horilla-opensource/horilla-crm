@@ -20,6 +20,19 @@ register_html(
     page="login",
 )
 
+register_html(
+    "inject_html/jalali_assets.html",
+    slot="body_end",
+    priority=85,
+)
+
+register_html(
+    "inject_html/jalali_assets.html",
+    slot="body_end",
+    priority=85,
+    page="login",
+)
+
 # Local imports
 from .models import Company, Department, Role
 

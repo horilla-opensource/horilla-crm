@@ -191,12 +191,30 @@ class HorillaBulkUpdateMixin:
                     elif field_type in ("float", "decimal"):
                         new_value = Decimal(new_value)
                     elif field_type in ("date", "datetime"):
-                        fmt = "%Y-%m-%d" if field_type == "date" else "%Y-%m-%dT%H:%M"
-                        new_value_dt = datetime.strptime(str(new_value), fmt)
+                        from horilla.utils.jalali import (
+                            parse_user_date,
+                            parse_user_datetime,
+                        )
+
+                        raw_value = str(new_value)
                         if field_type == "date":
-                            new_value = new_value_dt.date()
+                            parsed = parse_user_date(
+                                raw_value, user=self.request.user
+                            )
+                            if parsed is None:
+                                parsed = datetime.strptime(
+                                    raw_value, "%Y-%m-%d"
+                                ).date()
+                            new_value = parsed
                         else:
-                            new_value = new_value_dt
+                            parsed = parse_user_datetime(
+                                raw_value, user=self.request.user
+                            )
+                            if parsed is None:
+                                parsed = datetime.strptime(
+                                    raw_value, "%Y-%m-%dT%H:%M"
+                                )
+                            new_value = parsed
                     elif field_type == "choice":
                         choices = [c["value"] for c in field_info.get("choices", [])]
                         if new_value not in choices:

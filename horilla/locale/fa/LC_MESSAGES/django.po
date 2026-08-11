@@ -373,10 +373,10 @@ msgid "Data Mangement"
 msgstr "مدیریت داده"
 
 msgid "Import Data"
-msgstr "واردات داده"
+msgstr "ایمپورت داده"
 
 msgid "Export Data"
-msgstr "صادرات داده"
+msgstr "اکسپورت داده"
 
 msgid "Recycle Bin"
 msgstr "سطل بازیافت"
@@ -1112,10 +1112,10 @@ msgid "Import Histories"
 msgstr "تاریخچه‌های واردات"
 
 msgid "Can View Global Export"
-msgstr "می‌تواند صادرات جهانی را مشاهده کند"
+msgstr "می‌تواند اکسپورت جهانی را مشاهده کند"
 
 msgid "Global Export"
-msgstr "صادرات جهانی"
+msgstr "اکسپورت جهانی"
 
 msgid "Daily"
 msgstr "روزانه"
@@ -1136,7 +1136,7 @@ msgid "PDF"
 msgstr "PDF"
 
 msgid "Export Format"
-msgstr "قالب صادرات"
+msgstr "قالب اکسپورت"
 
 msgid "Frequency"
 msgstr "تناوب"
@@ -1148,10 +1148,10 @@ msgid "Last Executed On"
 msgstr "آخرین اجرا در"
 
 msgid "Export Schedule"
-msgstr "برنامه صادرات"
+msgstr "اکسپورت برنامه"
 
 msgid "Export Schedules"
-msgstr "برنامه‌های صادرات"
+msgstr "اکسپورت برنامه ها"
 
 msgid "Not run yet"
 msgstr "هنوز اجرا نشده است"
@@ -1301,7 +1301,7 @@ msgid "Cannot set both user and role"
 msgstr "نمی‌توان هم کاربر و هم نقش را تنظیم کرد"
 
 msgid "Scheduled Export - {}"
-msgstr "صادرات زمان‌بندی شده - {}"
+msgstr "اکسپورت زمان‌بندی شده - {}"
 
 msgid "Avatar"
 msgstr "آواتار"
@@ -1330,13 +1330,13 @@ msgid "Choose Module"
 msgstr "انتخاب ماژول"
 
 msgid "Select Export Format"
-msgstr "انتخاب قالب صادرات"
+msgstr "انتخاب قالب اکسپورت"
 
 msgid "Schedule"
 msgstr "برنامه‌ریزی"
 
 msgid "Export"
-msgstr "صادرات"
+msgstr "اکسپورت"
 
 msgid "Scheduled Exports"
 msgstr "صادرات‌های زمان‌بندی شده"
@@ -1345,7 +1345,7 @@ msgid "Quick Tips"
 msgstr "نکات سریع"
 
 msgid "Select multiple modules to export data from different sections at once"
-msgstr "برای صادرات داده از بخش‌های مختلف به طور همزمان، چندین ماژول انتخاب کنید"
+msgstr "برای اکسپورت داده از بخش‌های مختلف به طور همزمان، چندین ماژول انتخاب کنید"
 
 msgid "Choose from Excel, CSV, or PDF formats based on your needs"
 msgstr "بر اساس نیاز خود از بین قالب‌های اکسل، CSV یا PDF انتخاب کنید"
@@ -1358,10 +1358,10 @@ msgstr "می‌توانید تاریخ پایان برای صادرات‌های
 msgid ""
 "Export immediately by clicking the Export button, or schedule for automated "
 "recurring exports"
-msgstr "با کلیک روی دکمه صادرات، فوراً صادر کنید، یا برای صادرات تکراری خودکار زمان‌بندی کنید"
+msgstr "با کلیک روی دکمه صادرات، فوراً صادر کنید، یا برای اکسپورت تکراری خودکار زمان‌بندی کنید"
 
 msgid "Schedule Export"
-msgstr "زمان‌بندی صادرات"
+msgstr "زمان‌بندی اکسپورت"
 
 msgid "Close"
 msgstr "بستن"
@@ -2046,6 +2046,12 @@ msgstr "روزها"
 msgid "Settings"
 msgstr "تنظیمات"
 
+msgid "Manage your company, users, and system configuration."
+msgstr "شرکت، کاربران و تنظیمات سیستم رو مدیریت کنید"
+
+msgid "Search settings..."
+msgstr "جستجو در تنظیمات"
+
 msgid "Personal Information"
 msgstr "اطلاعات شخصی"
 
@@ -2133,19 +2139,19 @@ msgid ""
 msgstr "نشست شما ممکن است منقضی شده باشد، یا این فرم مدت طولانی باز بوده است. صفحه را بازخوانی کنید و دوباره امتحان کنید."
 
 msgid "Please select at least one model and export format."
-msgstr "لطفاً حداقل یک مدل و قالب صادرات انتخاب کنید."
+msgstr "لطفاً حداقل یک مدل و قالب اکسپورت انتخاب کنید."
 
 msgid "Selected module not found."
 msgstr "ماژول انتخاب شده یافت نشد."
 
 msgid "You do not have permission to export this module."
-msgstr "شما مجوز صادرات این ماژول را ندارید."
+msgstr "شما مجوز اکسپورت این ماژول را ندارید."
 
 msgid "Export failed. Please try again."
-msgstr "صادرات ناموفق بود. لطفاً دوباره امتحان کنید."
+msgstr "اکسپورت ناموفق بود. لطفاً دوباره امتحان کنید."
 
 msgid "Export completed successfully."
-msgstr "صادرات با موفقیت انجام شد."
+msgstr "اکسپورت با موفقیت انجام شد."
 
 msgid "Schedule not found."
 msgstr "برنامه یافت نشد."
@@ -2211,16 +2217,16 @@ msgid "Day of month is required for monthly schedule."
 msgstr "روز ماه برای برنامه ماهانه الزامی است."
 
 msgid "Scheduled export updated successfully."
-msgstr "صادرات زمان‌بندی شده با موفقیت به‌روزرسانی شد."
+msgstr "اکسپورت زمان‌بندی شده با موفقیت به‌روزرسانی شد."
 
 msgid "Scheduled export created successfully."
-msgstr "صادرات زمان‌بندی شده با موفقیت ایجاد شد."
+msgstr "اکسپورت زمان‌بندی شده با موفقیت ایجاد شد."
 
 msgid "Schedule Details"
 msgstr "جزئیات برنامه"
 
 msgid "Scheduled Export Details"
-msgstr "جزئیات صادرات زمان‌بندی شده"
+msgstr "جزئیات اکسپورت زمان‌بندی شده"
 
 msgid "User with this email or username does not exist."
 msgstr "کاربری با این ایمیل یا نام کاربری وجود ندارد."
@@ -2600,6 +2606,12 @@ msgstr "سازنده فرآیند"
 msgid "My Jobs"
 msgstr "وظایف من"
 
+msgid "Review Jobs"
+msgstr "بررسی وظایف"
+
+msgid "Approval Jobs"
+msgstr "تایید وظایف"
+
 msgid ""
 "Module for managing the process, including approval processes and review "
 "processes."
@@ -2904,7 +2916,11 @@ msgid "Bulk import records from a file."
 msgstr "واردات انبوه رکوردها از یک فایل."
 
 msgid "Export records to a file, or schedule recurring exports."
-msgstr "صادرات رکوردها به فایل یا زمان‌بندی صادرات دوره‌ای."
+msgstr "اکسپورت رکوردها به فایل یا زمان‌بندی اکسپورت دوره‌ای."
 
 msgid "Restore or permanently delete records removed from Horilla."
 msgstr "بازیابی یا حذف دائمی رکوردهای حذف‌شده از هورایلا."
+
+#, python-format
+msgid "%(time)s ago"
+msgstr "%(time)s پیش"

@@ -1838,6 +1838,45 @@ $(document).on("submit", "form[id^='exportForm-']", function (e) {
     return true;
 });
 
+function getFlowbiteDropdownPlacement(placement) {
+    placement = placement || "bottom";
+    if (document.documentElement.getAttribute("dir") === "rtl") {
+        var rtlPlacements = {
+            "right-end": "left-end",
+            "right-start": "left-start",
+            "left-end": "right-end",
+            "left-start": "right-start"
+        };
+        return rtlPlacements[placement] || placement;
+    }
+    return placement;
+}
+
+function initFlowbiteDropdowns(root) {
+    if (!window.Dropdown) {
+        return;
+    }
+    var $toggles = root
+        ? $(root).find("[data-dropdown-toggle]").addBack("[data-dropdown-toggle]")
+        : $("[data-dropdown-toggle]");
+    $toggles.each(function () {
+        var $toggle = $(this);
+        var targetId = $toggle.attr("data-dropdown-toggle");
+        var $target = $("#" + targetId);
+        if (!$target.length || $target.data("flowbiteInitialized")) {
+            return;
+        }
+        new Dropdown($target[0], $toggle[0], {
+            placement: getFlowbiteDropdownPlacement($toggle.attr("data-dropdown-placement"))
+        });
+        $target.data("flowbiteInitialized", true);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    initFlowbiteDropdowns();
+});
+
 // HTMX Events
 document.addEventListener("DOMContentLoaded", initSidebar);
 document.body.addEventListener("htmx:afterSwap", initSidebar);
@@ -1951,18 +1990,7 @@ $(document).on("htmx:afterSwap", function (event) {
 
 
     if (window.Dropdown) {
-        $('[data-dropdown-toggle]').each(function () {
-            var $toggle = $(this);
-            var targetId = $toggle.attr('data-dropdown-toggle');
-            var $target = $('#' + targetId);
-
-            if (!$target.data('flowbiteInitialized')) {
-                new Dropdown($target[0], $toggle[0], {
-                    placement: $toggle.attr('data-dropdown-placement') || 'bottom'
-                });
-                $target.data('flowbiteInitialized', true);
-            }
-        });
+        initFlowbiteDropdowns(event.target);
     }
 });
 

@@ -127,3 +127,14 @@ msgstr "قالب اعلان \"{}\" با موفقیت ایجاد شد."
 
 msgid "Customize the content of notifications sent to your users."
 msgstr "محتوای اعلان‌های ارسال‌شده به کاربران خود را سفارشی‌سازی کنید."
+
+#, python-format
+msgid "%(time)s ago by %(sender)s"
+msgstr "%(time)s پیش توسط %(sender)s"
+
+#, python-format
+msgid "%(time)s ago by "
+msgstr "%(time)s پیش توسط "
+
+msgid "System"
+msgstr "سیستم"

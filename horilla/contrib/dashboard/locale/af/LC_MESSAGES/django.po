@@ -9,582 +9,592 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 08:46+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2026-08-10 12:00+0330\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Module for building and customizing interactive dashboards."
-msgstr ""
+msgstr "ماژول برای ساخت و سفارشی‌سازی داشبوردهای تعاملی."
 
 msgid ""
 "Removed redundant fields attributes superseded by form_class on dashboard "
 "action views, and added admin and component view docstrings for pylint "
 "compliance."
 msgstr ""
+"ویژگی‌های فیلد اضافی که توسط form_class در نمایش‌های اقدام داشبورد جایگزین شده بودند حذف شدند و مستندسازی نمای مدیریت و مؤلفه برای انطباق با pylint اضافه شد."
 
 msgid ""
 "Dashboard forms aligned with HorillaModelForm layout: field_order and Meta."
 "fields = \"__all__\" with Meta.exclude; component form __init__ unchanged."
 msgstr ""
+"فرم‌های داشبورد با چیدمان HorillaModelForm هماهنگ شدند: field_order و Meta.fields = \"__all__\" با Meta.exclude؛ __init__ فرم مؤلفه بدون تغییر."
 
 msgid ""
 "Release 1.10: dashboards ship under contrib with app label dashboard. Widget "
 "and KPI wiring aligned to short app labels across contrib modules so filters "
 "and lookups resolve consistently."
 msgstr ""
+"نسخه ۱.۱۰: داشبوردها تحت contrib با برچسب برنامه dashboard ارائه می‌شوند. اتصال ویجت و KPI با برچسب‌های کوتاه برنامه در سراسر ماژول‌های contrib هماهنگ شد تا فیلترها و جستجوها به طور یکپارچه حل شوند."
 
 msgid ""
 "Extended dashboard generator to support multiple charts, multiple table "
 "widgets, and custom KPI functions. Added more KPI widgets and improved "
 "charts and reporting components for the dashboard."
 msgstr ""
+"تولیدکننده داشبورد برای پشتیبانی از چندین نمودار، چندین ویجت جدول و توابع KPI سفارشی گسترش یافت. ویجت‌های KPI بیشتری اضافه شدند و نمودارها و مؤلفه‌های گزارش‌دهی برای داشبورد بهبود یافتند."
 
 msgid ""
 "Added configurable Y-axis metrics for charts reusing KPI options, plus new "
 "chart types: Area, Tree Map, Heat Map, Radar, Sankey, and Scatter."
 msgstr ""
+"معیارهای قابل تنظیم محور Y برای نمودارها با استفاده مجدد از گزینه‌های KPI اضافه شدند، به علاوه انواع نمودار جدید: مساحت، نقشه درختی، نقشه حرارتی، رادار، سانکی و پراکندگی."
 
 msgid ""
 "Added advanced visualization capabilities including multi-series charts, "
 "improved stacked chart rendering, interactive chart previews in dashboard "
 "editor, and enhanced analytics widgets for deeper insights."
 msgstr ""
+"قابلیت‌های پیشرفته نمایش شامل نمودارهای چندسری، رندر بهبودیافته نمودارهای انباشته، پیش‌نمایش نمودار تعاملی در ویرایشگر داشبورد و ویجت‌های تحلیل پیشرفته برای بینش عمیق‌تر اضافه شدند."
 
 msgid ""
 "Migrated from Django AppConfig to Horilla AppLauncher and and replaced "
 "Django utilitieswith horilla.utils.decorators, horilla.utils.translation, "
 "and horilla.shortcuts where applicable."
 msgstr ""
+"از Django AppConfig به Horilla AppLauncher مهاجرت داده شد و ابزارهای Django با horilla.utils.decorators، horilla.utils.translation و horilla.shortcuts در صورت لزوم جایگزین شدند."
 
 msgid ""
 "Added drag and drop reordering from home page, date range filter,and set to "
 "default options for enhanced dashboard customization and data visualization."
 msgstr ""
+"مرتب‌سازی کشیدن و رها کردن از صفحه اصلی، فیلتر بازه تاریخ و گزینه‌های تنظیم به عنوان پیش‌فرض برای سفارشی‌سازی پیشرفته داشبورد و نمایش داده اضافه شدند."
 
 msgid "Dashboard"
-msgstr ""
+msgstr "داشبورد"
 
 msgid "Home"
-msgstr ""
+msgstr "خانه"
 
 msgid "Dashboards"
-msgstr ""
+msgstr "داشبوردها"
 
 msgid "Folder Name"
-msgstr ""
+msgstr "نام پوشه"
 
 msgid "Description"
-msgstr ""
+msgstr "توضیحات"
 
 msgid "Folder"
-msgstr ""
+msgstr "پوشه"
 
 msgid "Favourited By"
-msgstr ""
+msgstr "علاقه‌مندی توسط"
 
 msgid "Folder Owner"
-msgstr ""
+msgstr "مالک پوشه"
 
 msgid "Dashboard Folder"
-msgstr ""
+msgstr "پوشه داشبورد"
 
 msgid "Dashboard Folders"
-msgstr ""
+msgstr "پوشه‌های داشبورد"
 
 msgid "Dashboard Owner"
-msgstr ""
+msgstr "مالک داشبورد"
 
 msgid "Dashboard Name"
-msgstr ""
+msgstr "نام داشبورد"
 
 msgid "Is Default"
-msgstr ""
+msgstr "پیش‌فرض است"
 
 msgid "Charts"
-msgstr ""
+msgstr "نمودارها"
 
 msgid "Table Data"
-msgstr ""
+msgstr "داده جدول"
 
 msgid "KPI"
-msgstr ""
+msgstr "شاخص کلیدی عملکرد"
 
 msgid "Column Chart"
-msgstr ""
+msgstr "نمودار ستونی"
 
 msgid "Line Chart"
-msgstr ""
+msgstr "نمودار خطی"
 
 msgid "Pie Chart"
-msgstr ""
+msgstr "نمودار دایره‌ای"
 
 msgid "Funnel"
-msgstr ""
+msgstr "قیف"
 
 msgid "Bar Chart"
-msgstr ""
+msgstr "نمودار میله‌ای"
 
 msgid "Donut"
-msgstr ""
+msgstr "دونات"
 
 msgid "Stacked Vertical Chart"
-msgstr ""
+msgstr "نمودار انباشته عمودی"
 
 msgid "Stacked Horizontal Chart"
-msgstr ""
+msgstr "نمودار انباشته افقی"
 
 msgid "Scatter"
-msgstr ""
+msgstr "پراکندگی"
 
 msgid "Heat Map"
-msgstr ""
+msgstr "نقشه حرارتی"
 
 msgid "Tree Map"
-msgstr ""
+msgstr "نقشه درختی"
 
 msgid "Area Chart"
-msgstr ""
+msgstr "نمودار مساحت"
 
 msgid "Sankey Chart"
-msgstr ""
+msgstr "نمودار سانکی"
 
 msgid "Radar Chart"
-msgstr ""
+msgstr "نمودار رادار"
 
 msgid "Component Name"
-msgstr ""
+msgstr "نام مؤلفه"
 
 msgid "Component Type"
-msgstr ""
+msgstr "نوع مؤلفه"
 
 msgid "Chart Type"
-msgstr ""
+msgstr "نوع نمودار"
 
 msgid "Reports"
-msgstr ""
+msgstr "گزارش‌ها"
 
 msgid "Module"
-msgstr ""
+msgstr "ماژول"
 
 msgid "Metric Type"
-msgstr ""
+msgstr "نوع معیار"
 
 msgid "Grouping Field"
-msgstr ""
+msgstr "فیلد گروه‌بندی"
 
 msgid "Secondary Grouping"
-msgstr ""
+msgstr "گروه‌بندی ثانویه"
 
 msgid "Y-axis Metric Type"
-msgstr ""
+msgstr "نوع معیار محور Y"
 
 msgid "Table Columns"
-msgstr ""
+msgstr "ستون‌های جدول"
 
 msgid "Sequence"
-msgstr ""
+msgstr "توالی"
 
 msgid "KPI Icon"
-msgstr ""
+msgstr "آیکون KPI"
 
 msgid "Component Owner"
-msgstr ""
+msgstr "مالک مؤلفه"
 
 msgid "Dashboard Component"
-msgstr ""
+msgstr "مؤلفه داشبورد"
 
 msgid "Dashboard Components"
-msgstr ""
+msgstr "مؤلفه‌های داشبورد"
 
 msgid "Component"
-msgstr ""
+msgstr "مؤلفه"
 
 msgid "Field Name"
-msgstr ""
+msgstr "نام فیلد"
 
 msgid "Operator"
-msgstr ""
+msgstr "عملگر"
 
 msgid "Value"
-msgstr ""
+msgstr "مقدار"
 
 msgid "Component Criteria"
-msgstr ""
+msgstr "معیارهای مؤلفه"
 
 msgid "User"
-msgstr ""
+msgstr "کاربر"
 
 msgid ""
 "For default home: {\"kpi\": [\"default-kpi-0\", ...], \"chartsAndTables\": "
 "[...]}. For dashboard: {\"kpi\": [id, ...], \"components\": [id, ...]}."
 msgstr ""
+"برای خانه پیش‌فرض: {\"kpi\": [\"default-kpi-0\", ...], \"chartsAndTables\": [...]}. برای داشبورد: {\"kpi\": [id, ...], \"components\": [id, ...]}."
 
 msgid "Default Home Layout Order"
-msgstr ""
+msgstr "ترتیب چیدمان خانه پیش‌فرض"
 
 msgid "Default Home Layout Orders"
-msgstr ""
+msgstr "ترتیب‌های چیدمان خانه پیش‌فرض"
 
 #, python-format
 msgid "Layout order for %(user)s - %(dashboard)s"
-msgstr ""
+msgstr "ترتیب چیدمان برای %(user)s - %(dashboard)s"
 
 #, python-format
 msgid "Default home layout order for %(user)s"
-msgstr ""
+msgstr "ترتیب چیدمان خانه پیش‌فرض برای %(user)s"
 
 msgid "Company Name"
-msgstr ""
+msgstr "نام شرکت"
 
 msgid "Email"
-msgstr ""
+msgstr "ایمیل"
 
 msgid "Contact Number"
-msgstr ""
+msgstr "شماره تماس"
 
 msgid "Summit Logistics"
-msgstr ""
+msgstr "سامیت لجستیک"
 
 msgid "sales@summitlogistics.com"
-msgstr ""
+msgstr "sales@summitlogistics.com"
 
 msgid "+1 (415) 555-0182"
-msgstr ""
+msgstr "+1 (415) 555-0182"
 
 msgid "Brightline Media"
-msgstr ""
+msgstr "برایت‌لاین مدیا"
 
 msgid "hello@brightlinemedia.io"
-msgstr ""
+msgstr "hello@brightlinemedia.io"
 
 msgid "+1 (312) 555-0247"
-msgstr ""
+msgstr "+1 (312) 555-0247"
 
 msgid "Northstar Consulting"
-msgstr ""
+msgstr "نورت‌استار مشاوره"
 
 msgid "contact@northstarconsulting.co"
-msgstr ""
+msgstr "contact@northstarconsulting.co"
 
 msgid "+1 (646) 555-0119"
-msgstr ""
+msgstr "+1 (646) 555-0119"
 
 msgid "BluePeak Technologies"
-msgstr ""
+msgstr "بلوپیک تکنولوژی"
 
 msgid "info@bluepeaktech.ai"
-msgstr ""
+msgstr "info@bluepeaktech.ai"
 
 msgid "+1 (206) 555-0134"
-msgstr ""
+msgstr "+1 (206) 555-0134"
 
 msgid "Evergreen Retail Group"
-msgstr ""
+msgstr "اورگرین خرده‌فروشی"
 
 msgid "partnerships@evergreenretail.com"
-msgstr ""
+msgstr "partnerships@evergreenretail.com"
 
 msgid "+1 (718) 555-0176"
-msgstr ""
+msgstr "+1 (718) 555-0176"
 
 msgid "Edit"
-msgstr ""
+msgstr "ویرایش"
 
 msgid "Change Owner"
-msgstr ""
+msgstr "تغییر مالک"
 
 msgid "Delete"
-msgstr ""
+msgstr "حذف"
 
 msgid "Close"
-msgstr ""
+msgstr "بستن"
 
 msgid "Preview"
-msgstr ""
+msgstr "پیش‌نمایش"
 
 msgid "Select component type to see preview"
-msgstr ""
+msgstr "برای مشاهده پیش‌نمایش، نوع مؤلفه را انتخاب کنید"
 
 msgid "Choose File"
-msgstr ""
+msgstr "انتخاب فایل"
 
 msgid "No file chosen"
-msgstr ""
+msgstr "هیچ فایلی انتخاب نشده است"
 
 msgid "Conditions"
-msgstr ""
+msgstr "شروط"
 
 msgid "Remove"
-msgstr ""
+msgstr "حذف"
 
 msgid "Save"
-msgstr ""
+msgstr "ذخیره"
 
 msgid "Add components"
-msgstr ""
+msgstr "افزودن مؤلفه‌ها"
 
 msgid "Reorder"
-msgstr ""
+msgstr "مرتب‌سازی مجدد"
 
 msgid "Cancel"
-msgstr ""
+msgstr "لغو"
 
 msgid "Drag to reorder"
-msgstr ""
+msgstr "برای مرتب‌سازی مجدد بکشید"
 
 msgid "Loading KPI..."
-msgstr ""
+msgstr "در حال بارگذاری KPI..."
 
 msgid "Charts & Data"
-msgstr ""
+msgstr "نمودارها و داده"
 
 msgid "Export as PNG"
-msgstr ""
+msgstr "خروجی به عنوان PNG"
 
 msgid "Export as PDF"
-msgstr ""
+msgstr "خروجی به عنوان PDF"
 
 msgid "Update"
-msgstr ""
+msgstr "به‌روزرسانی"
 
 msgid "Add to Another Dashboard"
-msgstr ""
+msgstr "افزودن به داشبورد دیگر"
 
 msgid " Loading chart..."
-msgstr ""
+msgstr "در حال بارگذاری نمودار..."
 
 msgid "Created From report"
-msgstr ""
+msgstr "ایجاد شده از گزارش"
 
 msgid "No Components Added"
-msgstr ""
+msgstr "هیچ مؤلفه‌ای اضافه نشده است"
 
 msgid ""
 "This dashboard doesn't have any components yet. Add charts, tables, KPIs, or "
 "targets to visualize your data."
 msgstr ""
+"این داشبورد هنوز هیچ مؤلفه‌ای ندارد. برای نمایش داده‌های خود، نمودارها، جداول، KPIها یا اهداف را اضافه کنید."
 
 msgid "All Dashboards"
-msgstr ""
+msgstr "همه داشبوردها"
 
 msgid "Folders"
-msgstr ""
+msgstr "پوشه‌ها"
 
 msgid "All Folders"
-msgstr ""
+msgstr "همه پوشه‌ها"
 
 msgid "Favourites"
-msgstr ""
+msgstr "علاقه‌مندی‌ها"
 
 msgid "From"
-msgstr ""
+msgstr "از"
 
 msgid "to"
-msgstr ""
+msgstr "تا"
 
 msgid "Until"
-msgstr ""
+msgstr "تا"
 
 msgid "Custom"
-msgstr ""
+msgstr "سفارشی"
 
 msgid "Last"
-msgstr ""
+msgstr "آخرین"
 
 msgid "Days"
-msgstr ""
+msgstr "روزها"
 
 msgid "All Time"
-msgstr ""
+msgstr "همه زمان"
 
 msgid "Reset Range"
-msgstr ""
+msgstr "بازنشانی بازه"
 
 msgid "Custom Range"
-msgstr ""
+msgstr "بازه سفارشی"
 
 msgid "Start date"
-msgstr ""
+msgstr "تاریخ شروع"
 
 msgid "End date"
-msgstr ""
+msgstr "تاریخ پایان"
 
 msgid "Apply"
-msgstr ""
+msgstr "اعمال"
 
 msgid "Welcome"
-msgstr ""
+msgstr "خوش آمدید"
 
 msgid "Set to default"
-msgstr ""
+msgstr "تنظیم به عنوان پیش‌فرض"
 
 msgid "View All Dashboards"
-msgstr ""
+msgstr "مشاهده همه داشبوردها"
 
 msgid ""
 "Get started by creating your first dashboard or explore the overview below."
-msgstr ""
+msgstr "با ایجاد اولین داشبورد خود شروع کنید یا نمای کلی زیر را کاوش کنید."
 
 msgid ""
 "You currently don't have access to dashboard. Please contact your "
 "administrator to request permissions or explore available features."
-msgstr ""
+msgstr "شما در حال حاضر به داشبورد دسترسی ندارید. لطفاً برای درخواست مجوزها یا کاوش ویژگی‌های موجود با مدیر خود تماس بگیرید."
 
 msgid "Nothing to show yet. Please add your data."
-msgstr ""
+msgstr "هنوز چیزی برای نمایش وجود ندارد. لطفاً داده‌های خود را اضافه کنید."
 
 msgid "Records"
-msgstr ""
+msgstr "رکوردها"
 
 msgid "Failed to reset layout to default."
-msgstr ""
+msgstr "بازنشانی چیدمان به پیش‌فرض ناموفق بود."
 
 msgid " Delete"
-msgstr ""
+msgstr "حذف"
 
 msgid " Add to Another Dashboard"
-msgstr ""
+msgstr "افزودن به داشبورد دیگر"
 
 msgid "KPI icon"
-msgstr ""
+msgstr "آیکون KPI"
 
 msgid "Metric type"
-msgstr ""
+msgstr "نوع معیار"
 
 msgid "Secondary Grouping Field"
-msgstr ""
+msgstr "فیلد گروه‌بندی ثانویه"
 
 msgid "Y-axis metric"
-msgstr ""
+msgstr "معیار محور Y"
 
 msgid "Move to Dashboard"
-msgstr ""
+msgstr "انتقال به داشبورد"
 
 msgid "Original component not found."
-msgstr ""
+msgstr "مؤلفه اصلی یافت نشد."
 
 msgid "Chart successfully added to another dashboard."
-msgstr ""
+msgstr "نمودار با موفقیت به داشبورد دیگر اضافه شد."
 
 msgid "Add to Dashboard"
-msgstr ""
+msgstr "افزودن به داشبورد"
 
 msgid "This report '{}' is already added to the '{}' dashboard."
-msgstr ""
+msgstr "این گزارش '{}' قبلاً به داشبورد '{}' اضافه شده است."
 
 msgid "Report added to dashboard successfully."
-msgstr ""
+msgstr "گزارش با موفقیت به داشبورد اضافه شد."
 
 msgid "Report not found."
-msgstr ""
+msgstr "گزارش یافت نشد."
 
 msgid "Component name"
-msgstr ""
+msgstr "نام مؤلفه"
 
 msgid "Enter component name"
-msgstr ""
+msgstr "نام مؤلفه را وارد کنید"
 
 msgid "Missing module or grouping field; reload the chart and try again."
-msgstr ""
+msgstr "ماژول یا فیلد گروه‌بندی وجود ندارد؛ نمودار را دوباره بارگذاری کنید و دوباره امتحان کنید."
 
 msgid "Invalid module."
-msgstr ""
+msgstr "ماژول نامعتبر است."
 
 msgid "Please enter a component name."
-msgstr ""
+msgstr "لطفاً یک نام مؤلفه وارد کنید."
 
 msgid "Chart added to dashboard successfully."
-msgstr ""
+msgstr "نمودار با موفقیت به داشبورد اضافه شد."
 
 msgid "No component order provided. Please try reordering again."
-msgstr ""
+msgstr "هیچ ترتیب مؤلفه‌ای ارائه نشده است. لطفاً دوباره مرتب‌سازی مجدد را امتحان کنید."
 
 msgid "No component order provided."
-msgstr ""
+msgstr "هیچ ترتیب مؤلفه‌ای ارائه نشده است."
 
 msgid "Invalid component order. Please refresh and try again."
-msgstr ""
+msgstr "ترتیب مؤلفه نامعتبر است. لطفاً صفحه را بازخوانی کنید و دوباره امتحان کنید."
 
 msgid "Invalid component order."
-msgstr ""
+msgstr "ترتیب مؤلفه نامعتبر است."
 
 msgid "Components reordered successfully."
-msgstr ""
+msgstr "مؤلفه‌ها با موفقیت مرتب‌سازی مجدد شدند."
 
 msgid "New Dashboard"
-msgstr ""
+msgstr "داشبورد جدید"
 
 msgid "New Folder"
-msgstr ""
+msgstr "پوشه جدید"
 
 msgid "Dashboard layout reset to default order."
-msgstr ""
+msgstr "چیدمان داشبورد به ترتیب پیش‌فرض بازنشانی شد."
 
 msgid "Dashboard layout reset to default."
-msgstr ""
+msgstr "چیدمان داشبورد به پیش‌فرض بازنشانی شد."
 
 msgid "Favourite Dashboards"
-msgstr ""
+msgstr "داشبوردهای علاقه‌مندی"
 
 msgid "Select Grouping Field"
-msgstr ""
+msgstr "انتخاب فیلد گروه‌بندی"
 
 msgid "Select Secondary Grouping Field"
-msgstr ""
+msgstr "انتخاب فیلد گروه‌بندی ثانویه"
 
 msgid "Name"
-msgstr ""
+msgstr "نام"
 
 msgid "Type"
-msgstr ""
+msgstr "نوع"
 
 msgid ""
 "Your saved layout order was invalid and has been reset. Please reorder the "
 "dashboard again if needed."
-msgstr ""
+msgstr "ترتیب چیدمان ذخیره شده شما نامعتبر بود و بازنشانی شد. در صورت نیاز، دوباره داشبورد را مرتب کنید."
 
 msgid "KPI data is missing in the request"
-msgstr ""
+msgstr "داده KPI در درخواست وجود ندارد"
 
 msgid "Charts and tables data is missing in the request"
-msgstr ""
+msgstr "داده نمودارها و جداول در درخواست وجود ندارد"
 
 msgid "KPI data is invalid. Expected a list"
-msgstr ""
+msgstr "داده KPI نامعتبر است. یک لیست انتظار می‌رود"
 
 msgid "Charts and tables data is invalid. Expected a list"
-msgstr ""
+msgstr "داده نمودارها و جداول نامعتبر است. یک لیست انتظار می‌رود"
 
 msgid "KPI order is empty."
-msgstr ""
+msgstr "ترتیب KPI خالی است."
 
 msgid "Charts and tables order cannot be empty."
-msgstr ""
+msgstr "ترتیب نمودارها و جداول نمی‌تواند خالی باشد."
 
 msgid "Invalid KPI id in order."
-msgstr ""
+msgstr "شناسه KPI نامعتبر در ترتیب."
 
 msgid "Invalid chart or table id in order."
-msgstr ""
+msgstr "شناسه نمودار یا جدول نامعتبر در ترتیب."
 
 msgid "Invalid KPI order: IDs must match the current default home KPIs."
-msgstr ""
+msgstr "ترتیب KPI نامعتبر: شناسه‌ها باید با KPIهای خانه پیش‌فرض فعلی مطابقت داشته باشند."
 
 msgid ""
 "Invalid charts/tables order: IDs must match the current default home charts "
 "and tables."
-msgstr ""
+msgstr "ترتیب نمودارها/جداول نامعتبر: شناسه‌ها باید با نمودارها و جداول خانه پیش‌فرض فعلی مطابقت داشته باشند."
 
 msgid "Layout order saved successfully"
-msgstr ""
+msgstr "ترتیب چیدمان با موفقیت ذخیره شد"
 
 msgid "Layout order saved."
-msgstr ""
+msgstr "ترتیب چیدمان ذخیره شد."
 
 msgid "Layout reset to default."
-msgstr ""
+msgstr "چیدمان به پیش‌فرض بازنشانی شد."

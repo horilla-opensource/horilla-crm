@@ -61,6 +61,7 @@ class UserFormClass(HorillaMultiStepForm):
         3: ["department", "role"],
         4: [
             "language",
+            "calendar_system",
             "time_zone",
             "date_format",
             "time_format",

@@ -79,7 +79,11 @@
         {% endfor %}
     </head>
 
-    <body class="bg-secondary-50 font-[Inter,_sans-serif]" data-user-id="{{ request.user.id|default:0 }}">
+    <body
+        class="bg-secondary-50 font-[Inter,_sans-serif]"
+        data-user-id="{{ request.user.id|default:0 }}"
+        data-use-jalali-calendar="{% if USE_JALALI_CALENDAR %}true{% else %}false{% endif %}"
+    >
         <!-- Body Start: Early body initialization -->
         {% load_registered_html "body_start" as body_start_html %}
         {% for tpl in body_start_html %}

@@ -10,6 +10,7 @@ from zoneinfo import ZoneInfo
 from horilla.contrib.utils.middlewares import _thread_local
 
 # First party imports (Horilla)
+from horilla.utils.jalali import format_gregorian_as_jalali, uses_jalali_calendar
 from horilla.utils import timezone
 
 # Third-party imports (Django)
@@ -66,6 +67,13 @@ def format_datetime_value(value, user=None, company=None, convert_timezone=True)
             fmt = user.date_time_format
         elif company and getattr(company, "date_time_format", None):
             fmt = company.date_time_format
+        if uses_jalali_calendar(user=user):
+            try:
+                return format_gregorian_as_jalali(value, fmt, user=user)
+            except Exception:
+                return format_gregorian_as_jalali(
+                    value, "%Y-%m-%d %H:%M:%S", user=user
+                )
         try:
             return value.strftime(fmt)
         except Exception:
@@ -76,6 +84,11 @@ def format_datetime_value(value, user=None, company=None, convert_timezone=True)
             fmt = user.date_format
         elif company and getattr(company, "date_format", None):
             fmt = company.date_format
+        if uses_jalali_calendar(user=user):
+            try:
+                return format_gregorian_as_jalali(value, fmt, user=user)
+            except Exception:
+                return format_gregorian_as_jalali(value, "%Y-%m-%d", user=user)
         try:
             return value.strftime(fmt)
         except Exception:

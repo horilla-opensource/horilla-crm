@@ -50,6 +50,13 @@
                         <label class="text-xs text-color-600">{% trans 'Language' %}</label>
                         {{ form.language }}
                     </div>
+                    <div id="calendar-system-field" class="{% if request.user.language != 'fa' %}hidden{% endif %}">
+                        <label class="text-xs text-color-600">{% trans 'Calendar System' %}</label>
+                        {{ form.calendar_system }}
+                        <p class="text-[11px] text-gray-500 mt-1">
+                            {% trans 'Applies when your language is Persian. Reload the page after changing.' %}
+                        </p>
+                    </div>
                     <div>
                         <label class="text-xs text-color-600">{% trans 'Time Zone' %}</label>
                         {{ form.time_zone }}
@@ -74,4 +81,19 @@
             </div>
         </form>
     </div>
+    <script>
+        (function () {
+            const languageField = document.querySelector("#regional-formating-form [name='language']");
+            const calendarFieldWrapper = document.getElementById("calendar-system-field");
+            if (!languageField || !calendarFieldWrapper) {
+                return;
+            }
+            function syncCalendarFieldVisibility() {
+                const isPersian = languageField.value === "fa";
+                calendarFieldWrapper.classList.toggle("hidden", !isPersian);
+            }
+            languageField.addEventListener("change", syncCalendarFieldVisibility);
+            syncCalendarFieldVisibility();
+        })();
+    </script>
 {% endblock %}

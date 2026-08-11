@@ -163,7 +163,7 @@
                         id="searchInput"
                         name="search"
                         placeholder="{% trans 'Search' %}"
-                        class="text-color-600 px-2 py-1.5 pr-[40px] w-full border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm [transition:.3s] focus:border-primary-600"
+                        class="text-color-600 horilla-search-input--toolbar py-1.5 w-full border border-dark-50 rounded-md focus-visible:outline-0 placeholder:text-[#d3d3d3] placeholder:text-xs text-sm [transition:.3s] focus:border-primary-600"
                         value="{{ request.GET.search }}"
                         hx-get="{{ main_url }}?{% for key, value in request.GET.items %}{% if key != 'apply_filter' and  key != 'remove_filter' and key != 'field' and key != 'operator' and key != 'value' and key != 'search' %}{% if not forloop.first %}&{% endif %}{{ key }}={{ value }}{% endif %}{% endfor %}{% if request.GET.field %}&apply_filter=true{% endif %}"
                         hx-trigger="keyup changed delay:500ms, search"
@@ -173,7 +173,7 @@
                         hx-push-url="{{ search_push_url }}"
                         hx-include="#filtercontainer input, #filtercontainer select"
                     >
-                    <button class="absolute right-3 top-0 bottom-0 m-auto cursor-pointer">
+                    <button type="button" class="horilla-search-btn-end">
                         <img src="{% static 'assets/icons/search.svg' %}" alt="{% trans 'Search' %}" width="20">
                     </button>
                 </div>
@@ -258,7 +258,7 @@
                         </button>
                         {% if applied_filter_count %}
                             <span
-                                class="filter-count-badge absolute -top-2 -right-2 lg:-top-1 lg:-right-1 bg-red-500 text-white text-[10px] leading-none rounded-full min-w-[16px] h-4 flex items-center justify-center font-medium pt-0.5"
+                                class="filter-count-badge absolute -top-2 lg:-top-1 bg-red-500 text-white text-[10px] leading-none rounded-full min-w-[16px] h-4 flex items-center justify-center font-medium pt-0.5"
                                 aria-label="{% trans 'Applied filters' %}: {{ applied_filter_count }}"
                             >{{ applied_filter_count }}</span>
                         {% endif %}

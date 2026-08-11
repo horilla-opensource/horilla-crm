@@ -43,8 +43,13 @@
   right: 2px;
 }
 
-[dir="rtl"] input.peer:checked + div::after {
+[dir="rtl"] input.peer:checked + div.w-11::after {
   --tw-translate-x: -1.5rem;
+  transform: translateX(var(--tw-translate-x));
+}
+
+[dir="rtl"] input.peer:checked + div.w-10::after {
+  --tw-translate-x: -1.25rem;
   transform: translateX(var(--tw-translate-x));
 }
 
@@ -116,4 +121,212 @@
 [dir="rtl"] .card-item-menu {
   right: auto !important;
   left: 0.9375rem !important;
+}
+
+/*
+ * Phase 2 — generic UI utility mirrors for Tailwind physical classes.
+ * Prefer logical CSS in style.css for owned components; use this block for
+ * templates that still rely on physical Tailwind utilities.
+ */
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+[dir="rtl"] .ml-1 {
+  margin-left: 0;
+  margin-right: 0.25rem;
+}
+
+[dir="rtl"] .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+[dir="rtl"] .mr-1 {
+  margin-right: 0;
+  margin-left: 0.25rem;
+}
+
+[dir="rtl"] .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+/* Form/search overlays pinned with absolute right-3 */
+[dir="rtl"] .absolute.right-3 {
+  right: auto;
+  left: 0.75rem;
+}
+
+[dir="rtl"] .absolute.right-0 {
+  right: auto;
+  left: 0;
+}
+
+[dir="rtl"] .absolute.left-0 {
+  left: auto;
+  right: 0;
+}
+
+/* Table header/body corner radii */
+[dir="rtl"] .rounded-tl-md {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0.375rem !important;
+}
+
+[dir="rtl"] .rounded-tr-md {
+  border-top-right-radius: 0 !important;
+  border-top-left-radius: 0.375rem !important;
+}
+
+[dir="rtl"] .rounded-bl-md {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0.375rem !important;
+}
+
+[dir="rtl"] .rounded-br-md {
+  border-bottom-right-radius: 0 !important;
+  border-bottom-left-radius: 0.375rem !important;
+}
+
+/* List view action button group divider */
+[dir="rtl"] .tablebtn .border-r {
+  border-right-width: 0;
+  border-inline-end-width: 1px;
+}
+
+/* Toggle switches using Tailwind after:left-[2px] */
+[dir="rtl"] .after\:left-\[2px\]::after {
+  left: auto !important;
+  right: 2px !important;
+}
+
+/* Select2 multiple — mirror inline search caret position */
+[dir="rtl"] .select2-container--default .select2-selection--multiple .select2-selection__rendered:not(:empty) + .select2-search--inline {
+  right: auto;
+  left: 5px;
+}
+
+/*
+ * Phase 2 P1 — search padding fallbacks, list actions, column picker arrows.
+ */
+
+[dir="rtl"] .pl-9 {
+  padding-left: 0;
+  padding-right: 2.25rem;
+}
+
+[dir="rtl"] .pr-8 {
+  padding-right: 0;
+  padding-left: 2rem;
+}
+
+[dir="rtl"] .pr-\[40px\] {
+  padding-right: 0.5rem;
+  padding-left: 40px;
+}
+
+[dir="rtl"] .left-\[10px\] {
+  left: auto;
+  right: 10px;
+}
+
+[dir="rtl"] .right-\[10px\] {
+  right: auto;
+  left: 10px;
+}
+
+[dir="rtl"] .-right-2 {
+  right: auto;
+  left: -0.5rem;
+}
+
+[dir="rtl"] .lg\:-right-1 {
+  right: auto;
+  left: -0.25rem;
+}
+
+[dir="rtl"] .sticky.right-0 {
+  right: auto;
+  left: 0;
+}
+
+[dir="rtl"] .dropdown-content.right-0 {
+  right: auto;
+  left: 0;
+}
+
+[dir="rtl"] .absolute.top-2.right-2 {
+  right: auto;
+  left: 0.5rem;
+}
+
+[dir="rtl"] [class*="after:right-[8px]"]::after {
+  right: auto !important;
+  left: 8px !important;
+}
+
+[dir="rtl"] [class*="after:left-[8px]"]::after {
+  left: auto !important;
+  right: 8px !important;
+}
+
+[dir="rtl"] .pr-16 {
+  padding-right: 0.625rem;
+  padding-left: 4rem;
+}
+
+[dir="rtl"] .border-r-0,
+[dir="rtl"] .border-r-\[0px\] {
+  border-right-width: 1px;
+  border-left-width: 0;
+}
+
+/*
+ * Lead/opportunity pipeline — RTL stage order (first on the right) with left-pointing chevrons.
+ * Use direction:rtl for order; mirrored clip-paths for arrow shapes (not scaleX, which reverses order).
+ */
+html[dir="rtl"] .probar,
+html[dir="rtl"] .probar--rtl,
+[dir="rtl"] .probar,
+.probar--rtl {
+  direction: rtl;
+}
+
+html[dir="rtl"] .probar li div,
+html[dir="rtl"] .probar--rtl li div,
+[dir="rtl"] .probar li div,
+.probar--rtl li div {
+  clip-path: polygon(0% 50%, 10% 0%, 100% 0%, 90% 50%, 100% 100%, 10% 100%) !important;
+  -webkit-clip-path: polygon(0% 50%, 10% 0%, 100% 0%, 90% 50%, 100% 100%, 10% 100%) !important;
+}
+
+/* First stage (order 1) — rightmost, flat right edge */
+html[dir="rtl"] .probar li:first-child div,
+html[dir="rtl"] .probar--rtl li:first-child div,
+[dir="rtl"] .probar li:first-child div,
+.probar--rtl li:first-child div {
+  clip-path: polygon(0% 50%, 10% 0%, 100% 0%, 100% 50%, 100% 100%, 10% 100%) !important;
+  -webkit-clip-path: polygon(0% 50%, 10% 0%, 100% 0%, 100% 50%, 100% 100%, 10% 100%) !important;
+}
+
+/* Final stage — leftmost, flat left edge (no outward arrow) */
+html[dir="rtl"] .probar li:last-child div,
+html[dir="rtl"] .probar--rtl li:last-child div,
+[dir="rtl"] .probar li:last-child div,
+.probar--rtl li:last-child div {
+  clip-path: polygon(0% 0%, 100% 0%, 90% 50%, 100% 100%, 0% 100%) !important;
+  -webkit-clip-path: polygon(0% 0%, 100% 0%, 90% 50%, 100% 100%, 0% 100%) !important;
+  border-end-start-radius: 3px;
+  border-end-end-radius: 3px;
 }

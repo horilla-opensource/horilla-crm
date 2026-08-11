@@ -422,7 +422,7 @@
                                     <div class="relative">
                                         {{ field }}
                                         {% if field.field.widget.attrs.readonly or field.field.widget.attrs.data_readonly or field.field.widget.attrs.disabled or field.field.widget.attrs.data_disabled %}
-                                            <div class="absolute right-3 pb-3 transform -translate-y-1/2 pointer-events-none">
+                                            <div class="form-readonly-lock">
                                                 <svg
                                                     class="w-4 h-4 text-gray-400"
                                                     fill="none"

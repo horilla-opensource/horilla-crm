@@ -108,6 +108,7 @@ class HorillaUserAdmin(UserAdmin):
             {
                 "fields": (
                     "language",
+                    "calendar_system",
                     "time_zone",
                     "currency",
                     "time_format",

@@ -4,13 +4,14 @@ FROM python:3.13-slim AS builder
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# Install build dependencies
+# Install build dependencies including gettext
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         build-essential \
         libpq-dev \
         libjpeg-dev \
         zlib1g-dev \
+        gettext \
     && rm -rf /var/lib/apt/lists/*
 
 # Create virtual environment
@@ -29,7 +30,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:$PATH"
 
-# Install only runtime dependencies
+# Install only runtime dependencies including gettext
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libpq5 \
@@ -37,6 +38,7 @@ RUN apt-get update \
         zlib1g \
         curl \
         netcat-openbsd \
+        gettext \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
@@ -75,3 +77,4 @@ CMD ["uvicorn", "horilla.asgi:application", \
      "--ws-ping-timeout", "20", \
      "--lifespan", "off", \
      "--log-level", "info"]
+     

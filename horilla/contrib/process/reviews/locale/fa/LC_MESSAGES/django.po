@@ -3,189 +3,190 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 09:44+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2026-08-10 12:00+0330\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
 msgid "Review Process"
-msgstr ""
+msgstr "فرآیند بررسی"
 
 msgid "Select field(s)"
-msgstr ""
+msgstr "انتخاب فیلد(ها)"
 
 msgid "Fields to Review"
-msgstr ""
+msgstr "فیلدهای برای بررسی"
 
 msgid "Please select at least one field to review."
-msgstr ""
+msgstr "لطفاً حداقل یک فیلد برای بررسی انتخاب کنید."
 
 msgid "Please select at least one approver user."
-msgstr ""
+msgstr "لطفاً حداقل یک کاربر تأییدکننده انتخاب کنید."
 
 msgid "Please select at least one approver role."
-msgstr ""
+msgstr "لطفاً حداقل یک نقش تأییدکننده انتخاب کنید."
 
 msgid "Review Processes"
-msgstr ""
+msgstr "فرآیندهای بررسی"
 
 msgid "Review Jobs"
-msgstr ""
+msgstr "بررسی  وظابف"
 
 msgid "Title"
-msgstr ""
+msgstr "عنوان"
 
 msgid "Method Title"
-msgstr ""
+msgstr "عنوان روش"
 
 msgid "Module"
-msgstr ""
+msgstr "ماژول"
 
 msgid "Notify on Resubmission"
-msgstr ""
+msgstr "اعلان در هنگام ارسال مجدد"
 
 msgid "Notify on Approval"
-msgstr ""
+msgstr "اعلان در هنگام تأیید"
 
 msgid "Notify on Rejection"
-msgstr ""
+msgstr "اعلان در هنگام رد"
 
 msgid "Title is required."
-msgstr ""
+msgstr "عنوان الزامی است."
 
 msgid ""
 "An active review process already exists for this model and company. Only one "
 "active process is allowed per model per company."
 msgstr ""
+"یک فرآیند بررسی فعال از قبل برای این مدل و شرکت وجود دارد. فقط یک فرآیند فعال در هر مدل و هر شرکت مجاز است."
 
 msgid "Field Name"
-msgstr ""
+msgstr "نام فیلد"
 
 msgid "Operator"
-msgstr ""
+msgstr "عملگر"
 
 msgid "Value"
-msgstr ""
+msgstr "مقدار"
 
 msgid "AND"
-msgstr ""
+msgstr "و"
 
 msgid "OR"
-msgstr ""
+msgstr "یا"
 
 msgid "Logical Operator"
-msgstr ""
+msgstr "عملگر منطقی"
 
 msgid "Order"
-msgstr ""
+msgstr "ترتیب"
 
 msgid "Review Condition"
-msgstr ""
+msgstr "شرط بررسی"
 
 msgid "Review Conditions"
-msgstr ""
+msgstr "شروط بررسی"
 
 msgid "User"
-msgstr ""
+msgstr "کاربر"
 
 msgid "Role"
-msgstr ""
+msgstr "نقش"
 
 msgid "Approver Type"
-msgstr ""
+msgstr "نوع تأییدکننده"
 
 msgid "Approver Users"
-msgstr ""
+msgstr "کاربران تأییدکننده"
 
 msgid "Approver Roles"
-msgstr ""
+msgstr "نقش‌های تأییدکننده"
 
 msgid "Review Rule"
-msgstr ""
+msgstr "قانون بررسی"
 
 msgid "Review Rules"
-msgstr ""
+msgstr "قوانین بررسی"
 
 msgid "Review Rule Condition"
-msgstr ""
+msgstr "شرط قانون بررسی"
 
 msgid "Review Rule Conditions"
-msgstr ""
+msgstr "شروط قانون بررسی"
 
 msgid "Pending"
-msgstr ""
+msgstr "در انتظار"
 
 msgid "Approved"
-msgstr ""
+msgstr "تأیید شده"
 
 msgid "Rejected"
-msgstr ""
+msgstr "رد شده"
 
 msgid "Content Type"
-msgstr ""
+msgstr "نوع محتوا"
 
 msgid "Object ID"
-msgstr ""
+msgstr "شناسه شیء"
 
 msgid "Assigned To"
-msgstr ""
+msgstr "تخصیص داده شده به"
 
 msgid "Review Fields Snapshot"
-msgstr ""
+msgstr "تصویر لحظه‌ای فیلدهای بررسی"
 
 msgid "Status"
-msgstr ""
+msgstr "وضعیت"
 
 msgid "Reviewed By"
-msgstr ""
+msgstr "بررسی شده توسط"
 
 msgid "Reviewed At"
-msgstr ""
+msgstr "بررسی شده در"
 
 msgid "Review Note"
-msgstr ""
+msgstr "یادداشت بررسی"
 
 msgid "Review Job"
-msgstr ""
+msgstr "وظیفه بررسی"
 
 msgid "Add More"
-msgstr ""
+msgstr "افزودن بیشتر"
 
 msgid "Field Review"
-msgstr ""
+msgstr "بررسی فیلد"
 
 msgid "Close"
-msgstr ""
+msgstr "بستن"
 
 msgid "Your Decision"
-msgstr ""
+msgstr "تصمیم شما"
 
 msgid "Comment"
-msgstr ""
+msgstr "نظر"
 
 msgid "Add reason for this field decision"
-msgstr ""
+msgstr "دلیل این تصمیم فیلد را اضافه کنید"
 
 msgid "Reject"
-msgstr ""
+msgstr "رد"
 
 msgid "Approve"
-msgstr ""
+msgstr "تأیید"
 
 msgid "Process"
-msgstr ""
+msgstr "فرآیند"
 
 msgid "Record"
-msgstr ""
+msgstr "رکورد"
 
 #, python-format
 msgid ""
@@ -193,172 +194,179 @@ msgid ""
 "                            %(done)s / %(total)s approved.\n"
 "                        "
 msgstr ""
+"\n"
+"                            %(done)s / %(total)s تأیید شد.\n"
+"                        "
 
 msgid "Record Details"
-msgstr ""
+msgstr "جزئیات رکورد"
 
 msgid "No additional record details available."
-msgstr ""
+msgstr "هیچ جزئیات اضافی رکوردی در دسترس نیست."
 
 msgid "Fields To Review"
-msgstr ""
+msgstr "فیلدهای برای بررسی"
 
 msgid "Review field"
-msgstr ""
+msgstr "بررسی فیلد"
 
 msgid "Edit rejected field"
-msgstr ""
+msgstr "ویرایش فیلد رد شده"
 
 msgid "Edit"
-msgstr ""
+msgstr "ویرایش"
 
 msgid "Save and resubmit"
-msgstr ""
+msgstr "ذخیره و ارسال مجدد"
 
 msgid "Save"
-msgstr ""
+msgstr "ذخیره"
 
 msgid "Cancel"
-msgstr ""
+msgstr "لغو"
 
 msgid "No review fields captured for this job."
-msgstr ""
+msgstr "هیچ فیلد بررسی برای این وظیفه ضبط نشده است."
 
 msgid "Multi-Step Form"
-msgstr ""
+msgstr "فرم چندمرحله‌ای"
 
 msgid "Single-Step Form"
-msgstr ""
+msgstr "فرم تک‌مرحله‌ای"
 
 msgid "Choose File"
-msgstr ""
+msgstr "انتخاب فایل"
 
 msgid "No file chosen"
-msgstr ""
+msgstr "هیچ فایلی انتخاب نشده است"
 
 msgid "Clear"
-msgstr ""
+msgstr "پاک کردن"
 
 msgid "Read Only"
-msgstr ""
+msgstr "فقط خواندنی"
 
 msgid "Add"
-msgstr ""
+msgstr "افزودن"
 
 msgid "Loading..."
-msgstr ""
+msgstr "در حال بارگذاری..."
 
 msgid "Conditions"
-msgstr ""
+msgstr "شروط"
 
 msgid "Remove"
-msgstr ""
+msgstr "حذف"
 
 msgid "Save & New"
-msgstr ""
+msgstr "ذخیره و جدید"
 
 msgid "Entry Criteria"
-msgstr ""
+msgstr "معیارهای ورود"
 
 msgid ""
 "No entry criteria set. This review process applies to all records in the "
 "module."
 msgstr ""
+"هیچ معیار ورودی تعیین نشده است. این فرآیند بررسی برای همه رکوردهای ماژول اعمال می‌شود."
 
 msgid "Actions"
-msgstr ""
+msgstr "اقدامات"
 
 msgid "Resubmission"
-msgstr ""
+msgstr "ارسال مجدد"
 
 msgid "Approval"
-msgstr ""
+msgstr "تأیید"
 
 msgid "Rejection"
-msgstr ""
+msgstr "رد"
 
 msgid "Fields"
-msgstr ""
+msgstr "فیلدها"
 
 msgid "No review rules added"
-msgstr ""
+msgstr "هیچ قانون بررسی اضافه نشده است"
 
 msgid ""
 "Add a rule to assign an approver. Criteria is optional — if left empty, the "
 "rule applies to all records."
 msgstr ""
+"برای تخصیص تأییدکننده، یک قانون اضافه کنید. معیارها اختیاری هستند — در صورت خالی بودن، قانون برای همه رکوردها اعمال می‌شود."
 
 msgid "Rule"
-msgstr ""
+msgstr "قانون"
 
 msgid "Edit Rule"
-msgstr ""
+msgstr "ویرایش قانون"
 
 msgid "Delete Rule"
-msgstr ""
+msgstr "حذف قانون"
 
 msgid "Approver"
-msgstr ""
+msgstr "تأییدکننده"
 
 #, python-format
 msgid "You have a pending review request for %(record)s in %(process)s."
-msgstr ""
+msgstr "شما یک درخواست بررسی در انتظار برای %(record)s در %(process)s دارید."
 
 msgid "Add Rule"
-msgstr ""
+msgstr "افزودن قانون"
 
 msgid "Edit Process"
-msgstr ""
+msgstr "ویرایش فرآیند"
 
 msgid "Delete"
-msgstr ""
+msgstr "حذف"
 
 msgid "Criteria"
-msgstr ""
+msgstr "معیارها"
 
 msgid "Condition"
-msgstr ""
+msgstr "شرط"
 
 msgid "activated"
-msgstr ""
+msgstr "فعال شد"
 
 msgid "deactivated"
-msgstr ""
+msgstr "غیرفعال شد"
 
 msgid "An active review process already exists for this model and company."
-msgstr ""
+msgstr "یک فرآیند بررسی فعال از قبل برای این مدل و شرکت وجود دارد."
 
 msgid "My Review Jobs"
-msgstr ""
+msgstr "وظایف بررسی من"
 
 msgid "Review"
-msgstr ""
+msgstr "بررسی"
 
 msgid "The module for this review record is no longer available."
-msgstr ""
+msgstr "ماژول این رکورد بررسی دیگر در دسترس نیست."
 
 #, python-format
 msgid "%(owner)s resubmitted %(field)s in %(process)s for %(record)s."
-msgstr ""
+msgstr "%(owner)s دوباره %(field)s را در %(process)s برای %(record)s ارسال کرد."
 
 msgid "Invalid decision."
-msgstr ""
+msgstr "تصمیم نامعتبر است."
 
 #, python-format
 msgid ""
 "%(field)s was approved in %(process)s by %(approver)s. Comment: %(comment)s"
 msgstr ""
+"%(field)s توسط %(approver)s در %(process)s تأیید شد. نظر: %(comment)s"
 
 #, python-format
 msgid ""
 "%(field)s was rejected in %(process)s by %(approver)s. Reason: %(comment)s"
 msgstr ""
+"%(field)s توسط %(approver)s در %(process)s رد شد. دلیل: %(comment)s"
 
 msgid ""
 "All approvers have approved all review fields. Review completed successfully."
-msgstr ""
+msgstr "همه تأییدکنندگان همه فیلدهای بررسی را تأیید کردند. بررسی با موفقیت کامل شد."
 
 msgid ""
 "You have approved all fields. Waiting for other approvers to complete their "
 "review."
-msgstr ""
+msgstr "شما همه فیلدها را تأیید کرده‌اید. در انتظار اتمام بررسی سایر تأییدکنندگان."

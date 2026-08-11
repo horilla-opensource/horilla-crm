@@ -1,0 +1,7 @@
+{% load static i18n %}
+{% if USE_JALALI_CALENDAR %}
+<link rel="stylesheet" href="{% static 'assets/css/jalalidatepicker.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/horilla_jalali.css' %}">
+<script src="{% static 'assets/js/jalalidatepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/horilla_jalali.js' %}"></script>
+{% endif %}

@@ -21,6 +21,7 @@ from horilla.urls import reverse_lazy
 # First party imports (Horilla)
 from horilla.utils import timezone
 from horilla.utils.choices import (
+    CALENDAR_SYSTEM_CHOICES,
     DATE_FORMAT_CHOICES,
     DATETIME_FORMAT_CHOICES,
     NUMBER_GROUPING_CHOICES,
@@ -96,6 +97,15 @@ class HorillaUser(AbstractUser):
         verbose_name=_(
             "Language",
         ),
+    )
+    calendar_system = models.CharField(
+        max_length=20,
+        choices=CALENDAR_SYSTEM_CHOICES,
+        default="jalali",
+        help_text=_(
+            "Choose Shamsi (Jalali) or Gregorian dates when your language is Persian."
+        ),
+        verbose_name=_("Calendar System"),
     )
     time_zone = models.CharField(
         max_length=100,

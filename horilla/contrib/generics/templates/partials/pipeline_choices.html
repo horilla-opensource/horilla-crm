@@ -1,5 +1,5 @@
 {% include "messages.html" %}
-<ul class="probar flex text-sm" id="kanban-choices">
+<ul class="probar flex text-sm{% if LANGUAGE_BIDI %} probar--rtl{% endif %}" id="kanban-choices">
     {% for choice in pipeline_choices %}
         <li class="flex-auto relative {% if can_update %}cursor-pointer{% else %}cursor-not-allowed{% endif %}">
             {% if choice.5 and pipeline_custom_bg_color and pipeline_custom_text_color %}
@@ -8,7 +8,7 @@
                     class="
                         {% if pipeline_custom_hover_color and can_update %}{{ pipeline_custom_hover_color }}{% endif %} {{ pipeline_custom_bg_color }} {{ pipeline_custom_text_color }} font-bold
                         ps-8 px-3 py-1.5 w-full whitespace-nowrap transition duration-300
-                        inline-block px-8 py-2 text-center w-full min-w-[150px] [clip-path:polygon(100%_50%,90%_0%,0%_0%,10%_50%,0%_100%,90%_100%)]
+                        inline-block px-8 py-2 text-center w-full min-w-[150px]
                     "
                     {% if can_update %}
                         {% if choice.4 and final_stage_action %}
@@ -39,7 +39,7 @@
                         {% elif choice.3 %}bg-[#3f86e43a] text-[#3f86e4] {% if can_update %}hover:bg-[#528ddb]{% endif %}
                         {% else %}bg-[#F0F0F0] text-[#666] {% if can_update %}hover:bg-[#838181]{% endif %}{% endif %}
                         ps-8 px-3 py-1.5 w-full whitespace-nowrap transition duration-300
-                        inline-block px-8 py-2 text-center w-full min-w-[150px] [clip-path:polygon(100%_50%,90%_0%,0%_0%,10%_50%,0%_100%,90%_100%)]
+                        inline-block px-8 py-2 text-center w-full min-w-[150px]
                     "
                     {% if can_update %}
                         {% if choice.4 and final_stage_action %}
