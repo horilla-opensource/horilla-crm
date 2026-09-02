@@ -17,7 +17,27 @@ First-run onboarding runs only while no users exist in the database. Views are g
 | 5 | Lead stages init (CRM) | `leads:load_lead_stages` / `CreateLeadStageGroupView` |
 | 6 | Opportunity stages init (CRM) | `opportunities:load_opportunity_stages` / `CreateOppStageGroupView` |
 
-After company creation, **`company_created`** listeners inject HTMX scripts that load the lead-stage modal for new companies.
+After company creation, **`company_created`** listeners return an HTMX script fragment that closes the wizard modal, reloads the settings list, opens the content modal, and loads the lead-stage setup URL.
+
+### Modal transition script (`reload_and_load_url_script.html`)
+
+Used when a signal receiver must chain **close modal → reload list → open content modal → HTMX load URL**:
+
+| Receiver | Template | `load_url` target |
+|----------|----------|-------------------|
+| `handle_company_created` | `lead_status/reload_and_load_url_script.html` | `leads:load_lead_stages` |
+| `handle_lead_stage_group_created` | `opportunity_stage/reload_and_load_url_script.html` | `opportunities:load_opp_stages` |
+
+The template emits:
+
+```javascript
+closeModal();
+$('#reloadButton').click();
+openContentModal();
+// dynamic div: hx-get load_url → #contentModalBox
+```
+
+`ScriptResponse(reload=True, close=True)` alone does **not** replace this pattern — it does not call `openContentModal()` or inject the HTMX load into `#contentModalBox`. See [web.md — Modal transition after init signals](../../web/web.md#modal-transition-after-init-signals).
 
 ---
 
@@ -87,11 +107,11 @@ Stage constants and full wizard flow:
 
 ## Related signals
 
-| Signal | When |
-|--------|------|
-| `company_created` | New company saved — triggers lead-stage load script |
-| `lead_stage_created` | Lead stage group saved — opportunity init step when `initialization=True` |
-| `opp_stage_created` | Opportunity stage group saved |
+| Signal | When | Response |
+|--------|------|----------|
+| `company_created` | New company saved | Renders `reload_and_load_url_script.html` → lead stages modal |
+| `lead_stage_created` | Lead stage group saved | Init wizard step or opp-stage `reload_and_load_url_script.html` |
+| `opp_stage_created` | Opportunity stage group saved | — |
 
 ---
 
@@ -112,3 +132,4 @@ Stage constants and full wizard flow:
 - [Core app index](core_app.md)
 - [`db_initialization` decorator](../../utils/decorators.md#-db_initialization)
 - [Settings list shell](settings_list_shell.md) (settings pages after onboarding)
+- [Modal transition scripts](../../web/web.md#modal-transition-after-init-signals)

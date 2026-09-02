@@ -307,24 +307,28 @@ current 15-minute window and sends an HTML reminder email to the booker.
 
 ## Template Tag Builtins
 
-`static`, `i18n`, and `horilla_tags` are registered as Django template builtins in `settings.py`.
-Booking templates no longer contain explicit `{% load %}` declarations for these libraries. Do not
-re-add `{% load static %}`, `{% load i18n %}`, or `{% load horilla_tags %}` to any booking template —
-they are available in every template automatically.
+`static`, `i18n`, and `horilla_tags` are registered as Django template **builtins** in [`horilla/settings/base.py`](../../horilla/settings/base.md#-template-builtins). Booking templates do not need explicit `{% load static %}`, `{% load i18n %}`, or `{% load horilla_tags %}`.
 
-Affected booking templates (redundant `{% load %}` removed):
+---
 
-- `partials/cancel_cutoff_field.html`
-- `partials/location_field.html`
-- `partials/reschedule_cutoff_field.html`
-- `partials/time_slots.html`
-- `public/booking_cancel.html`
-- `public/booking_confirmed.html`
-- `public/booking_form.html`
-- `public/booking_reschedule.html`
-- `settings/booking_availability.html`
-- `settings/booking_detail.html`
-- `settings/booking_embed.html`
-- `settings/booking_page_nav.html`
-- `settings/booking_pages.html`
-- `settings/booking_status_form.html`
+## Settings empty state (`booking_pages.html`)
+
+When the active company has no **Business Hours** configured, the booking settings page shows a gate instead of the list shell:
+
+```django
+{% include "components/empty_state.html" with
+    image="assets/img/activate-company.svg"
+    message=empty_state_message
+    spacer=True
+    action_url=working_hours_url
+    action_label=empty_state_action_label %}
+```
+
+Context is built in the template with `{% trans %}`; `working_hours_url` comes from the view. See [empty-state partials](../../../templates/components/empty_state.md).
+
+---
+
+## Related documentation
+
+- Shared empty-state partials: [../../../templates/components/empty_state.md](../../../templates/components/empty_state.md)
+- Template builtins: [../../horilla/settings/base.md](../../horilla/settings/base.md#-template-builtins)

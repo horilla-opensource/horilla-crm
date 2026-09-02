@@ -219,6 +219,7 @@ See also [.claude/rules/horilla-coding-style.md](../.claude/rules/horilla-coding
 - [ ] Exceptions: `horilla.core.exceptions` — not `django.core.exceptions` for re-exported types.
 - [ ] Re-raised exceptions use `raise NewError(...) from exc` when translating caught errors (see [Exception chaining](#exception-chaining-raise--from)).
 - [ ] `@cached_property` values are read via accessor methods or explicit resolution — not passed as descriptors into ORM filters (see [`@cached_property` on views](#cached_property-on-views)).
+- [ ] Templates omit redundant `{% load static %}`, `{% load i18n %}`, and `{% load horilla_tags %}` (see [Django templates — built-in tag libraries](#django-templates--built-in-tag-libraries)).
 - [ ] New direct `django.*` imports are justified (not in Horilla map) or documented.
 
 ---
@@ -257,6 +258,47 @@ def company_for_user(self):
 | Currency / display fallbacks | Initialize default, then assign inside `if company is not None:` |
 
 Example (forecast views): [docs/horilla_crm/forecast/forecast_type_tab.md](docs/horilla_crm/forecast/forecast_type_tab.md#forecasttypetabmixin--cached-context-accessors).
+
+---
+
+## Django templates — built-in tag libraries
+
+Horilla registers common template tag libraries globally via `BUILTINS` in [`horilla/settings/base.py`](../horilla/settings/base.py). They are passed to Django as `OPTIONS["builtins"]` on the template engine.
+
+**Rule:** Do **not** add `{% load static %}`, `{% load i18n %}`, or `{% load horilla_tags %}` at the top of templates. Those libraries are already available in every template.
+
+| Built-in library | Provides (common) |
+|------------------|-------------------|
+| `django.templatetags.static` | `{% static %}`, `{% get_static_prefix %}`, … |
+| `django.templatetags.i18n` | `{% trans %}`, `{% blocktrans %}`, `{% get_current_language %}`, … |
+| `horilla.contrib.generics.templatetags.horilla_tags` | `{% has_perm %}`, `{% is_active %}`, `{% display_field_value %}`, … |
+
+Other tag libraries (e.g. `{% load horilla_call_tags %}`, app-specific libraries) are **not** built in — use `{% load … %}` only when you need tags from those modules.
+
+### Examples
+
+```django
+{# ✅ OK — no {% load %} needed for static, i18n, or horilla_tags #}
+<img src="{% static 'assets/img/activate-company.svg' %}" alt="{% trans 'Activate company' %}">
+{% has_perm "core.view_company" as can_view_company %}
+
+{# ❌ Avoid — redundant with BUILTINS #}
+{% load static %}
+{% load i18n %}
+{% load horilla_tags %}
+```
+
+```django
+{# ✅ OK — library not in BUILTINS #}
+{% load horilla_call_tags %}
+{% calls_enabled as calls_active %}
+```
+
+### Reviewer checklist
+
+- [ ] New or touched templates do not add `{% load static %}`, `{% load i18n %}`, or `{% load horilla_tags %}` unless removing legacy lines during a refactor.
+- [ ] `{% load … %}` is present only for tag libraries outside `BUILTINS`.
+- [ ] Prerequisite / no-data screens use [empty_state partials](templates/components/empty_state.md) instead of duplicating SVG markup.
 
 ---
 

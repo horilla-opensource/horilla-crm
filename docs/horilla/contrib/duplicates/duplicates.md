@@ -93,7 +93,19 @@ Both rule forms use **`HorillaModelForm`** with **`fields = "__all__"`** and exp
 
 ---
 
+## Empty states (v1.13.8)
+
+Matching rules accordion and potential-duplicates list use [empty_state.html](../../../templates/components/empty_state.md) instead of inline SVG blocks:
+
+| Template | Message |
+|----------|---------|
+| `matching_rule_accordion.html` | “Nothing to show yet. Please add your Matching Rules.” |
+| `potential_duplicates_list_view.html` | “No potential duplicates found.” |
+
+---
+
 ## Related documentation
 
 - Generics forms and detail tabs: [../generics/views/single_form.md](../generics/views/single_form.md), [../generics/views/detail_tabs.md](../generics/views/detail_tabs.md)
 - Core content types: [../core/models.md](../core/models.md)
+- Empty-state partials: [../../../templates/components/empty_state.md](../../../templates/components/empty_state.md)

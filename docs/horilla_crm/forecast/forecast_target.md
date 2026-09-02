@@ -57,6 +57,17 @@ The number of open condition rows is tracked in `request.session["condition_row_
 
 `UpdateTargetHelpTextView` returns an HTML snippet with context-sensitive help for the target value field (e.g. currency symbol, unit label) based on the selected `forecast_type`. Called via HTMX when the forecast type dropdown changes.
 
+### Empty states (`forecast_target_view.html`)
+
+The main template uses shared [empty-state partials](../../../templates/components/empty_state.md):
+
+| Condition | Partial |
+|-----------|---------|
+| `not has_company` | `components/empty_states/activate_company.html` |
+| No forecast type configured | `components/empty_state.html` with message “No Forecast Type set. Set it from settings.” (CTA button rendered outside the include when permissions allow) |
+
+The forecast dashboard shell (`forecast_view.html`) uses the same `activate_company.html` preset when `request.active_company` is missing.
+
 ---
 
 ## Bulk creation flow
@@ -72,5 +83,6 @@ The number of open condition rows is tracked in `request.session["condition_row_
 ## Related documentation
 
 - Forecast type tab (period table, trends, charts): [forecast_type_tab.md](forecast_type_tab.md)
+- Shared empty-state partials: [../../templates/components/empty_state.md](../../templates/components/empty_state.md)
 - `HorillaSingleFormView` multi-instance pattern: [../../horilla/contrib/generics/views/single_form.md](../../horilla/contrib/generics/views/single_form.md)
 - `HorillaListView`: [../../horilla/contrib/generics/views/list.md](../../horilla/contrib/generics/views/list.md)

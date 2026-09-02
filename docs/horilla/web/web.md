@@ -386,6 +386,43 @@ return ScriptResponse(
 
 ---
 
+## Modal transition after init signals
+
+Some CRM init flows return a **rendered script template** instead of `ScriptResponse` because they must:
+
+1. Close the wizard modal (`closeModal()`)
+2. Reload the settings list (`$('#reloadButton').click()`)
+3. Open the large content modal (`openContentModal()`)
+4. HTMX-load a URL into `#contentModalBox`
+
+Templates:
+
+- `horilla_crm/leads/templates/lead_status/reload_and_load_url_script.html`
+- `horilla_crm/opportunities/templates/opportunity_stage/reload_and_load_url_script.html`
+
+Signal receivers: `handle_company_created` (`horilla_crm/leads/signals.py`), `handle_lead_stage_group_created` (`horilla_crm/opportunities/signals.py`). Documented in [initialize_database.md](../contrib/core/initialize_database.md).
+
+### Recommended migration (future)
+
+Compose `ScriptResponse` with `extra=` for steps 3–4:
+
+```python
+from horilla.web import ScriptResponse
+
+return ScriptResponse(
+    close=True,
+    reload=True,
+    extra=(
+        "openContentModal();"
+        f"htmx.ajax('GET', '{load_url}', {{target: '#contentModalBox', swap: 'innerHTML'}});"
+    ),
+)
+```
+
+Until those templates are removed, keep the existing partials in sync with any modal DOM changes.
+
+---
+
 ## 🚫 `HttpNotFound` (custom 404)
 
 ### 📍 Class

@@ -35,7 +35,7 @@ The setup page (`TeamSellingSetupView`) and `ToggleTeamSellingView` are exempt f
 
 | View | Base | Purpose |
 |------|------|---------|
-| `OpportunityTeamView` | `HorillaView` | Main section shell — [settings list shell](../../horilla/contrib/core/settings_list_shell.md) |
+| `OpportunityTeamView` | `HorillaView` | Main section shell — [My Settings list shell](../../horilla/contrib/core/settings_list_shell.md#my-settings-list-shell-my_settings_list_shellhtml) (`my_settings_list_shell.html`) |
 | `OpportunityTeamNavbar` | `HorillaNavView` | Navigation with "Create Team" action |
 | `OpportunityTeamListView` | `HorillaListView` | Owner-filtered list of teams |
 | `OpportunityTeamFormView` | `HorillaSingleFormView` | Create/update team; condition rows for bulk member add |
@@ -100,6 +100,8 @@ Some HTMX chains can produce malformed query strings (e.g. `?obj=3?obj=3`). View
 ## Related documentation
 
 - [Opportunity stages](opportunity_stages.md)
+- My Settings list shell: [../../horilla/contrib/core/settings_list_shell.md](../../horilla/contrib/core/settings_list_shell.md#my-settings-list-shell-my_settings_list_shellhtml)
+- Empty-state partials (team-selling setup gate): [../../templates/components/empty_state.md](../../templates/components/empty_state.md)
 - `HorillaSingleFormView` multi-instance example: [../../horilla/contrib/generics/views/single_form.md](../../horilla/contrib/generics/views/single_form.md)
 - `HorillaListView`: [../../horilla/contrib/generics/views/list.md](../../horilla/contrib/generics/views/list.md)
 - Four-layer permissions: [../../horilla/contrib/generics/mixins.md](../../horilla/contrib/generics/mixins.md)

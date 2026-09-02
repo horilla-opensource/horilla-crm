@@ -2,7 +2,18 @@
 
 This tree mirrors **`horilla/contrib/`** Django apps. Each subfolder holds documentation for that app.
 
-## Recent updates (21–28 Aug 2026, v1.13.7)
+## Recent updates
+
+### Sep 2026 (v1.13.8)
+
+| Topic | Doc |
+|-------|-----|
+| Shared **empty-state** partials (`empty_state.html`, `activate_company.html`) | [../../templates/components/empty_state.md](../../templates/components/empty_state.md) |
+| **My Settings list shell** (`my_settings_list_shell.html`) | [core/settings_list_shell.md](core/settings_list_shell.md#my-settings-list-shell-my_settings_list_shellhtml) |
+| Template **BUILTINS** (`static`, `i18n`, `horilla_tags`) — no redundant `{% load %}` | [../settings/base.md](../settings/base.md#-template-builtins) · [coding_rule.md](../../coding_rule.md#django-templates--built-in-tag-libraries) |
+| Platform **locale** catalog refresh (`django.po` / `djangojs.po`) | `horilla/locale/` (run `makemessages` after string changes) |
+
+### Aug 2026 (v1.13.7)
 
 | Topic | Doc |
 |-------|-----|
@@ -24,7 +35,6 @@ This tree mirrors **`horilla/contrib/`** Django apps. Each subfolder holds docum
 | **core** | [core/core_app.md](core/core_app.md) (index) · [core/horilla.md](core/horilla.md) · [core/models.md](core/models.md) · … |
 | **dashboard** | [dashboard/dashboard.md](dashboard/dashboard.md) · [dashboard/default_dashboard_generator.md](dashboard/default_dashboard_generator.md) |
 | **duplicates** | [duplicates/duplicates.md](duplicates/duplicates.md) |
-| **field_requirements** | [field_requirements/field_requirements.md](field_requirements/field_requirements.md) |
 | **generics** | [generics/generics_app.md](generics/generics_app.md) · [generics/views/views_init.md](generics/views/views_init.md) · … |
 | **keys** | [keys/keys.md](keys/keys.md) · [keys/default_shortcut_registration.md](keys/default_shortcut_registration.md) |
 | **mail** | [mail/mail.md](mail/mail.md) |

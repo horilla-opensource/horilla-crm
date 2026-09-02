@@ -49,13 +49,19 @@ Returns the HTMX URL loaded into the main content area. Uses `?layout=` when set
 
 ### Settings list pages
 
-For Settings modules, set:
+For **admin Settings** modules:
 
 ```python
 template_name = "settings/settings_list_shell.html"
 view_id = "my-settings-view"
 nav_url = reverse_lazy("app:nav_view")
 list_url = reverse_lazy("app:list_view")
+```
+
+For **My Settings** list pages (sidebar profile area):
+
+```python
+template_name = "settings/my_settings_list_shell.html"
 ```
 
 See [settings list shell](../../core/settings_list_shell.md).
@@ -324,3 +330,4 @@ From a Lead form, allow creating a new `LeadStatus` in a dynamic modal and auto-
 - `HorillaTabView`: HTMX tabs + persisted active tab target.
 - `HorillaHistorySectionView`: object history timeline with filtering + pagination.
 - `HorillaDynamicCreateView`: safe dynamic creation modal with model/field validation, permission checks, and JS select-option injection.
+

@@ -28,7 +28,7 @@ Signals typically wire universal behaviors (audit helpers, cache invalidation—
 
 | Layer | Responsibility |
 |-------|----------------|
-| `HorillaView` | Base shell integration; use with [settings list shell](../core/settings_list_shell.md) for Settings list pages. |
+| `HorillaView` | Base shell integration; use with [settings list shell](../core/settings_list_shell.md) (`settings_list_shell.html` or `my_settings_list_shell.html`) for Settings list pages. |
 | `HorillaListView`, `HorillaKanbanView`, `HorillaCardView` | Data tables, boards, card grids with export + bulk actions. |
 | `HorillaDetailView`, `HorillaDetailTabView`, `HorillaSplitView` | Record detail, tabs, master/detail panes. |
 | `HorillaSingleFormView`, `HorillaMultiFormView` | Create/update flows; targeted by **duplicates** `inject.py`. |

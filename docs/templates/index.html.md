@@ -16,6 +16,7 @@ Related files:
 | `templates/components/header.html` | Top navigation bar |
 | `templates/components/sidebar.html` | Left icon sidebar |
 | `templates/components/horilla_modals.html` | Shared modal containers |
+| `templates/components/empty_state.html` | Shared empty-state image + message partial — see [components/empty_state.md](components/empty_state.md) |
 | `templates/messages.html` | Django messages toast area |
 | `templates/components/modelcontent_layout.html` | Standard inner layout (sidebar + `#mainContent`) |
 

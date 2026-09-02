@@ -75,6 +75,16 @@ The `perm` attribute uses **any-of** semantics (`has_any_perms`): the menu entry
 
 ## View permissions (`views.py`)
 
+`ShortKeyView` uses the shared [My Settings list shell](../../horilla/contrib/core/settings_list_shell.md#my-settings-list-shell-my_settings_list_shellhtml):
+
+```python
+class ShortKeyView(LoginRequiredMixin, HorillaView):
+    template_name = "settings/my_settings_list_shell.html"
+    view_id = "short-key-view"
+    nav_url = reverse_lazy("keys:short_key_nav")
+    list_url = reverse_lazy("keys:short_key_list")
+```
+
 `ShortKeyView` is protected at the dispatch level:
 
 ```python
@@ -111,3 +121,4 @@ Read **`ShortcutKey`** for:
 ## Related documentation
 
 - Step-by-step extension guide for other apps: [default_shortcut_registration.md](default_shortcut_registration.md)
+- My Settings list shell: [../core/settings_list_shell.md](../core/settings_list_shell.md#my-settings-list-shell-my_settings_list_shellhtml)

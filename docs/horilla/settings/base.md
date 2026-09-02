@@ -59,7 +59,9 @@ This is why template variables like `floating_menu`, `main_section_menu`, etc. a
 |---|---|
 | `django.templatetags.static` | `{% static %}` tag |
 | `django.templatetags.i18n` | `{% trans %}`, `{% blocktrans %}` tags |
-| `horilla.contrib.generics.templatetags.horilla_tags` | Horilla-specific tags and filters (permissions, formatting, etc.) |
+| `horilla.contrib.generics.templatetags.horilla_tags` | Horilla-specific tags and filters (permissions, formatting, `empty_add_message`, etc.) |
+
+Do not re-add `{% load static %}`, `{% load i18n %}`, or `{% load horilla_tags %}` in templates. See [coding_rule.md](../../coding_rule.md#django-templates--built-in-tag-libraries). For shared empty-state markup, see [empty_state.md](../../templates/components/empty_state.md).
 
 ## 🔌 REST Framework / JWT
 
