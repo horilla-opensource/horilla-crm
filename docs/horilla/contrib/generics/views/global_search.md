@@ -70,6 +70,7 @@ Each entry in the returned dict is keyed by **`model_name`** (e.g. `"Lead"`) wit
 - Else **`view_own_{model_name}`** → restrict using **`OWNER_FIELDS`**:
   - **ForeignKey** / **ManyToMany** to **user** / **employee** / **`auth.user`**: filter with `Q(...)` combined with **OR** across fields.
   - Non-relation fields: `Q(field_name=user)` when applicable.
+  - **`get_granted_access_filter(model, user, "view")`** (see [list.md — Granted access](list.md#granted-access-per-model-opt-in-beyond-owner_fields)) is called and, if it returns a `Q`, **OR'd** into the same combined query — so a model opting into granted access (e.g. `Opportunity` team members) surfaces matching records in search results even without an `OWNER_FIELDS` match.
 - If **`OWNER_FIELDS`** is missing or yields no queries, falls back to trying common names: **`created_by`**, **`user`**, **`owner`**, **`employee_id`** (same FK/M2M rules).
 - If user has **neither** permission → **empty** queryset.
 

@@ -316,7 +316,7 @@ Important caveat:
 
 Operational assumption:
 
-- IDs were sourced from authorized list rows in UI.
+- IDs were sourced from authorized list rows in UI. For a user who lacks the blanket `change_<model>` permission but holds `change_own_<model>`, that authorized-row scoping happens one level up, in the entrypoint that computes `record_ids`: it restricts to rows matching `OWNER_FIELDS` OR'd with `get_granted_access_filter(self.model, user, "change")` when the model defines it — so a model opting into [granted access](../list.md#granted-access-per-model-opt-in-beyond-owner_fields) (e.g. `Opportunity` team members) can still be bulk-updated without an `OWNER_FIELDS` match.
 
 If you need stricter defense-in-depth, override to intersect with `self.get_queryset()`.
 
@@ -452,3 +452,4 @@ Common customization options:
 
 `bulk_update.py` implements a permission-aware, type-coercing, audit-logging mass update pipeline for generic list views.
 It is optimized for HTMX modal UX and high-performance SQL bulk updates while still preserving per-record change history through `LogEntry`.
+

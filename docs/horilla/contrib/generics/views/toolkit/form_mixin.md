@@ -199,6 +199,7 @@ Flow:
 3. ownership checks in order:
    - `obj.is_owned_by(user)` if method exists
    - model-declared `OWNER_FIELDS`
+   - per-instance **granted access** hook: `user_has_granted_access(obj, user, "change")` (see [list.md — Granted access](../list.md#granted-access-per-model-opt-in-beyond-owner_fields)) — lets a model grant edit access some other way (e.g. `Opportunity` team membership) even when `OWNER_FIELDS` doesn't match
    - fallback fields:
      - `<model_name>_owner`
      - `owner`

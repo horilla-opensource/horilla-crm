@@ -289,7 +289,7 @@ Critical protection:
 
 - selected IDs are always intersected with `self.get_queryset()`.
 
-So effective delete scope is constrained by all list-level permission and ownership filters already applied in queryset construction.
+So effective delete scope is constrained by all list-level permission and ownership filters already applied in queryset construction. For a `delete_own_<model>`-only user, the confirm-delete branch (`action == "bulk_delete"`) additionally narrows `record_ids` to rows matching `OWNER_FIELDS`, OR'd with `get_granted_access_filter(self.model, user, "delete")` when the model defines it — so a model opting into [granted access](../list.md#granted-access-per-model-opt-in-beyond-owner_fields) (e.g. `Opportunity` team members) is bulk-deletable even without an `OWNER_FIELDS` match.
 
 Additional notes:
 

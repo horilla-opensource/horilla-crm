@@ -45,7 +45,7 @@ Subclasses that set **`model`** are stored in **`HorillaDetailView._view_registr
 1. Unauthenticated → **`redirect_to_login`** with `next` full path.
 2. Optionally **`model`** from **`GET`/`POST`** `app_label` + `model_name` via **`apps.get_model`**.
 3. **`get_object()`** — failures: HTMX → **`RefreshResponse`** + message; else **`HttpNotFound`** (both from **`horilla.web`**).
-4. Permission: **`view_{model}`** **or** (**owner** per **`OWNER_FIELDS`** and **`view_own_{model}`**). Owner detection supports **FK** (`== user`) and **M2M** (`user in field.all()`).
+4. Permission: **`view_{model}`** **or** (**owner** per **`OWNER_FIELDS`** and **`view_own_{model}`**) **or** granted access. Owner detection supports **FK** (`== user`) and **M2M** (`user in field.all()`). Granted access is a per-model opt-in beyond `OWNER_FIELDS`: if the model defines an instance method `has_granted_access(user, action)`, `user_has_granted_access(obj, user, action)` (in `helpers/queryset_utils.py`) calls it and grants access on a truthy result — used e.g. for `Opportunity` team members (`OpportunityTeamMember`) who aren't the record owner but should still see/act on it. The same hook (as a classmethod `granted_access_filter(cls, user, action)` returning a `Q`) is used at the queryset level by list/kanban/global-search views.
 5. Denied → **`403.html`**.
 
 ### `get` / templates
@@ -113,7 +113,7 @@ For **modal** or **lightweight** detail pages using **`template_name = "single_d
 |-----------|---------|------|
 | `title` | `"Detailed View"` | Context **`title`**. |
 | `header` | dict with title/subtitle/avatar | Branding block. |
-| `body` | `[]` | Field rows (app-specific). |
+| `body` | `[]` | Field rows; normalized by `get_body_fields()` (see below). |
 | `action_method` | `[]` | Extra action metadata. |
 | `actions` | `[]` | Toolbar actions. |
 | `cols` | `{}` | Layout columns config. |
@@ -129,7 +129,21 @@ For **modal** or **lightweight** detail pages using **`template_name = "single_d
 
 - **`__init__`**: sets **`ordered_ids_key`**, attaches **`request`** from **`_thread_local`** if available.
 - **`get`**: initializes empty session list if no **`ids_key`** in GET and no session data; if no **`instance`** and **`empty_template`**, renders it; if no instance, error + reload script.
-- **`get_context_data`**: **`instance`**, **`title`**, **`header`**, **`body`**, **`actions`**, **`action_method`**, **`cols`**; if **`instance_ids`** in session, **`closest_numbers`** for prev/next **`reverse_lazy`** URLs, **`extra_query`** (GET without **`ids_key`**).
+- **`get_context_data`**: **`instance`**, **`title`**, **`header`**, **`body`** (from **`get_body_fields()`**), **`actions`**, **`action_method`**, **`cols`**; if **`instance_ids`** in session, **`closest_numbers`** for prev/next **`reverse_lazy`** URLs, **`extra_query`** (GET without **`ids_key`**).
+
+### `get_body_fields()` — label normalization
+
+Each entry in **`self.body`** is normalized into `(label, field_name)`:
+
+- tuple/list `(label, field_name)` -> if `label` is a plain string that itself
+  names a real model field, resolved to that field's verbose name (e.g.
+  `("is_active", "is_active_col")` displays the `is_active` field's verbose
+  name); otherwise `label` is used as-is
+- string field name -> resolves the model field's verbose name
+- string `get_<field>_display` -> resolves the verbose name of `<field>`
+- string naming a method/property with a `short_description` attribute
+  (Django admin convention) -> uses that as the label
+- fallback -> title-cased string label
 
 ---
 

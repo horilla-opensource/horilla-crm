@@ -118,6 +118,7 @@ Default behavior:
 - **`view_{model_name}`** on `app_label` → allow.
 - Else, if model defines **`OWNER_FIELDS`**, check whether `obj` is “owned” by `request.user` via those FKs.
 - If owner → require **`view_own_{model_name}`**.
+- Else, if `request.user` has **`view_own_{model_name}`**, fall back to the per-instance **granted access** hook: **`user_has_granted_access(obj, user, "view")`** (see [list.md — Granted access](list.md#granted-access-per-model-opt-in-beyond-owner_fields)) → allow when the model grants access some other way (e.g. `Opportunity` team membership).
 - Otherwise → deny.
 
 Override for stricter or custom rules.

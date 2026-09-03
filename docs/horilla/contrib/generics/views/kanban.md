@@ -60,7 +60,8 @@ This allows one generic update endpoint to work across many model-specific kanba
 `can_user_modify_item(item)` allows move when:
 
 - user has `change_<model>` permission, or
-- user has `change_own_<model>` and matches any model `OWNER_FIELDS` FK value.
+- user has `change_own_<model>` and matches any model `OWNER_FIELDS` FK value, or
+- user has `change_own_<model>` and `user_has_granted_access(item, user, "change")` returns `True` — the per-instance [granted-access hook](list.md#granted-access-per-model-opt-in-beyond-owner_fields) (e.g. an `Opportunity` team member with sufficient `opportunity_access`), checked after the `OWNER_FIELDS` loop fails to match.
 
 If not allowed, move/update endpoints return a reload script with an error message.
 

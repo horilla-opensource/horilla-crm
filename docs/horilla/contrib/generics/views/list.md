@@ -152,8 +152,14 @@ Subclasses usually set:
 
 When `self.columns` is provided, each entry is normalized into `(label, field_name)`:
 
-- tuple/list -> used as-is
+- tuple/list `(label, field_name)` -> if `label` is a plain string that itself
+  names a real model field, resolved to that field's verbose name (e.g.
+  `("is_active", "is_active_col")` displays the `is_active` field's verbose
+  name); otherwise `label` is used as-is
 - string field name -> attempts model field lookup for verbose name
+- string `get_<field>_display` -> resolves the verbose name of `<field>`
+- string naming a method/property with a `short_description` attribute
+  (Django admin convention) -> uses that as the label
 - fallback -> title-cased string label
 
 The lookup is wrapped in `translation.override("en")` so labels are stable for UI metadata.
@@ -229,10 +235,35 @@ If enabled, stores the **ordered current queryset ids** to `ordered_ids_<model>`
 If `owner_filtration=True`:
 
 - user with `view_<model>` gets all
-- user with `view_own_<model>` gets OR-filter over `OWNER_FIELDS`
-- no matching permission -> empty queryset
+- user with `view_own_<model>` gets OR-filter over `OWNER_FIELDS`, further
+  OR'd with any **granted-access** filter (see below) if the model opts in
+- no matching permission -> empty queryset (unless a granted-access filter
+  still grants some rows)
 
 This is critical because it enforces visibility at query level, not only at template/action level.
+
+#### Granted access (per-model opt-in, beyond `OWNER_FIELDS`)
+
+Some models grant a user access to specific records through a mechanism other
+than plain ownership — e.g. being added as a team member on an `Opportunity`
+via `OpportunityTeamMember`. A model opts in by defining a classmethod:
+
+```python
+@classmethod
+def granted_access_filter(cls, user, action):
+    """Return a Q object (usable in queryset.filter(...)) matching records
+    that grant `user` access to `action` ("view", "change", or "delete")."""
+    ...
+```
+
+`horilla.contrib.generics.views.helpers.queryset_utils.get_granted_access_filter(model, user, action)`
+calls this hook (returning `None` if the model doesn't define it, or on
+error) and the result is OR'd into the ownership queryset filter above. The
+same helper module's `user_has_granted_access(obj, user, action)` does the
+equivalent per-instance check (via an optional `has_granted_access(user,
+action)` instance method) and is used by detail, delete, and kanban views to
+allow single-object access/actions that plain `OWNER_FIELDS` ownership
+wouldn't grant.
 
 ---
 

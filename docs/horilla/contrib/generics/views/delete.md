@@ -107,6 +107,7 @@ Rules:
 
 - User with `delete_perm` → can delete any instance.
 - User with `delete_own_perm` → can delete only if **any** `OWNER_FIELDS` on the model equals `request.user` (FK equality only in this check).
+- User with `delete_own_perm` but no `OWNER_FIELDS` match → falls back to the per-instance **granted access** hook, `user_has_granted_access(obj, user, "delete")` (see [list.md — Granted access](list.md#granted-access-per-model-opt-in-beyond-owner_fields)); if that returns `True`, the object may still be deleted.
 - Otherwise → `PermissionDenied`.
 
 Set `check_delete_permission = False` only if you enforce permissions elsewhere.
