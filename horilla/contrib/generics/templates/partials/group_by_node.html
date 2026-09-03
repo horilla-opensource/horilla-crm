@@ -9,7 +9,7 @@
     <tbody {% if group.needs_fetch %}id="tbody-{{ group.group_id }}"{% endif %}>
         <tr
             id="{{ group.group_id }}"
-            class="group-by-divider-row {% if parent_row_id %}row-collapsed{% endif %}"
+            class="group-by-divider-row {% if parent_row_id %}row-collapsed{% endif %} {% if group.needs_fetch %}cursor-pointer{% endif %}"
             {% if parent_row_id %}
                 data-group-parent="{{ parent_row_id }}"
             {% endif %}

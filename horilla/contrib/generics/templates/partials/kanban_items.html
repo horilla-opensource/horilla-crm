@@ -67,8 +67,7 @@
 
                             {% if allowed_kanban_attrs %}
                                 <p
-                                    class="mb-1 hover:text-primary-600 overflow-visible"
-                                    style="cursor: pointer"
+                                    class="mb-1 hover:text-primary-600 overflow-visible cursor-pointer"
                                     {% for attr_name, attr_value in kanban_attrs.items %}
                                         {% if attr_name != 'class' and attr_name != 'style' and attr_name != 'permission' and attr_name != 'own_permission' and attr_name != 'owner_field' and attr_name != 'owner_method' %}
                                             {{ attr_name }}="{{ attr_value|format:item|safe }}"
@@ -99,9 +98,8 @@
                         {% else %}
                             {# No permission check - render normally (string attrs) #}
                             <p
-                                class="mb-1 overflow-visible {% if kanban_attrs %} hover:text-primary-600 {% endif %}"
+                                class="mb-1 overflow-visible {% if kanban_attrs %} hover:text-primary-600 cursor-pointer{% endif %}"
                                 {% if kanban_attrs %}
-                                    style="cursor: pointer"
                                     {% for attr_name, attr_value in kanban_attrs.items %}
                                         {% if attr_name not in 'class style permission own_permission owner_field owner_method' %}
                                             {{ attr_name }}="{{ attr_value|format:item|safe }}"

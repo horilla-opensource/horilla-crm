@@ -591,7 +591,7 @@
                                         {% endif %}
                                     </td>
                                     <td
-                                        class="text-[13px] border-[1px] border-[solid] border-[#dddddd] text-left p-3 bg-gray-50"
+                                        class="text-[13px] border-[1px] border-[solid] border-[#dddddd] text-left p-3 bg-gray-50 cursor-pointer"
                                         hx-get="{% url 'forecast:forecast_opportunities' forecast_id=user_forecast.id opportunity_type='closed' %}?forecast_type_id={{ forecast_type.id }}{% if request.GET.fiscal_year_id %}&fiscal_year_id={{ request.GET.fiscal_year_id }}{% endif %}"
                                         hx-target="#contentModalBox"
                                         hx-trigger="click"
@@ -631,7 +631,7 @@
                                         </div>
                                     </td>
                                     <td
-                                        class="text-[13px] border-[1px] border-[solid] border-[#dddddd] text-left p-3 bg-gray-50"
+                                        class="text-[13px] border-[1px] border-[solid] border-[#dddddd] text-left p-3 bg-gray-50 cursor-pointer"
                                         hx-get="{% url 'forecast:forecast_opportunities' forecast_id=user_forecast.id opportunity_type='committed' %}?forecast_type_id={{ forecast_type.id }}{% if request.GET.fiscal_year_id %}&fiscal_year_id={{ request.GET.fiscal_year_id }}{% endif %}"
                                         hx-target="#contentModalBox"
                                         hx-trigger="click"
@@ -667,7 +667,7 @@
                                         </div>
                                     </td>
                                     <td
-                                        class="text-[13px] border-[1px] border-[solid] border-[#dddddd] text-left p-3 bg-gray-50"
+                                        class="text-[13px] border-[1px] border-[solid] border-[#dddddd] text-left p-3 bg-gray-50 cursor-pointer"
                                         hx-get="{% url 'forecast:forecast_opportunities' forecast_id=user_forecast.id opportunity_type='best_case' %}?forecast_type_id={{ forecast_type.id }}{% if request.GET.fiscal_year_id %}&fiscal_year_id={{ request.GET.fiscal_year_id }}{% endif %}"
                                         hx-target="#contentModalBox"
                                         hx-trigger="click"
@@ -703,7 +703,7 @@
                                         </div>
                                     </td>
                                     <td
-                                        class="text-[13px] border-[1px] border-[solid] border-[#dddddd] text-left p-3 bg-gray-50"
+                                        class="text-[13px] border-[1px] border-[solid] border-[#dddddd] text-left p-3 bg-gray-50 cursor-pointer"
                                         hx-get="{% url 'forecast:forecast_opportunities' forecast_id=user_forecast.id opportunity_type='open_pipeline' %}?forecast_type_id={{ forecast_type.id }}{% if request.GET.fiscal_year_id %}&fiscal_year_id={{ request.GET.fiscal_year_id }}{% endif %}"
                                         hx-target="#contentModalBox"
                                         hx-trigger="click"
