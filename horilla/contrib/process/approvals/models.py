@@ -392,11 +392,13 @@ class ApprovalDecision(HorillaCoreModel):
         ApprovalInstance,
         on_delete=models.CASCADE,
         related_name="decisions",
+        verbose_name=_("Instance"),
     )
     step = models.ForeignKey(
         ApprovalStep,
         on_delete=models.CASCADE,
         related_name="decisions",
+        verbose_name=_("Step"),
     )
 
     decided_by = models.ForeignKey(
@@ -405,15 +407,17 @@ class ApprovalDecision(HorillaCoreModel):
         null=True,
         blank=True,
         related_name="approval_decisions",
+        verbose_name=_("Decided By"),
     )
 
     decision = models.CharField(
         max_length=16,
         choices=DECISION_CHOICES,
+        verbose_name=_("Decision"),
     )
-    comment = models.TextField(blank=True)
+    comment = models.TextField(blank=True, verbose_name=_("Comment"))
 
-    decided_at = models.DateTimeField(auto_now_add=True)
+    decided_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Decided At"))
 
     class Meta:
         """Meta options for ApprovalDecision."""

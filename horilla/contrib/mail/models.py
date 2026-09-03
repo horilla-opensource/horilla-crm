@@ -103,6 +103,7 @@ class HorillaMailConfiguration(HorillaCoreModel):
     )
     use_dynamic_display_name = models.BooleanField(
         default=True,
+        verbose_name=_("Dynamic Display Name"),
         help_text=_(
             _("By enabling this the display name will take from who triggered the mail")
         ),
@@ -137,7 +138,9 @@ class HorillaMailConfiguration(HorillaCoreModel):
     oauth_state = models.CharField(
         editable=False, max_length=100, null=True, blank=True
     )
-    last_refreshed = models.DateTimeField(null=True, editable=False, blank=True)
+    last_refreshed = models.DateTimeField(
+        null=True, editable=False, blank=True, verbose_name=_("Token Last Refreshed")
+    )
 
     def __init__(self, *args, **kwargs):
         """Initialize the model instance."""
@@ -246,7 +249,7 @@ class HorillaMail(HorillaCoreModel):
 
     to = models.TextField(
         help_text=_("Comma separated recipient email addresses"),
-        verbose_name=_("To"),
+        verbose_name=_("Send To"),
         blank=True,  # Allow blank for drafts, validate when sending
     )
     cc = models.TextField(blank=True, null=True, verbose_name=_("Cc"))
@@ -270,10 +273,14 @@ class HorillaMail(HorillaCoreModel):
     object_id = models.PositiveIntegerField()
     related_to = models.GenericForeignKey("content_type", "object_id")
     mail_status = models.CharField(
-        max_length=20, choices=MAIL_STATUS_CHOICES, default="draft", db_index=True
+        max_length=20,
+        choices=MAIL_STATUS_CHOICES,
+        default="draft",
+        db_index=True,
+        verbose_name=_("Mail Status"),
     )
     mail_status_message = models.TextField(blank=True, null=True)
-    sent_at = models.DateTimeField(blank=True, null=True)
+    sent_at = models.DateTimeField(blank=True, null=True, verbose_name=_("Sent At"))
     delivered_at = models.DateTimeField(blank=True, null=True)
     bounced_at = models.DateTimeField(blank=True, null=True)
     opened_at = models.DateTimeField(blank=True, null=True)
