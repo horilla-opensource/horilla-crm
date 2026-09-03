@@ -121,7 +121,7 @@
                                             >
                                         </button>
                                     </div>
-                                {% else %}
+                                {% elif split.id %}
                                     <div class="flex tablebtn">
                                         <button
                                             type="button"
@@ -133,6 +133,18 @@
                                             hx-swap="outerHTML"
                                             onclick="hxConfirm(this,'{% trans "Are you sure you want to delete this split?" %}')"
                                             hx-trigger="confirmed"
+                                        >
+                                            <img src='{% static "assets/icons/a4.svg" %}' alt="" width="16" class="">
+                                        </button>
+                                    </div>
+                                {% else %}
+                                    <div class="flex tablebtn">
+                                        <button
+                                            type="button"
+                                            class="rounded-md w-10 h-7 bg-dark-25 flex-1 flex justify-center border-r border-r-[white] hover:bg-dark-50 transition duration-300 items-center"
+                                            title="{% trans 'Remove' %}"
+                                            aria-label="{% trans 'Remove' %}"
+                                            onclick="this.closest('tr').remove()"
                                         >
                                             <img src='{% static "assets/icons/a4.svg" %}' alt="" width="16" class="">
                                         </button>
