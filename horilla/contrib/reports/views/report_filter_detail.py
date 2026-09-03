@@ -407,7 +407,7 @@ class ReportDetailFilteredView(LoginRequiredMixin, View):
 
         # Add no_record_msg if queryset is empty
         if not queryset.exists():
-            context["no_record_msg"] = "No records found"
+            context["no_record_msg"] = _("No records found")
 
         # Render only the list_view.html template
         return render(request, "list_view.html", context)

@@ -202,7 +202,9 @@ class DashboardComponentTableDataView(LoginRequiredMixin, View):
             "visible_actions": [],
             "col_attrs": {},
             "table_class": True,
-            "no_record_msg": f"No {model._meta.verbose_name_plural} found matching the specified criteria.",
+            "no_record_msg": _(
+                f"No {model._meta.verbose_name_plural} found matching the specified criteria."
+            ),
             "header_attrs": {},
             "custom_bulk_actions": [],
             "additional_action_button": [],

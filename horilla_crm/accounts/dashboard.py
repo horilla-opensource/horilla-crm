@@ -109,7 +109,7 @@ def account_table_func(generator, model_info):
         title=_("Accounts"),
         filter_kwargs={},
         no_found_img="assets/img/not-found-list.svg",
-        no_record_msg="No accounts found.",
+        no_record_msg=_("No accounts found."),
         view_id="accounts_dashboard_list",
     )
 

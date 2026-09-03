@@ -452,7 +452,9 @@ class RoleMembersView(LoginRequiredMixin, TemplateView):
         context.update(list_view.get_context_data())
         context["role"] = role
         context["model_verbose_name"] = f"{role.role_name} Role Members"
-        context["no_record_msg"] = f'No members found in the "{role.role_name}" role.'
+        context["no_record_msg"] = _(
+            f'No members found in the "{role.role_name}" role.'
+        )
         return context
 
 

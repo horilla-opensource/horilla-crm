@@ -150,7 +150,7 @@ def campaign_table_func(generator, model_info):
         title=_("Campaigns"),
         filter_kwargs={},
         no_found_img="assets/img/not-found-list.svg",
-        no_record_msg="No campaigns found.",
+        no_record_msg=_("No campaigns found."),
         view_id="campaigns_dashboard_list",
     )
 

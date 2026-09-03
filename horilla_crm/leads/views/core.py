@@ -293,7 +293,7 @@ class LeadListView(LoginRequiredMixin, HorillaListView):
             queryset = queryset.filter(is_convert=True)
             self.actions = None
             self.no_record_add_button = False
-            self.no_record_msg = "Not found coverted leads"
+            self.no_record_msg = _("Not found coverted leads")
             self.bulk_update_option = False
         else:
             queryset = queryset.filter(is_convert=False)
@@ -780,7 +780,7 @@ class LeadSplitView(LoginRequiredMixin, HorillaSplitView):
             queryset = queryset.filter(is_convert=True)
             self.actions = None
             self.no_record_add_button = False
-            self.no_record_msg = "Not found coverted leads"
+            self.no_record_msg = _("Not found coverted leads")
             self.bulk_update_option = False
         else:
             queryset = queryset.filter(is_convert=False)

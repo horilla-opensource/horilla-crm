@@ -815,7 +815,7 @@ class LoginHistoryListView(LoginRequiredMixin, HorillaListView):
     bulk_update_option = False
     enable_sorting = False
 
-    no_record_msg = "No login history available for this user."
+    no_record_msg = _("No login history available for this user.")
 
     header_attrs = [
         {

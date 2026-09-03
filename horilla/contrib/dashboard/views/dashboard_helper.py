@@ -509,7 +509,9 @@ def get_table_data(component, request):
 
     context.update(
         {
-            "no_record_msg": f"No {model._meta.verbose_name_plural} found matching the specified criteria.",
+            "no_record_msg": _(
+                f"No {model._meta.verbose_name_plural} found matching the specified criteria."
+            ),
             "header_attrs": {},
             "col_attrs": col_attrs,
             "visible_actions": [],
