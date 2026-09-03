@@ -8,23 +8,16 @@ This module provides background tasks for:
 """
 
 # Standard library imports
-import csv
 import io
 import logging
 import zipfile
 from datetime import timedelta
-from io import BytesIO
 
 # Third-party imports
 from celery import shared_task
 
 # Third-party imports (Django)
 from django.core.mail import get_connection
-from openpyxl import Workbook
-from openpyxl.styles import Alignment, Font, PatternFill
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 
 from horilla.apps import apps
 from horilla.contrib.utils.middlewares import _thread_local
@@ -34,13 +27,14 @@ from horilla.db import models
 from horilla.utils import timezone
 from horilla.utils.translation import gettext as _
 
-from .utils import sanitize_export_value
-
 # Local imports
 from .views.export_data import (
-    get_export_cell_value,
     get_export_queryset,
     is_exportable_field,
+    iter_export_rows,
+    stream_export_to_csv,
+    stream_export_to_pdf,
+    stream_export_to_xlsx,
 )
 
 logger = logging.getLogger(__name__)
@@ -345,215 +339,22 @@ def export_model_data(
 
     field_data = [(str(field.verbose_name), field.name, field) for field in fields]
     column_headers = [fd[0] for fd in field_data]
-
-    data = []
-    for obj in queryset:
-        row = []
-        for _verbose_name, field_name, field in field_data:
-            value = get_export_cell_value(obj, field_name, field, user)
-            row.append(value)
-        data.append(row)
+    row_iter = iter_export_rows(queryset, field_data, user)
 
     if export_format == "csv":
-        return export_to_csv(model, column_headers, data)
+        filename = f"{model.__name__}_export.csv"
+        return stream_export_to_csv(model, column_headers, row_iter, filename)
     if export_format == "xlsx":
-        return export_to_xlsx(model, column_headers, data)
+        filename = f"{model.__name__}_export.xlsx"
+        return stream_export_to_xlsx(model, column_headers, row_iter, filename)
     if export_format == "pdf":
-        return export_to_pdf(model, column_headers, data)
+        filename = f"{model.__name__}_export.pdf"
+        document_title = f"Exported {model._meta.verbose_name_plural}"
+        return stream_export_to_pdf(
+            model, column_headers, row_iter, filename, document_title
+        )
 
     return None, None
-
-
-def export_to_csv(model, headers, data):
-    """Export data to CSV format."""
-    buffer = io.StringIO()
-    writer = csv.writer(buffer)
-    writer.writerow(headers)
-    for row in data:
-        sanitized_row = [sanitize_export_value(cell) for cell in row]
-        writer.writerow(sanitized_row)
-    buffer.seek(0)
-    return f"{model.__name__}_export.csv", io.BytesIO(buffer.getvalue().encode("utf-8"))
-
-
-def export_to_xlsx(model, headers, data):
-    """Export data to Excel format."""
-    wb = Workbook()
-    ws = wb.active
-
-    ws.append([str(header) for header in headers])
-
-    # Style headers
-    header_font = Font(bold=True)
-    header_alignment = Alignment(horizontal="center")
-    header_fill = PatternFill(
-        start_color="eafb5b", end_color="eafb5b", fill_type="solid"
-    )
-
-    for cell in ws[1]:
-        cell.font = header_font
-        cell.alignment = header_alignment
-        cell.fill = header_fill
-
-    # Set column widths
-    for col in ws.columns:
-        column_letter = col[0].column_letter
-        ws.column_dimensions[column_letter].width = 25
-
-    # Add data
-    for row in data:
-        sanitized_row = [
-            sanitize_export_value(str(cell) if cell is not None else "") for cell in row
-        ]
-        ws.append(sanitized_row)
-
-    # Set row heights
-    for idx, row in enumerate(ws.rows, 1):
-        ws.row_dimensions[idx].height = 15
-
-    buffer = BytesIO()
-    wb.save(buffer)
-    buffer.seek(0)
-    return f"{model.__name__}_export.xlsx", buffer
-
-
-def export_to_pdf(model, headers, data):
-    """Export data to PDF format."""
-    buffer = BytesIO()
-    page_size = (letter[1], letter[0])
-    width, height = page_size
-
-    c = canvas.Canvas(buffer, pagesize=page_size)
-    document_title = f"Exported {model._meta.verbose_name_plural}"
-    c.setTitle(document_title)
-
-    # PDF generation parameters
-    title_font_size = 18
-    header_font_size = 12
-    data_font_size = 10
-    start_x = 50
-    start_y = height - 100
-    min_col_width = 120
-    padding = 8
-    max_rows_per_page = 7
-    max_cols_per_page = 6
-    extra_row_spacing = 10
-
-    def wrap_text(text, max_chars):
-        text = str(text) if text is not None else ""
-        if len(text) <= max_chars:
-            return [text] if text else [""]
-        words = text.split()
-        lines = []
-        current_line = ""
-        for word in words:
-            if len(current_line) + len(word) + 1 <= max_chars:
-                current_line += word + " "
-            else:
-                lines.append(current_line.strip())
-                current_line = word + " "
-        if current_line:
-            lines.append(current_line.strip())
-        return lines if lines else [""]
-
-    column_chunks = [
-        headers[i : i + max_cols_per_page]
-        for i in range(0, len(headers), max_cols_per_page)
-    ]
-
-    for chunk_idx, chunk_headers in enumerate(column_chunks):
-        total_table_width = min(len(chunk_headers) * min_col_width, width - 100)
-        col_width = total_table_width / len(chunk_headers) if chunk_headers else 100
-        max_chars_per_line = int(col_width // (header_font_size * 0.5))
-
-        row_start = 0
-
-        while row_start < len(data):
-            # Draw title
-            c.setFont("Helvetica-Bold", title_font_size)
-            column_range = f"Columns {(chunk_idx * max_cols_per_page) + 1} to {min((chunk_idx + 1) * max_cols_per_page, len(headers))}"
-            c.drawCentredString(
-                width / 2, height - 50, f"{document_title} ({column_range})"
-            )
-
-            # Draw headers
-            c.setFont("Helvetica-Bold", header_font_size)
-            header_y = start_y
-            max_header_lines = max(
-                [len(wrap_text(h, max_chars_per_line)) for h in chunk_headers]
-            )
-            header_height = max_header_lines * (header_font_size + 2) + 15
-
-            c.setFillColor(colors.lightgrey)
-            c.rect(
-                start_x,
-                header_y - header_height + 5,
-                total_table_width,
-                header_height,
-                fill=1,
-                stroke=0,
-            )
-
-            c.setFillColor(colors.black)
-            for i, header in enumerate(chunk_headers):
-                x = start_x + i * col_width + padding
-                wrapped_header = wrap_text(header, max_chars_per_line)
-                y_offset = (
-                    header_height - len(wrapped_header) * (header_font_size + 2)
-                ) / 2 + 3
-                for line in wrapped_header:
-                    c.drawString(x, header_y - y_offset, line)
-                    y_offset += header_font_size + 2
-
-            # Draw data rows
-            c.setFont("Helvetica", data_font_size)
-            y = header_y - header_height - 10
-            rows_drawn = 0
-
-            for row_idx in range(row_start, len(data)):
-                if rows_drawn >= max_rows_per_page:
-                    break
-
-                start_col = chunk_idx * max_cols_per_page
-                end_col = min((chunk_idx + 1) * max_cols_per_page, len(data[row_idx]))
-                row = data[row_idx][start_col:end_col]
-
-                max_lines_in_row = max(
-                    [len(wrap_text(v, max_chars_per_line)) for v in row]
-                )
-                row_height = max_lines_in_row * (data_font_size + 2) + extra_row_spacing
-
-                if rows_drawn % 2 == 0:
-                    c.setFillColor(colors.whitesmoke)
-                    c.rect(
-                        start_x,
-                        y - row_height,
-                        total_table_width,
-                        row_height,
-                        fill=1,
-                        stroke=0,
-                    )
-
-                for i, value in enumerate(row):
-                    wrapped_value = wrap_text(value, max_chars_per_line)
-                    x = start_x + i * col_width + padding
-                    text_y_offset = (
-                        row_height - len(wrapped_value) * (data_font_size + 2)
-                    ) / 2 + 9
-                    for line in wrapped_value:
-                        c.setFillColor(colors.black)
-                        c.drawString(x, y - text_y_offset, line)
-                        text_y_offset += data_font_size + 2
-
-                y -= row_height
-                rows_drawn += 1
-
-            row_start += max_rows_per_page
-            c.showPage()
-
-    c.save()
-    buffer.seek(0)
-    return f"{model.__name__}_export.pdf", buffer
 
 
 def send_export_email(user, export_format, export_files, modules, company=None):

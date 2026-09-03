@@ -22,6 +22,7 @@ from django.views import View
 # Third-party imports
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.utils import get_column_letter
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
@@ -309,10 +310,6 @@ class ExportView(LoginRequiredMixin, TemplateView):
         safe_name = slugify(model._meta.verbose_name_plural)
         return f"{safe_name}_export_{timestamp}.{export_format}"
 
-    def _get_export_value(self, obj, field_name, field, user):
-        """Delegate to shared helper for use in view and in scheduled export tasks."""
-        return get_export_cell_value(obj, field_name, field, user)
-
     def export_model_data(
         self, model, export_format, queryset=None, selected_fields=None
     ):
@@ -325,211 +322,35 @@ class ExportView(LoginRequiredMixin, TemplateView):
 
         field_data = [(str(field.verbose_name), field.name, field) for field in fields]
         column_headers = [fd[0] for fd in field_data]
-
-        data = []
-        for obj in queryset:
-            row = []
-            for _verbose_name, field_name, field in field_data:
-                value = self._get_export_value(obj, field_name, field, user)
-                row.append(value)
-            data.append(row)
-
-        _model_verbose_name = model._meta.verbose_name_plural.lower().replace(" ", "_")
         document_title = f"Exported {model._meta.verbose_name_plural}"
 
         if export_format == "csv":
-            buffer = io.StringIO()
-            writer = csv.writer(buffer)
-            writer.writerow(column_headers)
-            for row in data:
-                sanitized_row = [sanitize_export_value(cell) for cell in row]
-                writer.writerow(sanitized_row)
-            buffer.seek(0)
             filename = self.get_export_filename(model, "csv")
-            return f"{filename}", io.BytesIO(buffer.getvalue().encode("utf-8"))
-
-        if export_format == "xlsx":
-            wb = Workbook()
-            ws = wb.active
-
-            ws.append([str(header) for header in column_headers])
-
-            header_font = Font(bold=True)
-            header_alignment = Alignment(horizontal="center")
-            header_fill = PatternFill(
-                start_color="eafb5b", end_color="eafb5b", fill_type="solid"
+            return stream_export_to_csv(
+                model,
+                column_headers,
+                iter_export_rows(queryset, field_data, user),
+                filename,
             )
 
-            for cell in ws[1]:
-                cell.font = header_font
-                cell.alignment = header_alignment
-                cell.fill = header_fill
-
-            for col in ws.columns:
-                column_letter = col[0].column_letter
-                ws.column_dimensions[column_letter].width = 25
-
-            for row in data:
-                sanitized_row = [
-                    sanitize_export_value(str(cell) if cell is not None else "")
-                    for cell in row
-                ]
-                ws.append(sanitized_row)
-
-            for idx, row in enumerate(ws.rows, 1):
-                ws.row_dimensions[idx].height = 15
-
-            buffer = BytesIO()
-            wb.save(buffer)
-            buffer.seek(0)
+        if export_format == "xlsx":
             filename = self.get_export_filename(model, "xlsx")
-            return f"{filename}", buffer
+            return stream_export_to_xlsx(
+                model,
+                column_headers,
+                iter_export_rows(queryset, field_data, user),
+                filename,
+            )
 
         if export_format == "pdf":
-            from reportlab.lib import colors
-
-            buffer = BytesIO()
-            page_size = (letter[1], letter[0])
-            width, height = page_size
-
-            c = canvas.Canvas(buffer, pagesize=page_size)
-            c.setTitle(document_title)
-
-            title_font_size = 18
-            header_font_size = 12
-            data_font_size = 10
-
-            start_x = 50
-            start_y = height - 100
-            min_col_width = 120
-            padding = 8
-            max_rows_per_page = 7
-            max_cols_per_page = 6
-            extra_row_spacing = 10
-
-            def wrap_text(text, max_chars):
-                text = str(text) if text is not None else ""
-                if len(text) <= max_chars:
-                    return [text] if text else [""]
-                words = text.split()
-                lines = []
-                current_line = ""
-                for word in words:
-                    if len(current_line) + len(word) + 1 <= max_chars:
-                        current_line += word + " "
-                    else:
-                        lines.append(current_line.strip())
-                        current_line = word + " "
-                if current_line:
-                    lines.append(current_line.strip())
-                return lines if lines else [""]
-
-            column_chunks = [
-                column_headers[i : i + max_cols_per_page]
-                for i in range(0, len(column_headers), max_cols_per_page)
-            ]
-
-            for chunk_idx, chunk_headers in enumerate(column_chunks):
-                total_table_width = min(len(chunk_headers) * min_col_width, width - 100)
-                col_width = (
-                    total_table_width / len(chunk_headers) if chunk_headers else 100
-                )
-                max_chars_per_line = int(col_width // (header_font_size * 0.5))
-
-                rows_drawn = 0
-                row_start = 0
-
-                while row_start < len(data):
-                    c.setFont("Helvetica-Bold", title_font_size)
-                    column_range = f"Columns {(chunk_idx * max_cols_per_page) + 1} to {min((chunk_idx + 1) * max_cols_per_page, len(column_headers))}"
-                    c.drawCentredString(
-                        width / 2, height - 50, f"{document_title} ({column_range})"
-                    )
-
-                    c.setFont("Helvetica-Bold", header_font_size)
-                    c.setFillColor(colors.black)
-                    header_y = start_y
-                    max_header_lines = 1
-                    for i, header in enumerate(chunk_headers):
-                        wrapped_header = wrap_text(header, max_chars_per_line)
-                        max_header_lines = max(max_header_lines, len(wrapped_header))
-
-                    header_height = max_header_lines * (header_font_size + 2) + 15
-                    c.setFillColor(colors.lightgrey)
-                    c.rect(
-                        start_x,
-                        header_y - header_height + 5,
-                        total_table_width,
-                        header_height,
-                        fill=1,
-                        stroke=0,
-                    )
-
-                    c.setFont("Helvetica-Bold", header_font_size)
-                    c.setFillColor(colors.black)
-                    for i, header in enumerate(chunk_headers):
-                        x = start_x + i * col_width + padding
-                        wrapped_header = wrap_text(header, max_chars_per_line)
-                        total_text_height = len(wrapped_header) * (header_font_size + 2)
-                        y_offset = (header_height - total_text_height) / 2 + 3
-                        for line in wrapped_header:
-                            c.drawString(x, header_y - y_offset, line)
-                            y_offset += header_font_size + 2
-
-                    c.setFont("Helvetica", data_font_size)
-                    y = header_y - header_height - 10
-                    rows_drawn = 0
-
-                    for row_idx in range(row_start, len(data)):
-                        if rows_drawn >= max_rows_per_page:
-                            break
-
-                        start_col = chunk_idx * max_cols_per_page
-                        end_col = min(
-                            (chunk_idx + 1) * max_cols_per_page, len(data[row_idx])
-                        )
-                        row = data[row_idx][start_col:end_col]
-
-                        max_lines_in_row = 1
-                        for value in row:
-                            wrapped_value = wrap_text(value, max_chars_per_line)
-                            max_lines_in_row = max(max_lines_in_row, len(wrapped_value))
-                        row_height = (
-                            max_lines_in_row * (data_font_size + 2) + extra_row_spacing
-                        )
-                        total_text_height = max_lines_in_row * (data_font_size + 2)
-                        text_y_offset = (row_height - total_text_height) / 2 + 9
-
-                        if rows_drawn % 2 == 0:
-                            c.setFillColor(colors.whitesmoke)
-                            c.rect(
-                                start_x,
-                                y - row_height,
-                                total_table_width,
-                                row_height,
-                                fill=1,
-                                stroke=0,
-                            )
-
-                        for i, value in enumerate(row):
-                            wrapped_value = wrap_text(value, max_chars_per_line)
-                            x = start_x + i * col_width + padding
-                            y_offset = text_y_offset
-                            for line in wrapped_value:
-                                c.setFillColor(colors.black)
-                                c.drawString(x, y - y_offset, line)
-                                y_offset += data_font_size + 2
-
-                        y -= row_height
-                        rows_drawn += 1
-
-                    row_start += max_rows_per_page
-                    c.showPage()
-
-            c.save()
-            buffer.seek(0)
             filename = self.get_export_filename(model, "pdf")
-            return f"{filename}", buffer
+            return stream_export_to_pdf(
+                model,
+                column_headers,
+                iter_export_rows(queryset, field_data, user),
+                filename,
+                document_title,
+            )
 
         return None, None
 
@@ -584,6 +405,222 @@ def get_export_cell_value(obj, field_name, field, user):
     except Exception as e:
         logger.error("Error retrieving field %s: %s", field_name, str(e))
         return ""
+
+
+def iter_export_rows(queryset, field_data, user):
+    """
+    Yield one export row (list of cell values) at a time.
+
+    Consumes `queryset` via `.iterator()` so the DB driver streams rows
+    instead of Django caching the full result set, and never materialises
+    more than one row in memory at a time.
+    """
+    for obj in queryset.iterator(chunk_size=2000):
+        yield [
+            get_export_cell_value(obj, field_name, field, user)
+            for _verbose_name, field_name, field in field_data
+        ]
+
+
+def stream_export_to_csv(model, column_headers, row_iter, filename):
+    """Write export rows to CSV in a single forward pass over `row_iter`."""
+    buffer = io.StringIO()
+    writer = csv.writer(buffer)
+    writer.writerow(column_headers)
+    for row in row_iter:
+        writer.writerow(row)
+    buffer.seek(0)
+    return filename, io.BytesIO(buffer.getvalue().encode("utf-8"))
+
+
+def stream_export_to_xlsx(model, column_headers, row_iter, filename):
+    """
+    Write export rows to XLSX in a single forward pass over `row_iter`,
+    using openpyxl's write-only mode so rows are streamed to disk instead
+    of being kept as in-memory cell objects.
+    """
+    from openpyxl.cell import WriteOnlyCell
+
+    wb = Workbook(write_only=True)
+    ws = wb.create_sheet()
+
+    # Column widths must be set before the first append() in write-only mode.
+    for idx in range(1, len(column_headers) + 1):
+        ws.column_dimensions[get_column_letter(idx)].width = 25
+
+    header_font = Font(bold=True)
+    header_alignment = Alignment(horizontal="center")
+    header_fill = PatternFill(
+        start_color="eafb5b", end_color="eafb5b", fill_type="solid"
+    )
+    header_cells = []
+    for header in column_headers:
+        cell = WriteOnlyCell(ws, value=str(header))
+        cell.font = header_font
+        cell.alignment = header_alignment
+        cell.fill = header_fill
+        header_cells.append(cell)
+    ws.append(header_cells)
+
+    for row in row_iter:
+        ws.append([str(cell) if cell is not None else "" for cell in row])
+
+    buffer = BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+    return filename, buffer
+
+
+def stream_export_to_pdf(model, column_headers, row_iter, filename, document_title):
+    """
+    Write export rows to PDF in a single forward pass over `row_iter`,
+    buffering only one page's worth of rows (`max_rows_per_page`) at a time.
+
+    Pages are grouped by row-batch first, then by column-chunk within that
+    batch (e.g. for >6 columns: page 1 = cols 1-6/rows 1-7, page 2 = cols
+    7-12/rows 1-7, page 3 = cols 1-6/rows 8-14, ...).
+    """
+    from reportlab.lib import colors
+
+    buffer = BytesIO()
+    page_size = (letter[1], letter[0])
+    width, height = page_size
+
+    c = canvas.Canvas(buffer, pagesize=page_size)
+    c.setTitle(document_title)
+
+    title_font_size = 18
+    header_font_size = 12
+    data_font_size = 10
+
+    start_x = 50
+    start_y = height - 100
+    min_col_width = 120
+    padding = 8
+    max_rows_per_page = 7
+    max_cols_per_page = 6
+    extra_row_spacing = 10
+
+    def wrap_text(text, max_chars):
+        text = str(text) if text is not None else ""
+        if len(text) <= max_chars:
+            return [text] if text else [""]
+        words = text.split()
+        lines = []
+        current_line = ""
+        for word in words:
+            if len(current_line) + len(word) + 1 <= max_chars:
+                current_line += word + " "
+            else:
+                lines.append(current_line.strip())
+                current_line = word + " "
+        if current_line:
+            lines.append(current_line.strip())
+        return lines if lines else [""]
+
+    column_chunks = [
+        column_headers[i : i + max_cols_per_page]
+        for i in range(0, len(column_headers), max_cols_per_page)
+    ]
+
+    def render_page(chunk_idx, chunk_headers, page_rows):
+        total_table_width = min(len(chunk_headers) * min_col_width, width - 100)
+        col_width = total_table_width / len(chunk_headers) if chunk_headers else 100
+        max_chars_per_line = int(col_width // (header_font_size * 0.5))
+
+        c.setFont("Helvetica-Bold", title_font_size)
+        column_range = f"Columns {(chunk_idx * max_cols_per_page) + 1} to {min((chunk_idx + 1) * max_cols_per_page, len(column_headers))}"
+        c.drawCentredString(
+            width / 2, height - 50, f"{document_title} ({column_range})"
+        )
+
+        c.setFont("Helvetica-Bold", header_font_size)
+        c.setFillColor(colors.black)
+        header_y = start_y
+        max_header_lines = 1
+        for header in chunk_headers:
+            wrapped_header = wrap_text(header, max_chars_per_line)
+            max_header_lines = max(max_header_lines, len(wrapped_header))
+
+        header_height = max_header_lines * (header_font_size + 2) + 15
+        c.setFillColor(colors.lightgrey)
+        c.rect(
+            start_x,
+            header_y - header_height + 5,
+            total_table_width,
+            header_height,
+            fill=1,
+            stroke=0,
+        )
+
+        c.setFont("Helvetica-Bold", header_font_size)
+        c.setFillColor(colors.black)
+        for i, header in enumerate(chunk_headers):
+            x = start_x + i * col_width + padding
+            wrapped_header = wrap_text(header, max_chars_per_line)
+            total_text_height = len(wrapped_header) * (header_font_size + 2)
+            y_offset = (header_height - total_text_height) / 2 + 3
+            for line in wrapped_header:
+                c.drawString(x, header_y - y_offset, line)
+                y_offset += header_font_size + 2
+
+        c.setFont("Helvetica", data_font_size)
+        y = header_y - header_height - 10
+
+        start_col = chunk_idx * max_cols_per_page
+        for rows_drawn, full_row in enumerate(page_rows):
+            end_col = min((chunk_idx + 1) * max_cols_per_page, len(full_row))
+            row = full_row[start_col:end_col]
+
+            max_lines_in_row = 1
+            for value in row:
+                wrapped_value = wrap_text(value, max_chars_per_line)
+                max_lines_in_row = max(max_lines_in_row, len(wrapped_value))
+            row_height = max_lines_in_row * (data_font_size + 2) + extra_row_spacing
+            total_text_height = max_lines_in_row * (data_font_size + 2)
+            text_y_offset = (row_height - total_text_height) / 2 + 9
+
+            if rows_drawn % 2 == 0:
+                c.setFillColor(colors.whitesmoke)
+                c.rect(
+                    start_x,
+                    y - row_height,
+                    total_table_width,
+                    row_height,
+                    fill=1,
+                    stroke=0,
+                )
+
+            for i, value in enumerate(row):
+                wrapped_value = wrap_text(value, max_chars_per_line)
+                x = start_x + i * col_width + padding
+                y_offset = text_y_offset
+                for line in wrapped_value:
+                    c.setFillColor(colors.black)
+                    c.drawString(x, y - y_offset, line)
+                    y_offset += data_font_size + 2
+
+            y -= row_height
+
+        c.showPage()
+
+    page_rows = []
+    any_rows = False
+    for row in row_iter:
+        any_rows = True
+        page_rows.append(row)
+        if len(page_rows) >= max_rows_per_page:
+            for chunk_idx, chunk_headers in enumerate(column_chunks):
+                render_page(chunk_idx, chunk_headers, page_rows)
+            page_rows = []
+
+    if page_rows or not any_rows:
+        for chunk_idx, chunk_headers in enumerate(column_chunks):
+            render_page(chunk_idx, chunk_headers, page_rows)
+
+    c.save()
+    buffer.seek(0)
+    return filename, buffer
 
 
 @method_decorator(htmx_required, name="dispatch")
@@ -908,11 +945,11 @@ class ScheduleExportListView(LoginRequiredMixin, HorillaListView):
     store_ordered_ids = True
 
     columns = [
-        (_("Modules"), "module_names_display"),
+        ("modules", "module_names_display"),
         "export_format",
         "frequency",
         (_("Schedule Details"), "frequency_display"),
-        (_("Last Executed On"), "last_executed"),
+        ("last_run", "last_executed"),
     ]
 
     @cached_property
@@ -1015,7 +1052,7 @@ class ScheduleExportDetailView(LoginRequiredMixin, HorillaModalDetailView):
         from horilla.core.exceptions import FieldDoesNotExist
 
         instance = self.instance or self.object
-        fields = [(_("Modules"), "module_names_display"), "export_format", "frequency"]
+        fields = [("modules", "module_names_display"), "export_format", "frequency"]
 
         if instance.frequency == "weekly":
             fields.append("weekday")
