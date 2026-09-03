@@ -189,10 +189,28 @@ class HorillaListView(HorillaListViewMixin, ListView):
             with translation.override("en"):
                 for col in self.columns:
                     if isinstance(col, (tuple, list)) and len(col) >= 2:
-                        resolved_columns.append((str(col[0]), str(col[1])))
+                        label = col[0]
+                        if isinstance(label, str):
+                            try:
+                                label = instance._meta.get_field(label).verbose_name
+                            except Exception:
+                                pass
+                        resolved_columns.append((str(label), str(col[1])))
                     elif isinstance(col, str):
+                        short_description = getattr(
+                            getattr(instance, col, None), "short_description", None
+                        )
+                        if short_description:
+                            resolved_columns.append((str(short_description), col))
+                            continue
+
+                        lookup_name = col
+                        if lookup_name.startswith("get_") and lookup_name.endswith(
+                            "_display"
+                        ):
+                            lookup_name = lookup_name[len("get_") : -len("_display")]
                         try:
-                            field = instance._meta.get_field(col)
+                            field = instance._meta.get_field(lookup_name)
                             verbose_name = str(field.verbose_name)
                             resolved_columns.append((verbose_name, col))
                         except Exception:

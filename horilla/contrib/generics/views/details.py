@@ -1319,8 +1319,14 @@ class HorillaModalDetailView(DetailView):
     def get_body_fields(self):
         """
         Normalize modal body fields.
-        - If an entry is (label, field_name), keep provided label.
+        - If an entry is (label, field_name), keep provided label, unless
+          label is itself a model field name, in which case resolve and
+          use that field's verbose_name.
         - If an entry is "field_name", resolve and use model verbose_name.
+        - If an entry is "get_<field_name>_display", resolve the verbose
+          name from the underlying <field_name>.
+        - If an entry names a method/property with a `short_description`
+          attribute (Django admin convention), use that as the label.
         """
         normalized = []
         instance = self.model()
@@ -1330,12 +1336,28 @@ class HorillaModalDetailView(DetailView):
                 label = field[0]
                 field_name = field[1]
                 extra = tuple(field[2:]) if len(field) > 2 else ()
+                if isinstance(label, str):
+                    try:
+                        label = instance._meta.get_field(label).verbose_name
+                    except FieldDoesNotExist:
+                        pass
                 normalized.append((label, field_name, *extra))
                 continue
 
             field_name = field
+            short_description = getattr(
+                getattr(instance, field_name, None), "short_description", None
+            )
+            if short_description:
+                normalized.append((str(short_description), field_name))
+                continue
+
+            lookup_name = field_name
+            if lookup_name.startswith("get_") and lookup_name.endswith("_display"):
+                lookup_name = lookup_name[len("get_") : -len("_display")]
+
             try:
-                model_field = instance._meta.get_field(field_name)
+                model_field = instance._meta.get_field(lookup_name)
                 label = model_field.verbose_name
             except FieldDoesNotExist:
                 label = str(field_name).replace("_", " ").title()
