@@ -105,10 +105,10 @@
                                                                 <span
                                                                     class="font-bold text-black"
                                                                 >{{ field|capfirst }}:</span>
-                                                                {{ values.0|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}
+                                                                {% if entry|is_date_field:field %}{{ values.0|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}{% else %}{{ values.0|html_to_text|default:"--"|truncate_diff_value }}{% endif %}
                                                                 → <span
                                                                     class="history-diff-chip"
-                                                                >{{ values.1|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}</span>
+                                                                >{% if entry|is_date_field:field %}{{ values.1|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}{% else %}{{ values.1|html_to_text|default:"--"|truncate_diff_value }}{% endif %}</span>
                                                                 {% if entry.actor %}
                                                                     {% trans "by" %}
                                                                     <span
@@ -143,9 +143,9 @@
                                                         {% if display_changes %}
                                                             {% for key, value in display_changes.items %}
                                                                 {{ key }}:
-                                                                {{ value.0|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}{% if value.1 %}
+                                                                {% if entry|is_date_field:key %}{{ value.0|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}{% else %}{{ value.0|html_to_text|default:"--"|truncate_diff_value }}{% endif %}{% if value.1 %}
                                                                     →
-                                                                    {{ value.1|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}{% endif %}<br>
+                                                                    {% if entry|is_date_field:key %}{{ value.1|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}{% else %}{{ value.1|html_to_text|default:"--"|truncate_diff_value }}{% endif %}{% endif %}<br>
                                                             {% endfor %}
                                                         {% else %}
                                                             {% trans "Action performed by" %}

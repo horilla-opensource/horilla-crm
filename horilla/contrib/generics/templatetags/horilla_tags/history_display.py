@@ -196,6 +196,40 @@ def history_changes_display(entry):
     return result
 
 
+# Django field classes (by name) whose values are actual date/datetime/time
+# instances, as opposed to e.g. DecimalField/IntegerField which just happen to
+# render as plain numeric strings.
+_DATE_LIKE_FIELD_TYPES = ("DateTimeField", "DateField", "TimeField")
+
+
+@register.filter
+def is_date_field(entry, field_label):
+    """
+    True if `field_label` (the verbose/display name used as a history_changes_display
+    key) corresponds to an actual Date/DateTime/Time field on the entry's model.
+
+    Used to gate the dateutil-based re-parsing fallback in
+    user_datetime_format_display so it only ever runs on real date fields,
+    never on plain numeric fields (probability, amount, quantity, ...) whose
+    string values a fuzzy date parser could otherwise misread as a date.
+    """
+    if entry is None or not field_label:
+        return False
+    try:
+        model = entry.content_type.model_class()
+    except Exception:
+        return False
+    if model is None:
+        return False
+    label = str(field_label).strip().lower()
+    for field in model._meta.get_fields():
+        verbose_name = str(getattr(field, "verbose_name", "") or "").strip().lower()
+        name = getattr(field, "name", "").replace("_", " ").strip().lower()
+        if label in (verbose_name, name):
+            return type(field).__name__ in _DATE_LIKE_FIELD_TYPES
+    return False
+
+
 def _get_activity_type_from_entry(entry):
     """Return activity_type string (task, event, meeting, log_call) for an Activity log entry, or None."""
     if entry is None:
