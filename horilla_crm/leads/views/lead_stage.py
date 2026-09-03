@@ -131,7 +131,7 @@ class LeadStageListView(LoginRequiredMixin, HorillaListView):
             }
         return None
 
-    columns = ["order", "name", (_("Is Final Stage"), "is_final_col"), "probability"]
+    columns = ["order", "name", ("is_final", "is_final_col"), "probability"]
     actions = [
         {
             "action": "Edit",

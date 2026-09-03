@@ -100,7 +100,7 @@ class CadenceListView(LoginRequiredMixin, HorillaListView):
         "name",
         "module",
         "description",
-        (_("Status"), "is_active_col"),
+        ("is_active", "is_active_col"),
     ]
 
     @cached_property

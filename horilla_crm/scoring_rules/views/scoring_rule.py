@@ -119,7 +119,7 @@ class ScoringRuleListView(LoginRequiredMixin, HorillaListView):
     columns = [
         "name",
         "module",
-        ("Is Active", "is_active_col"),
+        ("is_active", "is_active_col"),
         "description",
     ]
 

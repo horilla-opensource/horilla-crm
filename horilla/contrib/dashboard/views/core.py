@@ -129,7 +129,7 @@ class DashboardListView(LoginRequiredMixin, HorillaListView):
         context["title"] = _("Dashboards")
         return context
 
-    columns = ["name", "description", "folder", (_("Is Default"), "is_default_col")]
+    columns = ["name", "description", "folder", ("is_default", "is_default_col")]
 
     @cached_property
     def action_method(self):

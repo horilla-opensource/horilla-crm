@@ -391,8 +391,8 @@ class ImportHistoryView(LoginRequiredMixin, HorillaListView):
         "duration_seconds",
         "created_at",
         "created_by",
-        (_("Imported File"), "imported_file"),
-        (_("Error File"), "error_list"),
+        ("imported_file_path", "imported_file"),
+        ("error_file_path", "error_list"),
     ]
 
 

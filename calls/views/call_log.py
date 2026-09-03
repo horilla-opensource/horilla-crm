@@ -390,12 +390,12 @@ class ObjectCallLogView(LoginRequiredMixin, HorillaListView):
     bulk_select_option = False
     list_column_visibility = False
     columns = [
-        (_("Direction"), "direction"),
-        (_("Provider"), "provider"),
-        (_("Status"), "status"),
-        (_("Duration"), "get_duration_display"),
-        (_("Agent"), "agent"),
-        (_("Date & Time"), "started_at"),
+        "direction",
+        "provider",
+        "status",
+        ("duration_seconds", "get_duration_display"),
+        "agent",
+        "started_at",
     ]
 
     @cached_property

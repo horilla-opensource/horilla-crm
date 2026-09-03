@@ -40,33 +40,33 @@ class MailConfigDetailView(LoginRequiredMixin, HorillaModalDetailView):
 
     # Fields always shown for every config
     _COMMON_FIELDS = [
-        (_("Channel"), "mail_channel"),
-        (_("Type"), "type"),
-        (_("Host"), "host"),
-        (_("Port"), "port"),
-        (_("Primary"), "is_primary"),
+        "mail_channel",
+        "type",
+        "host",
+        "port",
+        "is_primary",
     ]
 
     # Outgoing SMTP-only fields
     _OUTGOING_FIELDS = [
-        (_("From Email"), "from_email"),
-        (_("Display Name"), "display_name"),
-        (_("Use TLS"), "use_tls"),
-        (_("Use SSL"), "use_ssl"),
-        (_("Fail Silently"), "fail_silently"),
-        (_("Dynamic Display Name"), "use_dynamic_display_name"),
-        (_("Timeout (seconds)"), "timeout"),
+        "from_email",
+        "display_name",
+        "use_tls",
+        "use_ssl",
+        "fail_silently",
+        "use_dynamic_display_name",
+        "timeout",
     ]
 
     # Outlook OAuth-only fields
     _OUTLOOK_FIELDS = [
-        (_("Client ID"), "outlook_client_id"),
-        (_("Tenant ID"), "outlook_tenant_id"),
-        (_("Redirect URI"), "outlook_redirect_uri"),
-        (_("Authorization URL"), "outlook_authorization_url"),
-        (_("Token URL"), "outlook_token_url"),
-        (_("API Endpoint"), "outlook_api_endpoint"),
-        (_("Token Last Refreshed"), "last_refreshed"),
+        "outlook_client_id",
+        "outlook_tenant_id",
+        "outlook_redirect_uri",
+        "outlook_authorization_url",
+        "outlook_token_url",
+        "outlook_api_endpoint",
+        "last_refreshed",
     ]
 
     def get_body_fields(self):
@@ -80,7 +80,8 @@ class MailConfigDetailView(LoginRequiredMixin, HorillaModalDetailView):
                 fields += self._OUTGOING_FIELDS
             if self.instance.type == "outlook":
                 fields += self._OUTLOOK_FIELDS
-        return fields
+        self.body = fields
+        return super().get_body_fields()
 
     actions = [
         {

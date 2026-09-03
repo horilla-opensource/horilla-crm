@@ -105,10 +105,10 @@ class WorkflowRuleListView(LoginRequiredMixin, HorillaListView):
     list_column_visibility = False
     columns = [
         "name",
-        (_("Model"), "model"),
+        "model",
         "description",
         (_("Execute on"), "get_execute_display"),
-        (_("Active"), "is_active_col"),
+        ("is_active", "is_active_col"),
     ]
     actions = [
         {
@@ -476,9 +476,9 @@ class WorkflowTimeTriggerHistoryView(LoginRequiredMixin, HorillaListView):
     main_url = ""
     columns = [
         (_("Record"), "get_record_name"),
-        (_("Scheduled At"), "scheduled_at"),
-        (_("Executed At"), "executed_at"),
-        (_("Status"), "status"),
+        "scheduled_at",
+        "executed_at",
+        "status",
     ]
 
     @cached_property

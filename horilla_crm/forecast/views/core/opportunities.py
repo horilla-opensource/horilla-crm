@@ -132,23 +132,23 @@ class ForecastOpportunitiesView(LoginRequiredMixin, View):
                 type_info["opportunities"] = self.get_opportunities_by_type(
                     forecast, type_info["key"], user_id
                 )
-                columns = [("Opportunity Name", "name")]
+                columns = ["name"]
                 if (
                     hasattr(forecast, "forecast_type")
                     and forecast.forecast_type
                     and forecast.forecast_type.is_quantity_based
                 ):
-                    columns.append(("Quantity", "quantity"))
+                    columns.append("quantity")
                 else:
-                    columns.append(("Amount", "amount"))
+                    columns.append("amount")
                 columns.extend(
                     [
-                        ("Close Date", "close_date"),
+                        "close_date",
                         ("Stage", "stage__name"),
                     ]
                 )
                 if type_info["key"] != "closed":
-                    columns.append(("Probability", "probability"))
+                    columns.append("probability")
 
                 list_view = HorillaListView(
                     model=Opportunity,

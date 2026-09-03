@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 
+from horilla.auth.models import User
 from horilla.contrib.generics.views import HorillaListView
 from horilla.contrib.generics.views.single_form import HorillaSingleFormView
 from horilla.shortcuts import redirect, render
@@ -147,9 +148,7 @@ class MeetingIntegrationSettingsView(LoginRequiredMixin, View):
 class MeetingAllowedUsersListView(LoginRequiredMixin, HorillaListView):
     """HorillaListView — allowed users for meeting integration (read-only modal)."""
 
-    from horilla.auth.models import User as _User
-
-    model = _User
+    model = User
     view_id = "meeting-allowed-users-list"
     template_name = "meeting/allowed_users_modal.html"
     search_url = reverse_lazy("meeting:meeting_allowed_users_list")
@@ -164,8 +163,8 @@ class MeetingAllowedUsersListView(LoginRequiredMixin, HorillaListView):
     table_height_as_class = "h-[calc(60vh-80px)]"
     columns = [
         (_("Full Name"), "get_full_name"),
-        (_("Role"), "role__role_name"),
-        (_("Email"), "email"),
+        ("role", "role__role_name"),
+        "email",
     ]
 
     @method_decorator(
@@ -210,7 +209,7 @@ class MeetingAllowedRolesListView(LoginRequiredMixin, HorillaListView):
     action_method = ""
     table_height_as_class = "h-[calc(60vh-80px)]"
     columns = [
-        (_("Role Name"), "role_name"),
+        "role_name",
     ]
 
     @method_decorator(

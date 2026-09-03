@@ -168,7 +168,7 @@ class ReportsListView(LoginRequiredMixin, HorillaListView):
             }
         return None
 
-    columns = ["name", (_("Module"), "module_verbose_name"), "folder"]
+    columns = ["name", ("module", "module_verbose_name"), "folder"]
 
     @cached_property
     def action_method(self):
@@ -246,7 +246,7 @@ class FavouriteReportsListView(LoginRequiredMixin, HorillaListView):
         queryset = queryset.filter(is_favourite=True)
         return queryset
 
-    columns = ["name", (_("Module"), "module_verbose_name"), "folder"]
+    columns = ["name", ("module", "module_verbose_name"), "folder"]
 
     @cached_property
     def col_attrs(self):
@@ -452,7 +452,7 @@ class ReportFolderDetailView(LoginRequiredMixin, HorillaListView):
     sorting_target = f"#tableview-{view_id}"
 
     columns = [
-        (_("Name"), "name"),
+        "name",
         (_("Type"), "get_item_type"),
     ]
 

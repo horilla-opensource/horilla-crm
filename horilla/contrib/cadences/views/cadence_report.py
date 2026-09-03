@@ -226,7 +226,7 @@ class CadenceTaskListView(LoginRequiredMixin, HorillaListView):
     actions = []
     columns = [
         (_("Follow-Up"), "followup_label"),
-        (_("Subject"), "subject"),
+        "subject",
         (_("Completed"), "completed_count"),
         (_("Pending"), "pending_count"),
         (_("Unresolved"), "unresolved_count"),
@@ -354,7 +354,7 @@ class CadenceCallListView(LoginRequiredMixin, HorillaListView):
     actions = []
     columns = [
         (_("Follow-Up"), "followup_label"),
-        (_("Purpose"), "purpose"),
+        "purpose",
         (_("Completed"), "completed_count"),
         (_("Scheduled"), "scheduled_count"),
         (_("Overdue"), "overdue_count"),

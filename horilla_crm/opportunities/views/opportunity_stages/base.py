@@ -135,7 +135,7 @@ class OpportunityStageListView(LoginRequiredMixin, HorillaListView):
     columns = [
         "order",
         "name",
-        (_("Is Final Stage"), "is_final_col"),
+        ("is_final", "is_final_col"),
         "probability",
         "stage_type",
     ]

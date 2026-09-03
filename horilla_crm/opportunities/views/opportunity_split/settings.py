@@ -151,7 +151,7 @@ class OpportunitySplitListView(
         "split_label",
         "split_field",
         "totals_100_percent",
-        (_("Is Active"), "is_active_col"),
+        ("is_active", "is_active_col"),
     ]
 
 

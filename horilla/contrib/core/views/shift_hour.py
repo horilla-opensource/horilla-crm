@@ -65,10 +65,10 @@ class ShiftHourListView(LoginRequiredMixin, HorillaListView):
 
     columns = [
         "name",
-        (_("Shift Timing"), "get_timing_type_display"),
-        (_("Shift Days"), "get_formatted_week_days"),
+        "get_timing_type_display",
+        ("week_days", "get_formatted_week_days"),
         "time_zone",
-        (_("No of Users"), "get_assigned_users_count_display"),
+        ("assigned_users", "get_assigned_users_count_display"),
     ]
 
     @cached_property
@@ -212,12 +212,12 @@ class ShiftHourDetailView(LoginRequiredMixin, HorillaModalDetailView):
     }
 
     body = [
-        (_("Main hours"), "get_timing_type_display"),
-        (_("Schedule"), "get_formatted_week_days"),
-        (_("Break 1"), "get_break1_brief"),
-        (_("Break 2"), "get_break2_brief"),
-        (_("Assigned users"), "get_assigned_users_label"),
-        (_("Active"), "get_active_display"),
+        "get_timing_type_display",
+        ("week_days", "get_formatted_week_days"),
+        ("break1_mode", "get_break1_brief"),
+        ("break2_mode", "get_break2_brief"),
+        ("assigned_users", "get_assigned_users_label"),
+        ("is_active", "get_active_display"),
     ]
 
     actions = [

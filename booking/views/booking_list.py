@@ -110,11 +110,11 @@ class BookingListView(LoginRequiredMixin, HorillaListView):
     store_ordered_ids = True
 
     columns = [
-        (_("Booker"), "booker_name"),
-        (_("Email"), "booker_email"),
-        (_("Date & Time"), "start_datetime"),
+        "booker_name",
+        "booker_email",
+        "start_datetime",
         "status",
-        (_("Meeting URL"), "meeting_url"),
+        "meeting_url",
     ]
 
     @cached_property
@@ -209,12 +209,12 @@ class MyBookingsListView(LoginRequiredMixin, HorillaListView):
     main_url = reverse_lazy("booking:my_bookings")
 
     columns = [
-        (_("Booking Page"), "booking_page"),
-        (_("Booker"), "booker_name"),
-        (_("Email"), "booker_email"),
-        (_("Date & Time"), "start_datetime"),
+        "booking_page",
+        "booker_name",
+        "booker_email",
+        "start_datetime",
         "status",
-        (_("Meeting URL"), "meeting_url"),
+        "meeting_url",
     ]
 
     @cached_property
@@ -308,13 +308,13 @@ class BookingDetailModalView(LoginRequiredMixin, HorillaModalDetailView):
         "avatar": "",
     }
     body = [
-        (_("Booking Page"), "booking_page"),
-        (_("Start"), "start_datetime"),
-        (_("End"), "end_datetime"),
-        (_("Status"), "get_status_display"),
-        (_("Meeting URL"), "meeting_url"),
-        (_("Timezone"), "booker_timezone"),
-        (_("Cancellation Reason"), "cancellation_reason"),
+        "booking_page",
+        "start_datetime",
+        "end_datetime",
+        "status",
+        "meeting_url",
+        "booker_timezone",
+        "cancellation_reason",
     ]
     actions = [
         {

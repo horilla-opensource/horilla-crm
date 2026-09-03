@@ -30,11 +30,11 @@ class GlobalTaskListView(GlobalTypeListMixin, LoginRequiredMixin, HorillaListVie
     view_id = "global-task-list"
 
     columns = [
-        (_("Subject"), "subject"),
-        (_("Due Date"), "due_datetime"),
-        (_("Priority"), "task_priority"),
-        (_("Related To"), "related_object"),
-        (_("Status"), "status_col"),
+        "subject",
+        "due_datetime",
+        "task_priority",
+        "related_object",
+        ("status", "status_col"),
     ]
 
     def get_search_url(self):
@@ -56,12 +56,12 @@ class GlobalMeetingListView(GlobalTypeListMixin, LoginRequiredMixin, HorillaList
     view_id = "global-meeting-list"
 
     columns = [
-        (_("Subject"), "subject"),
-        (_("Start Date"), "get_start_date"),
-        (_("End Date"), "get_end_date"),
-        (_("Meeting Link"), "meeting_link_col"),
-        (_("Related To"), "related_object"),
-        (_("Status"), "status_col"),
+        "subject",
+        ("start_datetime", "get_start_date"),
+        ("end_datetime", "get_end_date"),
+        ("meeting_url", "meeting_link_col"),
+        "related_object",
+        ("status", "status_col"),
     ]
 
     def get_search_url(self):
@@ -83,12 +83,12 @@ class GlobalCallListView(GlobalTypeListMixin, LoginRequiredMixin, HorillaListVie
     view_id = "global-call-list"
 
     columns = [
-        (_("Subject"), "subject"),
-        (_("Purpose"), "call_purpose"),
-        (_("Type"), "call_type"),
-        (_("Duration"), "call_duration_display"),
-        (_("Related To"), "related_object"),
-        (_("Status"), "status_col"),
+        "subject",
+        "call_purpose",
+        "call_type",
+        "call_duration_display",
+        "related_object",
+        ("status", "status_col"),
     ]
 
     def get_search_url(self):
@@ -110,12 +110,12 @@ class GlobalEventListView(GlobalTypeListMixin, LoginRequiredMixin, HorillaListVi
     view_id = "global-event-list"
 
     columns = [
-        (_("Subject"), "subject"),
-        (_("Start Date"), "get_start_date"),
-        (_("End Date"), "get_end_date"),
-        (_("Location"), "location"),
-        (_("Related To"), "related_object"),
-        (_("Status"), "status_col"),
+        "subject",
+        ("start_datetime", "get_start_date"),
+        ("end_datetime", "get_end_date"),
+        "location",
+        "related_object",
+        ("status", "status_col"),
     ]
 
     def get_search_url(self):

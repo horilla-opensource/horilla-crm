@@ -28,7 +28,7 @@ class RecycleBin(models.Model):
     Model to store soft-deleted records with their serialized data.
     """
 
-    model_name = models.CharField(max_length=255)
+    model_name = models.CharField(max_length=255, verbose_name=_("Model Name"))
     record_id = models.CharField(max_length=255)
     data = models.TextField()
     deleted_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Deleted At"))
@@ -38,6 +38,7 @@ class RecycleBin(models.Model):
         null=True,
         blank=True,
         related_name="recycle_delete",
+        verbose_name=_("Deleted By"),
     )
     company = models.ForeignKey(
         "Company",

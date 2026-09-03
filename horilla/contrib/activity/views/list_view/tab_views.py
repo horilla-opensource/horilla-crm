@@ -82,10 +82,10 @@ class TaskListView(ActivityTabListMixin, LoginRequiredMixin, HorillaListView):
     no_record_fit_height = False
 
     columns = [
-        ("Title", "title"),
-        ("Due Date", "due_datetime"),
-        ("Priority", "task_priority"),
-        (_("Status"), "status_col"),
+        "title",
+        "due_datetime",
+        "task_priority",
+        ("status", "status_col"),
     ]
 
     def get_search_url(self):
@@ -156,11 +156,11 @@ class MeetingListView(ActivityTabListMixin, HorillaListView):
     no_record_fit_height = False
 
     columns = [
-        ("Title", "title"),
-        ("Start Date", "get_start_date"),
-        ("End Date", "get_end_date"),
-        (_("Meeting Link"), "meeting_link_col"),
-        (_("Status"), "status_col"),
+        "title",
+        ("start_datetime", "get_start_date"),
+        ("end_datetime", "get_end_date"),
+        ("meeting_url", "meeting_link_col"),
+        ("status", "status_col"),
     ]
 
     def get_search_url(self):
@@ -233,10 +233,10 @@ class CallListView(ActivityTabListMixin, HorillaListView):
     no_record_fit_height = False
 
     columns = [
-        ("Purpose", "call_purpose"),
-        ("Type", "call_type"),
-        ("Duration", "call_duration_display"),
-        (_("Status"), "status_col"),
+        "call_purpose",
+        "call_type",
+        "call_duration_display",
+        ("status", "status_col"),
     ]
 
     def get_search_url(self):
@@ -304,10 +304,10 @@ class EmailListView(HorillaListView):
     owner_filtration = False
 
     columns = [
-        ("Subject", "render_subject"),
-        ("Send To", "to"),
-        ("Sent At", "sent_at"),
-        ("Status", "get_mail_status_display"),
+        ("subject", "render_subject"),
+        "to",
+        "sent_at",
+        "get_mail_status_display",
     ]
 
     def get_search_url(self):
@@ -596,11 +596,11 @@ class EventListView(ActivityTabListMixin, HorillaListView):
     no_record_fit_height = False
 
     columns = [
-        ("Title", "title"),
-        ("Start Date", "get_start_date"),
-        ("End Date", "get_end_date"),
-        ("Location", "location"),
-        (_("Status"), "status_col"),
+        "title",
+        ("start_datetime", "get_start_date"),
+        ("end_datetime", "get_end_date"),
+        "location",
+        ("status", "status_col"),
     ]
 
     def get_search_url(self):

@@ -168,8 +168,8 @@ class RecycleBinListView(LoginRequiredMixin, HorillaListView):
         return [
             (_("Record Name"), "record_name"),
             (_("Type"), "get_model_display_name"),
-            (_("Deleted By"), "deleted_by"),
-            (_("Deleted At"), "deleted_at"),
+            "deleted_by",
+            "deleted_at",
         ]
 
     @cached_property

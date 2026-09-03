@@ -573,12 +573,12 @@ class ApprovalHistoryDetailTimelineTabView(LoginRequiredMixin, HorillaListView):
     filterset_class = None
     enable_sorting = False
     columns = [
-        (_("Step"), "step"),
+        "step",
         (_("Cycle"), "cycle_label"),
-        (_("Decision"), "get_decision_display"),
-        (_("Decided By"), "decided_by"),
-        (_("Comment"), "comment"),
-        (_("Decided At"), "decided_at"),
+        "get_decision_display",
+        "decided_by",
+        "comment",
+        "decided_at",
     ]
 
     def get_queryset(self):
@@ -641,10 +641,10 @@ class ApprovalHistoryDetailTasksTabView(LoginRequiredMixin, HorillaListView):
     main_url = reverse_lazy("approvals:approval_history_detail_tasks_tab_view")
     view_id = "approval-history-tasks-list"
     columns = [
-        (_("Subject"), "subject"),
-        (_("Status"), "get_status_update_html"),
-        (_("Priority"), "get_task_priority_display"),
-        (_("Due Date"), "due_datetime"),
+        "subject",
+        ("status", "get_status_update_html"),
+        "get_task_priority_display",
+        "due_datetime",
     ]
     col_attrs = [
         {

@@ -152,10 +152,10 @@ class BookingPageListView(LoginRequiredMixin, HorillaListView):
     columns = [
         "title",
         "host",
-        (_("Duration (min)"), "duration"),
-        (_("Online"), "is_online"),
-        (_("Meeting Provider"), "meeting_provider"),
-        (_("Active"), "is_active"),
+        "duration",
+        "is_online",
+        "meeting_provider",
+        "is_active",
     ]
 
     @cached_property

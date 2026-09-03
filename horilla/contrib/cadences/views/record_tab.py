@@ -28,7 +28,7 @@ class CadenceRecordTabView(LoginRequiredMixin, HorillaListView):
     view_id = "cadence-record-tab-list"
     filterset_class = None
     columns = [
-        (_("Cadence Name"), "name"),
+        "name",
         (_("Start Date"), "created_at"),
         (_("Next Follow-up"), "next_followup_type"),
         (_("Next Follow-up Response"), "next_followup_response"),

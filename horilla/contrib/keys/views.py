@@ -126,7 +126,7 @@ class ShortKeyListView(LoginRequiredMixin, HorillaListView):
             }
         return None
 
-    columns = [(_("Page"), "page_display"), (_("Key"), "custom_key_col")]
+    columns = [("page", "page_display"), ("key", "custom_key_col")]
 
     def get_queryset(self):
         """Return shortcut keys filtered by the logged-in user across all companies."""

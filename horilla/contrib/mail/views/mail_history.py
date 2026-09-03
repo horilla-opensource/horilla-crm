@@ -83,11 +83,11 @@ class MailHistoryListView(LoginRequiredMixin, HorillaListView):
     bulk_export_option = False
 
     columns = [
-        (_("To"), "to"),
-        (_("Subject"), "subject"),
-        (_("Status"), "mail_status"),
-        (_("Sent By"), "send_by"),
-        (_("Sent At"), "sent_at"),
+        "to",
+        "subject",
+        "mail_status",
+        "send_by",
+        "sent_at",
     ]
 
     actions = [

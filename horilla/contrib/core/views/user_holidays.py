@@ -151,8 +151,8 @@ class UserHolidayDetailView(LoginRequiredMixin, HorillaModalDetailView):
     }
 
     body = [
-        (_("Holiday Start Date"), "start_date"),
-        (_("Holiday End Date"), "end_date"),
-        (_("Specific Users"), "specific_users_enable"),
-        (_("Recurring"), "is_recurring_holiday"),
+        "start_date",
+        "end_date",
+        ("specific_users", "specific_users_enable"),
+        ("is_recurring", "is_recurring_holiday"),
     ]

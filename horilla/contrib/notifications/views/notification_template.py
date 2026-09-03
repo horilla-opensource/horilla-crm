@@ -111,7 +111,7 @@ class NotificationTemplateListView(LoginRequiredMixin, HorillaListView):
     enable_sorting = False
     filterset_class = NotificationTemplateFilter
 
-    columns = ["title", (_("Related Model"), "get_related_model")]
+    columns = ["title", ("content_type", "get_related_model")]
 
     def no_record_add_button(self):
         """Button to show when no records exist"""

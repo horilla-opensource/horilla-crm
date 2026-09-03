@@ -340,9 +340,9 @@ class AcivityKanbanView(LoginRequiredMixin, HorillaKanbanView):
     actions = AllActivityListView.actions
 
     columns = [
-        (_("Subject"), "subject"),
-        (_("Activity Type"), "activity_type"),
-        (_("Related To"), "related_object"),
+        "subject",
+        "activity_type",
+        "related_object",
     ]
 
     @cached_property
@@ -424,32 +424,32 @@ class AcivityKanbanView(LoginRequiredMixin, HorillaKanbanView):
 
 _KANBAN_TYPE_COLUMNS = {
     "task": [
-        (_("Subject"), "subject"),
-        (_("Related To"), "related_object"),
-        (_("Priority"), "task_priority"),
-        (_("Due Date"), "due_datetime"),
-        (_("Assigned To"), "assigned_to"),
+        "subject",
+        "related_object",
+        "task_priority",
+        "due_datetime",
+        "assigned_to",
     ],
     "meeting": [
-        (_("Subject"), "subject"),
-        (_("Related To"), "related_object"),
-        (_("Start Date"), "get_start_date"),
-        (_("End Date"), "get_end_date"),
-        (_("Meeting Link"), "get_meeting_url_display"),
+        "subject",
+        "related_object",
+        ("start_datetime", "get_start_date"),
+        ("end_datetime", "get_end_date"),
+        "get_meeting_url_display",
     ],
     "log_call": [
-        (_("Subject"), "subject"),
-        (_("Related To"), "related_object"),
-        (_("Purpose"), "call_purpose"),
-        (_("Type"), "call_type"),
-        (_("Duration"), "call_duration_display"),
+        "subject",
+        "related_object",
+        "call_purpose",
+        "call_type",
+        "call_duration_display",
     ],
     "event": [
-        (_("Subject"), "subject"),
-        (_("Related To"), "related_object"),
-        (_("Start Date"), "get_start_date"),
-        (_("End Date"), "get_end_date"),
-        (_("Location"), "location"),
+        "subject",
+        "related_object",
+        ("start_datetime", "get_start_date"),
+        ("end_datetime", "get_end_date"),
+        "location",
     ],
 }
 

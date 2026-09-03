@@ -116,7 +116,7 @@ class LeadAssignmentListView(LoginRequiredMixin, HorillaListView):
     columns = [
         "name",
         "description",
-        "is_active_col",
+        ("is_active", "is_active_col"),
     ]
 
     actions = [

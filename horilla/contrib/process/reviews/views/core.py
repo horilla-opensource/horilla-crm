@@ -183,7 +183,7 @@ class ReviewProcessListView(LoginRequiredMixin, HorillaListView):
     bulk_select_option = False
     enable_sorting = False
 
-    columns = ["title", "model", (_("Status"), "is_active_col")]
+    columns = ["title", "model", ("is_active", "is_active_col")]
 
     @cached_property
     def col_attrs(self):
