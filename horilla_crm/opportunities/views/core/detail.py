@@ -40,10 +40,6 @@ class OpportunityDetailView(RecentlyViewedMixin, LoginRequiredMixin, HorillaDeta
     pipeline_field = "stage"
     tab_url = reverse_lazy("opportunities:opportunity_detail_view_tabs")
     actions = OpportunityListView.actions
-    breadcrumbs = [
-        ("Sales", "leads:leads_view"),
-        ("Opportunites", "opportunities:opportunities_view"),
-    ]
 
     body = [
         "name",
@@ -296,19 +292,7 @@ class OpportunityDetailTab(LoginRequiredMixin, HorillaDetailSectionView):
     """Detail tab view for opportunities."""
 
     model = Opportunity
-    non_editable_fields = ["expected_revenue"]
-    excluded_fields = [
-        "id",
-        "created_at",
-        "additional_info",
-        "updated_at",
-        "history",
-        "is_active",
-        "created_by",
-        "updated_by",
-        "company",
-        "forecast_category",
-    ]
+    non_editable_fields = ["expected_revenue", "forecast_category", "probability"]
 
 
 @method_decorator(
