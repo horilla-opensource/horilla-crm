@@ -196,7 +196,7 @@ class ChildCampaignForm(forms.Form):
         widget=forms.Select(
             attrs={
                 "class": "select2-pagination w-full text-sm",
-                "data-placeholder": "Select Campaign",
+                "data-placeholder": _("Select Campaign"),
                 "data-url": reverse_lazy(
                     "generics:model_select2",
                     kwargs={"app_label": "campaigns", "model_name": "Campaign"},

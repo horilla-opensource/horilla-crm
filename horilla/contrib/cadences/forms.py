@@ -454,12 +454,12 @@ class CadenceFollowUpForm(HorillaModelForm):
         do_unit = cleaned.get("do_this_unit")
         do_value = cleaned.get("do_this_value")
         if do_unit and do_unit != "immediately" and not do_value:
-            self.add_error("do_this_value", "This field is required.")
+            self.add_error("do_this_value", _("This field is required."))
         if do_unit == "immediately":
             cleaned["do_this_value"] = None
         followup_number = cleaned.get("followup_number") or 1
         if followup_number > 1 and not cleaned.get("previous_status"):
-            self.add_error("previous_status", "This field is required.")
+            self.add_error("previous_status", _("This field is required."))
         if followup_number == 1:
             cleaned["previous_status"] = None
             cleaned["branch_from"] = None
@@ -541,11 +541,11 @@ class CadenceFollowUpForm(HorillaModelForm):
     @staticmethod
     def _get_previous_status_label(previous_type):
         labels = {
-            "task": "After previous Task is",
-            "call": "After previous Call is",
-            "email": "After previous Email is",
+            "task": _("After previous Task is"),
+            "call": _("After previous Call is"),
+            "email": _("After previous Email is"),
         }
-        return labels.get(previous_type, "After previous follow-up is")
+        return labels.get(previous_type, _("After previous follow-up is"))
 
     def _get_previous_status_choices(self, previous_type, followup_number):
         cadence_id = None
@@ -575,22 +575,22 @@ class CadenceFollowUpForm(HorillaModelForm):
 
         if previous_type == "call":
             choices = [
-                ("scheduled", "Scheduled"),
-                ("completed", "Completed"),
-                ("overdue", "Overdue"),
-                ("cancelled", "Cancelled"),
+                ("scheduled", _("Scheduled")),
+                ("completed", _("Completed")),
+                ("overdue", _("Overdue")),
+                ("cancelled", _("Cancelled")),
             ]
             return [c for c in choices if c[0] not in used_statuses]
         if previous_type == "task":
             choices = list(Activity.STATUS_CHOICES)
             return [c for c in choices if c[0] not in used_statuses]
         choices = [
-            ("scheduled", "Scheduled"),
-            ("completed", "Completed"),
-            ("overdue", "Overdue"),
-            ("cancelled", "Cancelled"),
-            ("in_progress", "In Progress"),
-            ("not_started", "Not Started"),
+            ("scheduled", _("Scheduled")),
+            ("completed", _("Completed")),
+            ("overdue", _("Overdue")),
+            ("cancelled", _("Cancelled")),
+            ("in_progress", _("In Progress")),
+            ("not_started", _("Not Started")),
         ]
         return [c for c in choices if c[0] not in used_statuses]
 

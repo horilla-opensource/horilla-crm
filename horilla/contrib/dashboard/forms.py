@@ -14,6 +14,7 @@ from horilla.contrib.generics.forms import HorillaModelForm
 from horilla.registry.feature import FEATURE_REGISTRY
 from horilla.urls import reverse_lazy
 from horilla.utils.choices import DISPLAYABLE_FIELD_TYPES
+from horilla.utils.translation import gettext_lazy as _
 
 # Local imports
 from .models import ComponentCriteria, Dashboard, DashboardComponent, DashboardFolder
@@ -610,7 +611,7 @@ class DashboardCreateForm(HorillaModelForm):
                                             "class": "js-example-basic-multiple headselect",
                                             "id": "id_columns",
                                             "name": "columns",
-                                            "data-placeholder": "Add Columns",
+                                            "data-placeholder": _("Add Columns"),
                                             "tabindex": "-1",
                                             "aria-hidden": "true",
                                             "multiple": True,
@@ -627,7 +628,7 @@ class DashboardCreateForm(HorillaModelForm):
                             "class": "js-example-basic-multiple headselect",
                             "id": "id_columns",
                             "name": "columns",
-                            "data-placeholder": "Add Columns",
+                            "data-placeholder": _("Add Columns"),
                             "tabindex": "-1",
                             "aria-hidden": "true",
                             "multiple": True,

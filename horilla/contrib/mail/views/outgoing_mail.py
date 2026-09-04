@@ -351,9 +351,11 @@ class MailServerTestEmailView(LoginRequiredMixin, FormView):
             first_sentence = sentences[0].strip()
             if len(first_sentence) > 100:
                 first_sentence = first_sentence[:97] + "..."
-            return first_sentence if first_sentence else "Unknown error occurred"
+            return (
+                first_sentence if first_sentence else str(_("Unknown error occurred"))
+            )
 
-        return "Unknown error occurred"
+        return str(_("Unknown error occurred"))
 
     def form_valid(self, form):
         """Handle valid form submission"""

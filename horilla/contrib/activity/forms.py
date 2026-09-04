@@ -517,7 +517,7 @@ class ActivityCreateForm(OwnerQuerysetMixin, HorillaModelForm):
                 attrs={
                     "hx-target": "#activity-form-view-container",
                     "hx-swap": "outerHTML",
-                    "data-placeholder": "Select Activity Type",
+                    "data-placeholder": _("Select Activity Type"),
                     # Preserve already-entered values (e.g. start/end datetime from calendar click)
                     # when re-rendering fields after activity type changes.
                     "hx-include": "#activity-form-view",
@@ -655,7 +655,7 @@ class ActivityCreateForm(OwnerQuerysetMixin, HorillaModelForm):
 
         object_id_attrs = {
             "id": f"id_{field_name}",
-            "data-placeholder": "Select Related Object",
+            "data-placeholder": _("Select Related Object"),
             "class": "select2-pagination w-full text-sm",
             "data-field-name": field_name,
         }
@@ -887,7 +887,7 @@ class ActivityCreateForm(OwnerQuerysetMixin, HorillaModelForm):
                         "rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-primary-500"
                     ),
                     "data-online-field": "true",
-                    "data-placeholder": "Select Provider",
+                    "data-placeholder": _("Select Provider"),
                     "id": "id_meeting_provider",
                 }
             ),

@@ -142,7 +142,7 @@ class NotificationTemplate(HorillaCoreModel):
         """Return the related model's verbose name."""
         if self.content_type:
             return self.content_type.model_class()._meta.verbose_name
-        return "General"
+        return _("General")
 
     def get_edit_url(self):
         """Get the URL to edit this notification template."""

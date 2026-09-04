@@ -201,7 +201,7 @@ class ChildContactForm(forms.Form):
         widget=forms.Select(
             attrs={
                 "class": "select2-pagination w-full text-sm",
-                "data-placeholder": "Select Contact",
+                "data-placeholder": _("Select Contact"),
                 "data-url": reverse_lazy(
                     "generics:model_select2",
                     kwargs={"app_label": "contacts", "model_name": "Contact"},

@@ -516,9 +516,9 @@ class ForecastTargetFormView(LoginRequiredMixin, HorillaSingleFormView):
         if combination in unique_cache:
             try:
                 user = User.objects.get(id=assigned_to_id)
-                return f"Duplicate entry found for user '{user}'."
+                return _("Duplicate entry found for user '%(user)s'.") % {"user": user}
             except Exception:
-                return "Duplicate entry found."
+                return str(_("Duplicate entry found."))
 
         if ForecastTarget.objects.filter(
             assigned_to_id=assigned_to_id,
@@ -527,9 +527,11 @@ class ForecastTargetFormView(LoginRequiredMixin, HorillaSingleFormView):
         ).exists():
             try:
                 user = User.objects.get(id=assigned_to_id)
-                return f"Forecast target already exists for user '{user}'."
+                return _("Forecast target already exists for user '%(user)s'.") % {
+                    "user": user
+                }
             except Exception:
-                return "Forecast target already exists."
+                return str(_("Forecast target already exists."))
 
         unique_cache.add(combination)
         return None

@@ -54,7 +54,7 @@ class ReportFolder(HorillaCoreModel):
 
     def get_item_type(self):
         """Return a short label describing the item type (Folder)."""
-        return "Folder"
+        return _("Folder")
 
     def get_detail_view_url(self):
         """
@@ -163,7 +163,7 @@ class Report(HorillaCoreModel):
 
     def get_item_type(self):
         """Return a short label describing the item type (Report)."""
-        return "Report"
+        return _("Report")
 
     @property
     def model_class(self):

@@ -308,7 +308,7 @@ class SaveFilterListForm(forms.Form):
         cleaned_data = super().clean()
         list_name = cleaned_data.get("list_name")
         if not list_name or not list_name.strip():
-            self.add_error("list_name", "List name cannot be empty.")
+            self.add_error("list_name", _("List name cannot be empty."))
         return cleaned_data
 
 

@@ -181,7 +181,7 @@ class SaveFilterListView(LoginRequiredMixin, FormView):
 
         create_new = self.request.POST.get("create_new") == "true"
         if not create_new and not any(filter_params.values()):
-            form.add_error(None, "At least one filter is required.")
+            form.add_error(None, _("At least one filter is required."))
             return self.form_invalid(form)
         try:
             saved_filter_list, _created = (

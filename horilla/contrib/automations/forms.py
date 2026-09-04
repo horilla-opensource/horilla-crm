@@ -14,6 +14,7 @@ from horilla.contrib.mail.models import HorillaMailConfiguration
 # First party imports (Horilla)
 from horilla.db import models
 from horilla.urls import reverse_lazy
+from horilla.utils.translation import gettext_lazy as _
 
 # Local imports
 from .models import AutomationCondition, HorillaAutomation
@@ -347,7 +348,7 @@ class HorillaAutomationForm(HorillaModelForm):
                             )
 
                 # Also add 'self' option
-                field_choices.insert(0, ("self", "Self (User who triggered)"))
+                field_choices.insert(0, ("self", _("Self (User who triggered)")))
         except Exception:
             pass
 
@@ -431,7 +432,7 @@ class HorillaAutomationForm(HorillaModelForm):
                 widget=forms.SelectMultiple(
                     attrs={
                         "class": "js-example-basic-multiple headselect w-full",
-                        "data-placeholder": "Select user fields",
+                        "data-placeholder": _("Select user fields"),
                         "multiple": "multiple",
                     }
                 ),
@@ -489,15 +490,19 @@ class HorillaAutomationForm(HorillaModelForm):
         if trigger == "scheduled":
             errors = {}
             if not cleaned.get("schedule_date_field"):
-                errors["schedule_date_field"] = "Required for scheduled automations."
+                errors["schedule_date_field"] = _("Required for scheduled automations.")
             if cleaned.get("schedule_offset_amount") is None:
-                errors["schedule_offset_amount"] = "Required for scheduled automations."
+                errors["schedule_offset_amount"] = _(
+                    "Required for scheduled automations."
+                )
             if not cleaned.get("schedule_offset_direction"):
-                errors["schedule_offset_direction"] = (
+                errors["schedule_offset_direction"] = _(
                     "Required for scheduled automations."
                 )
             if not cleaned.get("schedule_offset_unit"):
-                errors["schedule_offset_unit"] = "Required for scheduled automations."
+                errors["schedule_offset_unit"] = _(
+                    "Required for scheduled automations."
+                )
             if errors:
                 raise forms.ValidationError(errors)
         return cleaned

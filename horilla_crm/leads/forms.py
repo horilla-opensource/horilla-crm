@@ -308,26 +308,30 @@ class LeadConversionForm(forms.Form):
             if not cleaned_data.get("account_name"):
                 self.add_error(
                     "account_name",
-                    "Account name is required when creating new account.",
+                    _("Account name is required when creating new account."),
                 )
         elif account_action == "select_existing":
             if not cleaned_data.get("existing_account"):
-                self.add_error("existing_account", "Please select an existing account.")
+                self.add_error(
+                    "existing_account", _("Please select an existing account.")
+                )
 
         # Validate contact
         contact_action = cleaned_data.get("contact_action")
         if contact_action == "create_new":
             if not cleaned_data.get("first_name"):
                 self.add_error(
-                    "first_name", "First name is required when creating new contact."
+                    "first_name", _("First name is required when creating new contact.")
                 )
             if not cleaned_data.get("last_name"):
                 self.add_error(
-                    "last_name", "Last name is required when creating new contact."
+                    "last_name", _("Last name is required when creating new contact.")
                 )
         elif contact_action == "select_existing":
             if not cleaned_data.get("existing_contact"):
-                self.add_error("existing_contact", "Please select an existing contact.")
+                self.add_error(
+                    "existing_contact", _("Please select an existing contact.")
+                )
 
         # Validate opportunity
         opportunity_action = cleaned_data.get("opportunity_action")
@@ -335,12 +339,12 @@ class LeadConversionForm(forms.Form):
             if not cleaned_data.get("opportunity_name"):
                 self.add_error(
                     "opportunity_name",
-                    "Opportunity name is required when creating new opportunity.",
+                    _("Opportunity name is required when creating new opportunity."),
                 )
         elif opportunity_action == "select_existing":
             if not cleaned_data.get("existing_opportunity"):
                 self.add_error(
-                    "existing_opportunity", "Please select an existing opportunity."
+                    "existing_opportunity", _("Please select an existing opportunity.")
                 )
 
         return cleaned_data

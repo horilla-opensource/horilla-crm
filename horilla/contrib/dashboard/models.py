@@ -64,7 +64,7 @@ class DashboardFolder(HorillaCoreModel):
 
     def get_item_type(self):
         """Get the type of item for display purposes"""
-        return "Folder"
+        return _("Folder")
 
     def get_detail_view_url(self):
         """URL to view the folder details"""
@@ -130,7 +130,7 @@ class Dashboard(HorillaCoreModel):
 
     def get_item_type(self):
         """Get the type of item for display purposes"""
-        return "Dashboard"
+        return _("Dashboard")
 
     def get_detail_view_url(self):
         """URL to view the dashboard details"""

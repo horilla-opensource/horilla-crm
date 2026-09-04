@@ -857,7 +857,7 @@ class HorillaMultiStepForm(HorillaFormMixin, forms.ModelForm):
                         ):
                             # Add required error if not already present
                             if field_name not in self.errors:
-                                self.add_error(field_name, "This field is required.")
+                                self.add_error(field_name, _("This field is required."))
                         elif (
                             model_field.blank
                             or has_stored_file

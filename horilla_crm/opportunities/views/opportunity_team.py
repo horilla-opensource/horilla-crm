@@ -533,7 +533,7 @@ class OpportunityTeamMemberCreateView(
         """Validate form before creating multiple instances"""
         team_id = form.cleaned_data.get("team")
         if not team_id:
-            form.add_error("team", "Team is required.")
+            form.add_error("team", _("Team is required."))
             return False
         return True
 
@@ -550,7 +550,7 @@ class OpportunityTeamMemberCreateView(
         # Check if user already in this submission
         cache_key = (user_id, team_pk)
         if cache_key in unique_cache:
-            return "User has already been added to this team."
+            return str(_("User has already been added to this team."))
 
         # Check if user already exists in team
         if self.model.objects.filter(user_id=user_id, team_id=team_pk).exists():
@@ -559,7 +559,7 @@ class OpportunityTeamMemberCreateView(
                 name = f"{user.first_name} {user.last_name}".strip() or user.username
             except Exception:
                 name = f"User ID {user_id}"
-            return f"{name} is already a member of this team."
+            return _("%(name)s is already a member of this team.") % {"name": name}
 
         unique_cache.add(cache_key)
         return None  # No duplicate
@@ -851,7 +851,7 @@ class AddOpportunityMemberView(
         """Validate form before creating multiple instances"""
         opp_id = form.cleaned_data.get("opportunity")
         if not opp_id:
-            form.add_error("opportunity", "Opportunity is required.")
+            form.add_error("opportunity", _("Opportunity is required."))
             return False
         return True
 
@@ -867,7 +867,7 @@ class AddOpportunityMemberView(
         # Check if user already in this submission
         cache_key = (user_id, opp_pk)
         if cache_key in unique_cache:
-            return "Duplicate user in submission"
+            return str(_("Duplicate user in submission"))
 
         if self.model.objects.filter(user_id=user_id, opportunity_id=opp_pk).exists():
             try:
@@ -876,9 +876,13 @@ class AddOpportunityMemberView(
                     f"{user_obj.first_name} {user_obj.last_name}".strip()
                     or user_obj.username
                 )
-                return f"{user_name} is already a member of this opportunity"
+                return _("%(name)s is already a member of this opportunity") % {
+                    "name": user_name
+                }
             except Exception:
-                return f"User ID {user_id} is already a member of this opportunity"
+                return _(
+                    "User ID %(user_id)s is already a member of this opportunity"
+                ) % {"user_id": user_id}
 
         unique_cache.add(cache_key)
         return None

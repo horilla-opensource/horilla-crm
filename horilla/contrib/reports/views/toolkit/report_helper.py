@@ -5,6 +5,7 @@ import copy
 
 # First party imports (Horilla)
 from horilla.shortcuts import render
+from horilla.utils.translation import gettext_lazy as _
 
 # Fields used for creating temporary report objects with preview data
 TEMP_REPORT_FIELDS = (
@@ -122,7 +123,7 @@ def extract_display_value(key_or_value):
     Fallbacks to a generic "Unspecified (-)" when the value is empty.
     """
     if not key_or_value:
-        return "Unspecified (-)"
+        return str(_("Unspecified (-)"))
 
     key_str = str(key_or_value)
 

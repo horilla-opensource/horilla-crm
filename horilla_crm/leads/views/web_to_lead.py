@@ -23,6 +23,7 @@ from horilla.utils.decorators import (
     method_decorator,
     permission_required_or_denied,
 )
+from horilla.utils.translation import gettext_lazy as _
 from horilla.web import HttpNotFound, HttpResponse, RedirectResponse
 
 # Local imports
@@ -230,13 +231,13 @@ class SaveLeadFormView(LoginRequiredMixin, FormView):
         # Validate lead owner
         lead_owner = self.request.POST.get("lead_owner")
         if not lead_owner:
-            form.add_error("lead_owner", "Lead Owner is required.")
+            form.add_error("lead_owner", _("Lead Owner is required."))
             return self.form_invalid(form)
 
         # Validate selected fields
         selected_fields = self.request.POST.getlist("selected_fields[]")
         if not selected_fields:
-            form.add_error(None, "Select at least one field.")
+            form.add_error(None, _("Select at least one field."))
             return self.form_invalid(form)
 
         # Validate return URL requirements
@@ -245,17 +246,17 @@ class SaveLeadFormView(LoginRequiredMixin, FormView):
         if return_url_enable:
             return_url = form.cleaned_data.get("return_url")
             if not return_url:
-                form.add_error("return_url", "Return URL is required when enabled.")
+                form.add_error("return_url", _("Return URL is required when enabled."))
                 return self.form_invalid(form)
         else:
             success_message = form.cleaned_data.get("success_message")
             success_description = form.cleaned_data.get("success_description")
             if not success_message:
-                form.add_error("success_message", "Success message is required.")
+                form.add_error("success_message", _("Success message is required."))
                 return self.form_invalid(form)
             if not success_description:
                 form.add_error(
-                    "success_description", "Success description is required."
+                    "success_description", _("Success description is required.")
                 )
                 return self.form_invalid(form)
 

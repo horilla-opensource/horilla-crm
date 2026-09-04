@@ -226,8 +226,8 @@ class DuplicateRuleCondition(HorillaCoreModel):
     logical_operator = models.CharField(
         max_length=10,
         choices=[
-            ("and", "AND"),
-            ("or", "OR"),
+            ("and", _("AND")),
+            ("or", _("OR")),
         ],
         default="and",
         verbose_name=_("Logical Operator"),

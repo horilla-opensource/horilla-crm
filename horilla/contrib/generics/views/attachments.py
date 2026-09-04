@@ -215,7 +215,7 @@ class HorillaNotesAttachementDetailView(HorillaModalDetailView):
             self.object = None
 
         if not self.object:
-            messages.error(self.request, "The requested attachment does not exist.")
+            messages.error(self.request, _("The requested attachment does not exist."))
             return ScriptResponse(reload=True, msgs=True, extra="closeContentModal();")
 
         related_obj = self.object.related_object

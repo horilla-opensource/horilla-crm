@@ -492,7 +492,7 @@ class HorillaMailTemplate(HorillaCoreModel):
         """Return the related model's verbose name."""
         if self.content_type:
             return self.content_type.model_class()._meta.verbose_name
-        return "General"
+        return _("General")
 
     def clean(self):
         """Sanitize XSS content from mail fields."""

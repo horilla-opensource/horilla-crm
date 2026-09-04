@@ -17,6 +17,7 @@ from horilla.utils.decorators import (
     method_decorator,
     permission_required_or_denied,
 )
+from horilla.utils.translation import gettext_lazy as _
 from horilla.views.generic import TemplateView, View
 from horilla.web import ScriptResponse
 
@@ -180,14 +181,17 @@ class CreateSelectedDefaultReportsView(LoginRequiredMixin, View):
 
         # Show messages
         if created_reports and skipped_reports:
-            message = f"{len(created_reports)} report(s) loaded successfully. {len(skipped_reports)} report(s) already exist and were skipped."
+            message = _(
+                "%(created)s report(s) loaded successfully. "
+                "%(skipped)s report(s) already exist and were skipped."
+            ) % {"created": len(created_reports), "skipped": len(skipped_reports)}
             messages.success(self.request, message)
         elif created_reports:
-            messages.success(self.request, "Reports loaded successfully")
+            messages.success(self.request, _("Reports loaded successfully"))
         elif skipped_reports:
-            messages.warning(self.request, "All selected reports already exist")
+            messages.warning(self.request, _("All selected reports already exist"))
         else:
-            messages.info(self.request, "No reports were processed")
+            messages.info(self.request, _("No reports were processed"))
 
         return ScriptResponse(reload=True, close=True)
 

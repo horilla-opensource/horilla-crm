@@ -37,16 +37,16 @@ class HorillaAutomation(HorillaCoreModel):
     """
 
     choices = [
-        ("on_create", "On Create"),
-        ("on_update", "On Update"),
-        ("on_create_or_update", "Both Create and Update"),
-        ("on_delete", "On Delete"),
-        ("scheduled", "Scheduled (time-based)"),
+        ("on_create", _("On Create")),
+        ("on_update", _("On Update")),
+        ("on_create_or_update", _("Both Create and Update")),
+        ("on_delete", _("On Delete")),
+        ("scheduled", _("Scheduled (time-based)")),
     ]
     SEND_OPTIONS = [
-        ("mail", "Send as Mail"),
-        ("notification", "Send as Notification"),
-        ("both", "Send as Mail and Notification"),
+        ("mail", _("Send as Mail")),
+        ("notification", _("Send as Notification")),
+        ("both", _("Send as Mail and Notification")),
     ]
 
     title = models.CharField(max_length=256, unique=True, verbose_name=_("Title"))

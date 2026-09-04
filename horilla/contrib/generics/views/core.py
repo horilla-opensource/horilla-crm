@@ -287,7 +287,7 @@ class HorillaDynamicCreateView(LoginRequiredMixin, FormView):
         self.target_model, self.field_names = self.get_model_and_fields()
 
         if not self.target_model:
-            messages.error(self.request, "Invalid model or fields")
+            messages.error(self.request, _("Invalid model or fields"))
             return self._modal_close_with_message_response()
 
         # Validate field names against the model
@@ -460,5 +460,5 @@ class HorillaDynamicCreateView(LoginRequiredMixin, FormView):
 
     def form_invalid(self, form):
         """Show error message and re-render form with validation errors."""
-        messages.error(self.request, "Please correct the errors below.")
+        messages.error(self.request, _("Please correct the errors below."))
         return super().form_invalid(form)

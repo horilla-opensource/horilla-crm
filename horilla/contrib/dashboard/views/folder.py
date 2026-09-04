@@ -245,8 +245,8 @@ class FolderDetailListView(LoginRequiredMixin, HorillaListView):
         dashboards_list = list(dashboard)
 
         for folder in folders_list:
-            folder.item_type = "Folder"
-            folder.get_item_type = "Folder"
+            folder.item_type = _("Folder")
+            folder.get_item_type = _("Folder")
             folder.hx_target = "#mainContent"
             folder.hx_swap = "outerHTML"
             folder.hx_select = "#mainContent"
@@ -256,8 +256,8 @@ class FolderDetailListView(LoginRequiredMixin, HorillaListView):
             )
 
         for dashboard in dashboards_list:
-            dashboard.item_type = "Dashboard"
-            dashboard.get_item_type = "Dashboard"
+            dashboard.item_type = _("Dashboard")
+            dashboard.get_item_type = _("Dashboard")
             dashboard.hx_target = "#mainContent"
             dashboard.hx_swap = "outerHTML"
             dashboard.hx_select = "#mainContent"

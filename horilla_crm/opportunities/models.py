@@ -304,10 +304,10 @@ class Opportunity(HorillaCoreModel):
     """Django model based on  Opportunity object"""
 
     TYPE_CHOICES = [
-        ("existing_customer_upgrade", "Existing Customer - Upgrade"),
-        ("existing_customer_replacement", "Existing Customer - Replacement"),
-        ("existing_customer_downgrade", "Existing Customer - Downgrade"),
-        ("new_customer", "New Customer"),
+        ("existing_customer_upgrade", _("Existing Customer - Upgrade")),
+        ("existing_customer_replacement", _("Existing Customer - Replacement")),
+        ("existing_customer_downgrade", _("Existing Customer - Downgrade")),
+        ("new_customer", _("New Customer")),
     ]
 
     LEAD_SOURCES = [
@@ -323,17 +323,17 @@ class Opportunity(HorillaCoreModel):
     ]
 
     FORECAST_CATEGORY_CHOICES = [
-        ("omitted", "Omitted"),
-        ("pipeline", "Pipeline"),
-        ("best_case", "Best Case"),
-        ("commit", "Commit"),
-        ("closed", "Closed"),
+        ("omitted", _("Omitted")),
+        ("pipeline", _("Pipeline")),
+        ("best_case", _("Best Case")),
+        ("commit", _("Commit")),
+        ("closed", _("Closed")),
     ]
 
     DELIVERY_STATUS_CHOICES = [
-        ("yet_to_fulfill", "Yet to Fulfill"),
-        ("partially_delivered", "Partially Delivered"),
-        ("completely_delivered", "Completely Delivered"),
+        ("yet_to_fulfill", _("Yet to Fulfill")),
+        ("partially_delivered", _("Partially Delivered")),
+        ("completely_delivered", _("Completely Delivered")),
     ]
 
     name = models.CharField(max_length=120, verbose_name=_("Opportunity Name"))
@@ -854,7 +854,7 @@ class OpportunitySettings(HorillaCoreModel):
         unique_together = ("company",)
 
     def __str__(self):
-        return "Opportunity Settings"
+        return str(_("Opportunity Settings"))
 
     @classmethod
     def get_settings(cls, company):

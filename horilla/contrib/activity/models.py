@@ -267,7 +267,7 @@ class Activity(HorillaCoreModel):
         Return the start date or due date or created at date based on activity type.
         """
         if self.activity_type in ["event", "meeting"] and self.is_all_day:
-            return "All Day Event"
+            return _("All Day Event")
         return self.start_datetime or self.due_datetime or self.created_at
 
     def get_end_date(self):
@@ -275,7 +275,7 @@ class Activity(HorillaCoreModel):
         Return the end date or due date or created at date based on activity type.
         """
         if self.activity_type in ["event", "meeting"] and self.is_all_day:
-            return "All Day Event"
+            return _("All Day Event")
         return self.end_datetime or self.due_datetime or self.created_at
 
     def meeting_link_col(self):

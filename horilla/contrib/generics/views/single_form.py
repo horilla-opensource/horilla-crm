@@ -490,7 +490,7 @@ class HorillaSingleFormView(FormViewCommonMixin, FormView):
 
         if not condition_data:
             if form:
-                form.add_error(None, "At least one instance must be added.")
+                form.add_error(None, _("At least one instance must be added."))
             return []
 
         created_instances = []

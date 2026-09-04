@@ -439,7 +439,7 @@ class ChangeDefaultCurrencyFormView(LoginRequiredMixin, FormView):
                 ).first()
 
                 if current_default and current_default.id == new_default_currency.id:
-                    messages.info(self.request, "Currency is already the default.")
+                    messages.info(self.request, _("Currency is already the default."))
                     return ScriptResponse(
                         extra="htmx.trigger('#tab-currency-view','click');",
                         close=True,
@@ -530,7 +530,7 @@ class ChangeDefaultCurrencyFormView(LoginRequiredMixin, FormView):
 
                 company.currency = new_default_currency.currency
                 company.save()
-            messages.success(self.request, "Default currency changed successfully.")
+            messages.success(self.request, _("Default currency changed successfully."))
             return ScriptResponse(
                 extra="htmx.trigger('#tab-currency-view','click');", close=True
             )
@@ -855,7 +855,7 @@ class CurrencyDeleteView(LoginRequiredMixin, HorillaSingleDeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.is_default:
-            messages.error(self.request, "Default Currency can not delete")
+            messages.error(self.request, _("Default Currency can not delete"))
             response = ScriptResponse(
                 extra="$('#reloadCurrencyButton').click();", close=True
             )

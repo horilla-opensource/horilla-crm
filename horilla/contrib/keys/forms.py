@@ -90,13 +90,13 @@ class ShortcutKeyForm(HorillaModelForm):
                     choices.append((url, label))
 
         self.fields["page"] = forms.ChoiceField(
-            choices=[("", "Select Page")] + choices,
-            label="Page",
+            choices=[("", _("Select Page"))] + choices,
+            label=_("Page"),
             required=True,
             widget=forms.Select(
                 attrs={
                     "class": "js-example-basic-single headselect w-full text-sm",
-                    "data-placeholder": "Select Page",
+                    "data-placeholder": _("Select Page"),
                     "id": "id_page",
                 }
             ),
@@ -105,13 +105,13 @@ class ShortcutKeyForm(HorillaModelForm):
         command_choices = self._get_command_choices()
 
         self.fields["command"] = forms.ChoiceField(
-            choices=[("", "Select Command Key")] + command_choices,
+            choices=[("", _("Select Command Key"))] + command_choices,
             label=_("Command Key"),
             required=True,
             widget=forms.Select(
                 attrs={
                     "class": "js-example-basic-single headselect w-full text-sm",
-                    "data-placeholder": "Select Command Key",
+                    "data-placeholder": _("Select Command Key"),
                     "id": "id_command",
                 }
             ),
