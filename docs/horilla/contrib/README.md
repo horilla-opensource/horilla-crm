@@ -35,6 +35,7 @@ This tree mirrors **`horilla/contrib/`** Django apps. Each subfolder holds docum
 | **core** | [core/core_app.md](core/core_app.md) (index) · [core/horilla.md](core/horilla.md) · [core/models.md](core/models.md) · … |
 | **dashboard** | [dashboard/dashboard.md](dashboard/dashboard.md) · [dashboard/default_dashboard_generator.md](dashboard/default_dashboard_generator.md) |
 | **duplicates** | [duplicates/duplicates.md](duplicates/duplicates.md) |
+| **field_requirements** | [field_requirements/field_requirements.md](field_requirements/field_requirements.md) |
 | **generics** | [generics/generics_app.md](generics/generics_app.md) · [generics/views/views_init.md](generics/views/views_init.md) · … |
 | **keys** | [keys/keys.md](keys/keys.md) · [keys/default_shortcut_registration.md](keys/default_shortcut_registration.md) |
 | **mail** | [mail/mail.md](mail/mail.md) |
