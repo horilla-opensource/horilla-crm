@@ -14,15 +14,15 @@
     ></span>
 <div class="{% if border_enabled %} border-b border-b-primary-100 {% endif %} bg-white {% if nav_width %} px-5 fixed z-10 w-fill-available {% else %} flex justify-between items-center mb-2 w-full {% endif %}">
     <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 justify-between w-full {% if not nav_width %} pb-2 {% endif %}">
-        <div class="flex items-start gap-4 min-w-0 flex-1">
+        <div class="flex items-center gap-2 min-w-0 flex-1">
             {% if navbar_indication %}
                 <button
-                    class="mt-1 shrink-0"
+                    class="shrink-0"
                     {% for attr_name, attr_value in navbar_indication_attrs.items %}
                         {{ attr_name }}="{{ attr_value|safe }}"
                     {% endfor %}
                 >
-                    <i class="fas fa-arrow-left mr-2"></i>
+                    <i class="fas fa-arrow-left"></i>
                 </button>
             {% endif %}
 
