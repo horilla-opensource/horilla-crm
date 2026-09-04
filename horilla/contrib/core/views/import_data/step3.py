@@ -18,7 +18,6 @@ from .base import IMPORT_EXCLUDED_FIELDS, get_model_verbose_name
 # Third-party imports (Django)
 
 
-
 logger = logging.getLogger(__name__)
 
 

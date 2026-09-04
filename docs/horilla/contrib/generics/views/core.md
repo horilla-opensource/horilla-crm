@@ -330,4 +330,3 @@ From a Lead form, allow creating a new `LeadStatus` in a dynamic modal and auto-
 - `HorillaTabView`: HTMX tabs + persisted active tab target.
 - `HorillaHistorySectionView`: object history timeline with filtering + pagination.
 - `HorillaDynamicCreateView`: safe dynamic creation modal with model/field validation, permission checks, and JS select-option injection.
-

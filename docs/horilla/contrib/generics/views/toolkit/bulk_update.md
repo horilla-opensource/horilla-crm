@@ -452,4 +452,3 @@ Common customization options:
 
 `bulk_update.py` implements a permission-aware, type-coercing, audit-logging mass update pipeline for generic list views.
 It is optimized for HTMX modal UX and high-performance SQL bulk updates while still preserving per-record change history through `LogEntry`.
-

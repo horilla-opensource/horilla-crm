@@ -128,4 +128,3 @@ This app is listed before the CRM apps, so discovery is hooked into
 before forms are composed. Turning the feature off is still one
 ``INSTALLED_APPS`` line: no FormExtension classes are registered, and the
 core/generics form mixins are unchanged.
-
