@@ -155,8 +155,9 @@ class ApprovalProcessRuleActionFormView(LoginRequiredMixin, View):
                             {
                                 "name": f.name,
                                 "label": str(
-                                    getattr(f, "verbose_name", f.name)
-                                ).title(),
+                                    getattr(f, "verbose_name", None)
+                                    or f.name.replace("_", " ").title()
+                                ),
                                 "type": dtype,
                                 "choices": choices,
                             }
@@ -166,7 +167,10 @@ class ApprovalProcessRuleActionFormView(LoginRequiredMixin, View):
                             continue
                         try:
                             if f.get_internal_type() == "EmailField":
-                                label = str(getattr(f, "verbose_name", f.name)).title()
+                                label = str(
+                                    getattr(f, "verbose_name", None)
+                                    or f.name.replace("_", " ").title()
+                                )
                                 email_to_choices.append(
                                     (
                                         f"instance.{f.name}",
@@ -185,7 +189,10 @@ class ApprovalProcessRuleActionFormView(LoginRequiredMixin, View):
                             getattr(f, "many_to_one", False)
                             and getattr(f, "related_model", None) == User
                         ):
-                            fk_label = str(getattr(f, "verbose_name", f.name)).title()
+                            fk_label = str(
+                                getattr(f, "verbose_name", None)
+                                or f.name.replace("_", " ").title()
+                            )
                             # Email action: resolve to address via instance.<fk>.email only.
                             email_to_choices.append(
                                 (
@@ -238,7 +245,10 @@ class ApprovalProcessRuleActionFormView(LoginRequiredMixin, View):
                     field_meta.append(
                         {
                             "name": f.name,
-                            "label": str(getattr(f, "verbose_name", f.name)).title(),
+                            "label": str(
+                                getattr(f, "verbose_name", None)
+                                or f.name.replace("_", " ").title()
+                            ),
                             "type": dtype,
                             "choices": choices,
                         }
@@ -328,7 +338,10 @@ class ApprovalProcessRuleComposeDynamicView(LoginRequiredMixin, View):
             fields.append(
                 {
                     "name": f.name,
-                    "label": str(getattr(f, "verbose_name", f.name)).title(),
+                    "label": str(
+                        getattr(f, "verbose_name", None)
+                        or f.name.replace("_", " ").title()
+                    ),
                 }
             )
         return fields

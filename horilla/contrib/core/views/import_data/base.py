@@ -174,7 +174,7 @@ class ImportDataView(TemplateView):
     def _format_model_info(self, model):
         return {
             "name": model.__name__,
-            "label": model._meta.verbose_name.title(),
+            "label": model._meta.verbose_name,
             "app_label": model._meta.app_label,
             "module": model.__module__,
         }

@@ -239,7 +239,7 @@ class LeadAssignmentMatchCriteria(HorillaCoreModel):
         """Return the verbose name of the Lead field (e.g. 'lead_status' → 'Lead Status')."""
 
         try:
-            return Lead._meta.get_field(self.field).verbose_name.title()
+            return Lead._meta.get_field(self.field).verbose_name
         except Exception:
             return self.field.replace("_", " ").title()
 

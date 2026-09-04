@@ -491,7 +491,7 @@ class HorillaMailTemplate(HorillaCoreModel):
     def get_related_model(self):
         """Return the related model's verbose name."""
         if self.content_type:
-            return self.content_type.model_class()._meta.verbose_name.title()
+            return self.content_type.model_class()._meta.verbose_name
         return "General"
 
     def clean(self):

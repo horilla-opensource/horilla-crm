@@ -365,7 +365,10 @@ class ApprovalProcessRuleComposeView(LoginRequiredMixin, HorillaSingleFormView):
             fields.append(
                 {
                     "name": f.name,
-                    "label": str(getattr(f, "verbose_name", f.name)).title(),
+                    "label": str(
+                        getattr(f, "verbose_name", None)
+                        or f.name.replace("_", " ").title()
+                    ),
                 }
             )
         # Fallback: include condition-field choices if model introspection yielded none/limited fields.

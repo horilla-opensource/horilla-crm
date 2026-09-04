@@ -106,7 +106,7 @@ class FieldRequirement(HorillaCoreModel):
         """
         model = self.model_class
         if model is not None:
-            return str(model._meta.verbose_name).title()
+            return str(model._meta.verbose_name)
         if self.content_type_id:
             return str(self.content_type)
         return ""
@@ -128,7 +128,7 @@ class FieldRequirement(HorillaCoreModel):
         field = self.model_field
         if field is None:
             return self.field_name
-        return str(field.verbose_name).title()
+        return str(field.verbose_name)
 
     @property
     def requirement_label(self):

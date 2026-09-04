@@ -54,7 +54,7 @@ class HorillaContentType(ContentType):
     def __str__(self):
         model_cls = self.model_class()
         if model_cls:
-            return model_cls._meta.verbose_name.title()
+            return str(model_cls._meta.verbose_name)
         return self.model.replace("_", " ").title()
 
 

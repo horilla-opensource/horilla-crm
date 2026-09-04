@@ -112,8 +112,8 @@ class PermissionUtils:
                 continue
 
             if search_query:
-                verbose_name = model._meta.verbose_name.title().lower()
-                verbose_name_plural = model._meta.verbose_name_plural.title().lower()
+                verbose_name = model._meta.verbose_name.lower()
+                verbose_name_plural = model._meta.verbose_name_plural.lower()
                 search_lower = search_query.lower()
 
                 if not (

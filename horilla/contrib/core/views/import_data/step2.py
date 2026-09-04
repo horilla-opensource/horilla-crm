@@ -20,6 +20,7 @@ from .base import IMPORT_EXCLUDED_FIELDS
 # Third-party imports (Django)
 
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -115,7 +116,7 @@ class ImportStep2View(View):
 
                 field_info = {
                     "name": field.name,
-                    "verbose_name": field.verbose_name.title(),
+                    "verbose_name": field.verbose_name,
                     "required": not field.null and not field.blank,
                     "field_type": field_type,
                     "is_choice_field": False,

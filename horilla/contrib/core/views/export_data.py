@@ -135,7 +135,7 @@ def build_schedule_modules_context(module_names, saved_fields):
         schedule_modules.append(
             {
                 "name": name,
-                "label": model._meta.verbose_name.title(),
+                "label": model._meta.verbose_name,
                 "fields": field_context,
                 "all_checked": all(f["checked"] for f in field_context),
             }
@@ -184,7 +184,7 @@ class ExportView(LoginRequiredMixin, TemplateView):
                     models.append(
                         {
                             "name": model.__name__,
-                            "label": model._meta.verbose_name.title(),
+                            "label": model._meta.verbose_name,
                             "app_label": model._meta.app_label,
                             "module": model.__module__,
                             "fields": [

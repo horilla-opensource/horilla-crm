@@ -623,7 +623,7 @@ class GetModelFieldChoicesView(LoginRequiredMixin, View):
                 getattr(field, "verbose_name", None)
                 or field.name.replace("_", " ").title()
             )
-            field_choices.append((field.name, str(verbose_name).title()))
+            field_choices.append((field.name, str(verbose_name)))
 
         # Build select HTML
         return render(

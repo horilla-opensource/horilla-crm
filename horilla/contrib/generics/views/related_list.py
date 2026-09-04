@@ -94,7 +94,7 @@ class HorillaRelatedListSectionView(DetailView):
 
             related_model = field.related_model
             config = related_config.get(field.name, {})
-            default_title = related_model._meta.verbose_name_plural.title()
+            default_title = related_model._meta.verbose_name_plural
 
             related_lists.append(
                 {
@@ -115,7 +115,7 @@ class HorillaRelatedListSectionView(DetailView):
                 related_model = apps.get_model(
                     custom_config["app_label"], custom_config["model_name"]
                 )
-                default_title = related_model._meta.verbose_name_plural.title()
+                default_title = related_model._meta.verbose_name_plural
 
                 related_lists.append(
                     {
@@ -233,7 +233,7 @@ class HorillaRelatedListSectionView(DetailView):
             config = self.related_list_config.get(field.name, {})
             dropdown_actions = config.get("dropdown_actions", [])
             custom_buttons = config.get("custom_buttons", [])
-            default_title = related_model._meta.verbose_name_plural.title()
+            default_title = related_model._meta.verbose_name_plural
 
             list_view = self.create_generic_list_view_instance(
                 model=related_model,
@@ -273,7 +273,7 @@ class HorillaRelatedListSectionView(DetailView):
             related_model = apps.get_model(
                 custom_config["app_label"], custom_config["model_name"]
             )
-            default_title = related_model._meta.verbose_name_plural.title()
+            default_title = related_model._meta.verbose_name_plural
             config = custom_config.get("config", {})
             dropdown_actions = config.get("dropdown_actions", [])
 

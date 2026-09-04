@@ -32,7 +32,7 @@ def get_field_choices(model):
     """
     choices = []
     for field in get_configurable_fields(model):
-        label = str(field.verbose_name).title()
+        label = str(field.verbose_name)
         if not can_relax_requirement(field):
             label = _("%(label)s (always required)") % {"label": label}
         choices.append((field.name, label))

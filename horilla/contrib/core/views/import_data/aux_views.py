@@ -89,7 +89,7 @@ class GetModelFieldsView(LoginRequiredMixin, View):
             context = {
                 "field": {
                     "name": field_name,
-                    "verbose_name": field.verbose_name.title(),
+                    "verbose_name": field.verbose_name,
                     "is_choice_field": is_choice_field,
                     "is_foreign_key": is_foreign_key,
                     "choices": (
@@ -215,7 +215,7 @@ class GetUniqueValuesView(LoginRequiredMixin, View):
             context = {
                 "field": {
                     "name": field_name,
-                    "verbose_name": field.verbose_name.title(),
+                    "verbose_name": field.verbose_name,
                     "is_choice_field": is_choice_field,
                     "is_foreign_key": is_foreign_key,
                     "choices": (
@@ -534,7 +534,7 @@ class DownloadTemplateModalView(LoginRequiredMixin, TemplateView):
 
                 field_info = {
                     "name": field.name,
-                    "verbose_name": field.verbose_name.title(),
+                    "verbose_name": field.verbose_name,
                     "required": not field.null and not field.blank,
                 }
                 fields.append(field_info)
@@ -621,7 +621,7 @@ class DownloadTemplateView(LoginRequiredMixin, View):
             for field_name in selected_fields:
                 try:
                     field = model._meta.get_field(field_name)
-                    field_headers.append(field.verbose_name.title())
+                    field_headers.append(field.verbose_name)
                 except Exception:
                     field_headers.append(field_name)
 

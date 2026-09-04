@@ -118,7 +118,7 @@ class ChangeChartTypeView(LoginRequiredMixin, HorillaSingleFormView):
         for field_name in temp_report.row_groups_list:
             try:
                 field = temp_report.model_class._meta.get_field(field_name)
-                verbose_name = field.verbose_name.title()
+                verbose_name = field.verbose_name
                 field_choices.append((field_name, f"{verbose_name} (Row Group)"))
             except Exception:
                 field_choices.append((field_name, f"{field_name.title()} (Row Group)"))
@@ -126,7 +126,7 @@ class ChangeChartTypeView(LoginRequiredMixin, HorillaSingleFormView):
         for field_name in temp_report.column_groups_list:
             try:
                 field = temp_report.model_class._meta.get_field(field_name)
-                verbose_name = field.verbose_name.title()
+                verbose_name = field.verbose_name
                 field_choices.append((field_name, f"{verbose_name} (Column Group)"))
             except Exception:
                 field_choices.append(
@@ -418,7 +418,7 @@ class UpdateReportView(LoginRequiredMixin, HorillaSingleFormView):
             except Http404:
                 messages.error(
                     request,
-                    f"{self.model._meta.verbose_name.title()} not found or no longer exists.",
+                    f"{self.model._meta.verbose_name} not found or no longer exists.",
                 )
                 return ScriptResponse(
                     reload=True,
@@ -461,7 +461,7 @@ class MoveReportView(LoginRequiredMixin, HorillaSingleFormView):
             except Http404:
                 messages.error(
                     request,
-                    f"{self.model._meta.verbose_name.title()} not found or no longer exists.",
+                    f"{self.model._meta.verbose_name} not found or no longer exists.",
                 )
                 return ScriptResponse(
                     reload=True,
@@ -520,7 +520,7 @@ class MoveFolderView(LoginRequiredMixin, HorillaSingleFormView):
             except Http404:
                 messages.error(
                     request,
-                    f"{self.model._meta.verbose_name.title()} not found or no longer exists.",
+                    f"{self.model._meta.verbose_name} not found or no longer exists.",
                 )
                 return ScriptResponse(
                     reload=True,

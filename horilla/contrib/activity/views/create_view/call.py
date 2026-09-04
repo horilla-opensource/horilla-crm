@@ -64,7 +64,7 @@ class CallCreateForm(
             except Http404:
                 messages.error(
                     request,
-                    f"{self.model._meta.verbose_name.title()} not found or no longer exists.",
+                    f"{self.model._meta.verbose_name} not found or no longer exists.",
                 )
                 return ScriptResponse(
                     reload=True,

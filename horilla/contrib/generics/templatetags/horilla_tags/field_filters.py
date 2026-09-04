@@ -626,7 +626,7 @@ def get_field_verbose_name(component_or_condition, model_name_or_field_name):
         else:
             model = apps.get_model("your_app_name", model_name_or_field_name)
             field = model._meta.get_field(component_or_condition.field)
-        return field.verbose_name.title()
+        return field.verbose_name
     except Exception:
         field_name = getattr(component_or_condition, "field", model_name_or_field_name)
         return field_name.replace("_", " ").title()

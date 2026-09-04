@@ -75,7 +75,10 @@ class ApprovalProcessRuleRecordFieldsFragmentView(LoginRequiredMixin, View):
             fields.append(
                 {
                     "name": f.name,
-                    "label": str(getattr(f, "verbose_name", f.name)).title(),
+                    "label": str(
+                        getattr(f, "verbose_name", None)
+                        or f.name.replace("_", " ").title()
+                    ),
                 }
             )
         return fields
@@ -380,7 +383,10 @@ class ApprovalProcessDetailView(LoginRequiredMixin, DetailView):
             return field_name
         try:
             field = model_cls._meta.get_field(field_name)
-            return str(getattr(field, "verbose_name", field_name)).title()
+            return str(
+                getattr(field, "verbose_name", None)
+                or field_name.replace("_", " ").title()
+            )
         except Exception:
             return field_name
 

@@ -357,9 +357,7 @@ class HorillaDynamicCreateView(LoginRequiredMixin, FormView):
         """Add form_title, target_field, form_url, full_width_fields, and field_permissions to context."""
         context = super().get_context_data(**kwargs)
         if self.target_model:
-            context["form_title"] = (
-                f"Create {self.target_model._meta.verbose_name.title()}"
-            )
+            context["form_title"] = f"Create {self.target_model._meta.verbose_name}"
             context["target_field"] = self.request.GET.get("target_field")
             query_string = self.request.GET.urlencode()
             context["form_url"] = (

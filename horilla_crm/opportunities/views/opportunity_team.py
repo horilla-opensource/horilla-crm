@@ -304,7 +304,7 @@ class OpportunityTeamFormView(
         self.request.session.modified = True
         messages.success(
             self.request,
-            f"{self.model._meta.verbose_name.title()} {'updated' if self.kwargs.get('pk') else 'created'} successfully.",
+            f"{self.model._meta.verbose_name} {'updated' if self.kwargs.get('pk') else 'created'} successfully.",
         )
         return ScriptResponse(reload=True, close=True)
 

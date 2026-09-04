@@ -334,7 +334,7 @@ class OpportunityTeamForm(HorillaModelForm):
                                         "model_name": model_name,
                                     },
                                 ),
-                                "data-placeholder": f"Select {model_field.verbose_name.title()}",
+                                "data-placeholder": f"Select {model_field.verbose_name}",
                                 "data-field-name": field_name,
                                 "id": f"id_{field_name}_0",
                                 "name": f"{field_name}_0",

@@ -286,7 +286,10 @@ class WorkflowRuleDetailView(LoginRequiredMixin, DetailView):
             return field_name
         try:
             field = model_cls._meta.get_field(field_name)
-            return str(getattr(field, "verbose_name", field_name)).title()
+            return str(
+                getattr(field, "verbose_name", None)
+                or field_name.replace("_", " ").title()
+            )
         except Exception:
             return field_name
 

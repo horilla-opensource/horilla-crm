@@ -319,7 +319,7 @@ class HorillaFormMixin:
                 kwargs={"app_label": app_label, "model_name": model_name},
             ),
             "data-placeholder": _("Select %(field)s")
-            % {"field": model_field.verbose_name.title()},
+            % {"field": model_field.verbose_name},
             "multiple": "multiple",
             "data-initial": data_initial,
             "data-field-name": field_name,
@@ -358,7 +358,7 @@ class HorillaFormMixin:
                 kwargs={"app_label": app_label, "model_name": model_name},
             ),
             "data-placeholder": _("Select %(field)s")
-            % {"field": model_field.verbose_name.title()},
+            % {"field": model_field.verbose_name},
             "data-initial": str(initial_value) if initial_value is not None else "",
             "data-field-name": field_name,
             "id": f"id_{field_name}",

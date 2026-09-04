@@ -270,7 +270,7 @@ class FormViewCommonMixin:
                 related_models_info[field_name] = {
                     "model_name": related_model._meta.model_name,
                     "app_label": related_model._meta.app_label,
-                    "verbose_name": related_model._meta.verbose_name.title(),
+                    "verbose_name": related_model._meta.verbose_name,
                     "permission": permission_str,
                     "initial": initial_values if initial_values else None,
                 }

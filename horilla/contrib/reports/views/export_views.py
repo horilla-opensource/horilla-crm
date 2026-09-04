@@ -225,7 +225,7 @@ class ReportExportView(ReportPreviewMixin, LoginRequiredMixin, View):
         for col in selected_columns:
             try:
                 field = resolve_report_field(model_class, col)
-                verbose_name = field.verbose_name.title()
+                verbose_name = field.verbose_name
                 has_choices = bool(getattr(field, "choices", None))
             except Exception:
                 verbose_name = col.replace("__", " - ").replace("_", " ").title()
@@ -268,7 +268,7 @@ class ReportExportView(ReportPreviewMixin, LoginRequiredMixin, View):
             actual_field = filter_data.get("original_field", field_name)
             try:
                 field = resolve_report_field(model_class, actual_field)
-                verbose_name = field.verbose_name.title()
+                verbose_name = field.verbose_name
             except Exception:
                 verbose_name = (
                     actual_field.replace("__", " - ").replace("_", " ").title()

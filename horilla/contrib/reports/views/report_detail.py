@@ -386,7 +386,7 @@ class ReportDetailView(ReportDetailDataMixin, RecentlyViewedMixin, DetailView):
             if get_virtual_field(model_class, col) is not None:
                 continue
             field = model_class._meta.get_field(col)
-            verbose_name = field.verbose_name.title()
+            verbose_name = field.verbose_name
             if field.choices:
                 columns.append((verbose_name, f"get_{col}_display"))
             else:

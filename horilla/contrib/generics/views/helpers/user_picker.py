@@ -58,7 +58,7 @@ def _get_model_fields(model):
         fields.append(
             {
                 "name": field.name,
-                "verbose_name": str(field.verbose_name).title(),
+                "verbose_name": str(field.verbose_name),
                 "type": ftype,
                 "choices": choices,
                 "operators": operators,

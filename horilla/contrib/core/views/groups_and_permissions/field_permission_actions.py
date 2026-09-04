@@ -108,7 +108,7 @@ class SaveBulkFieldPermissionsView(LoginRequiredMixin, View):
                 ).format(
                     count=len(field_permissions),
                     user_count=users.count(),
-                    model=model._meta.verbose_name.title(),
+                    model=model._meta.verbose_name,
                 ),
             )
 

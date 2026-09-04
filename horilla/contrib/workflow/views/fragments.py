@@ -72,7 +72,9 @@ def _get_model_fields(rule):
     for f in list(model_cls._meta.fields) + list(model_cls._meta.many_to_many):
         if f.name in skip or not getattr(f, "editable", True):
             continue
-        label = str(getattr(f, "verbose_name", f.name)).title()
+        label = str(
+            getattr(f, "verbose_name", None) or f.name.replace("_", " ").title()
+        )
         fields.append((f.name, label))
     return fields
 
@@ -140,7 +142,9 @@ def _build_field_meta(rule):
         field_meta.append(
             {
                 "name": f.name,
-                "label": str(getattr(f, "verbose_name", f.name)).title(),
+                "label": str(
+                    getattr(f, "verbose_name", None) or f.name.replace("_", " ").title()
+                ),
                 "type": dtype,
                 "choices": choices,
             }
@@ -151,7 +155,9 @@ def _build_field_meta(rule):
             continue
         try:
             if f.get_internal_type() == "EmailField":
-                label = str(getattr(f, "verbose_name", f.name)).title()
+                label = str(
+                    getattr(f, "verbose_name", None) or f.name.replace("_", " ").title()
+                )
                 email_to_choices.append((f"instance.{f.name}", label))
                 notification_to_choices.append((f"instance.{f.name}", label))
         except Exception:
@@ -160,7 +166,9 @@ def _build_field_meta(rule):
             getattr(f, "many_to_one", False)
             and getattr(f, "related_model", None) == User
         ):
-            fk_label = str(getattr(f, "verbose_name", f.name)).title()
+            fk_label = str(
+                getattr(f, "verbose_name", None) or f.name.replace("_", " ").title()
+            )
             email_to_choices.append((f"instance.{f.name}.email", f"{fk_label} Email"))
             notification_to_choices.append((f"instance.{f.name}", fk_label))
 
@@ -189,7 +197,9 @@ def _get_date_field_choices(rule):
             continue
         itype = f.get_internal_type() if hasattr(f, "get_internal_type") else ""
         if itype in ("DateField", "DateTimeField"):
-            label = str(getattr(f, "verbose_name", f.name)).title()
+            label = str(
+                getattr(f, "verbose_name", None) or f.name.replace("_", " ").title()
+            )
             choices.append((f.name, label))
     return choices
 

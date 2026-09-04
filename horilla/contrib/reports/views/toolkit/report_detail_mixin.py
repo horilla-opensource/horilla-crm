@@ -29,7 +29,7 @@ class ReportDetailDataMixin:
     def get_verbose_name(self, field_name, model_class):
         """Get the verbose name of a field."""
         try:
-            return resolve_report_field(model_class, field_name).verbose_name.title()
+            return resolve_report_field(model_class, field_name).verbose_name
         except Exception:
             return field_name.replace("__", " - ").title()
 

@@ -368,7 +368,7 @@ class ReportDetailFilteredView(LoginRequiredMixin, View):
         columns = []
         for col in temp_report.selected_columns_list:
             field = model_class._meta.get_field(col)
-            verbose_name = field.verbose_name.title()
+            verbose_name = field.verbose_name
             if field.choices:
                 columns.append((verbose_name, f"get_{col}_display"))
             else:

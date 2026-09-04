@@ -128,7 +128,7 @@ class DashboardCreateForm(HorillaModelForm):
                 view_own_perm = f"{app_label}.view_own_{meta_model_name}"
 
                 if user.has_perm(view_perm) or user.has_perm(view_own_perm):
-                    label = model_cls._meta.verbose_name.title()
+                    label = model_cls._meta.verbose_name
                     allowed_modules.append((module_key, label))
 
             if not self.instance_obj or not self.instance_obj.pk:

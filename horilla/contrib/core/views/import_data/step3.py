@@ -18,6 +18,7 @@ from .base import IMPORT_EXCLUDED_FIELDS, get_model_verbose_name
 # Third-party imports (Django)
 
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -167,7 +168,7 @@ class ImportStep3View(View):
                     continue
                 field_info = {
                     "name": field.name,
-                    "verbose_name": field.verbose_name.title(),
+                    "verbose_name": field.verbose_name,
                     "required": not field.null and not field.blank,
                     "field_type": field.get_internal_type(),
                     "is_choice_field": False,

@@ -156,7 +156,10 @@ class ModelFieldsModalView(LoginRequiredMixin, TemplateView):
             if field_name in excluded_fields:
                 continue
 
-            verbose_name = getattr(field, "verbose_name", field_name).title()
+            verbose_name = (
+                getattr(field, "verbose_name", None)
+                or field_name.replace("_", " ").title()
+            )
 
             if field_name in existing_permissions:
                 current_permission = existing_permissions[field_name]
@@ -192,7 +195,7 @@ class ModelFieldsModalView(LoginRequiredMixin, TemplateView):
             "model": model,
             "model_name": model_name,
             "app_label": app_label,
-            "verbose_name": model._meta.verbose_name.title(),
+            "verbose_name": model._meta.verbose_name,
             "fields": fields,
             "context_type": context_type,
             "role_id": role_id,

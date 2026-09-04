@@ -576,7 +576,7 @@ def get_field_verbose_name(field_name, model_class):
     """Get verbose name for a field"""
     try:
         field = resolve_report_field(model_class, field_name)
-        return field.verbose_name.title()
+        return field.verbose_name
     except Exception:
         return field_name.replace("__", " - ").replace("_", " ").title()
 

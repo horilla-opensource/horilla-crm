@@ -172,7 +172,7 @@ def add_condition_fields(form):
                         kwargs={"app_label": app_label, "model_name": model_name_fk},
                     ),
                     "data-placeholder": _("Select %(field)s")
-                    % {"field": model_field.verbose_name.title()},
+                    % {"field": model_field.verbose_name},
                     "data-field-name": field_name,
                     "data-form-class": f"{form.__module__}.{form.__class__.__name__}",
                     **_condition_select_attrs(field_name, row_id),

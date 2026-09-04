@@ -119,7 +119,7 @@ class ImportStep1View(View):
                     modules = [
                         {
                             "name": model.__name__,
-                            "label": model._meta.verbose_name.title(),
+                            "label": model._meta.verbose_name,
                             "app_label": model._meta.app_label,
                             "module": model.__module__,
                         }
@@ -520,7 +520,7 @@ class ImportStep1View(View):
                     permitted.append(
                         {
                             "name": model.__name__,
-                            "label": model._meta.verbose_name.title(),
+                            "label": model._meta.verbose_name,
                             "app_label": model._meta.app_label,
                             "module": model.__module__,
                         }
@@ -561,7 +561,7 @@ class ImportStep1View(View):
 
                 field_info = {
                     "name": field.name,
-                    "verbose_name": field.verbose_name.title(),
+                    "verbose_name": field.verbose_name,
                     "required": not field.null and not field.blank,
                     "field_type": field_type,
                     "is_choice_field": False,

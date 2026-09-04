@@ -184,7 +184,7 @@ class ReviewProcessForm(HorillaModelForm):
                 getattr(field, "verbose_name", None)
                 or field.name.replace("_", " ").title()
             )
-            field_choices.append((field.name, str(verbose_name).title()))
+            field_choices.append((field.name, str(verbose_name)))
         return field_choices
 
     def clean_review_fields(self):

@@ -174,7 +174,7 @@ class Report(HorillaCoreModel):
     def module_verbose_name(self):
         """Return the verbose name of the module's model"""
         model = self.model_class
-        return model._meta.verbose_name.title()
+        return model._meta.verbose_name
 
     @property
     def selected_columns_list(self):
