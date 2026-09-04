@@ -157,6 +157,10 @@ class HorillaAutomationListView(LoginRequiredMixin, HorillaListView):
         "delivery_channel",
     ]
 
+    def get_queryset(self):
+        """Exclude Big Deal Alert automations, which have their own dedicated list."""
+        return super().get_queryset().exclude(additional_info__big_deal=True)
+
     def no_record_add_button(self):
         """Return configuration for the 'no records' Load Automation button when permitted."""
         if self.request.user.has_perm("automations.add_horillaautomation"):
