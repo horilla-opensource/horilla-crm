@@ -41,7 +41,6 @@ class Contact(HorillaCoreModel):
     contact_owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        default="",
         verbose_name=_("Contact Owner"),
         related_name="owned_contacts",
     )

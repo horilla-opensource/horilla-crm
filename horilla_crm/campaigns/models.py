@@ -265,7 +265,6 @@ class Campaign(HorillaCoreModel):
     campaign_owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        default="",
         verbose_name=_("Campaign Owner"),
         related_name="campaign",
     )

@@ -430,7 +430,6 @@ class Opportunity(HorillaCoreModel):
     account = models.ForeignKey(
         Account,
         on_delete=models.PROTECT,
-        default="",
         null=True,
         blank=True,
         verbose_name=_("Account"),
