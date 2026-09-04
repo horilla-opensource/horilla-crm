@@ -70,27 +70,45 @@
 
                                         <div class="min-w-0 flex-1">
                                             <p class="text-xs text-gray-700">
-                                                {% if entry.content_type.model == "calllog" %}
-                                                    <span class="font-bold text-black">{% trans "Status" %}:</span>
-                                                    {% if entry.status %}
-                                                        {{ entry.status|capfirst }}
-                                                    {% else %}
-                                                        {% trans "Initiated" %}
-                                                    {% endif %}
-                                                {% elif 'created' in entry|lower %}
-                                                    {% with mail_label=entry|mail_create_display activity_label=entry|activity_create_display details=entry|activity_create_details %}
-                                                        {% if mail_label %}
-                                                            {{ mail_label }}
-                                                        {% elif activity_label %}
-                                                            {% if details %}<span
+                                                {% if entry|is_create_entry %}
+                                                    {% with type_label=entry|create_type_display status_label=entry|create_status_display:model_name extra_changes=entry|create_extra_changes:model_name %}
+                                                        {% if type_label %}
+                                                            <span
+                                                                class="inline-flex items-center gap-1 bg-primary-100 text-primary-700 font-semibold px-2 py-0.5 rounded-full mr-1"
+                                                            >{{ type_label }}</span>
+                                                            {% if status_label %}<span class="mx-1">·</span><span
                                                                     class="font-bold text-black"
                                                                 >{% trans "Status" %}:</span>
-                                                                {{ details.status }}{% endif %}
+                                                                {{ status_label }}{% endif %}
                                                         {% else %}
-                                                            {% trans "New" %}
-                                                            {{ entry.content_type|content_type_verbose_name|capfirst }}
-                                                            {% trans "created" %}
+                                                            <span
+                                                                class="inline-flex items-center gap-1 bg-primary-100 text-primary-700 font-semibold px-2 py-0.5 rounded-full mr-1"
+                                                            >{% trans "New" %}
+                                                                {{ entry.content_type|content_type_verbose_name|capfirst }}
+                                                                {% trans "created" %}</span>
                                                         {% endif %}
+                                                        {% for field, values in extra_changes.items %}
+                                                            <span class="mx-1">·</span>
+                                                            <span
+                                                                class="font-bold text-black"
+                                                            >{{ field|capfirst }}:</span>
+                                                            {% if values.0 == "__m2m__" %}
+                                                                <span
+                                                                    class="history-diff-chip {% if values.1 == 'delete' %}history-diff-chip-removed{% else %}history-diff-chip-added{% endif %}"
+                                                                >{{ values.3|default:values.2 }}</span>
+                                                            {% elif entry|is_date_field:field %}{{ values.1|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}
+                                                            {% else %}{{ values.1|html_to_text|default:"--"|truncate_diff_value }}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for field, value in entry.creation_time_additions %}
+                                                            <span class="mx-1">·</span>
+                                                            <span
+                                                                class="font-bold text-black"
+                                                            >{{ field|capfirst }}:</span>
+                                                            <span
+                                                                class="history-diff-chip {% if value.1 == 'delete' %}history-diff-chip-removed{% else %}history-diff-chip-added{% endif %}"
+                                                            >{{ value.3|default:value.2 }}</span>
+                                                        {% endfor %}
                                                         {% if entry.actor %}
                                                             {% trans "by" %}
                                                             <span
@@ -98,17 +116,29 @@
                                                             >{{ entry.actor }}</span>
                                                         {% endif %}
                                                     {% endwith %}
-                                                {% elif 'updated' in entry|lower %}
-                                                    {% with display_changes=entry|history_changes_display %}
+                                                {% else %}
+                                                    {% with display_changes=entry|history_changes_display subject=entry|related_entry_subject:model_name %}
                                                         {% if display_changes %}
+                                                            {% if subject %}<span
+                                                                    class="inline-flex items-center gap-1 bg-primary-100 text-primary-700 font-semibold px-2 py-0.5 rounded-full mr-1"
+                                                                >{{ subject }}</span>{% endif %}
                                                             {% for field, values in display_changes.items %}
                                                                 <span
                                                                     class="font-bold text-black"
                                                                 >{{ field|capfirst }}:</span>
-                                                                {% if entry|is_date_field:field %}{{ values.0|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}{% else %}{{ values.0|html_to_text|default:"--"|truncate_diff_value }}{% endif %}
+                                                                {% if values.0 == "__m2m__" %}
+                                                                    <span
+                                                                        class="history-diff-chip {% if values.1 == 'delete' %}history-diff-chip-removed{% else %}history-diff-chip-added{% endif %}"
+                                                                    >{{ values.3|default:values.2 }}</span>
+                                                                {% elif entry|is_date_field:field %}{{ values.0|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}
                                                                 → <span
                                                                     class="history-diff-chip"
-                                                                >{% if entry|is_date_field:field %}{{ values.1|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}{% else %}{{ values.1|html_to_text|default:"--"|truncate_diff_value }}{% endif %}</span>
+                                                                >{{ values.1|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}</span>
+                                                                {% else %}{{ values.0|html_to_text|default:"--"|truncate_diff_value }}
+                                                                → <span
+                                                                    class="history-diff-chip"
+                                                                >{{ values.1|html_to_text|default:"--"|truncate_diff_value }}</span>
+                                                                {% endif %}
                                                                 {% if entry.actor %}
                                                                     {% trans "by" %}
                                                                     <span
@@ -118,38 +148,16 @@
                                                                 {% if not forloop.last %}<br>{% endif %}
                                                             {% endfor %}
                                                         {% else %}
-                                                            {{ entry.content_type|content_type_verbose_name }}
-                                                            {% trans "status" %}
-                                                        {% endif %}
-                                                    {% endwith %}
-                                                {% elif 'call' in entry|lower %}
-                                                    {% trans "Added call task to this" %} {{ model_name|capfirst }}
-                                                {% elif 'email' in entry|lower %}
-                                                    {% trans "Send email to this" %} {{ model_name|capfirst }}
-                                                {% elif entry.content_type.model == "activity" %}
-                                                    {% if "email" in entry.changes_display_dict %}
-                                                        {% trans "Send email to this" %} {{ model_name|capfirst }}
-                                                    {% else %}
-                                                        {% trans "Activity logged for this" %}
-                                                        {{ model_name|capfirst }}
-                                                    {% endif %}
-                                                {% elif entry.content_type.model == "event" %}
-                                                    {% trans "Event scheduled for this" %} {{ model_name|capfirst }}
-                                                {% elif entry.content_type.model == "meeting" %}
-                                                    {% trans "Meeting scheduled with this" %}
-                                                    {{ model_name|capfirst }}
-                                                {% else %}
-                                                    {% with display_changes=entry|history_changes_display %}
-                                                        {% if display_changes %}
-                                                            {% for key, value in display_changes.items %}
-                                                                {{ key }}:
-                                                                {% if entry|is_date_field:key %}{{ value.0|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}{% else %}{{ value.0|html_to_text|default:"--"|truncate_diff_value }}{% endif %}{% if value.1 %}
-                                                                    →
-                                                                    {% if entry|is_date_field:key %}{{ value.1|html_to_text|default:"--"|user_datetime_format_display|truncate_diff_value }}{% else %}{{ value.1|html_to_text|default:"--"|truncate_diff_value }}{% endif %}{% endif %}<br>
-                                                            {% endfor %}
-                                                        {% else %}
-                                                            {% trans "Action performed by" %}
-                                                            {{ entry.actor|default:"Unknown" }}
+                                                            <span
+                                                                class="inline-flex items-center gap-1 bg-primary-100 text-primary-700 font-semibold px-2 py-0.5 rounded-full mr-1"
+                                                            >{% if subject %}{{ subject }}{% else %}{{ entry.content_type|content_type_verbose_name|capfirst }}{% endif %}</span>
+                                                            {% trans "updated" %}
+                                                            {% if entry.actor %}
+                                                                {% trans "by" %}
+                                                                <span
+                                                                    class="inline-flex items-center gap-1 bg-gray-100 text-gray-800 font-semibold px-2 py-0.5 rounded-full ml-0.5"
+                                                                >{{ entry.actor }}</span>
+                                                            {% endif %}
                                                         {% endif %}
                                                     {% endwith %}
                                                 {% endif %}

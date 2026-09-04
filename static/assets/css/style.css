@@ -1693,6 +1693,16 @@ input[type="radio"] {
   border-radius: 5px;
 }
 
+.history-diff-chip-added {
+  background-color: #d2f5df9c;
+  color: #1f9254;
+}
+
+.history-diff-chip-removed {
+  background-color: #ffd8d29c;
+  color: #e54f38;
+}
+
 /* .contact-info {
   background: #e54f380f;
   padding: 10px 15px;

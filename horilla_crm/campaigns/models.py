@@ -511,42 +511,49 @@ class Campaign(HorillaCoreModel):
         """
         Recalculate all campaign metrics and update the fields.
         Useful for migrations or manual corrections.
+
+        Only writes (and therefore only creates a history entry for) fields
+        whose recalculated value actually differs from what's stored - a
+        Decimal aggregate like Sum("amount") can come back at a different
+        precision (e.g. 40199.1400000000) than the field's own decimal_places
+        even when the underlying total hasn't changed, so values are quantized
+        to each field's own decimal_places before comparing/assigning.
         """
+        from decimal import Decimal
+
         from horilla.db.models import Sum
 
-        # Leads and converted leads
-        self.leads_in_campaign = self.members.filter(member_type="lead").count()
-        self.converted_leads_in_campaign = self.members.filter(
-            member_type="lead", lead__is_convert=True
-        ).count()
-        # Contacts
-        self.contacts_in_campaign = self.members.filter(member_type="contact").count()
-        # Opportunities
         opportunities = self.opportunities.all()
-        self.opportunities_in_campaign = opportunities.count()
         won_opps_by_final = opportunities.filter(stage__is_final=True)
-        self.won_opportunities_in_campaign = won_opps_by_final.count()
-        # Opportunity values
         value_opps = opportunities.aggregate(total=Sum("amount"))["total"] or 0
-        value_won_opps = (
-            opportunities.filter(stage__is_final=True).aggregate(total=Sum("amount"))[
-                "total"
-            ]
-            or 0
-        )
-        self.value_opportunities = value_opps
-        self.value_won_opportunities = value_won_opps
-        self.responses_in_campaign = self.members.filter(
-            member_status="responded"
-        ).count()
-        self.save(
-            update_fields=[
-                "leads_in_campaign",
-                "converted_leads_in_campaign",
-                "contacts_in_campaign",
-                "opportunities_in_campaign",
-                "won_opportunities_in_campaign",
-                "value_opportunities",
-                "value_won_opportunities",
-            ]
-        )
+        value_won_opps = won_opps_by_final.aggregate(total=Sum("amount"))["total"] or 0
+
+        new_values = {
+            "leads_in_campaign": self.members.filter(member_type="lead").count(),
+            "converted_leads_in_campaign": self.members.filter(
+                member_type="lead", lead__is_convert=True
+            ).count(),
+            "contacts_in_campaign": self.members.filter(member_type="contact").count(),
+            "opportunities_in_campaign": opportunities.count(),
+            "won_opportunities_in_campaign": won_opps_by_final.count(),
+            "value_opportunities": value_opps,
+            "value_won_opportunities": value_won_opps,
+            "responses_in_campaign": self.members.filter(
+                member_status="responded"
+            ).count(),
+        }
+
+        changed_fields = []
+        for field_name, new_value in new_values.items():
+            field = self._meta.get_field(field_name)
+            if isinstance(field, models.DecimalField):
+                new_value = Decimal(new_value).quantize(
+                    Decimal(1).scaleb(-field.decimal_places)
+                )
+            if getattr(self, field_name) == new_value:
+                continue
+            setattr(self, field_name, new_value)
+            changed_fields.append(field_name)
+
+        if changed_fields:
+            self.save(update_fields=changed_fields)

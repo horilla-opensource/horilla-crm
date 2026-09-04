@@ -24,6 +24,11 @@ class Activity(HorillaCoreModel):
     Model representing various types of activities such as events, meetings, tasks, and log calls.
     """
 
+    # Lets the generic history/audit log display (history_display.py) label a
+    # CREATE entry as e.g. "Task added" via get_activity_type_display(), instead
+    # of hardcoding Activity's type values there.
+    HISTORY_CREATE_TYPE_FIELD = "activity_type"
+
     ACTIVITY_TYPES = [
         ("event", _("Event")),
         ("meeting", _("Meeting")),

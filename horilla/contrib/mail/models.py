@@ -229,6 +229,11 @@ class HorillaMail(HorillaCoreModel):
     Model to store each email details
     """
 
+    # Lets the generic history/audit log display (history_display.py) label a
+    # CREATE entry as e.g. "Draft added"/"Sent added" via get_mail_status_display(),
+    # instead of hardcoding HorillaMail's status values there.
+    HISTORY_CREATE_TYPE_FIELD = "mail_status"
+
     MAIL_STATUS_CHOICES = [
         ("draft", _("Draft")),
         ("scheduled", _("Scheduled")),

@@ -23,6 +23,13 @@ DIFF_VALUE_PREVIEW_LENGTH = 60
 
 
 @register.filter
+def is_create_entry(entry):
+    """True if this log entry's action is CREATE. Checks entry.action directly
+    rather than string-matching LogEntry.__str__() output."""
+    return getattr(entry, "action", None) == LogEntry.Action.CREATE
+
+
+@register.filter
 def content_type_verbose_name(content_type):
     """Get the verbose name of a ContentType's model, falling back to its raw model name."""
     if not content_type:
@@ -101,33 +108,191 @@ def _is_redundant_history_entry(entry, same_group_entries):
     return False
 
 
+# A m2m-add UPDATE landing within this many seconds of its object's CREATE is
+# treated as part of the same form submission (e.g. form.save_m2m() firing
+# right after instance.save()), not a later, separate edit.
+_CREATION_TIME_M2M_WINDOW_SECONDS = 10
+
+
+def _find_creation_time_m2m_target(entry, same_group_entries):
+    """
+    If `entry` is a pure M2M-add UPDATE (no other field changed) that landed
+    within _CREATION_TIME_M2M_WINDOW_SECONDS of a CREATE for the same object in
+    `same_group_entries`, return that CREATE entry so the caller can fold this
+    UPDATE's change into it. Otherwise return None.
+    """
+    try:
+        if getattr(entry, "action", None) != LogEntry.Action.UPDATE:
+            return None
+        if getattr(entry, "reassignments", None):
+            return None
+        changes = history_changes_display(entry)
+        if not changes:
+            return None
+        if not all(
+            isinstance(v, (list, tuple))
+            and len(v) >= 2
+            and v[0] == "__m2m__"
+            and v[1] == "add"
+            for v in changes.values()
+        ):
+            return None
+        ct = getattr(entry, "content_type", None)
+        timestamp = getattr(entry, "timestamp", None)
+        if ct is None or timestamp is None:
+            return None
+        entry_pk = str(
+            getattr(entry, "object_pk", None) or getattr(entry, "object_id", "")
+        )
+        for other in same_group_entries:
+            if other is entry:
+                continue
+            if getattr(other, "action", None) != LogEntry.Action.CREATE:
+                continue
+            if getattr(other, "content_type", None) != ct:
+                continue
+            other_pk = str(
+                getattr(other, "object_pk", None) or getattr(other, "object_id", "")
+            )
+            if other_pk != entry_pk:
+                continue
+            other_timestamp = getattr(other, "timestamp", None)
+            if other_timestamp is None:
+                continue
+            delta = abs((timestamp - other_timestamp).total_seconds())
+            if delta <= _CREATION_TIME_M2M_WINDOW_SECONDS:
+                return other
+    except Exception:
+        pass
+    return None
+
+
+# A M2M "delete" UPDATE and "add" UPDATE on the same field/object landing within
+# this many seconds of each other are treated as one reassignment (e.g. a form's
+# save_m2m()/`.set()` firing post_remove then post_add), not two separate edits.
+_M2M_REASSIGN_WINDOW_SECONDS = 5
+
+
+def _entry_object_key(entry):
+    ct = getattr(entry, "content_type", None)
+    if ct is None:
+        return None
+    pk = str(getattr(entry, "object_pk", None) or getattr(entry, "object_id", ""))
+    return (ct, pk)
+
+
+def _pure_m2m_changes(entry):
+    """
+    Return entry's history_changes_display() only if EVERY changed field is a pure
+    M2M marker (add or delete), else None. Used to find entries safe to pair as a
+    reassignment (an entry that also changed a normal field is never merged away).
+    """
+    if getattr(entry, "action", None) != LogEntry.Action.UPDATE:
+        return None
+    changes = history_changes_display(entry)
+    if not changes:
+        return None
+    if not all(
+        isinstance(v, (list, tuple)) and len(v) >= 2 and v[0] == "__m2m__"
+        for v in changes.values()
+    ):
+        return None
+    return changes
+
+
+def _pair_m2m_reassignments(entries):
+    """
+    Find UPDATE entries that are a pure M2M "delete" on some field paired with a
+    pure M2M "add" on the SAME field for the SAME object within
+    _M2M_REASSIGN_WINDOW_SECONDS - i.e. Django's `.set()` swapping who's assigned,
+    which fires as two separate signals/LogEntry rows. Attach the pairing onto the
+    "add" entry as `reassignments`: {field: (old_objects_str, new_objects_str)},
+    and return the set of "delete" entries that got absorbed into a pairing (to be
+    dropped from the rendered list).
+    Generic: keys purely off action/field/timestamp, no model or field names.
+    """
+    absorbed = set()
+    deletes = [e for e in entries if _pure_m2m_changes(e) is not None]
+    for add_entry in entries:
+        add_changes = _pure_m2m_changes(add_entry)
+        if not add_changes:
+            continue
+        add_key = _entry_object_key(add_entry)
+        add_timestamp = getattr(add_entry, "timestamp", None)
+        if add_key is None or add_timestamp is None:
+            continue
+        for field, value in add_changes.items():
+            if value[1] != "add":
+                continue
+            best_match = None
+            best_delta = None
+            for del_entry in deletes:
+                if del_entry is add_entry or id(del_entry) in absorbed:
+                    continue
+                if _entry_object_key(del_entry) != add_key:
+                    continue
+                del_changes = _pure_m2m_changes(del_entry)
+                del_value = del_changes.get(field)
+                if del_value is None or del_value[1] != "delete":
+                    continue
+                del_timestamp = getattr(del_entry, "timestamp", None)
+                if del_timestamp is None:
+                    continue
+                delta = abs((add_timestamp - del_timestamp).total_seconds())
+                if delta > _M2M_REASSIGN_WINDOW_SECONDS:
+                    continue
+                if best_delta is None or delta < best_delta:
+                    best_delta = delta
+                    best_match = del_entry
+            if best_match is not None:
+                reassignments = getattr(add_entry, "reassignments", None)
+                if reassignments is None:
+                    reassignments = {}
+                    add_entry.reassignments = reassignments
+                old_value = _pure_m2m_changes(best_match)[field]
+                reassignments[field] = (old_value[3], value[3])
+                absorbed.add(id(best_match))
+    return absorbed
+
+
 @register.filter
 def collapse_redundant_history(entries):
     """
-    Collapse redundant updates: for any object, if the same group has a CREATE,
-    hide that object's UPDATE entries so one create+updates shows as one entry.
+    Collapse redundant/duplicate history rows so one logical action reads as one
+    row instead of several:
+      - An UPDATE with no real displayed changes (a noise auto-save right after
+        creation) is dropped.
+      - A M2M "delete" + "add" UPDATE pair on the same field/object within
+        _M2M_REASSIGN_WINDOW_SECONDS (a reassignment, e.g. changing who's
+        "Assigned To") is merged into one row showing "Old -> New", matching how
+        a normal field edit displays, instead of two separate Removed/Added rows.
+      - An UPDATE that is purely an M2M add (e.g. "Assigned To: Added: X") landed
+        within seconds of the object's CREATE is folded into that CREATE entry
+        (via a `creation_time_additions` attribute) instead of being shown as its
+        own separate "edit" row, since it's part of the same form submission
+        (e.g. assigning someone while creating a task), not a later edit.
     Use in template: {% for entry in entries|collapse_redundant_history %}
     """
     if not entries:
         return entries
-    return [e for e in entries if not _is_redundant_history_entry(e, entries)]
-
-
-# Map Activity.activity_type (db value) to history label
-ACTIVITY_TYPE_ADDED_LABELS = {
-    "task": _("Task added"),
-    "event": _("Event added"),
-    "meeting": _("Meeting added"),
-    "log_call": _("Call added"),
-}
-
-# Map mail_status (or similar) to history label for create entries (any model with mail_status)
-MAIL_STATUS_CREATE_LABELS = {
-    "sent": _("Email sent"),
-    "draft": _("Draft saved"),
-    "scheduled": _("Scheduled mail"),
-    "failed": _("Mail failed"),
-}
+    absorbed_into_reassignment = _pair_m2m_reassignments(entries)
+    result = []
+    for entry in entries:
+        if id(entry) in absorbed_into_reassignment:
+            continue
+        if _is_redundant_history_entry(entry, entries):
+            continue
+        target = _find_creation_time_m2m_target(entry, entries)
+        if target is not None:
+            additions = getattr(target, "creation_time_additions", None)
+            if additions is None:
+                additions = []
+                target.creation_time_additions = additions
+            for field, value in history_changes_display(entry).items():
+                additions.append((field, value))
+            continue
+        result.append(entry)
+    return result
 
 
 @register.filter
@@ -137,8 +302,10 @@ def history_changes_display(entry):
 
     Auditlog stores M2M changes as {"type": "m2m", "operation": "add", "objects": [...]}.
     The default changes_display_dict iterates over that dict and shows keys "type" and
-    "operation" as if they were old/new values. This filter fixes that by replacing
-    such entries with human-readable text (e.g. "Added: Adam Lui").
+    "operation" as if they were old/new values, and there's no real "old" state for an
+    add/remove, so a fake "-- -> Added: X" diff arrow only confuses readers. Instead this
+    returns a 3-item marker ["__m2m__", operation, objects_str] that the history template
+    renders as a plain "Added/Removed: X" line without a diff arrow.
     """
     if entry is None:
         return {}
@@ -156,6 +323,27 @@ def history_changes_display(entry):
 
     result = dict(display_dict)
 
+    # django-auditlog tracks reverse relations (a related model's ForeignKey
+    # pointing AT this model, e.g. Opportunity.contact_roles) as if they were
+    # trackable fields. On CREATE there's no real value yet, so it stringifies
+    # the reverse RelatedManager descriptor into garbage like
+    # "app_label.SomeModel.None" instead of a real value. Drop any changed
+    # field that is structurally a reverse relation (not a real column on this
+    # model) - generic, no field names hardcoded.
+    if model:
+        for field_name in list(changes_dict.keys()):
+            try:
+                field = model._meta.get_field(field_name)
+            except FieldDoesNotExist:
+                continue
+            if getattr(field, "concrete", True):
+                continue
+            # Matches the same verbose_name auditlog itself used as the
+            # changes_display_dict key (auditlog/models.py: changes_display_dict).
+            verbose_name = str(getattr(field, "verbose_name", field_name))
+            result.pop(verbose_name, None)
+            changes_dict.pop(field_name, None)
+
     for field_name, value in changes_dict.items():
         if not isinstance(value, dict) or value.get("type") != "m2m":
             continue
@@ -172,13 +360,26 @@ def history_changes_display(entry):
         objects = value.get("objects") or []
         objects_str = ", ".join(str(o) for o in objects)
         if operation == "add":
-            label = "Added"
+            label = _("Added")
         elif operation == "delete":
-            label = "Removed"
+            label = _("Removed")
         else:
             label = str(operation)
-        display = f"{label}: {objects_str}" if objects_str else label
-        result[verbose_name] = ["--", display]
+        result[verbose_name] = ["__m2m__", operation, str(label), objects_str]
+
+    # If this entry was paired with a matching add/delete on the same field (see
+    # _pair_m2m_reassignments), show it as a plain "Old -> New" diff instead of
+    # the M2M add/remove marker, matching how a normal field edit displays.
+    reassignments = getattr(entry, "reassignments", None)
+    if reassignments:
+        for verbose_name, val in list(result.items()):
+            if not (
+                isinstance(val, (list, tuple)) and len(val) >= 2 and val[0] == "__m2m__"
+            ):
+                continue
+            pair = reassignments.get(verbose_name)
+            if pair is not None:
+                result[verbose_name] = [pair[0], pair[1]]
 
     # Remove bogus entries that are M2M keys shown as "type" -> "operation"
     for key in list(result):
@@ -193,7 +394,41 @@ def history_changes_display(entry):
         if key.lower().replace(" ", "_") in ("updated_at", "modified_at"):
             del result[key]
 
+    # Drop fields whose "change" isn't real - e.g. a Decimal re-saved with
+    # different precision ("40199.14" -> "40199.1400000000") or "0.00" vs "0".
+    # Only the display string differs; the field didn't actually change.
+    for key in list(result):
+        val = result[key]
+        if not (
+            isinstance(val, (list, tuple)) and len(val) >= 2 and val[0] != "__m2m__"
+        ):
+            continue
+        if _values_equal(val[0], val[1]):
+            del result[key]
+
     return result
+
+
+def _values_equal(old, new):
+    """
+    True if `old` and `new` represent the same value despite differing string
+    formatting - e.g. Decimal re-quantization ("40199.14" vs "40199.1400000000")
+    or "0.00" vs "0". Used to drop no-op diffs from history so a field only
+    shows as changed when it actually changed. Falls back to plain string
+    equality for anything that isn't numeric.
+    """
+    if old == new:
+        return True
+    old_text = str(old).strip()
+    new_text = str(new).strip()
+    if old_text == new_text:
+        return True
+    try:
+        from decimal import Decimal, InvalidOperation
+
+        return Decimal(old_text) == Decimal(new_text)
+    except (InvalidOperation, ValueError, TypeError):
+        return False
 
 
 # Django field classes (by name) whose values are actual date/datetime/time
@@ -230,52 +465,66 @@ def is_date_field(entry, field_label):
     return False
 
 
-def _get_activity_type_from_entry(entry):
-    """Return activity_type string (task, event, meeting, log_call) for an Activity log entry, or None."""
+@register.filter
+def related_entry_subject(entry, primary_model_name):
+    """
+    For a history entry that belongs to a DIFFERENT model than the page's own
+    record (e.g. viewing a Lead's History tab, but this entry is one of its
+    related Tasks/Activities), return a short subject label like "Task: Test"
+    so the row doesn't read as if it were the primary record's own field
+    changing. Returns "" when the entry IS the primary record's own history
+    (no qualifier needed) or the model/label can't be determined. Generic:
+    works for any model pairing, no model names hardcoded.
+    """
+    if entry is None:
+        return ""
+    try:
+        ct = getattr(entry, "content_type", None)
+        if ct is None:
+            return ""
+        if primary_model_name and ct.model == primary_model_name:
+            return ""
+        verbose_name = content_type_verbose_name(ct)
+        obj = _get_related_object_from_entry(entry)
+        if obj is not None:
+            obj_label = str(obj)
+            if obj_label:
+                return f"{verbose_name}: {obj_label}"
+        return str(verbose_name)
+    except Exception:
+        return ""
+
+
+def _get_history_create_type_field(model):
+    """
+    Return the name of the model's own "kind/type" discriminator field for history
+    display, if it declares one via `HISTORY_CREATE_TYPE_FIELD` (e.g. Activity sets
+    this to "activity_type" since one Activity model represents Task/Event/Meeting/
+    Log Call). Generic: works for any model that opts in this way; no model names
+    or field names are hardcoded here.
+    """
+    if model is None:
+        return None
+    field_name = getattr(model, "HISTORY_CREATE_TYPE_FIELD", None)
+    if not field_name:
+        return None
+    try:
+        model._meta.get_field(field_name)
+    except FieldDoesNotExist:
+        return None
+    return field_name
+
+
+def _get_related_object_from_entry(entry):
+    """Return the model instance a log entry refers to, or None."""
     if entry is None:
         return None
     try:
-        if getattr(entry, "content_type", None) is None:
+        ct = getattr(entry, "content_type", None)
+        if ct is None:
             return None
-        model = entry.content_type.model_class()
-        if model is None or model.__name__ != "Activity":
-            return None
-    except Exception:
-        return None
-    # Prefer serialized_data from auditlog (set on create)
-    serialized = getattr(entry, "serialized_data", None)
-    if isinstance(serialized, dict):
-        fields = serialized.get("fields") or {}
-        at = fields.get("activity_type")
-        if at in ACTIVITY_TYPE_ADDED_LABELS:
-            return at
-    # Fallback: load the Activity by object_pk
-    try:
-        object_pk = getattr(entry, "object_pk", None) or getattr(
-            entry, "object_id", None
-        )
-        if object_pk is not None:
-            obj = (
-                model.objects.filter(pk=object_pk)
-                .values_list("activity_type", flat=True)
-                .first()
-            )
-            if obj and obj in ACTIVITY_TYPE_ADDED_LABELS:
-                return obj
-    except Exception:
-        pass
-    return None
-
-
-def _get_activity_from_entry(entry):
-    """Return the Activity instance for an Activity log entry, or None."""
-    if entry is None:
-        return None
-    try:
-        if getattr(entry, "content_type", None) is None:
-            return None
-        model = entry.content_type.model_class()
-        if model is None or model.__name__ != "Activity":
+        model = ct.model_class()
+        if model is None:
             return None
         object_pk = getattr(entry, "object_pk", None) or getattr(
             entry, "object_id", None
@@ -287,8 +536,16 @@ def _get_activity_from_entry(entry):
         return None
 
 
-def _get_mail_create_label(entry):
-    """Return a label for a CREATE entry whose model has mail_status (e.g. Email sent, Draft saved). Generic; no model name."""
+@register.filter
+def create_type_display(entry):
+    """
+    For a CREATE log entry whose model declares HISTORY_CREATE_TYPE_FIELD (a
+    choices field naming what "kind" of record this is, e.g. Activity's
+    activity_type), return a phrase like "Task added" using that field's own
+    get_<field>_display() value. Generic: derives the label from the model's own
+    field choices, not a hardcoded per-model/per-value mapping. Returns empty
+    string when the model doesn't opt in or the entry isn't a create.
+    """
     if entry is None:
         return ""
     try:
@@ -298,96 +555,46 @@ def _get_mail_create_label(entry):
         return ""
     try:
         ct = getattr(entry, "content_type", None)
-        if ct is None:
-            return ""
-        model = ct.model_class()
-        if model is None:
-            return ""
-        if not hasattr(model, "_meta") or "mail_status" not in [
-            f.name for f in model._meta.get_fields()
-        ]:
-            return ""
-        object_pk = getattr(entry, "object_pk", None) or getattr(
-            entry, "object_id", None
-        )
-        if object_pk is None:
-            return ""
-        obj = (
-            model.objects.filter(pk=object_pk)
-            .values_list("mail_status", flat=True)
-            .first()
-        )
-        if obj and obj in MAIL_STATUS_CREATE_LABELS:
-            return str(MAIL_STATUS_CREATE_LABELS.get(obj, ""))
+        model = ct.model_class() if ct else None
     except Exception:
-        pass
-    return ""
-
-
-@register.filter
-def mail_create_display(entry):
-    """
-    For a CREATE log entry whose model has mail_status, return "Email sent", "Draft saved",
-    "Scheduled mail", or "Mail failed" so history distinguishes sent/draft/scheduled. Generic.
-    """
-    return _get_mail_create_label(entry)
-
-
-@register.filter
-def is_error_entry(entry):
-    """Return True if this history entry represents an error/failure (delete action or failed mail)."""
-    if entry is None:
-        return False
-    action = getattr(entry, "action", None)
-    if action == LogEntry.Action.DELETE:
-        return True
-    if action == LogEntry.Action.CREATE:
-        failed_label = str(MAIL_STATUS_CREATE_LABELS.get("failed", ""))
-        if failed_label and _get_mail_create_label(entry) == failed_label:
-            return True
-    return False
-
-
-@register.filter
-def activity_create_display(entry):
-    """
-    For an Activity CREATE log entry, return a phrase like "Task added", "Event added",
-    "Meeting added", "Call added". Returns empty string for non-Activity or non-create entries.
-    """
-    if entry is None:
+        model = None
+    field_name = _get_history_create_type_field(model)
+    if not field_name:
+        return ""
+    obj = _get_related_object_from_entry(entry)
+    if obj is None:
+        return ""
+    display_getter = getattr(obj, f"get_{field_name}_display", None)
+    if not callable(display_getter):
         return ""
     try:
-        if getattr(entry, "action", None) != LogEntry.Action.CREATE:
-            return ""
+        type_label = display_getter()
     except Exception:
         return ""
-    activity_type = _get_activity_type_from_entry(entry)
-    if activity_type is None:
+    if not type_label:
         return ""
-    return str(ACTIVITY_TYPE_ADDED_LABELS.get(activity_type, ""))
+    return str(_("%(type)s added") % {"type": type_label})
 
 
 def _entry_kind(entry):
-    """Classify a history entry the same way history_tab.html does, for day-level tag counts."""
-    text = str(entry).lower()
-    if getattr(entry, "content_type", None) and entry.content_type.model == "calllog":
-        return "call"
-    if "email" in text:
-        return "email"
-    if "call" in text:
-        return "call"
-    if "updated" in text:
-        return "edit"
-    if "created" in text:
+    """
+    Classify a history entry by its actual auditlog action, matching the two
+    branches history_tab.html renders (CREATE, everything else). Generic: no
+    model names or string-matching on LogEntry.__str__().
+    """
+    action = getattr(entry, "action", None)
+    if action == LogEntry.Action.CREATE:
         return "created"
+    if action == LogEntry.Action.UPDATE:
+        return "edit"
     return "other"
 
 
 @register.filter
 def history_day_tags(entries):
     """
-    Summarize a day's entries into small tag chips (e.g. "2 edits", "1 call") for the
-    collapsed accordion header. Order: edit, call, email, created, other.
+    Summarize a day's entries into small tag chips (e.g. "2 edits") for the
+    collapsed accordion header. Order: edit, created, other.
     """
     if not entries:
         return []
@@ -402,8 +609,6 @@ def history_day_tags(entries):
 
     labels = {
         "edit": (_("edit"), _("edits")),
-        "call": (_("call"), _("calls")),
-        "email": (_("email"), _("emails")),
         "created": (_("Created"), _("Created")),
         "other": (_("event"), _("events")),
     }
@@ -421,34 +626,133 @@ def history_day_tags(entries):
 
 
 @register.filter
-def activity_create_details(entry):
+def create_status_display(entry, primary_model_name=None):
     """
-    For an Activity CREATE log entry, return a dict with type_label and status for history display.
-    Returns None for non-activity create.
+    For a CREATE log entry belonging to a RELATED object (not the page's own
+    record - see related_entry_subject), whose model has a `status` choices
+    field, return its human-readable value (via the model's own
+    get_status_display()) so the create row can show e.g. "Status: Not
+    Started". Generic: works for any model with a `status` field.
+
+    When the entry IS the page's own record being created (e.g. viewing this
+    Task's own History tab), this returns "" - the current status is already
+    shown in the page header, so repeating it in the create row is redundant.
+    Returns "" when there is none, the entry isn't a create, or it's the
+    page's own record.
     """
     if entry is None:
-        return None
+        return ""
     try:
         if getattr(entry, "action", None) != LogEntry.Action.CREATE:
-            return None
+            return ""
     except Exception:
-        return None
-    activity = _get_activity_from_entry(entry)
-    if activity is None:
-        return None
-    activity_type = getattr(activity, "activity_type", None)
-    if activity_type not in ACTIVITY_TYPE_ADDED_LABELS:
-        return None
-    type_label = str(ACTIVITY_TYPE_ADDED_LABELS.get(activity_type, ""))
-    status_raw = getattr(activity, "status", None)
-    status_display = (
-        dict(activity.STATUS_CHOICES).get(status_raw, status_raw or "--")
-        if hasattr(activity, "STATUS_CHOICES")
-        else (status_raw or "--")
-    )
-    if hasattr(status_display, "_proxy____args"):
-        status_display = str(status_display)
-    return {
-        "type_label": type_label,
-        "status": status_display,
-    }
+        return ""
+    try:
+        ct = getattr(entry, "content_type", None)
+        if ct is not None and primary_model_name and ct.model == primary_model_name:
+            return ""
+    except Exception:
+        pass
+    obj = _get_related_object_from_entry(entry)
+    if obj is None:
+        return ""
+    display_getter = getattr(obj, "get_status_display", None)
+    if not callable(display_getter):
+        return ""
+    try:
+        return str(display_getter())
+    except Exception:
+        return ""
+
+
+@register.filter
+def create_extra_changes(entry, primary_model_name=None):
+    """
+    For a CREATE log entry belonging to a RELATED object (not the page's own
+    record - see related_entry_subject), return its field changes (same shape
+    as history_changes_display) MINUS the fields already surfaced via
+    create_type_display/create_status_display (the model's HISTORY_CREATE_TYPE_FIELD
+    and its `status` field, if any), so the create row can show every other field
+    that was set at creation (subject, due date, priority, ...) without repeating
+    the type/status badges.
+
+    When the entry IS the page's own record being created (e.g. viewing an
+    Opportunity's own History tab and this is the Opportunity's own creation),
+    this returns {} - the user is already looking at all of that record's
+    fields on the page itself, so dumping every field into the history row
+    would just repeat what's already visible. Generic: works for any model,
+    no field names hardcoded beyond the same "status" convention
+    create_status_display already relies on.
+    """
+    if entry is None:
+        return {}
+    try:
+        if getattr(entry, "action", None) != LogEntry.Action.CREATE:
+            return {}
+    except Exception:
+        return {}
+    try:
+        ct = getattr(entry, "content_type", None)
+        if ct is not None and primary_model_name and ct.model == primary_model_name:
+            return {}
+    except Exception:
+        pass
+    changes = history_changes_display(entry)
+    if not changes:
+        return {}
+    try:
+        ct = getattr(entry, "content_type", None)
+        model = ct.model_class() if ct else None
+    except Exception:
+        model = None
+
+    skip_field_names = {"status", "id", "pk"}
+    type_field = _get_history_create_type_field(model)
+    if type_field:
+        skip_field_names.add(type_field)
+    try:
+        from horilla.contrib.core.models import HorillaCoreModel
+
+        skip_field_names.update(HorillaCoreModel.field_permissions_exclude)
+    except Exception:
+        pass
+    if model:
+        try:
+            for field in model._meta.private_fields:
+                if type(field).__name__ == "GenericForeignKey":
+                    skip_field_names.add(field.name)
+                    skip_field_names.add(field.ct_field)
+                    skip_field_names.add(field.fk_field)
+        except Exception:
+            pass
+
+    skip_verbose_names = set()
+    if model:
+        for field_name in skip_field_names:
+            try:
+                field = model._meta.get_field(field_name)
+            except FieldDoesNotExist:
+                continue
+            verbose_name = getattr(field, "verbose_name", field_name)
+            skip_verbose_names.add(str(verbose_name).lower())
+            skip_verbose_names.add(field_name.replace("_", " ").lower())
+
+    def _is_empty(value):
+        if not isinstance(value, (list, tuple)) or len(value) < 2:
+            return False
+        if value[0] == "__m2m__":
+            return not value[3]
+        new_value = value[1]
+        if new_value is None:
+            return True
+        text = str(new_value).strip()
+        return text in ("", "None", "null", "[]", "{}", "False")
+
+    result = {}
+    for key, value in changes.items():
+        if str(key).lower() in skip_verbose_names:
+            continue
+        if _is_empty(value):
+            continue
+        result[key] = value
+    return result

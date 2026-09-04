@@ -272,6 +272,14 @@ body.dark #history-main .history-diff-chip {
   background-color: color-mix(in srgb, var(--menu-arrow-fg, #E54F38) 25%, #2f2f2f) !important;
   color: rgb(255 255 255 / 95%) !important;
 }
+body.dark #history-main .history-diff-chip-added {
+  background-color: color-mix(in srgb, #1f9254 25%, #2f2f2f) !important;
+  color: rgb(255 255 255 / 95%) !important;
+}
+body.dark #history-main .history-diff-chip-removed {
+  background-color: color-mix(in srgb, #e54f38 25%, #2f2f2f) !important;
+  color: rgb(255 255 255 / 95%) !important;
+}
 /* Keep real profile/sidebar avatar colors in dark mode */
 body.dark img.header-profile-avatar,
 body.dark img.settings-sidebar-avatar,
