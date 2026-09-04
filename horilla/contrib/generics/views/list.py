@@ -197,8 +197,12 @@ class HorillaListView(HorillaListViewMixin, ListView):
                                 pass
                         resolved_columns.append((str(label), str(col[1])))
                     elif isinstance(col, str):
+                        # Look up via the class (not the instance) so resolving a
+                        # column name never triggers a related-object DB fetch,
+                        # e.g. for a ForeignKey field with an invalid default.
+                        class_attr = getattr(type(instance), col, None)
                         short_description = getattr(
-                            getattr(instance, col, None), "short_description", None
+                            class_attr, "short_description", None
                         )
                         if short_description:
                             resolved_columns.append((str(short_description), col))
