@@ -1,0 +1,124 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-03 19:52+0000\n"
+"PO-Revision-Date: 2026-09-03 19:52+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Custom Fields"
+msgstr "فیلدهای سفارشی"
+
+msgid "You do not have permission to edit this."
+msgstr "شما مجوز ویرایش این را ندارید."
+
+msgid "You do not have permission to view this."
+msgstr "شما مجوز مشاهده این را ندارید."
+
+msgid "This field is required."
+msgstr "این فیلد الزامی است."
+
+msgid "Enter a valid number."
+msgstr "یک عدد معتبر وارد کنید."
+
+msgid "Select a valid choice."
+msgstr "یک گزینه معتبر انتخاب کنید."
+
+msgid "Model"
+msgstr "مدل"
+
+msgid "Option 1, Option 2, Option 3"
+msgstr "گزینه ۱، گزینه ۲، گزینه ۳"
+
+msgid "Choices are required for Multiple Choice fields."
+msgstr "گزینه‌ها برای فیلدهای چندگزینه‌ای الزامی هستند."
+
+msgid "Custom fields are only supported for Leads and Opportunities."
+msgstr "فیلدهای سفارشی فقط برای سرنخ‌ها و فرصت‌ها پشتیبانی می‌شوند."
+
+msgid "Custom Field"
+msgstr "فیلد سفارشی"
+
+msgid "Small Text"
+msgstr "متن کوتاه"
+
+msgid "Large Text"
+msgstr "متن بلند"
+
+msgid "Number"
+msgstr "عدد"
+
+msgid "Multiple Choice"
+msgstr "چندگزینه‌ای"
+
+msgid "Field Name"
+msgstr "نام فیلد"
+
+msgid "Field Type"
+msgstr "نوع فیلد"
+
+msgid "Required"
+msgstr "الزامی"
+
+msgid "Comma-separated list of choices (only for Multiple Choice type)"
+msgstr "فهرست گزینه‌ها با جداکننده ویرگول (فقط برای نوع چندگزینه‌ای)"
+
+msgid "Choices"
+msgstr "گزینه‌ها"
+
+msgid "Display Order"
+msgstr "ترتیب نمایش"
+
+msgid "Field Definition"
+msgstr "تعریف فیلد"
+
+msgid "Object ID"
+msgstr "شناسه شیء"
+
+msgid "Value"
+msgstr "مقدار"
+
+msgid "Numeric Value"
+msgstr "مقدار عددی"
+
+msgid "Custom Field Value"
+msgstr "مقدار فیلد سفارشی"
+
+msgid "Custom Field Values"
+msgstr "مقادیر فیلدهای سفارشی"
+
+#, python-format
+msgid "Enter %(name)s"
+msgstr "%(name)s را وارد کنید"
+
+msgid ""
+"Define custom fields to capture additional information on Leads and "
+"Opportunities."
+msgstr ""
+"فیلدهای سفارشی را برای ثبت اطلاعات بیشتر روی سرنخ‌ها و فرصت‌ها تعریف کنید."
+
+msgid "Name"
+msgstr "نام"
+
+msgid "Type"
+msgstr "نوع"
+
+msgid "Order"
+msgstr "ترتیب"
+
+msgid "Edit"
+msgstr "ویرایش"
+
+msgid "Delete"
+msgstr "حذف"

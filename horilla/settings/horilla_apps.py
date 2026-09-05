@@ -13,5 +13,6 @@ INSTALLED_APPS.extend(
         "horilla_crm.forecast",
         "booking",
         "calls",
+        "custom_fields",
     ]
 )
