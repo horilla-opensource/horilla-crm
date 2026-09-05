@@ -3,13 +3,20 @@
 # First party imports (Horilla)
 from horilla.utils.translation import gettext_lazy as _
 
-__version__ = "1.11.8"
+__version__ = "1.11.9"
 __module_name__ = "Mail"
 __release_date__ = ""
 __description__ = _(
     "Module for managing incoming and outgoing emails through mail servers and Outlook."
 )
 __icon__ = "assets/icons/icon1.svg"
+
+__1_11_9__ = _(
+    "Redirect anonymous users to login on draft actions instead of 403. Add missing "
+    "verbose_name on model fields used as list/detail columns; derive column labels from "
+    "verbose_name; quieter history/audit display; indexes on frequently filtered fields; "
+    "cursor-pointer on clickable controls; wrap remaining strings with gettext."
+)
 
 __1_11_8__ = _(
     "Use requests.HTTPError and RuntimeError in Outlook token refresh and send paths. "

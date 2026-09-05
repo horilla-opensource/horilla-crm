@@ -2,13 +2,19 @@
 
 from horilla.utils.translation import gettext_lazy as _
 
-__version__ = "1.11.11"
+__version__ = "1.11.12"
 __module_name__ = "Activity"
 __release_date__ = ""
 __description__ = _(
     "Module for tracking and managing activities such as tasks,calls, events, and emails."
 )
 __icon__ = "activity/assets/icons/activity-red.svg"
+
+__1_11_12__ = _(
+    "Derive list column labels from model verbose_name; stop forcing create-view labels "
+    "to title case; wrap remaining user-facing strings with gettext; quieter history/"
+    "audit display for activity models."
+)
 
 __1_11_11__ = _("Stop duplicate HTMX loads and excess requests on activity tabs.")
 

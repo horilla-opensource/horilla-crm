@@ -2,13 +2,26 @@
 
 from django.utils.translation import gettext_lazy as _
 
-__version__ = "1.13.7"
+__version__ = "1.13.8"
 __module_name__ = _("Core System")
 __release_date__ = ""
 __description__ = _(
     "Core system providing authentication, configuration, utilities, and platform-level services."
 )
 __icon__ = "assets/icons/logo.png"
+
+__1_13_8__ = _(
+    "Generics: granted (non-owner) record access across list, detail, kanban, search, and "
+    "bulk flows; derive list/detail column labels from model verbose_name without extra DB "
+    "fetches; shared empty_state and activate_company partials; my_settings_list_shell for "
+    "My Settings lists; shared is_active toggle column; stop forcing verbose names to title "
+    "case; quieter generic history/audit display with model names and safer non-date diffs; "
+    "related-list header restyle; wrap long note text; cursor-pointer on more clickable "
+    "controls. Core: cache available companies in the context processor; stream export "
+    "generation; indexes on frequently filtered fields; register Field Requirements in "
+    "INSTALLED_APPS. UI: reposition overflowing Summernote toolbar dropdowns; history and "
+    "layout CSS tweaks."
+)
 
 __1_13_7__ = _(
     "Generics: stretch list columns on wide viewports; collapsible day-accordion history tab "

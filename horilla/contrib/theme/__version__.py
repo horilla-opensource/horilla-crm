@@ -5,13 +5,15 @@ Version and metadata information for the theme module.
 # First party imports (Horilla)
 from horilla.utils.translation import gettext_lazy as _
 
-__version__ = "1.11.3"
+__version__ = "1.11.4"
 __module_name__ = "Theme Manager"
 __release_date__ = ""
 __description__ = _(
     "Module providing customizable color themes and UI personalization."
 )
 __icon__ = "theme/assets/icons/theme.svg"
+
+__1_11_4__ = _("Adopt the shared empty_state partial on theme cards.")
 
 __1_11_3__ = _(
     "Fix dark-mode contrast regressions in the history tab, detail modal, and related "

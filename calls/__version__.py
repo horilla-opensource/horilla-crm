@@ -2,7 +2,7 @@
 
 from horilla.utils.translation import gettext_lazy as _
 
-__version__ = "1.11.5"
+__version__ = "1.11.6"
 __module_name__ = _("Calls Integration")
 __release_date__ = ""
 __description__ = _(
@@ -11,6 +11,11 @@ __description__ = _(
     "mapping, and company-level access control."
 )
 __icon__ = "assets/fontawesome/svgs/solid/phone.svg"
+
+__1_11_6__ = _(
+    "Derive call-log list column labels from model verbose_name instead of hardcoded "
+    "translations."
+)
 
 __1_11_5__ = _(
     "Raise requests.HTTPError and ValueError instead of bare Exception in Exotel adapter "

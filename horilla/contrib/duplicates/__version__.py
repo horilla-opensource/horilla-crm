@@ -3,13 +3,19 @@
 # First party imports (Horilla)
 from horilla.utils.translation import gettext_lazy as _
 
-__version__ = "1.11.6"
+__version__ = "1.11.7"
 __module_name__ = "Duplicate Control"
 __release_date__ = ""
 __description__ = _(
     "Module for detecting potential duplicate records and supporting merge workflows."
 )
 __icon__ = "assets/icons/clone.svg"
+
+__1_11_7__ = _(
+    "Adopt shared empty_state partials on matching rules and potential duplicates. Add "
+    "cursor-pointer on clickable controls; stop forcing form labels to title case; wrap "
+    "remaining model strings with gettext."
+)
 
 __1_11_6__ = _("Move matching rules onto the shared settings_list_shell layout.")
 

@@ -5,13 +5,20 @@ Version information for the Process Builder
 # First party imports (Horilla)
 from horilla.utils.translation import gettext_lazy as _
 
-__version__ = "1.11.6"
+__version__ = "1.11.7"
 __module_name__ = "Process Builder"
 __release_date__ = ""
 __description__ = _(
     "Module for managing the process, including approval processes and review processes."
 )
 __icon__ = "assets/icons/process-management.svg"
+
+__1_11_7__ = _(
+    "Use the shared is_active toggle column partial for approvals and reviews. Derive "
+    "list/detail column labels from model verbose_name; add missing verbose_name on "
+    "approval fields; stop forcing labels to title case; indexes on frequently filtered "
+    "fields."
+)
 
 __1_11_6__ = _(
     "Apply runtime viewport fit on approval/review process lists and approval job/"

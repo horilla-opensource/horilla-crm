@@ -8,11 +8,17 @@ application registry and UI.
 # First party imports (Horilla)
 from horilla.utils.translation import gettext_lazy as _
 
-__version__ = "1.11.5"
+__version__ = "1.11.6"
 __module_name__ = "Dashboards"
 __release_date__ = ""
 __description__ = _("Module for building and customizing interactive dashboards.")
 __icon__ = "assets/icons/icon6.svg"
+
+__1_11_6__ = _(
+    "Derive list column labels from model verbose_name; mark empty-state no_record_msg "
+    "strings for translation; stop forcing form labels to title case; wrap remaining "
+    "strings with gettext; add indexes on frequently filtered fields."
+)
 
 __1_11_5__ = _(
     "RTL-aware widget reordering on home and dashboard detail. Translate default "

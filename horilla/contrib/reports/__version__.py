@@ -3,13 +3,19 @@
 # First party imports (Horilla)
 from horilla.utils.translation import gettext_lazy as _
 
-__version__ = "1.11.8"
+__version__ = "1.11.9"
 __module_name__ = "Reports"
 __release_date__ = ""
 __description__ = _(
     "Module for creating and customizing reports across all system modules."
 )
 __icon__ = "assets/icons/icon5.svg"
+
+__1_11_9__ = _(
+    "Derive list column labels from model verbose_name; mark empty-state no_record_msg "
+    "strings for translation; stop forcing labels to title case; wrap remaining "
+    "user-facing strings with gettext."
+)
 
 __1_11_8__ = _(
     "Fit reports folder and list views to the viewport instead of overflowing."

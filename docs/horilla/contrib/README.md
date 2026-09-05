@@ -2,18 +2,7 @@
 
 This tree mirrors **`horilla/contrib/`** Django apps. Each subfolder holds documentation for that app.
 
-## Recent updates
-
-### Sep 2026 (v1.13.8)
-
-| Topic | Doc |
-|-------|-----|
-| Shared **empty-state** partials (`empty_state.html`, `activate_company.html`) | [../../templates/components/empty_state.md](../../templates/components/empty_state.md) |
-| **My Settings list shell** (`my_settings_list_shell.html`) | [core/settings_list_shell.md](core/settings_list_shell.md#my-settings-list-shell-my_settings_list_shellhtml) |
-| Template **BUILTINS** (`static`, `i18n`, `horilla_tags`) — no redundant `{% load %}` | [../settings/base.md](../settings/base.md#-template-builtins) · [coding_rule.md](../../coding_rule.md#django-templates--built-in-tag-libraries) |
-| Platform **locale** catalog refresh (`django.po` / `djangojs.po`) | `horilla/locale/` (run `makemessages` after string changes) |
-
-### Aug 2026 (v1.13.7)
+## Recent updates (21–28 Aug 2026, v1.13.7)
 
 | Topic | Doc |
 |-------|-----|

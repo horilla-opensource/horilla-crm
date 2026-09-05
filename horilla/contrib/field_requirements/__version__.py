@@ -5,13 +5,18 @@ Version information for the field requirements app.
 # First party imports (Horilla)
 from horilla.utils.translation import gettext_lazy as _
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __module_name__ = "Field Requirements"
 __release_date__ = ""
 __description__ = _(
     "Configure which fields are required or optional on opted-in models, per company."
 )
 __icon__ = ""
+
+__1_0_1__ = _(
+    "Stop forcing verbose names into title case on forms and models. Drop the bundled "
+    "initial migration so the app ships migration-free with the current registry."
+)
 
 __1_0_0__ = _(
     "Register field requirements as a self-contained contrib feature. Lead and "

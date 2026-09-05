@@ -2,11 +2,23 @@
 
 from horilla.utils.translation import gettext_lazy as _
 
-__version__ = "1.11.13"
+__version__ = "1.11.14"
 __module_name__ = "CRM"
 __release_date__ = ""
 __description__ = _("CRM module for managing leads, contacts, and opportunities.")
 __icon__ = "assets/icons/icon2.svg"
+
+__1_11_14__ = _(
+    "Opportunities: grant team members access via opportunity_access; use "
+    "my_settings_list_shell for Team Selling; simplify detail field configuration; fix "
+    'split modal width and remove-row for new splits; remove invalid ForeignKey default=""; '
+    "shared empty_state and is_active toggle partials. Leads: company-scope custom stage "
+    "save/create; Field Requirements registration; assignment-rule and stage column labels "
+    "from verbose_name. Forecast: full list view on opportunity pagination; speed period "
+    "matching by grouping by owner; empty-state gates; DB indexes. Campaigns/Contacts: "
+    "ForeignKey default cleanup, indexes, and gettext on remaining strings. Scoring rules: "
+    "shared is_active and empty_state markup."
+)
 
 __1_11_13__ = _(
     "Initialize Database: centralize DEFAULT_LEAD_INIT_STAGES and "
