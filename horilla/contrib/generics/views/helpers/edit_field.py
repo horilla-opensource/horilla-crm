@@ -454,6 +454,21 @@ def _get_section_view_instance(model, request, pk):
     return view
 
 
+def can_edit_all_fields(request, obj):
+    """
+    Whether ``request.user`` may use Edit Details on ``obj``.
+
+    The record page's own rule, the one its Edit Details button and stage bar
+    follow: :meth:`HorillaDetailView.check_update_permission` (an owner with
+    ``change_own_<model>``, or anyone with ``change_<model>``; never a
+    locked record).
+    """
+    from horilla.contrib.generics.views.details import HorillaDetailView
+
+    section_view = _get_section_view_instance(obj.__class__, request, obj.pk)
+    return HorillaDetailView.check_update_permission(section_view)
+
+
 class ExtraFieldsProvider(View):
     """
     Extension seam for non-model fields in the bulk "Edit Details" form.
@@ -591,12 +606,6 @@ class EditAllFieldsView(LoginRequiredMixin, View):
         try:
             if not self.model:
                 self.model = apps.get_model(app_label, model_name)
-            perm = f"{self.model._meta.app_label}.change_{self.model._meta.model_name}"
-
-            if not request.user.has_perm(perm):
-                messages.error(request, _("You do not have permission to edit this."))
-                return ScriptResponse(reload=True)
-
             obj = get_object_or_404(self.model, pk=pk)
         except Exception as e:
             messages.error(self.request, e)
@@ -604,6 +613,10 @@ class EditAllFieldsView(LoginRequiredMixin, View):
 
         if is_record_locked(obj):
             messages.error(request, _("This record is read-only."))
+            return ScriptResponse(reload=True)
+
+        if not can_edit_all_fields(request, obj):
+            messages.error(request, _("You do not have permission to edit this."))
             return ScriptResponse(reload=True)
 
         context = build_edit_all_fields_context(
@@ -670,18 +683,20 @@ class UpdateAllFieldsView(LoginRequiredMixin, View):
         try:
             if not self.model:
                 self.model = apps.get_model(app_label, model_name)
-            perm = f"{self.model._meta.app_label}.change_{self.model._meta.model_name}"
-            if not request.user.has_perm(perm):
-                messages.error(request, _("You do not have permission to edit this."))
-                return ScriptResponse(reload=True, status=403)
-
             obj = get_object_or_404(self.model, pk=pk)
         except Exception as e:
             messages.error(self.request, e)
             return ScriptResponse(reload=True)
 
+        if is_record_locked(obj):
+            messages.error(request, _("This record is read-only."))
+            return ScriptResponse(reload=True, status=403)
+
+        if not can_edit_all_fields(request, obj):
+            messages.error(request, _("You do not have permission to edit this."))
+            return ScriptResponse(reload=True, status=403)
+
         from horilla.contrib.core.utils import get_field_permissions_for_model
-        from horilla.contrib.generics.views.details import HorillaDetailView
 
         section_view = _get_section_view_instance(self.model, request, pk)
         section_view.object = obj
@@ -689,13 +704,12 @@ class UpdateAllFieldsView(LoginRequiredMixin, View):
 
         field_permissions = get_field_permissions_for_model(request.user, self.model)
         non_editable_fields = section_view.non_editable_fields
-        can_update = HorillaDetailView.check_update_permission(section_view)
 
         resolver = get_field_info_resolver()
         errors = {}
         changed_fields = []
         m2m_changed = False
-        if can_update and section_view.edit_field:
+        if section_view.edit_field:
             for verbose_name, field_name in body:
                 field_perm = field_permissions.get(field_name, "readwrite")
                 submitted = field_name in request.POST or any(

@@ -489,6 +489,124 @@ class ChangeOwnEditFormAccessTests(TestCase):
         self.assertTrue(self.can_open_edit_form(self.peer, self.rep_holiday))
 
 
+class EditDetailsAccessTests(TestCase):
+    """Edit Details on the Details tab follows the record page's own rule,
+    ``HorillaDetailView.check_update_permission``, which already decides
+    whether its button shows: an owner with ``change_own_<model>``, or anyone
+    with ``change_<model>``, and never a locked record.
+
+    Holiday stands in for any owned model: its ``OWNER_FIELDS`` is
+    ``specific_users``.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # django-login-history reads request.META['HTTP_USER_AGENT'] on
+        # login/logout, which the test client's bare request doesn't set.
+        user_logged_in.disconnect(post_login)
+        user_logged_out.disconnect(post_logout)
+
+    @classmethod
+    def tearDownClass(cls):
+        user_logged_in.connect(post_login)
+        user_logged_out.connect(post_logout)
+        super().tearDownClass()
+
+    def setUp(self):
+        self.company = Company.objects.create(
+            name="Acme", email="acme@example.com", country="US"
+        )
+        self.owner = self.make_user("owner", "change_own_holiday")
+        self.other = self.make_user("other", "change_own_holiday")
+        self.editor = self.make_user("editor", "change_holiday")
+        # Created by someone else, so the created_by fallback owner field
+        # doesn't make anyone an owner.
+        hr = User.objects.create_user(
+            username="hr", email="hr@example.com", password="pass", company=self.company
+        )
+        now = timezone.now()
+        self.holiday = Holiday.objects.create(
+            name="Day off",
+            start_date=now,
+            end_date=now,
+            company=self.company,
+            created_by=hr,
+            updated_by=hr,
+        )
+        self.holiday.specific_users.add(self.owner)
+        self.url_kwargs = {
+            "pk": self.holiday.pk,
+            "app_label": "core",
+            "model_name": "holiday",
+        }
+
+    def make_user(self, username, codename):
+        """Create a user whose only edit right on holidays is ``codename``."""
+        user = User.objects.create_user(
+            username=username,
+            email=f"{username}@example.com",
+            password="pass",
+            company=self.company,
+        )
+        user.user_permissions.add(
+            Permission.objects.get(content_type__app_label="core", codename=codename)
+        )
+        return user
+
+    def open_form(self, user):
+        """The response ``user`` gets from the Edit Details button."""
+        self.client.force_login(user)
+        return self.client.get(
+            reverse("generics:edit_all_fields", kwargs=self.url_kwargs),
+            HTTP_HX_REQUEST="true",
+        )
+
+    def save_name(self, user, name):
+        """Post a new name through Edit Details as ``user``."""
+        self.client.force_login(user)
+        response = self.client.post(
+            reverse("generics:update_all_fields", kwargs=self.url_kwargs),
+            {"name": name},
+            HTTP_HX_REQUEST="true",
+        )
+        self.holiday.refresh_from_db()
+        return response
+
+    def test_owner_with_change_own_gets_the_form(self):
+        """Clicking Edit Details opens the form instead of a permission error."""
+        self.assertContains(self.open_form(self.owner), 'id="details-bulk-edit-form"')
+
+    def test_owner_with_change_own_saves(self):
+        """The owner's change is saved."""
+        response = self.save_name(self.owner, "Long weekend")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.holiday.name, "Long weekend")
+
+    def test_change_own_on_someone_elses_record_is_refused(self):
+        """change_own doesn't reach a record the user doesn't own."""
+        self.assertNotContains(self.open_form(self.other), "details-bulk-edit-form")
+        self.assertEqual(self.save_name(self.other, "Long weekend").status_code, 403)
+        self.assertEqual(self.holiday.name, "Day off")
+
+    def test_change_permission_edits_any_record(self):
+        """change_<model> still edits records the user doesn't own."""
+        self.assertContains(self.open_form(self.editor), 'id="details-bulk-edit-form"')
+        self.save_name(self.editor, "Long weekend")
+        self.assertEqual(self.holiday.name, "Long weekend")
+
+    def test_locked_record_is_refused(self):
+        """A read-only record opens no form and keeps its values."""
+        with mock.patch.object(Holiday, "is_record_locked", True, create=True):
+            self.assertNotContains(
+                self.open_form(self.editor), "details-bulk-edit-form"
+            )
+            self.assertEqual(
+                self.save_name(self.editor, "Long weekend").status_code, 403
+            )
+        self.assertEqual(self.holiday.name, "Day off")
+
+
 class HistoryDayGroupingTests(SimpleTestCase):
     """History entries are grouped under the day their shown time falls on,
     not the stored UTC day."""
